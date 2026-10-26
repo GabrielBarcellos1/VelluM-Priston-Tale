@@ -69,14 +69,14 @@ export function createRuntimeSkillSystem(ctx) {
   const ready=new Map(),totals=new Map(),active=new Map(),dots=new Map();
   let actionReady=0,generation=0;
   const learned=s=>levels.get(typeof s==='number'?s:s.id)??0;
-  const rank=()=>ctx.stats.level>=60?3:ctx.stats.level>=40?2:ctx.stats.level>=20?1:0;
+  const rank=()=>ctx.rank?ctx.rank():ctx.stats.level>=60?3:ctx.stats.level>=40?2:ctx.stats.level>=20?1:0;
   const points=()=>({skill:Math.max(0,Math.floor(Math.max(0,ctx.stats.level-8)/2)-list.filter(s=>s.tier<4).reduce((n,s)=>n+learned(s),0)),
     elite:Math.max(0,Math.floor(Math.max(0,ctx.stats.level-58)/2)-list.filter(s=>s.tier===4).reduce((n,s)=>n+learned(s),0))});
   function liveBuffs(){const best=new Map();for(const b of active.values())if(b.until>now()&&(!best.has(b.code)||best.get(b.code).level<b.level))best.set(b.code,b);return [...best.values()];}
   const attackFor=(s,n)=>skillAttackProfile(s,rule(s),Math.max(1,n),ctx.stats,ctx.equipment?.()??{},ctx.stats.magicPowerPercent??0);
   function view(s) {
     const p=profile(s),n=learned(s),next=Math.min(10,n+1),passive=p.kind==='passive';
-    const v={...s,level:n,passive,locked:false,icon:s.classicIcon??s.icon,iconProvenance:s.iconProvenance,
+    const v={...s,level:n,passive,locked:s.tier>rank()+1,icon:s.classicIcon??s.icon,iconProvenance:s.iconProvenance,
       reqLevel:(rule(s).reqLevel??s.reqLevel)+n*2,maxLevel:10,price:100*s.tier*(n+1)**2,
       mp:passive?0:Math.ceil(at(p.mp,n)*(1-(ctx.premiumValue?.('manaReduce')??0)/100)),
       mpNext:passive?0:Math.ceil(at(p.mp,next)*(1-(ctx.premiumValue?.('manaReduce')??0)/100)),
@@ -132,6 +132,7 @@ export function createRuntimeSkillSystem(ctx) {
   function reveal(){let changed=false;for(const [id,b]of active)if(profile(b).special==='stealth'){active.delete(id);changed=true;}if(changed){ctx.recalculate?.();ctx.buffsChanged?.();}}
   function cast(id,target) {
     const s=list.find(s=>s.id===id),n=learned(id);if(!s||!n||s.kind==='passive')throw Error('Aprenda uma habilidade ativa antes de usá-la.');
+    if(s.tier>rank()+1&&!ctx.freeCast?.())throw Error('Conclua o desafio de classe para liberar este tier.');
     const game=ctx.game(),p=profile(s),v=view(s);
     if(!game||game.dead||ctx.stats.hp<=0)throw Error('O personagem está morto.');
     if(game.worldLocked||game.air?.motion)throw Error('Aguarde o personagem ficar disponível.');

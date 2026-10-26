@@ -34,7 +34,7 @@ def library(actor):
     source=store.base_catalog()+[{'code':i['code'],'name':i['name'],'kind':'item','category':'items','price':1000,
                                 'permanent':i['slot']!='POTION','icon':i['image'],'definition':i}
                                for i in json.loads((accounts.ROOT/'data/shop-items.json').read_text(encoding='utf-8'))['items']]
-    return list({p['code']:p for p in source}.values())
+    return list({p['code']:p for p in reversed(source)}.values())
 
 
 def save_product(actor,data):

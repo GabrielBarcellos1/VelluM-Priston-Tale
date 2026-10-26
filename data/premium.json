@@ -63,7 +63,8 @@
       "value": 10,
       "icon": "reign/sinimage/premium/expuppotion.png",
       "description": "Bônus de experiência dos monstros.",
-      "buffIcon": "expuppotion"
+      "buffIcon": "expuppotion",
+      "effectRule": "vellum-seven-day-product"
     },
     {
       "code": "BI113",
@@ -75,7 +76,8 @@
       "value": 10,
       "icon": "reign/sinimage/premium/expuppotion.png",
       "description": "Bônus de experiência dos monstros.",
-      "buffIcon": "expuppotion"
+      "buffIcon": "expuppotion",
+      "effectRule": "vellum-seven-day-product"
     },
     {
       "code": "BI324",
@@ -87,7 +89,8 @@
       "value": 10,
       "icon": "reign/sinimage/premium/expuppotion.png",
       "description": "Bônus de experiência dos monstros.",
-      "buffIcon": "expuppotion"
+      "buffIcon": "expuppotion",
+      "effectRule": "vellum-seven-day-product"
     },
     {
       "code": "BI325",
@@ -99,7 +102,8 @@
       "value": 10,
       "icon": "reign/sinimage/premium/expuppotion.png",
       "description": "Bônus de experiência dos monstros.",
-      "buffIcon": "expuppotion"
+      "buffIcon": "expuppotion",
+      "effectRule": "vellum-seven-day-product"
     },
     {
       "code": "BI326",
@@ -111,7 +115,8 @@
       "value": 30,
       "icon": "reign/sinimage/premium/expuppotion.png",
       "description": "Bônus de experiência dos monstros.",
-      "buffIcon": "expuppotion"
+      "buffIcon": "expuppotion",
+      "effectRule": "vellum-seven-day-product"
     },
     {
       "code": "BI124",
@@ -123,7 +128,8 @@
       "value": 30,
       "icon": "reign/sinimage/premium/expuppotion.png",
       "description": "Bônus de experiência dos monstros.",
-      "buffIcon": "expuppotion"
+      "buffIcon": "expuppotion",
+      "effectRule": "vellum-seven-day-product"
     },
     {
       "code": "BI327",
@@ -135,7 +141,8 @@
       "value": 30,
       "icon": "reign/sinimage/premium/expuppotion.png",
       "description": "Bônus de experiência dos monstros.",
-      "buffIcon": "expuppotion"
+      "buffIcon": "expuppotion",
+      "effectRule": "vellum-seven-day-product"
     },
     {
       "code": "BI328",
@@ -147,7 +154,8 @@
       "value": 30,
       "icon": "reign/sinimage/premium/expuppotion.png",
       "description": "Bônus de experiência dos monstros.",
-      "buffIcon": "expuppotion"
+      "buffIcon": "expuppotion",
+      "effectRule": "vellum-seven-day-product"
     },
     {
       "code": "BI119",
@@ -315,7 +323,8 @@
       "value": 30,
       "icon": "reign/sinimage/premium/m_reduce.png",
       "description": "Reduz em 30% o custo de MP das habilidades.",
-      "buffIcon": "m_reduce"
+      "buffIcon": "m_reduce",
+      "effectRule": "vellum-seven-day-product"
     },
     {
       "code": "BI128",
@@ -327,7 +336,8 @@
       "value": 30,
       "icon": "reign/sinimage/premium/m_reduce.png",
       "description": "Reduz em 30% o custo de MP das habilidades.",
-      "buffIcon": "m_reduce"
+      "buffIcon": "m_reduce",
+      "effectRule": "vellum-seven-day-product"
     },
     {
       "code": "BI337",
@@ -339,7 +349,8 @@
       "value": 30,
       "icon": "reign/sinimage/premium/m_reduce.png",
       "description": "Reduz em 30% o custo de MP das habilidades.",
-      "buffIcon": "m_reduce"
+      "buffIcon": "m_reduce",
+      "effectRule": "vellum-seven-day-product"
     },
     {
       "code": "BI338",
@@ -351,7 +362,8 @@
       "value": 30,
       "icon": "reign/sinimage/premium/m_reduce.png",
       "description": "Reduz em 30% o custo de MP das habilidades.",
-      "buffIcon": "m_reduce"
+      "buffIcon": "m_reduce",
+      "effectRule": "vellum-seven-day-product"
     },
     {
       "code": "BI339",
@@ -363,7 +375,8 @@
       "value": 30,
       "icon": "reign/sinimage/premium/s_reduce.png",
       "description": "Reduz em 30% o custo de resistência das habilidades.",
-      "buffIcon": "s_reduce"
+      "buffIcon": "s_reduce",
+      "effectRule": "vellum-seven-day-product"
     },
     {
       "code": "BI191",
@@ -375,7 +388,8 @@
       "value": 30,
       "icon": "reign/sinimage/premium/s_reduce.png",
       "description": "Reduz em 30% o custo de resistência das habilidades.",
-      "buffIcon": "s_reduce"
+      "buffIcon": "s_reduce",
+      "effectRule": "vellum-seven-day-product"
     },
     {
       "code": "BI340",
@@ -387,7 +401,8 @@
       "value": 30,
       "icon": "reign/sinimage/premium/s_reduce.png",
       "description": "Reduz em 30% o custo de resistência das habilidades.",
-      "buffIcon": "s_reduce"
+      "buffIcon": "s_reduce",
+      "effectRule": "vellum-seven-day-product"
     },
     {
       "code": "BI341",
@@ -399,7 +414,8 @@
       "value": 30,
       "icon": "reign/sinimage/premium/s_reduce.png",
       "description": "Reduz em 30% o custo de resistência das habilidades.",
-      "buffIcon": "s_reduce"
+      "buffIcon": "s_reduce",
+      "effectRule": "vellum-seven-day-product"
     },
     {
       "code": "BI344",
@@ -452,6 +468,277 @@
       "description": "Adiciona 1000 ao peso máximo enquanto ativo. Não aumenta os pontos de vida.",
       "buffIcon": "m_might",
       "effectRule": "public-max-weight"
+    },
+    {
+      "code": "BI133",
+      "name": "Fênix — 7 dias",
+      "kind": "phoenix",
+      "category": "premium",
+      "seconds": 604800,
+      "hours": 168,
+      "price": 4000,
+      "value": 1,
+      "icon": "image/sinimage/items/premium/itbi133.png",
+      "buffIcon": "m_phoenix",
+      "definition": {
+        "code": "BI133",
+        "name": "Fênix — 7 dias",
+        "family": "BI1",
+        "w": 1,
+        "h": 1,
+        "image": "image/sinimage/items/premium/itbi133.png",
+        "slot": "ECORE",
+        "price": 0,
+        "weight": 1
+      },
+      "description": "Companheira Fênix visível e uma rolagem comum extra de drop de 25%. Tempo corrido por 7 dias, inclusive offline.",
+      "effectRule": "vellum-seven-day-product"
+    },
+    {
+      "code": "BI901",
+      "name": "EXP Up +100% — 7 dias",
+      "kind": "expUp",
+      "category": "premium",
+      "seconds": 604800,
+      "hours": 168,
+      "price": 5000,
+      "value": 100,
+      "icon": "image/sinimage/items/premium/itbi124.png",
+      "buffIcon": "expup",
+      "definition": {
+        "code": "BI901",
+        "name": "EXP Up +100% — 7 dias",
+        "family": "BI1",
+        "w": 1,
+        "h": 1,
+        "image": "image/sinimage/items/premium/itbi124.png",
+        "slot": "ECORE",
+        "price": 0,
+        "weight": 1
+      },
+      "description": "Dobra a EXP de monstros por 7 dias.",
+      "effectRule": "vellum-seven-day-product"
+    },
+    {
+      "code": "BI902",
+      "name": "Drena Almas — 7 dias",
+      "kind": "manaRecharge",
+      "category": "premium",
+      "seconds": 604800,
+      "hours": 168,
+      "price": 3000,
+      "value": 5,
+      "icon": "image/sinimage/items/premium/itbi122.png",
+      "buffIcon": "manarecharge",
+      "definition": {
+        "code": "BI902",
+        "name": "Drena Almas — 7 dias",
+        "family": "BI1",
+        "w": 1,
+        "h": 1,
+        "image": "image/sinimage/items/premium/itbi122.png",
+        "slot": "ECORE",
+        "price": 0,
+        "weight": 1
+      },
+      "description": "Recuperação de MP conforme a regra de Drena Almas, por 7 dias.",
+      "effectRule": "vellum-seven-day-product"
+    },
+    {
+      "code": "BI903",
+      "name": "Presa Vampírica Superior — 7 dias",
+      "kind": "vampiricEx",
+      "category": "premium",
+      "seconds": 604800,
+      "hours": 168,
+      "price": 6000,
+      "value": 10,
+      "icon": "image/sinimage/items/premium/itbi188.png",
+      "buffIcon": "vampiric",
+      "definition": {
+        "code": "BI903",
+        "name": "Presa Vampírica Superior — 7 dias",
+        "family": "BI1",
+        "w": 1,
+        "h": 1,
+        "image": "image/sinimage/items/premium/itbi188.png",
+        "slot": "ECORE",
+        "price": 0,
+        "weight": 1
+      },
+      "description": "Melhor variante de Presa Vampírica, por 7 dias. Não acumula com a Presa comum.",
+      "effectRule": "vellum-seven-day-product"
+    },
+    {
+      "code": "BI904",
+      "name": "Redução de RES — 7 dias",
+      "kind": "staminaReduce",
+      "category": "premium",
+      "seconds": 604800,
+      "hours": 168,
+      "price": 3000,
+      "value": 30,
+      "icon": "image/sinimage/items/premium/itbi191.png",
+      "buffIcon": "s_reduce",
+      "definition": {
+        "code": "BI904",
+        "name": "Redução de RES — 7 dias",
+        "family": "BI1",
+        "w": 1,
+        "h": 1,
+        "image": "image/sinimage/items/premium/itbi191.png",
+        "slot": "ECORE",
+        "price": 0,
+        "weight": 1
+      },
+      "description": "Reduz o custo de resistência das habilidades em 30% por 7 dias.",
+      "effectRule": "vellum-seven-day-product"
+    },
+    {
+      "code": "BI905",
+      "name": "Redução de Mana — 7 dias",
+      "kind": "manaReduce",
+      "category": "premium",
+      "seconds": 604800,
+      "hours": 168,
+      "price": 3000,
+      "value": 30,
+      "icon": "image/sinimage/items/premium/itbi128.png",
+      "buffIcon": "m_reduce",
+      "definition": {
+        "code": "BI905",
+        "name": "Redução de Mana — 7 dias",
+        "family": "BI1",
+        "w": 1,
+        "h": 1,
+        "image": "image/sinimage/items/premium/itbi128.png",
+        "slot": "ECORE",
+        "price": 0,
+        "weight": 1
+      },
+      "description": "Reduz o custo de MP das habilidades em 30% por 7 dias.",
+      "effectRule": "vellum-seven-day-product"
+    },
+    {
+      "code": "BI906",
+      "name": "Olho Mágico — 7 dias",
+      "kind": "thirdEyes",
+      "category": "premium",
+      "seconds": 604800,
+      "hours": 168,
+      "price": 3000,
+      "value": 50,
+      "icon": "image/sinimage/items/premium/itbi112.png",
+      "buffIcon": "thirdeyes",
+      "definition": {
+        "code": "BI906",
+        "name": "Olho Mágico — 7 dias",
+        "family": "BI1",
+        "w": 1,
+        "h": 1,
+        "image": "image/sinimage/items/premium/itbi112.png",
+        "slot": "ECORE",
+        "price": 0,
+        "weight": 1
+      },
+      "description": "50% de chance de uma rolagem comum adicional de drop, por 7 dias.",
+      "effectRule": "vellum-seven-day-product"
+    },
+    {
+      "code": "FO110",
+      "name": "Mirage Force",
+      "kind": "item",
+      "category": "items",
+      "price": 500,
+      "permanent": false,
+      "icon": "image/sinimage/items/accessory/itfo110.png",
+      "definition": {
+        "code": "FO110",
+        "name": "Mirage Force",
+        "family": "FO1",
+        "w": 1,
+        "h": 1,
+        "image": "image/sinimage/items/accessory/itfo110.png",
+        "slot": "FORCEORB",
+        "price": 130000,
+        "weight": 2,
+        "req": {
+          "level": 70
+        }
+      },
+      "description": "Uma Força Mirage consumível. Respeita a faixa de nível da força.",
+      "effectRule": "server-stock-consumable"
+    },
+    {
+      "code": "FO130",
+      "name": "Magic Mirage Force",
+      "kind": "item",
+      "category": "items",
+      "price": 500,
+      "permanent": false,
+      "icon": "image/sinimage/items/accessory/itfo130.png",
+      "definition": {
+        "code": "FO130",
+        "name": "Magic Mirage Force",
+        "family": "FO1",
+        "w": 1,
+        "h": 1,
+        "image": "image/sinimage/items/accessory/itfo130.png",
+        "slot": "FORCEORB",
+        "price": 130000,
+        "weight": 2,
+        "req": {
+          "level": 90
+        }
+      },
+      "description": "Uma Força Mirage consumível. Respeita a faixa de nível da força.",
+      "effectRule": "server-stock-consumable"
+    },
+    {
+      "code": "BI900",
+      "name": "Kit Up — 7 dias",
+      "kind": "bundle",
+      "category": "premium",
+      "seconds": 604800,
+      "hours": 168,
+      "price": 24000,
+      "value": 0,
+      "icon": "image/sinimage/items/premium/itbi133.png",
+      "buffIcon": "m_phoenix",
+      "definition": {
+        "code": "BI900",
+        "name": "Kit Up — 7 dias",
+        "family": "BI1",
+        "w": 1,
+        "h": 1,
+        "image": "image/sinimage/items/premium/itbi133.png",
+        "slot": "ECORE",
+        "price": 0,
+        "weight": 1
+      },
+      "description": "Ative para receber EXP +100%, Drena Almas, Presa Superior, redução de RES/MP, Fênix e Olho Mágico por 7 dias, além de 10 Forças Mirage adequadas à classe. Ativação conjunta; tempo continua offline.",
+      "bundle": {
+        "components": [
+          "BI901",
+          "BI902",
+          "BI903",
+          "BI904",
+          "BI905",
+          "BI133",
+          "BI906"
+        ],
+        "forceQuantity": 10,
+        "physicalForce": "FO110",
+        "magicForce": "FO130"
+      },
+      "effectRule": "vellum-seven-day-product"
     }
-  ]
+  ],
+  "vellumKitPolicy": {
+    "kit": "BI900",
+    "price": 24000,
+    "individualTotal": 32000,
+    "discountPercent": 25,
+    "activation": "all seven effects start together; force orbs are ten consumables, not a seven-day active force"
+  }
 }

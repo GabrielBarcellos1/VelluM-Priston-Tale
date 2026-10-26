@@ -259,8 +259,16 @@ def kill(user,data):
                 if pool:
                     selected=RNG.choice(pool);chance=r['highLevelChance'] if selected.get('req',{}).get('level',0)>=80 else r['equipmentChance']
                     if RNG.random()*100<chance:items.append((selected['code'],1,'equipment'))
+            if premium and db.execute("SELECT 1 FROM premium_active WHERE username=? AND kind='phoenix' AND expires>?",(user['username'],time.time())).fetchone() and RNG.random()<.25:
+                pool=eligible(monster,low,level)
+                if pool:
+                    selected=RNG.choice(pool);chance=r['highLevelChance'] if selected.get('req',{}).get('level',0)>=80 else r['equipmentChance']
+                    if RNG.random()*100<chance:items.append((selected['code'],1,'equipment'))
         origin='staff-test' if user['role'] in ('admin','gm') else 'client-kill/server-roll'
         event(db,user,'monster.kill','kill',job=job,character=name,map_id=map_id,monster=monster['name'],trust=origin,detail={'monsterId':monster['id'],'rulesVersion':table['version'],'combatVerified':False})
+        if data.get('trialToken'):
+            import npc_services
+            npc_services.record_trial_kill(db,user,data,monster)
         result=[]
         if gold:
             latest=json.loads(db.execute('SELECT state FROM characters WHERE username=? AND job=?',(user['username'],job)).fetchone()['state'])

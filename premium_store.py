@@ -27,6 +27,13 @@ def catalog(db=None, include_hidden=False):
     if not include_hidden:query+=' WHERE enabled=1 AND archived=0'
     return [json.loads(row['data']) for row in db.execute(query+' ORDER BY rowid')]
 
+def activate_effect(db,target,item):
+    group='vampiric' if item['kind']=='vampiricEx' else item['kind']
+    old=db.execute('SELECT expires,value FROM premium_active WHERE username=? AND kind=?',(target,group)).fetchone()
+    if old and old['expires']>time.time() and old['value']>item['value']:raise ValueError('Há um efeito mais forte ativo. Aguarde terminar antes de ativar este produto.')
+    expires=max(time.time(),old['expires'] if old else 0)+item['seconds']
+    db.execute('INSERT INTO premium_active VALUES(?,?,?,?,?) ON CONFLICT(username,kind) DO UPDATE SET code=excluded.code,expires=excluded.expires,value=excluded.value',(target,group,item['code'],expires,item['value']))
+
 
 def setup(db):
     db.executescript('''
@@ -39,6 +46,11 @@ def setup(db):
     ''')
     for product in base_catalog():
         db.execute('INSERT OR IGNORE INTO shop_products(code,data) VALUES(?,?)',(product['code'],json.dumps(product,ensure_ascii=False)))
+    if not db.execute("SELECT 1 FROM local_migrations WHERE id='26-kit-up-and-phoenix'").fetchone():
+        for p in base_catalog():
+            if p['code'] in ('BI133','BI900','BI901','BI902','BI903','BI904','BI905','BI906','FO110','FO130'):
+                db.execute('UPDATE shop_products SET data=?,enabled=1,archived=0,version=version+1 WHERE code=?',(json.dumps(p,ensure_ascii=False),p['code']))
+        db.execute("INSERT INTO local_migrations VALUES('26-kit-up-and-phoenix')")
     if not db.execute("SELECT 1 FROM local_migrations WHERE id='21-public-premium-effects'").fetchone():
         # Preserve published offers, prices, custom names/descriptions and stock.
         # Only migrate the old generated rule metadata and default descriptions.
@@ -116,11 +128,28 @@ def transact(user,action,data):
                 result={'message':f"{count} × {item['name']} comprado. Use pela bolsa ou cinto." if item['kind']=='item' else f"{item['name']} comprado. Equipe pela bolsa." if item.get('permanent') else f"{count} × {item['name']} ({item['hours']}h) comprado. Use no inventário para ativar."}
                 reason='Purchase '+item['code']
             elif action=='consume':
-                if item['kind']!='item' or item['definition'].get('slot')!='POTION':raise ValueError('Este produto não é um consumível.')
+                if item['kind']!='item' or item['definition'].get('slot') not in ('POTION','FORCEORB'):raise ValueError('Este produto não é um consumível.')
                 if not db.execute('UPDATE premium_stock SET quantity=quantity-1 WHERE username=? AND code=? AND quantity>0',(target,item['code'])).rowcount:raise ValueError('Você não possui esse item.')
                 amount=0;reason='Consume '+item['code'];result={'message':item['name']+' utilizado.'}
             elif action=='activate':
                 if item.get('permanent') or item['kind']=='item':raise ValueError('Trajes são equipamentos permanentes. Equipe na bolsa.')
+                if item['kind']=='bundle':
+                    job=data.get('job');generation=data.get('generation')
+                    if type(job) is not int or not 1<=job<=11:raise ValueError('Escolha a classe que receberá as Forças Mirage.')
+                    row=db.execute('SELECT generation FROM character_versions WHERE username=? AND job=? AND deleted=0',(target,job)).fetchone()
+                    if not row or row['generation']!=generation:raise ValueError('Atualize a página e selecione o personagem novamente.')
+                    parts={p['code']:p for p in catalog(db,True)}
+                    for code in item['bundle']['components']:
+                        if code not in parts:raise ValueError('Componente do kit indisponível. Nenhum item foi consumido.')
+                        activate_effect(db,target,parts[code])
+                    if not db.execute('UPDATE premium_stock SET quantity=quantity-1 WHERE username=? AND code=? AND quantity>0',(target,item['code'])).rowcount:raise ValueError('Você não possui esse kit.')
+                    force=item['bundle']['magicForce'] if job in (7,8,10) else item['bundle']['physicalForce']
+                    quantity=item['bundle']['forceQuantity']
+                    db.execute('INSERT INTO premium_stock VALUES(?,?,?) ON CONFLICT(username,code) DO UPDATE SET quantity=quantity+excluded.quantity',(target,force,quantity))
+                    amount=0;reason='Activate '+item['code'];result={'message':'Kit Up ativado: sete efeitos por 7 dias e 10 Forças Mirage entregues. O tempo continua offline.'}
+                    db.execute('INSERT INTO coin_ledger(actor,target,delta,reason,created) VALUES(?,?,?,?,?)',(user['username'],target,amount,reason,time.time()))
+                    db.execute('INSERT INTO store_requests VALUES(?,?,?,?)',(user['username'],request_id,payload,json.dumps(result,ensure_ascii=False)))
+                    return {**result,'wallet':snapshot(db,target)}
                 # Vampiric variants share one group, so they can never stack.
                 group='vampiric' if item['kind']=='vampiricEx' else item['kind']
                 old_active=db.execute('SELECT expires,value FROM premium_active WHERE username=? AND kind=?',(target,group)).fetchone()

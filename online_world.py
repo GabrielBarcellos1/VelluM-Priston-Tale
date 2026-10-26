@@ -30,6 +30,7 @@ def heartbeat(user,data):
     body,face=MODELS[job]
     packet={'name':name,'job':job,'level':max(1,min(150,int(stats.get('level',1)))),'body':f'char/tmabcd/{body}.ini','face':f'char/tmabcd/{face}.inf',
             **pos,'angle':angle,'moving':data.get('moving') is True,'running':data.get('running') is True,'motion':data.get('motion') if data.get('motion') in ('stand','run','walk','attack','skill','damage','dead') else 'stand','dead':data.get('dead') is True,'seq':int(data.get('seq',0)) if isinstance(data.get('seq',0),int) and 0<=data.get('seq',0)<=1e9 else 0,'hp':1,'hpMax':1,'gm':staff}
+    packet['rank']=max(0,min(3,int(stats.get('classRank',0))))
     for slot in ('weapon','shield','armor'):
         item=equip.get(slot) or {};code=item.get('code')
         if isinstance(code,str) and re.fullmatch(r'[A-Z]{2}\d{3}',code):
@@ -39,6 +40,7 @@ def heartbeat(user,data):
     if saved.get('inv',{}).get('costumeOn') or saved.get('inv',{}).get('costumeAlways'):
         if re.fullmatch(r'CA\d{3}',costume.get('code','')):packet['costume']=costume['code']
     with accounts.connection() as db:
+        packet['phoenix']=bool(db.execute("SELECT 1 FROM premium_active WHERE username=? AND kind='phoenix' AND expires>?",(user['username'],time.time())).fetchone()) if db.execute("SELECT 1 FROM sqlite_master WHERE name='premium_active'").fetchone() else False
         if db.execute("SELECT 1 FROM sqlite_master WHERE type='table' AND name='skin_equipped'").fetchone():
             for row in db.execute('SELECT o.data FROM skin_equipped e JOIN skin_offers o ON o.id=e.id JOIN skin_owned n ON n.username=e.username AND n.id=e.id WHERE e.username=? AND e.job=?',(user['username'],job)):
                 skin=json.loads(row['data']);base=equip.get({'arma':'weapon','escudo':'shield','traje':'armor'}.get(skin['cat'],''))

@@ -26,7 +26,9 @@ import { brandInterface } from "/brand-ui.mjs";
 import { stepMonster, incomingHit, withAttackProfile } from "/monster-ai.mjs";
 import { watchRelease } from "/release-client.mjs";
 import { canonicalCommand, openCommandHelp } from "/command-help.mjs";
-import { objectiveValue, objectiveIncrement } from "/quest-progress.mjs";
+import { promotionRank, createWorldQuests, mergeNpcRecords } from "/world-quests.mjs";
+import { createGameFeatures } from "/game-features.mjs";
+import { objectiveValue, objectiveIncrement, questCollectionCode } from "/quest-progress.mjs";
 import { experienceFloor, migrateExperience, killExperience, classDamageScale, balanceMonster, questExperienceReward, potionCanUse, registerPotion } from "/balance-rules.mjs";
 import { monsterControl } from "/skill-runtime.mjs";
 import { createSkillSystem } from "/skill-system.mjs";
@@ -132,7 +134,7 @@ async function showShop() {
   await refreshWallet();
   game.events.emit("npcOpen", { npcId: 0, name: "Item Shop", windowKind: "itemshop", data: {} });
 }
-const [fieldData, wikiData, itemData, questData, spawnData, dropRules, skillData] =
+const [fieldData, wikiData, itemData, questData, spawnData, dropRules, skillData,npcStageData] =
   await Promise.all([
     get("/api/map-fields"),
     get("/api/wiki"),
@@ -141,6 +143,7 @@ const [fieldData, wikiData, itemData, questData, spawnData, dropRules, skillData
     get("/api/map-spawns"),
     get("/api/local/drops"),
     get("/api/local/skills"),
+    get("/api/map-npcs"),
   ]);
 const wiki = { ...wikiData.wiki, monsters: wikiData.wiki.monsters.map(withAttackProfile) };
 const definitions = new Map(itemData.map((item) => [item.code, item]));
@@ -281,8 +284,9 @@ const stats = {
   shootingRange: definitions.get(starterWeapon)?.range ?? 0,
 };
 migrateExperience(stats, balanceRules);
+stats.classRank=promotionRank(stored?.completed,characterClass.job);
 const fieldMinimum=balanceRules.maps?.find(m=>m.id===field.id)?.minimum??1;
-if(!isAdmin&&stats.level<fieldMinimum){location.replace(`?classe=${characterClass.job}&mapa=${characterClass.tribe==='morion'?21:3}`);throw Error(`Este mapa requer nível ${fieldMinimum}.`);}
+if(!isAdmin&&stats.level<fieldMinimum&&!((field.id===30&&stored?.questMeta?.trial?.expires>serverNow()/1000)||(field.id===32&&stored?.questMeta?.duel?.expires>serverNow()/1000))){location.replace(`?classe=${characterClass.job}&mapa=${characterClass.tribe==='morion'?21:3}`);throw Error(`Este mapa requer nível ${fieldMinimum}.`);}
 const inv = {
   costumeOn:
     typeof stored?.inv?.costumeOn === "boolean"
@@ -299,7 +303,7 @@ const inv = {
   belt: [instance("PL101", 20), instance("PM101", 20), instance("PS101", 20)],
 };
 function restoreItem(item, options = {}) {
-  if (!item || !definitions.has(item.code)) return null;
+  if (!item || !definitions.has(item.code) || (item.expiresAt&&item.expiresAt<=serverNow()/1000)) return null;
   const result = instance(item.code, number(item.count, 1, 1, 9999), item.premiumManaged === true);
   if (item.endgame === true && isAdmin) {
     const upgraded = endgameItem(item.code, number(item.uid, result.uid, 1));
@@ -330,7 +334,10 @@ function restoreItem(item, options = {}) {
   if (item.mixed && B.mixById(item.mixRecipeId)) B.applyMix(result, B.mixById(item.mixRecipeId));
   result.uid = number(item.uid, result.uid, 1);
   nextUid = Math.max(nextUid, result.uid);
-  return restoreItemRolls(result, item, options);
+  restoreItemRolls(result,item,options);
+  if(item.questWeapon){result.questWeapon=structuredClone(item.questWeapon);result.req={level:40};result.noGold=true;result.bound=true;result.name=item.name;}
+  if(item.expiresAt){result.expiresAt=item.expiresAt;result.noGold=true;result.bound=true;}
+  return result;
 }
 if (stored?.inv && typeof stored.inv.equip === "object" && Array.isArray(stored.inv.bag)) {
   inv.equip = Object.fromEntries(
@@ -521,6 +528,7 @@ const hero = {
   modelName2: characterClass.faces[0],
   jobCode: characterClass.job,
   level: stats.level,
+  rank: stats.classRank,
   brood: characterClass.tribe === "morion" ? 1 : 0,
   startField: field.id,
   posX: spawn[0],
@@ -538,8 +546,7 @@ const enter = {
   name: field.name,
   sky: "day",
 };
-const npcs = wiki.npcs
-  .filter((n) => n.map === field.id)
+const npcs = mergeNpcRecords(field,wiki.npcs,npcStageData.stages[field.stage])
   .map((n) => ({ ...n, y: null, angle: worldFacingAngle(n, enter) }));
 conn.world = Promise.resolve({ enter, npcs });
 let game = null;
@@ -553,6 +560,8 @@ const objectiveProgress =
     ? stored.objectiveProgress
     : {};
 
+const questMeta=stored?.questMeta&&typeof stored.questMeta==='object'?stored.questMeta:{};
+let worldQuests,gameFeatures;
 // Administration belongs to this independent local session only.
 const adminState = {
   god: false,
@@ -1045,7 +1054,7 @@ function publishBuffs() {
             !(p.kind === "vampiric" && simulated.has("vampiricEx")),
         )
         .map((p) => ({
-          code: "premium:" + p.buffIcon,
+          code: "premium:" + (B.premiumIcons[p.kind]?.[0]??p.buffIcon),
           name: p.name,
           secondsLeft: Math.ceil((p.expiresAt * 1000 - serverNow()) / 1000),
           total: p.seconds,
@@ -1058,6 +1067,7 @@ function publishBuffs() {
 const skills = createSkillSystem({
   catalog: skillData,
   job: characterClass.job,
+  rank: () => isAdmin&&endgameEnabled?3:stats.classRank,
   name: hero.name,
   stats,
   saved: stored?.skills,
@@ -1118,6 +1128,16 @@ if (stored?.warehouse) {
     .map((p) => ({ ...p, item: restoreItem(p.item) }))
     .filter((p) => p.item);
 }
+worldQuests=createWorldQuests({name:hero.name,job:characterClass.job,tribe:characterClass.tribe,stats,
+ completed,accepted,progress:objectiveProgress,meta:questMeta,definitions:questData.quests,catalog:skillData,policy:questData.classQuestPolicy,
+ learned:()=>skills.exportState(),equipment:()=>inv.equip,now:()=>serverNow()/1000,notice,ready:q=>gameFeatures?.ready(q),changed:()=>skills.publish()});
+gameFeatures=createGameFeatures({name:hero.name,job:characterClass.job,tribe:characterClass.tribe,stats,inv,warehouse,hero,npcs,wiki,field,monsters,balance:balanceRules,B,
+ definitions,completed,accepted,meta:questMeta,world:worldQuests,game:()=>game,now:serverNow,instance,addBag,restoreItem,notice,deliver,recalculate,
+ save,flush:()=>stateWrite,savedAt:()=>lastSavedAt,setSavedAt:n=>{lastSavedAt=Math.max(lastSavedAt,n??0)},post:postLocal,requestId,applyWallet,refresh:refreshWallet,
+ busy:()=>economyBusy,setBusy:value=>{economyBusy=value},pendingLoot:()=>pendingLoot,lootFlush:()=>lootQueue,dropLoot,
+ views:questViews,publish:()=>deliver({t:'quests',list:questViews()}),complete:completeQuest,update:updateQuests,openSkills:showSkillBook,
+ navigate:async map=>{if(!save(true))throw Error('Não foi possível salvar.');await stateWrite;await globalThis.__localSession.online?.dispose();location.search=`?classe=${characterClass.job}&mapa=${map}`;},
+ reload:()=>location.reload()});
 function dropLoot(monster) {
   const source = { ...monster },
     key = requestId();
@@ -1131,6 +1151,7 @@ function dropLoot(monster) {
         monster: source.definition.id,
         map: field.id,
         adminSpawn: !!source.adminSpawn,
+        ...(source.trialToken?{trialToken:source.trialToken}:{}),
         requestId: key,
       };
       let result;
@@ -1236,6 +1257,7 @@ function recalculate() {
     120 +
     (stats.level - 1) * 12 +
     (stats.health - 24) * 2 +
+    ((stats.classRank ?? 0) >= 2 ? 15 : 0) +
     (endgameEnabled ? 1000 : 0) +
     bonus("hpAdd") +
     (specBonus.hpAdd ?? 0) +
@@ -1325,6 +1347,7 @@ function save(force = false) {
         completed: [...completed],
         accepted: [...accepted],
         objectiveProgress,
+        questMeta,
         warehouse,
         skills: skills.exportState(),
         skillCooldowns: skills.exportCooldowns(),
@@ -1348,8 +1371,9 @@ function save(force = false) {
 }
 function questViews() {
   return questData.quests
-    .filter((q) => questEligible(q, stats, characterClass.tribe, completed))
-    .map((q) => {
+    .filter((q) => q.id.startsWith('rank.')?worldQuests.eligible(q):questEligible(q, stats, characterClass.tribe, completed))
+    .map((raw) => {
+      const q=worldQuests.resolve(raw);
       const objectives = q.steps
         .filter((o) => !o.race || o.race === characterClass.tribe)
         .map((o) => {
@@ -1358,7 +1382,7 @@ function questViews() {
           );
           return {
             ...o,
-            done: Math.min(o.need,objectiveValue(q,o,objectiveProgress[`${q.id}:${o.id}`],stats,skills.exportState(),skillData)),
+            done: Math.min(o.need,objectiveValue(q,o,objectiveProgress[`${q.id}:${o.id}`],stats,skills.exportState(),skillData,inv)),
             target: npc ? { ...o.target, x: npc.x, z: npc.z, npcId: npc.id } : o.target,
           };
         });
@@ -1376,21 +1400,24 @@ function questViews() {
           progress: q.offer ?? "",
           complete: "Objetivos concluídos.",
         },
-        giverNpc: q.giver?.[0],
-        turnInNpc: q.turnIn?.[0],
+        giverNpc: q.giver?.find(n=>!n.race||n.race===characterClass.tribe),
+        turnInNpc: q.turnIn?.find(n=>!n.race||n.race===characterClass.tribe),
       };
     });
 }
-function updateQuests(type, value) {
-  for (const q of questViews())
-    for (const objective of q.objectives) {
-      if (q.state === "available") continue;
-      const increment=objectiveMatches(q,objective,type,value,game?.currentFieldId()??field.id)?1:
-        objectiveIncrement(q,objective,type,value,skillData,skills.exportState());
-      if(!increment)continue;
-      objectiveProgress[`${q.id}:${objective.id}`] = Math.min(objective.need,(objectiveProgress[`${q.id}:${objective.id}`]??0)+increment);
-    }
-  deliver({ t: "quests", list: questViews() });
+function updateQuests(type,value){
+ const data={...(value&&typeof value==='object'?value:{}),field:field.id};
+ if(type==='talk')data.npcId=value;
+ for(const q of questViews()){
+  if(q.state==='available')continue;
+  if(q.id.startsWith('rank.')){worldQuests.event(q,q.objectives,type,data);continue;}
+  for(const objective of q.objectives){
+   const normal=type==='kill'&&typeof value==='object'?value.name:value;
+   const increment=objectiveMatches(q,objective,type,normal,field.id)?1:objectiveIncrement(q,objective,type,data,skillData,skills.exportState());
+   if(increment)objectiveProgress[q.id+':'+objective.id]=Math.min(objective.need,(objectiveProgress[q.id+':'+objective.id]??0)+increment);
+  }
+ }
+ const views=questViews();worldQuests.notify(views);deliver({t:'quests',list:views});
 }
 function gainExperience(gained) {
   stats.exp += gained;
@@ -1406,24 +1433,33 @@ function gainExperience(gained) {
   }
   skills.publish();
 }
-function completeQuest(id) {
+function completeQuest(id,npcId=null) {
   const quest = questViews().find((q) => q.id === id);
   if (!quest || quest.state !== "ready") return notice("Conclua os objetivos da missão primeiro.");
-  const backup = clone(inv.bag);
-  for (const reward of quest.rewards?.items ?? []) {
+  const previousRank=stats.classRank;
+  if(id.startsWith('rank.')&&(!gameFeatures.npcTeacher(npcId)||!worldQuests.allSkillsThrough(worldQuests.rank()+1)))return notice('Entregue ao Mestre correto, com todas as habilidades anteriores aprendidas.'),false;
+  const backup = clone(inv);
+  for(const o of quest.objectives){const code=questCollectionCode(o);if(code){let remaining=o.need;for(const bag of [inv.bag,inv.bagB])for(const p of bag)if(p.item.code===code&&!p.item.premiumManaged){const count=Math.min(remaining,p.item.count??1);p.item.count-=count;remaining-=count;}if(remaining){Object.assign(inv,backup);notice('Os itens da missão não estão mais disponíveis.');return false;}for(const key of ['bag','bagB'])inv[key]=inv[key].filter(p=>(p.item.count??1)>0);}}
+  if(id==='rank.2'){try{gameFeatures.loanWeapon();}catch(e){Object.assign(inv,backup);notice(e.message);return false;}}
+  for (const reward of (quest.rewards?.items ?? []).filter(r=>!r.jobs?.length||r.jobs.includes(characterClass.job))) {
     const item = instance(reward.code, reward.count ?? 1);
+    if(item&&id.startsWith('rank.2.2.')){item.expiresAt=serverNow()/1000+5*86400;item.noGold=true;item.bound=true;}
     if (item && !addBag(item)) {
-      inv.bag = backup;
-      return notice("Abra espaço na bolsa para receber a recompensa.");
+      Object.assign(inv,backup);
+      notice("Abra espaço na bolsa para receber a recompensa.");return false;
     }
   }
   completed.add(id);
+  if(id.startsWith('rank.'))worldQuests.done(quest);
+  if(id.startsWith('rank.2.2.'))for(const item of [...Object.values(inv.equip),...Object.values(inv.equipB),...inv.bag.map(p=>p.item),...inv.bagB.map(p=>p.item)])if(item?.questWeapon)item.expiresAt=serverNow()/1000+5*86400;
   stats.gold += quest.rewards?.gold ?? 0;
   gainExperience(questExperienceReward(quest.rewards, stats.level,balanceRules));
   deliver({ t: "questDone", id: quest.id, title: quest.title, rewards: quest.rewards ?? {} });
   deliver({ t: "quests", list: questViews() });
   recalculate();
   save();
+  if(stats.classRank>previousRank)gameFeatures.promoted();
+  return true;
 }
 function findSpace(item) {
   return firstSpace(inv.bag, item);
@@ -1521,8 +1557,9 @@ async function redistributeAtNpc(npcId, mode) {
 
 function npcTalk(id, interactive) {
   const npc = npcs.find((n) => n.id === id);
-  if (!npc || !game) return;
+  if (!npc || !game || game.dead) return;
   if (!interactive) return;
+  if(Math.hypot(game.pos.x-npc.x,-game.pos.z-npc.z)>500)return notice('Aproxime-se do NPC.');
   updateQuests("talk", id);
   if (npc.services?.includes("event") && /event girl/i.test(npc.name)) {
     showRedistribution(npc);
@@ -1544,7 +1581,7 @@ function npcTalk(id, interactive) {
     });
   } else if (npc.services?.includes("skill")) {
     skills.publish();
-    showSkillBook(id);
+    gameFeatures.openNpc(npc).catch(e=>notice(e.message));
   } else if (npc.services?.includes("itemshop")) {
     showShop().catch((e) => notice(e.message));
   } else if (npc.services?.includes("warehouse")) {
@@ -1564,6 +1601,8 @@ function npcTalk(id, interactive) {
       ["aging", "mix", "force", "mixreset"].includes(service),
     );
     game.events.emit("npcOpen", { npcId: id, name: npc.name, windowKind, data: { taxPct: 0 } });
+  } else if (npc.services?.some(s=>['charity','post','clan','levelRanking','manufacture','smelting','bellatra'].includes(s))) {
+    gameFeatures.openNpc(npc).catch(e=>notice(e.message));
   } else if (npc.services?.includes("quest")) {
     const q = questAtNpc(id, "ready") ?? questAtNpc(id, "available");
     if (q)
@@ -1579,9 +1618,7 @@ function npcTalk(id, interactive) {
       });
     else notice(`${npc.name}: não há missão disponível para este personagem.`);
   } else {
-    notice(
-      `${npc.name}: ${npc.services?.length ? "este serviço ainda está em reconstrução local." : "Bem-vindo!"}`,
-    );
+    gameFeatures.openNpc(npc).catch(e=>notice(e.message));
   }
 }
 function damageMonster(id, power = 1, rangeOverride = null, options = {}) {
@@ -1664,11 +1701,12 @@ function damageMonster(id, power = 1, rangeOverride = null, options = {}) {
     ts: performance.now() / 1000,
   });
   if (monster.hp === 0) {
+    if(gameFeatures.defeated(monster))return dealt;
     kills++;
     const gained = killExperience(monster.definition,stats.level,balanceRules,premiumValue("expUp"));
     gainExperience(gained);
     dropLoot(monster);
-    updateQuests("kill", monster.name);
+    updateQuests('kill',{id:monster.definition.id,name:monster.name,field:field.id});
     for(const [code,at]of Object.entries(monster.skillMarks??{}))if(performance.now()-at<=10000)updateQuests("skillKill",{code});
     recalculate();
     save();
@@ -1776,6 +1814,7 @@ async function handle(message) {
         deliver({ t: "error", text: error.message });
       }
       break;
+    case 'rankUp': {const npc=npcs.find(n=>n.id===message.npcId);if(npc)gameFeatures.openNpc(npc).catch(e=>notice(e.message));break;}
     case "skillGuide":
       deliver({ t: "skillGuide", job: characterClass.job, skills: skills.snapshot().skills });
       break;
@@ -1947,6 +1986,7 @@ async function handle(message) {
           position: { x: game.pos.x, z: -game.pos.z },
         });
         deliver(result);
+        if(result.ok)updateQuests(message.t,{});
         postLocal("/api/local/game/report", {
           message: result.text,
           operation: message.t,
@@ -1993,13 +2033,13 @@ async function handle(message) {
     }
     case "questAccept": {
       const q = questAtNpc(message.npcId, "available");
-      if (q) accepted.add(q.id);
+      if(q){if(q.id.startsWith('rank.'))worldQuests.accept(q);else accepted.add(q.id);}
       deliver({ t: "quests", list: questViews() });
       break;
     }
     case "questComplete": {
       const q = questAtNpc(message.npcId, "ready");
-      if (q) completeQuest(q.id);
+      if (q) completeQuest(q.id,message.npcId);
       break;
     }
     case "move":
@@ -2098,12 +2138,17 @@ async function handle(message) {
     }
     case "useItem": {
       const item = findItem(message.uid);
-      if (item?.slot === "FORCEORB" && !item.premiumManaged) {
+      if (item?.slot === "FORCEORB") {
         const force = B.forceInfo(item.code);
         if (!force || stats.level < force.level[0] || stats.level > force.level[1])
           return notice("Force Orb incompatível com seu nível.");
+        if (activeForce && activeForce.expiresAt > serverNow() / 1000)
+          return notice("Aguarde a Força atual terminar antes de usar outra.");
+        if(item.premiumManaged){
+          if(pendingPremiums.has(item.code))return;pendingPremiums.add(item.code);
+          try{const result=await postLocal('/api/local/premium/consume',{code:item.code,requestId:requestId()});applyWallet(result.wallet);}finally{pendingPremiums.delete(item.code);}
+        }else consume(item);
         activeForce = { code: item.code, expiresAt: serverNow() / 1000 + force.seconds };
-        consume(item);
         recalculate();
         publishBuffs();
         break;
@@ -2113,6 +2158,7 @@ async function handle(message) {
         pendingPremiums.add(item.code);
         try {
           const result = await postLocal("/api/local/premium/activate", {
+            job:characterClass.job,generation:characterGeneration,
             code: item.code,
             requestId: requestId(),
           });
@@ -2343,7 +2389,7 @@ async function handle(message) {
       if (economyBusy || pendingLoot)
         return notice("Aguarde a confirmação dos drops antes de renascer.");
       const destination =
-        message.where === "field" ? field.id : characterClass.tribe === "morion" ? 21 : 3;
+        message.where === 'field' && ![30,32].includes(field.id) ? field.id : characterClass.tribe === 'morion' ? 21 : 3;
       stats.hp = stats.hpMax;
       stats.mp = stats.mpMax;
       stats.sp = stats.spMax;
@@ -2359,12 +2405,22 @@ async function handle(message) {
     case "questList":
       deliver({ t: "quests", list: questViews() });
       break;
+    case "questTravelReq": {
+      const q=questViews().find(q=>q.id===message.id);
+      const o=q?.objectives.find(o=>o.done<o.need);
+      const map=o?.target?.field??o?.maps?.[0];
+      if(!q||q.state==='available'||!Number.isInteger(map))return notice('Escolha uma missão ativa com destino conhecido.');
+      if(q.id.startsWith('rank.')&&o.type==='rankDuel')return notice('Inicie o duelo no Mestre de Habilidades.');
+      if(map===field.id)return notice('O objetivo está neste mapa. Consulte o Guia de Missões.');
+      await gameFeatures.travel(map);return;
+    }
     case "questUiEvent":
       updateQuests("ui", message.name);
       break;
     case "questTake": {
       const quest = questViews().find((q) => q.id === message.id);
       if (quest) {
+        if(quest.id.startsWith('rank.'))return notice('Aceite o desafio no Mestre de Habilidades.');
         accepted.add(quest.id);
         deliver({ t: "quests", list: questViews() });
       }
@@ -2597,6 +2653,7 @@ try {
       ts: performance.now() / 1000,
     });
   }
+  gameFeatures.start();
   let monsterTickAt = performance.now();
   setInterval(() => {
     const now = performance.now();
