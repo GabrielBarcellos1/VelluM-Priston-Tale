@@ -1,3 +1,4 @@
+import { walkingStages, createMapTravel } from "/map-travel.mjs";
 import {
   repairPrice,
   salePrice,
@@ -134,7 +135,7 @@ async function showShop() {
   await refreshWallet();
   game.events.emit("npcOpen", { npcId: 0, name: "Item Shop", windowKind: "itemshop", data: {} });
 }
-const [fieldData, wikiData, itemData, questData, spawnData, dropRules, skillData,npcStageData] =
+const [fieldData, wikiData, itemData, questData, spawnData, dropRules, skillData,npcStageData,mapLinks] =
   await Promise.all([
     get("/api/map-fields"),
     get("/api/wiki"),
@@ -144,6 +145,7 @@ const [fieldData, wikiData, itemData, questData, spawnData, dropRules, skillData
     get("/api/local/drops"),
     get("/api/local/skills"),
     get("/api/map-npcs"),
+    get("/api/map-links"),
   ]);
 const wiki = { ...wikiData.wiki, monsters: wikiData.wiki.monsters.map(withAttackProfile) };
 const definitions = new Map(itemData.map((item) => [item.code, item]));
@@ -549,7 +551,7 @@ const enter = {
 const npcs = mergeNpcRecords(field,wiki.npcs,npcStageData.stages[field.stage])
   .map((n) => ({ ...n, y: null, angle: worldFacingAngle(n, enter) }));
 conn.world = Promise.resolve({ enter, npcs });
-let game = null;
+let game = null, mapTravel = null, pendingMapTravel = null;
 let pendingState = null,
   stateWrite = null;
 let kills = number(stored?.kills, 0);
@@ -1403,8 +1405,8 @@ function save(force = false) {
         name: stats.name,
         stats,
         inv,
-        field: game?.currentFieldId() ?? field.id,
-        position: game?.playerPosition() ?? enter,
+        field: pendingMapTravel?.field ?? game?.currentFieldId() ?? field.id,
+        position: pendingMapTravel?.position ?? game?.playerPosition() ?? enter,
         kills,
         completed: [...completed],
         accepted: [...accepted],
@@ -1684,6 +1686,7 @@ function npcTalk(id, interactive) {
   }
 }
 function damageMonster(id, power = 1, rangeOverride = null, options = {}) {
+  if (mapTravel?.busy) return;
   const monster = monsters.get(id);
   if (!monster || monster.owner || monster.hp <= 0 || !game || game.dead || stats.hp <= 0) return;
   const control=monsterControl(monster);
@@ -2107,6 +2110,9 @@ async function handle(message) {
       if (q) completeQuest(q.id,message.npcId);
       break;
     }
+    case "field":
+      await mapTravel.walk(message.id);
+      return;
     case "move":
       return;
     case "attack":
@@ -2517,15 +2523,16 @@ async function handle(message) {
   save();
 }
 conn.sendGame = (message) => {
+  if (mapTravel?.busy) return;
   if(!message||typeof message.t!=='string')return notice('Ação inválida.');
   if (economyUncertain)
     return notice("Recarregue para recuperar a operação confirmada pelo servidor.");
-  if (economyBusy && !["move", "shot"].includes(message.t))
+  if (economyBusy && !["move", "shot", "field"].includes(message.t))
     return notice("Aguarde a operação do inventário terminar.");
   if (message.t !== "chat" && conn.onGameSend?.(message) === false) return;
   queueMicrotask(async () => {
     if(economyUncertain)return notice('Recarregue para recuperar a operação confirmada pelo servidor.');
-    if(economyBusy&&!['move','shot'].includes(message.t))return notice('Aguarde a operação do inventário terminar.');
+    if(economyBusy&&!['move','shot','field'].includes(message.t))return notice('Aguarde a operação do inventário terminar.');
     try {
       await handle(message);
     } catch (error) {
@@ -2540,10 +2547,36 @@ conn.send = (packet) => {
     queueMicrotask(() => npcTalk(view.getUint32(12, true), view.getInt32(8, true) === 1));
 };
 conn.close = () => save();
+const canEnterWalking = target => isAdmin ||
+  stats.level >= (balanceRules.maps?.find(m => m.id === target.id)?.minimum ?? 1);
+mapTravel = createMapTravel({
+  fields: fieldData.fields, current: field.id, portals: mapLinks.portals,
+  canEnter: canEnterWalking, alive: () => stats.hp > 0 && !game?.dead,
+  position: () => game?.playerPosition() ?? enter,
+  ready: () => !economyBusy && !pendingLoot && !economyUncertain,
+  prepare: landing => {
+    pendingMapTravel = landing;
+    game.keys.clear();
+    game.target = game.attackTarget = game.talkTo = null;
+    game.attackHeld = false;
+    notice('Entrando em ' + fieldData.fields.find(f => f.id === landing.field).name + '…');
+  },
+  save: () => save(true), flush: () => stateWrite,
+  dispose: async () => { await globalThis.__localSession.online?.dispose(); },
+  navigate: id => { location.search = '?classe=' + characterClass.job + '&mapa=' + id; },
+  rollback: () => {
+    pendingMapTravel = null;
+    if (game) {
+      game.currentStage = field.stage;
+      game.stagePicker.reset();
+      teleportHere(enter.x, enter.z);
+    }
+  }, notice,
+});
 syncPremiumInventory();
 recalculate();
 conn.gameBacklog.push(
-  { t: "fields", current: field.id, stages: [{ ...field, bgm: enter.bgm }], gates: [] },
+  { t: "fields", current: field.id, stages: walkingStages(fieldData.fields, field.id, canEnterWalking).map(f => ({ ...f, bgm: f.village ? "town2" : "forest" })), gates: [] },
   skills.snapshot(),
   { t: "pets", list: [] },
   { t: "quests", list: questViews() },
@@ -2640,6 +2673,15 @@ try {
     onSupport: event => skills.receiveSupport?.(event),
   });
   await globalThis.__localSession.online.ready;
+  // The converted terrain uses different elevations than the classic source.
+  // Resolve trigger heights from this map's actual collision floor.
+  for (const portal of mapLinks.portals.filter(p => p.fromField === field.id)) {
+    const floor = game.ground.spawnPoint(portal.x, -portal.z);
+    portal.disabled = !floor;
+    if (floor) portal.floorY = floor.y;
+  }
+  globalThis.__localSession.mapTravel = mapTravel;
+  setInterval(() => mapTravel.tick(), 150);
   skills.restoreCompanions?.();
   addEventListener(
     "keydown",
@@ -2733,7 +2775,7 @@ try {
     const now = performance.now();
     const dt = (now - monsterTickAt) / 1000;
     monsterTickAt = now;
-    if (document.hidden || !game || game.dead) return;
+    if (document.hidden || !game || game.dead || mapTravel?.busy) return;
     faceNearbyNpcs(
       game.npcs.filter((view) => npcs.some((entry) => entry.id === view.id)),
       game.pos,
@@ -2804,7 +2846,7 @@ try {
     if (update.length) deliver({ t: "monsters", update, ts: now / 1000 });
   }, 200);
   setInterval(() => {
-    if (document.hidden || !game || game.dead) return;
+    if (document.hidden || !game || game.dead || mapTravel?.busy) return;
     skills.tickCooldowns();
     skills.expire();
     updateQuests("skillSecond",{codes:skills.buffs().map(b=>b.code.replace(/^skill:/,""))});

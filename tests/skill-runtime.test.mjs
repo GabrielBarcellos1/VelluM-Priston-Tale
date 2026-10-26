@@ -109,7 +109,7 @@ test('the actual session damage handler changes monster HP and returns damage fo
   const monster={id:1,x:10,z:0,hp:10000,hpMax:10000,seq:0,definition:{level:1,defense:0,absorb:0,attack:[1,1]}};
   const packets=[],stats={hp:1000,damageMin:100,damageMax:100,critical:0,attackRating:1000,level:100};
   const math=Object.create(Math);math.random=()=>.5;
-  const context={monsters:new Map([[1,monster]]),game:{pos:{x:0,z:0}},stats,skillData:catalog,Math:math,
+  const context={mapTravel:null,monsters:new Map([[1,monster]]),game:{pos:{x:0,z:0}},stats,skillData:catalog,Math:math,
     physicalHit,monsterControl,classDamageScale,characterClass:{job:1},balanceRules:{classes:{1:{damageCurve:[{level:1,value:2},{level:150,value:2}]}}},performance:{now:()=>0},skills:{reveal(){},exportState(){return{}}},updateQuests(){},premiumRecovery:()=>({hp:0,mp:0}),premiumValue:()=>0,deliver:p=>packets.push(p)};
   const hit=vm.runInNewContext(`(${fn})`,context);
   assert.equal(hit(1,1.5,500,{magic:true}),300);assert.equal(monster.hp,9700);
