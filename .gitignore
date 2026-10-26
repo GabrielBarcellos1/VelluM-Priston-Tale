@@ -1,0 +1,15 @@
+.local-data/
+.original-cache/
+.tools/
+__pycache__/
+*.py[cod]
+.updates/
+*.log
+*.sqlite3
+*.sqlite3-*
+.env
+.env.*
+!.env.example
+data/accounts.seed.json
+data/characters.seed.json
+LINK_DO_JOGO.txt
