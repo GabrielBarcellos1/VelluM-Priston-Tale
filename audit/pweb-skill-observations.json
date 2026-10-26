@@ -1,0 +1,18 @@
+{
+  "source": "https://pweb.world/",
+  "observedDate": "2026-10-25",
+  "method": "Values visibly displayed in native skill tooltips; no direct private API requests",
+  "context": "Fighter character level 27; current cooldown is contextual and must not be generalized to every mastery/equipment state",
+  "completeBalanceExport": false,
+  "observations": {
+    "SKILL_MELEE_MASTERY": {"1":{"weaponDamagePercent":6},"2":{"weaponDamagePercent":10}},
+    "SKILL_FIRE_ATTRIBUTE": {"1":{"fireResistance":9},"2":{"fireResistance":17}},
+    "SKILL_RAVING": {"1":{"damagePercent":3,"hitCount":2,"hpCostPercent":1,"mp":14,"stamina":35,"observedCooldownSeconds":17.15},"2":{"damagePercent":6,"hitCount":2,"hpCostPercent":1.3,"mp":16,"stamina":37}},
+    "SKILL_IMPACT": {"1":{"damagePercent":10,"attackRating":6,"mp":18,"stamina":37,"observedCooldownSeconds":17.15},"2":{"damagePercent":12,"attackRating":9,"mp":20,"stamina":39}},
+    "SKILL_TRIPLE_IMPACT": {"1":{"damagePercent":7,"hitCount":1,"mp":22,"stamina":39,"observedCooldownSeconds":17.15},"2":{"damagePercent":10,"hitCount":1,"mp":24,"stamina":41}},
+    "SKILL_BRUTAL_SWING": {"1":{"damagePercent":5,"criticalAdditionalPercent":1,"mp":24,"stamina":41,"observedCooldownSeconds":17.15},"2":{"damagePercent":8,"criticalAdditionalPercent":3,"mp":26,"stamina":43}},
+    "SKILL_ROAR": {"1":{"knockbackRange":50,"durationSeconds":1,"mp":26,"stamina":39,"observedCooldownSeconds":17.15},"2":{"knockbackRange":60,"durationSeconds":2,"mp":28,"stamina":41}},
+    "SKILL_RAGE_OF_ZECRAM": {"1":{"damagePercent":3,"fireAttackPercent":3,"mp":29,"stamina":45,"pvpDirectDamage":false}}
+  }
+}
+

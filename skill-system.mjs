@@ -6,6 +6,7 @@ import {
   skillAreaProfile,
   selectSplashTargets,
   skillHealingRange,
+  skillAttackRows,
 } from "./skill-damage.mjs";
 export function validateSkillCatalog(catalog) {
   const ids = new Set(),
@@ -155,17 +156,7 @@ export function createSkillSystem(ctx) {
       slot: passive ? undefined : (rule?.slot ?? "both"),
       desc:
         s.descriptionPt ?? `${s.name} · ${passive ? "habilidade passiva" : "habilidade ativa"}.`,
-      rows: [
-        {
-          label: passive ? "Bônus por nível" : "Potência",
-          cur: passive
-            ? `${level * 1.5}%`
-            : `${Math.round((rule?.damagePercent ? 1 + at(rule.damagePercent, level) / 100 : 1 + s.tier * 0.25 + level * 0.12) * 100)}%`,
-          next: passive
-            ? `${(level + 1) * 1.5}%`
-            : `${Math.round((rule?.damagePercent ? 1 + at(rule.damagePercent, level + 1) / 100 : 1 + s.tier * 0.25 + (level + 1) * 0.12) * 100)}%`,
-        },
-      ],
+      rows: [],
       mastery: level ? 10000 : 0,
     };
     if (!passive) {
@@ -182,32 +173,20 @@ export function createSkillSystem(ctx) {
     }
     if (passive || ["buff", "party"].includes(s.kind)) {
       const rows = effectRows(effectFor(s, level, ctx.catalog.rules));
-      if (rows.length) result.rows = rows;
+      const nextRows = effectRows(effectFor(s, Math.min(s.maxLevel, level + 1), ctx.catalog.rules));
+      const nextByLabel = new Map(nextRows.map((row) => [row.label, row.cur]));
+      const currentByLabel = new Map(rows.map((row) => [row.label, row.cur]));
+      result.rows = [...new Set([...currentByLabel.keys(), ...nextByLabel.keys()])].map((label) => ({
+        label,
+        cur: currentByLabel.get(label) ?? "0",
+        next: nextByLabel.get(label) ?? "0",
+      }));
     }
     if (!passive && !self && s.kind !== "debuff") {
       const attack = attackFor(s, level),
         next = attackFor(s, Math.min(s.maxLevel, level + 1));
       result.damageSource = attack.source;
-      if (attack.damageRange)
-        result.rows = [
-          {
-            label: "Dano da habilidade",
-            cur: attack.damageRange.map((n) => Math.floor(n * attack.power)).join("–"),
-            next: next.damageRange.map((n) => Math.floor(n * next.power)).join("–"),
-          },
-        ];
-      if (attack.attackRatingPercent)
-        result.rows.push({
-          label: "Taxa de ataque",
-          cur: `+${attack.attackRatingPercent}%`,
-          next: `+${next.attackRatingPercent}%`,
-        });
-      if (attack.criticalBonus)
-        result.rows.push({
-          label: "Crítico adicional",
-          cur: `+${attack.criticalBonus}%`,
-          next: `+${next.criticalBonus}%`,
-        });
+      result.rows = skillAttackRows(attack, next);
     }
     if (!passive) result.rows.push({ label: "Recarga", cur: `${result.cooldown.toFixed(2)} s` });
     return result;
@@ -469,3 +448,4 @@ export function createSkillSystem(ctx) {
     points,
   };
 }
+

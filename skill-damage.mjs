@@ -33,6 +33,7 @@ const critical = {
   SKILL_DOUBLE_CRASH: "D_Crash_Critical",
 };
 const repeats = {
+  SKILL_RAVING: "Ravind_Speed",
   SKILL_TRIPLE_IMPACT: "T_Impact_Hit",
   SKILL_AVALANCHE: "Avalanche_ArrowNum",
   SKILL_SHADOW_MASTER: "Shadow_Master_ShadowNum",
@@ -100,13 +101,44 @@ export function skillAttackProfile(skill, rule, level, stats, equipment = {}, sp
   }
   if (skill.code === "SKILL_BRUTAL_SWING") profile.criticalPercent = value("B_Swing_Critical") ?? 0;
   if (skill.code === "SKILL_AVALANCHE") profile.criticalScale = 0.5;
-  if (repeats[skill.code]) profile.hitCount = value(repeats[skill.code]) ?? 1;
+  const hitCount = at(rule?.hitCount, level) ?? value(repeats[skill.code]);
+  if (Number.isFinite(hitCount)) profile.hitCount = Math.max(1, Math.min(10, Math.trunc(hitCount)));
   if (skill.code === "SKILL_SPLIT_JAVELIN") {
     profile.power *= value("Split_Javelin_AttackNum") ?? 1;
     profile.noCritical = true;
     profile.hitCount = 1;
   }
   return profile;
+}
+
+// The tooltip and combat must describe the same evaluated per-level profile.
+// Raw percentage tables alone omit spell ranges, fixed additions and repeats.
+export function skillAttackRows(current, next) {
+  const rows = [];
+  const pair = (label, field, format, show = true) => {
+    if (!show) return;
+    rows.push({ label, cur: format(current[field] ?? 0), next: format(next[field] ?? 0) });
+  };
+  if (current.damageRange && next.damageRange) {
+    rows.push({
+      label: "Dano da habilidade",
+      cur: current.damageRange.map((n) => Math.floor(n * current.power)).join("–"),
+      next: next.damageRange.map((n) => Math.floor(n * next.power)).join("–"),
+    });
+  } else if (current.power !== 1 || next.power !== 1) {
+    const bonus = (value) => `${Math.round((value - 1) * 10000) / 100}%`;
+    pair("Bônus no dano", "power", bonus);
+  }
+  pair("Ataque adicional", "flatDamage", (n) => `+${n}`,
+       current.flatDamage !== undefined || next.flatDamage !== undefined);
+  pair("No. de acertos", "hitCount", String, current.hitCount > 1 || next.hitCount > 1);
+  pair("Taxa de ataque", "attackRatingPercent", (n) => `+${n}%`,
+       !!(current.attackRatingPercent || next.attackRatingPercent));
+  pair("Crítico adicional", "criticalBonus", (n) => `+${n}%`,
+       !!(current.criticalBonus || next.criticalBonus));
+  pair("Bônus no crítico", "criticalPercent", (n) => `+${n}%`,
+       !!(current.criticalPercent || next.criticalPercent));
+  return rows;
 }
 // Native event frames place strikes visually, but do not prove the number of
 // damaging hits. Only counts recovered from skill tables enable multiple hits.
@@ -207,3 +239,4 @@ export function skillHealingRange(skill, rule, level, stats, equipment = {}) {
       Math.trunc((stats.spi ?? 0) / (i ? 6 : 8)),
   );
 }
+
