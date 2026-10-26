@@ -2216,6 +2216,7 @@ async function handle(message) {
         if(old.count+record.item.count>9999)return notice('Limite de 9999 poções por pilha.');
         old.count += record.item.count;
         bag.splice(at, 1);
+        updateQuests("belt",{});
         break;
       }
       bag.splice(at, 1);
