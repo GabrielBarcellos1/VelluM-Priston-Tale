@@ -117,3 +117,13 @@ test('the actual session damage handler changes monster HP and returns damage fo
   monster.owner='friend';assert.equal(hit(1,100,500,{magic:true}),undefined);assert.equal(monster.hp,9200);
   assert.ok(packets.some(p=>p.t==='damage'&&p.amount===300));
 });
+
+test('Sword Blast advertises an achievable range and hits a target near that range',()=>{
+ const skill=catalog.skills.find(s=>s.code==='SKILL_SWORD_BLAST'),f=fixture(skill);
+ const view=f.system.snapshot().skills.find(s=>s.id===skill.id);
+ assert.equal(view.range,120);f.monster.x=110;
+ const mp=f.stats.mp,sp=f.stats.sp;f.system.cast(skill.id,1);f.pending.forEach(fn=>fn());
+ assert.ok(f.calls.damage.some(call=>call[0]===1));assert.equal(mp-f.stats.mp,8);assert.equal(sp-f.stats.sp,22);
+ const distant=fixture(skill);distant.monster.x=400;const before=distant.stats.mp;
+ assert.throws(()=>distant.system.cast(skill.id,1),/Aproxime/);assert.equal(distant.stats.mp,before);
+});

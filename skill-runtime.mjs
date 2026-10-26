@@ -85,6 +85,7 @@ export function createRuntimeSkillSystem(ctx) {
       target:p.target,slot:passive?undefined:rule(s).slot??'both',mastery:n?10000:0,
       ruleSource:p.source,cooldownSource:p.source,desc:s.descriptionPt??s.name,rows:[],
       area:{radius:at(p.radius,n),targetLimit:at(p.targetLimit,n),shape:p.shape.type}};
+    if(p.shape.type === 'line') v.range = Math.min(v.range, at(p.shape.length,n) ?? v.range);
     if(!passive&&v.cooldown){try{v.cooldown=Math.max(v.cooldown,ctx.timing?.(v)?.duration??0);}catch{}}
     if(ready.get(s.id)>now())v.cooldown=totals.get(s.id);
     if(['buff','party','summon','passive'].includes(p.kind)) {
