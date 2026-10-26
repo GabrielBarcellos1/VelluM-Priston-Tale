@@ -1,3 +1,4 @@
+import { questTarget } from "/quest-targets.mjs";
 import { serviceDialog } from "/npc-panels.mjs";
 import { walkingStages, createMapTravel } from "/map-travel.mjs";
 import {
@@ -1451,7 +1452,7 @@ function questViews() {
           return {
             ...o,
             done: Math.min(o.need,objectiveValue(q,o,objectiveProgress[`${q.id}:${o.id}`],stats,skills.exportState(),skillData,inv)),
-            target: npc ? { ...o.target, x: npc.x, z: npc.z, npcId: npc.id } : o.target,
+            target: questTarget(o, fieldData.fields, spawnData.stages, wiki.npcs),
           };
         });
       return {
