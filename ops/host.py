@@ -51,6 +51,16 @@ def build(url='http://127.0.0.1:19065'):
         return json.load(response)
 
 
+def configured_public_url(fallback=None):
+    """Operator-controlled canonical address; the quick tunnel remains a fallback."""
+    try:
+        value=json.loads((STATE/'public-origin.json').read_text(encoding='utf-8'))['url']
+        if isinstance(value,str) and re.fullmatch(r'https://[a-zA-Z0-9.-]+(?:/[a-zA-Z0-9_-]+)*/?',value):return value.rstrip('/')
+    except (OSError,ValueError,TypeError,KeyError):
+        pass
+    return fallback
+
+
 def git(*args):
     result = subprocess.run([GIT, '-c', 'safe.directory=' + str(REPO), '-C', str(REPO), *args],
                             capture_output=True, env=ENV, creationflags=FLAGS, timeout=90)
@@ -146,7 +156,7 @@ class Host:
                 match = re.search(r'https://[a-z0-9-]+\.trycloudflare\.com', line)
                 if match and process is self.tunnel:
                     self.url = match.group(0)
-                    atomic(BASE / 'LINK_DO_JOGO.txt', (self.url + '\n').encode())
+                    atomic(BASE / 'LINK_DO_JOGO.txt', (configured_public_url(self.url) + '\n').encode())
                     log.info('Public URL: %s', self.url)
 
     def start_tunnel(self):
@@ -267,17 +277,19 @@ class Host:
                 except Exception as error:
                     log.error('Backup: %s', error)
             public_ok = False
-            if self.url and healthy:
+            external_url=configured_public_url(self.url)
+            if external_url and healthy:
                 try:
-                    public = build(self.url)
+                    public = build(external_url)
                     public_ok = public.get('installation') == info.get('installation')
                 except Exception:
                     pass
-            status_file('public-link.json', {'url': self.url, 'verified': public_ok,
+            if external_url:atomic(BASE / 'LINK_DO_JOGO.txt',(external_url+'\n').encode())
+            status_file('public-link.json', {'url': external_url, 'verified': public_ok,
                                             'status': 'online' if public_ok else 'verifying',
                                             'updatedAt': time.time()})
             status_file('hosting-status.json', {'gameHealthy': healthy, 'gamePid': self.game.pid,
-                        'tunnelPid': self.tunnel.pid, 'publicUrl': self.url, 'publicVerified': public_ok,
+                        'tunnelPid': self.tunnel.pid, 'publicUrl': external_url, 'backupUrl': self.url, 'publicVerified': public_ok,
                         'commit': self.deployed, 'updateError': self.failure, 'updatedAt': time.time()})
             time.sleep(10)
 

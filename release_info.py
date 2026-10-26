@@ -9,7 +9,7 @@ import time
 
 ROOT=Path(__file__).resolve().parent
 BRAND='FREEston Tale'
-VERSION=30
+VERSION=31
 _guard=threading.Lock()
 _cache=(None,None)
 
@@ -61,3 +61,4 @@ def read_link():
         if time.time()-data.get('updatedAt',0)>90:return {**data,'status':'offline','verified':False}
         return data
     except (OSError,ValueError,TypeError):return {'status':'offline','url':None,'verified':False}
+

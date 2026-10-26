@@ -29,7 +29,15 @@ Arquivos locais de contas/personagens nao sao publicados nem substituidos. O ban
 
 ## Endereco publico
 
-O jogo usa um Quick Tunnel separado do tunel do Guacamole. O endereco trycloudflare.com e temporario e pode mudar apos reinicio/falha do tunel. O servidor nao garante funcionamento com falta de energia, internet ou PC desligado. Para endereco fixo, configure um dominio e tunel permanente.
+Endereco oficial: https://acesso.gbtechnology.com.br/priston/ . O Nginx ja usado pelo Guacamole encaminha apenas /priston/ para host.docker.internal:19065; /guacamole/ conserva sua configuracao e suas conexoes. O tunel permanente do dominio permanece no servico Cloudflared existente. Nao e necessario criar outro dominio ou alterar DNS.
+
+O backend tambem funciona na raiz e no prefixo /priston. Login, cookies, APIs, modulos, imagens e redirecionamentos respeitam o prefixo; cookies do jogo usam Path=/priston/. A instalacao e o banco SQLite sao os mesmos.
+
+C:\VelluM\data\public-origin.json define {"url":"https://acesso.gbtechnology.com.br/priston"}. O supervisor verifica esse endereco e o apresenta em public-link.json, hosting-status.json e LINK_DO_JOGO.txt. O Quick Tunnel separado continua como alternativa temporaria, registrada em backupUrl; seu endereco pode mudar. O endereco oficial independe dele.
+
+O script ops/install-priston-route.ps1 faz backup do proxy e do supervisor, valida nginx -t, aplica reload gradual e verifica o jogo e o Guacamole. Depois instala o supervisor atualizado e reinicia somente VelluM-Hosting. Backups ficam em C:\VelluM\backups\priston-route-DATA-HORA. Alterar ops/host.py no repositorio exige copiar a versao validada para C:\VelluM\ops\host.py e reiniciar a tarefa; o supervisor nao substitui seu proprio processo automaticamente.
+
+O servidor depende do computador de hospedagem, Docker, internet e energia; nao depende do computador usado para acessar o Guacamole.
 
 ## Operacao no PowerShell como administrador
 

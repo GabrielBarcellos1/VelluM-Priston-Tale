@@ -35,6 +35,7 @@ import boss_roulette
 import server_economy
 import custom_skins
 import gm_tools
+import path_mount
 
 ROOT = Path(__file__).resolve().parent
 CACHE = Path(os.environ.get('PWEB_CACHE_DIR', str(ROOT / '.original-cache'))).resolve()
@@ -119,6 +120,12 @@ class Handler(SimpleHTTPRequestHandler):
     def __init__(self, *args, **kwargs):
         super().__init__(*args, directory=str(ROOT), **kwargs)
 
+    def mount_path(self):
+        self.mount,self.path=path_mount.strip_mount(self.path)
+
+    def send_header(self,name,value):
+        super().send_header(name,path_mount.header(name,value,getattr(self,'mount','')))
+
     def end_headers(self):
         # The original client cannot connect to production accounts or sockets.
         self.send_header('Content-Security-Policy', "default-src 'self'; script-src 'self' 'wasm-unsafe-eval'; connect-src 'self'; img-src 'self' data: blob:; media-src 'self' data: blob:; style-src 'self' 'unsafe-inline'; font-src 'self' data:; worker-src 'self' blob:; frame-src 'none'; object-src 'none'; base-uri 'self'; form-action 'self'")
@@ -126,6 +133,7 @@ class Handler(SimpleHTTPRequestHandler):
         super().end_headers()
 
     def reply(self, data, content_type, status=200, headers=None):
+        data=path_mount.rewrite(data,content_type,getattr(self,'mount',''))
         self.send_response(status)
         for name,value in (headers or {}).items():
             self.send_header(name,value)
@@ -151,6 +159,7 @@ class Handler(SimpleHTTPRequestHandler):
 
 
     def do_GET(self):
+        self.mount_path()
         path = unquote(urlsplit(self.path).path)
         if '..' in path.split('/') or '\x00' in path or '\\' in path:
             self.send_error(400)
@@ -288,19 +297,23 @@ class Handler(SimpleHTTPRequestHandler):
                 pass
 
     def do_POST(self):
+        self.mount_path()
         path=urlsplit(self.path).path
         if path.startswith('/api/telemetry/'):
             return self.json_reply({'ok':True})
         if not path.startswith('/api/local/'):
             return self.json_reply({'ok':False,'error':'Local-only session'},405)
         origin=self.headers.get('Origin')
-        if (origin and urlsplit(origin).netloc.lower()!=self.headers.get('Host','').lower()) or self.headers.get('Sec-Fetch-Site')=='cross-site':
-            return self.json_reply({'error':'Origem inválida.'},403)
         try:
             length=int(self.headers.get('Content-Length','0'))
             if length<0 or length>1100000 or not self.headers.get('Content-Type','').startswith('application/json'):
                 return self.json_reply({'error':'Requisição inválida.'},400)
-            data=json.loads(self.rfile.read(length)) if length else {}
+            body=self.rfile.read(length)
+            # Drain the bounded request before rejecting its origin, avoiding a TCP
+            # reset on Windows that can hide the intended 403 response.
+            if (origin and urlsplit(origin).netloc.lower()!=self.headers.get('Host','').lower()) or self.headers.get('Sec-Fetch-Site')=='cross-site':
+                return self.json_reply({'error':'Origem inválida.'},403)
+            data=json.loads(body) if length else {}
             if not isinstance(data,dict):
                 return self.json_reply({'error':'Requisição inválida.'},400)
             if path=='/api/local/login':
@@ -473,3 +486,4 @@ def main():
 
 if __name__ == '__main__':
     main()
+
