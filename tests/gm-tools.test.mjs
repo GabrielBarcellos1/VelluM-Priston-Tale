@@ -1,7 +1,7 @@
 import test from 'node:test';
 import assert from 'node:assert/strict';
 import {readFile} from 'node:fs/promises';
-import {gmProtection,protectGm,gmTrainingActive} from '../gm-tools.mjs';
+import {gmProtection,protectGm,applyGmAttack,gmTrainingActive} from '../gm-tools.mjs';
 import {experienceSpan,killExperience} from '../balance-rules.mjs';
 const read=async name=>JSON.parse(await readFile(new URL('../data/'+name+'.json',import.meta.url),'utf8'));
 const [profile,balance,wiki,fields]=await Promise.all(['gm-training','balance','wiki','map-fields'].map(read));
@@ -37,5 +37,13 @@ test('reference cycles target roughly one hour rather than 300 hours; normal pro
    total+=experienceSpan(row.level,balance)/averageXP*row.cycleSeconds;
   }
   assert.ok(total>3300&&total<3900,`${cls.name}: ${total}s`);
+ }
+});
+
+test('GM Sheltom adds 50 to both damage limits only when equipped by staff',()=>{
+ for(const [staff,equip,expected] of [[true,{sheltom:{code:'OS199'}},50],[false,{sheltom:{code:'OS199'}},0],[true,{},0],[true,{sheltom:{code:'OS110'}},0]]){
+  const s={damageMin:10,damageMax:20,attackStep:80};
+  applyGmAttack(s,gmProtection(staff,equip));
+  assert.deepEqual(s,{damageMin:10+expected,damageMax:20+expected,attackStep:80});
  }
 });

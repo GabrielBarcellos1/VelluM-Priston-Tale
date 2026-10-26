@@ -12,7 +12,7 @@ import {
 import { craftAtNpc, decorateCraftItem } from "/npc-crafting.mjs";
 import { mountOnlineSession } from "/online-session.mjs";
 import { worldFacingAngle, faceNearbyNpcs } from "/character-facing.mjs";
-import {GM_SHELTOM,GM_POTION,gmProtection,protectGm,gmTrainingActive} from "/gm-tools.mjs";
+import {GM_SHELTOM,GM_POTION,gmProtection,protectGm,applyGmAttack,gmTrainingActive} from "/gm-tools.mjs";
 import { premiumRecovery } from "/premium-effects.mjs";
 import { captureBaseRolls, restoreItemRolls } from "/item-save.mjs";
 import { combatStats } from "/character-stats.mjs";
@@ -1334,6 +1334,7 @@ function recalculate() {
   stats.expLevel = experienceFloor(stats.level,balanceRules);
   stats.expNext = experienceFloor(stats.level+1,balanceRules);
   Object.assign(stats, combatStats(stats, inv.equip, specBonus, effects));
+  applyGmAttack(stats,gmSheltomActive());
   protectGm(stats,gmSheltomActive());
   const force =
     activeForce && activeForce.expiresAt > serverNow() / 1000

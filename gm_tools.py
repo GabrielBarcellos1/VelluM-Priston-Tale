@@ -13,7 +13,7 @@ def definitions(items):
     for base,code,name,slot in [('OS110',SHELTOM,'Sheltom GM — Proteção de Teste','SHELTOM'),('BI143',POTION,'Poção EXP GM — Rota 120','ECORE')]:
         item=copy.deepcopy(items[base]);item.update(code=code,name=name,slot=slot,req={},price=0,weight=0,noGold=True,bound=True,gmOnly=True)
         item['image']='image/freeston/gm/'+('sheltom' if code==SHELTOM else 'potion')+'.svg'
-        if code==SHELTOM:item.update(defense=[1000000,1000000])
+        if code==SHELTOM:item.update(defense=[1000000,1000000],damage=[50,50,50,50])
         result.append(item)
     return result
 
