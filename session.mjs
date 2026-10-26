@@ -1,3 +1,4 @@
+import { serviceDialog } from "/npc-panels.mjs";
 import { walkingStages, createMapTravel } from "/map-travel.mjs";
 import {
   repairPrice,
@@ -1675,11 +1676,12 @@ function npcTalk(id, interactive) {
     game.events.emit("npcOpen", { npcId: id, name: npc.name, windowKind: "warehouse", data: {} });
     emitWarehouse();
   } else if (npc.services?.some((s) => ["teleport", "wing"].includes(s))) {
-    game.events.emit("npcOpen", {
-      npcId: id,
-      name: npc.name,
-      windowKind: "teleport",
-      data: { dest: "Destino", dests: travelDestinations(), taxPct: 0 },
+    game.keys.clear();
+    const panel = serviceDialog(npc.name, "Escolha o destino. A taxa será cobrada ao viajar.");
+    travelDestinations().forEach((dest, index) => {
+      const button = panel.button(`${dest.name} — nível ${dest.level} — ${dest.fee} ouro`,
+        async () => { if (await handle({ t: "npcTeleport", npcId: id, index })) panel.close(); });
+      button.disabled = !canEnterWalking({ id: dest.field }) || stats.gold < dest.fee;
     });
   } else if (
     npc.services?.some((service) => ["aging", "mix", "force", "mixreset"].includes(service))
@@ -2107,20 +2109,21 @@ async function handle(message) {
       break;
     }
     case "npcTeleport": {
-      if (
-        !npcs
-          .find((n) => n.id === message.npcId)
-          ?.services?.some((s) => ["teleport", "wing"].includes(s))
-      )
-        return;
-      const dest = travelDestinations()[message.index ?? 0];
-      if (!dest) return;
-      if((!isAdmin||gameplayTestMode)&&stats.level<dest.level)return notice(`Este destino requer nível ${dest.level}.`);
-      if (stats.gold < dest.fee) return notice("Ouro insuficiente para teleportar.");
+      const npc = npcs.find(n => n.id === message.npcId &&
+        n.services?.some(s => ["teleport", "wing"].includes(s)));
+      if (!npc || game.dead || stats.hp <= 0 || economyBusy || pendingLoot || economyUncertain) return false;
+      if (Math.hypot(game.pos.x - npc.x, -game.pos.z - npc.z) > 500) return false;
+      const index = message.index ?? 0;
+      if (!Number.isInteger(index) || index < 0) return false;
+      const dest = travelDestinations()[index];
+      if (!dest) return false;
+      if (!canEnterWalking({ id: dest.field })) { notice(`Este destino requer nível ${dest.level}.`); return false; }
+      if (stats.gold < dest.fee) { notice("Ouro insuficiente para teleportar."); return false; }
+      economyBusy = true;
       stats.gold -= dest.fee;
-      save();
-      location.search = `?mapa=${dest.field}&classe=${hero.jobCode}`;
-      return;
+      try { await gameFeatures.travel(dest.field); return true; }
+      catch (error) { stats.gold += dest.fee; recalculate(); save(true); notice("Teleporte cancelado: " + error.message); return false; }
+      finally { economyBusy = false; }
     }
     case "questAccept": {
       const q = questAtNpc(message.npcId, "available");
@@ -2553,6 +2556,7 @@ async function handle(message) {
     case "clientMode":
     case "myShopViewClose":
     case "charCfg":
+    case "autoHunt":
     case "onboard":
       break;
     default:

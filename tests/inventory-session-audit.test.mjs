@@ -100,3 +100,16 @@ test('town cores consume one unit before travel, restore after failure and rejec
  f.context.game.dead=false;f.inv.bag[0].item.code='EC104';f.context.gameFeatures.travel=async id=>visited.push(id);
  await f.handle({t:'useItem',uid:700});assert.deepEqual(visited,[3,21]);assert.equal(f.inv.bag.length,0);
 });
+
+test('NPC teleport enforces proximity, level and funds; a failed save refunds the fee',async()=>{
+ const f=fixture(),visits=[];f.context.npcs[0].services.push('teleport');
+ f.context.travelDestinations=()=>[{field:21,level:10,fee:100}];
+ f.context.canEnterWalking=()=>f.stats.level>=10;
+ f.context.gameFeatures={travel:async map=>{visits.push(map);assert.equal(f.stats.gold,9900);}};
+ f.context.game.pos.x=600;assert.equal(await f.handle({t:'npcTeleport',npcId:1,index:0}),false);
+ f.context.game.pos.x=0;f.stats.level=1;assert.equal(await f.handle({t:'npcTeleport',npcId:1,index:0}),false);
+ f.stats.level=30;f.stats.gold=99;assert.equal(await f.handle({t:'npcTeleport',npcId:1,index:0}),false);
+ f.stats.gold=10000;assert.equal(await f.handle({t:'npcTeleport',npcId:1,index:0}),true);assert.deepEqual(visits,[21]);
+ f.context.gameFeatures.travel=async()=>{throw Error('save failed');};
+ assert.equal(await f.handle({t:'npcTeleport',npcId:1,index:0}),false);assert.equal(f.stats.gold,9900);assert.equal(f.context.economyBusy,false);
+});
