@@ -1650,16 +1650,18 @@ function npcTalk(id, interactive) {
     showRedistribution(npc);
   } else if (npc.services?.includes("shop")) {
     const stock = (npc.shop ?? []).map((code) => definitions.get(code)).filter(Boolean);
+    // The native shop hides misc whenever an equipment tab is populated.
+    const supplies = stock.some(i => i.slot === "POTION");
     game.events.emit("npcOpen", {
       npcId: id,
       name: npc.name,
       windowKind: "shop",
       data: {
         weapons: stock.filter((i) => i.slot.startsWith("WEAPON")).map((i) => i.code),
-        armors: stock
+        armors: (supplies ? [] : stock)
           .filter((i) => !i.slot.startsWith("WEAPON") && i.slot !== "POTION")
           .map((i) => i.code),
-        misc: stock.filter((i) => i.slot === "POTION").map((i) => i.code),
+        misc: (supplies ? stock.filter(i => !i.slot.startsWith("WEAPON")) : []).map((i) => i.code),
         vipPct: 0,
         taxPct: 0,
       },
