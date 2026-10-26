@@ -1,0 +1,2373 @@
+{
+  "release": 17,
+  "verifiedIdenticalToZephira": false,
+  "officialPrivateExpAndDropsRecovered": false,
+  "source": "Classic public Priston Tale client, NOT verified Zephira server balance",
+  "sources": [
+    {
+      "url": "https://raw.githubusercontent.com/yweenzy/pristontale-1/299c615ed9a13f9ac394c6d0ac32f19e126b308d/src/sinbaram/sinSkill_Info.cpp",
+      "sha256": "59851204174539665feb0f12f7f836d3960a5a31d1f542fe1aea488d87c6aff9"
+    },
+    {
+      "url": "https://raw.githubusercontent.com/yweenzy/pristontale-1/299c615ed9a13f9ac394c6d0ac32f19e126b308d/src/sinbaram/sinSkill.cpp",
+      "sha256": "f8d799b7ade7aef2776eeb92ba297991aa528846040a75703d803bb14150353b"
+    },
+    {
+      "url": "https://raw.githubusercontent.com/yweenzy/pristontale-1/299c615ed9a13f9ac394c6d0ac32f19e126b308d/src/Language/Brazil/b_sinSkill_Info.h",
+      "sha256": "f5d4ce9543ffca4132cd18354248bd194c73be5f56f0f01b829522eed61e4046"
+    },
+    {
+      "url": "https://raw.githubusercontent.com/yweenzy/pristontale-1/299c615ed9a13f9ac394c6d0ac32f19e126b308d/src/sinbaram/sinTable.h",
+      "sha256": "cfded5c545091faca2b779f9f6ffaf13d5a480581b81f221fcf1607dfb39795b"
+    },
+    {
+      "url": "https://raw.githubusercontent.com/yweenzy/pristontale-1/299c615ed9a13f9ac394c6d0ac32f19e126b308d/src/sinbaram/sinSubMain.cpp",
+      "sha256": "f265ea1be3012c821a0022bd923e183eb2f47247bbaccf3a4553600cb4ac7e58"
+    },
+    {
+      "url": "https://raw.githubusercontent.com/yweenzy/pristontale-1/299c615ed9a13f9ac394c6d0ac32f19e126b308d/src/Server/Svr_Damge.cpp",
+      "sha256": "02851f1421828a2c4628ebd575cdf5ed45674afccac422cc9b76528d9f2c73d0"
+    }
+  ],
+  "skills": [
+    {
+      "code": "SKILL_MELEE_MASTERY",
+      "job": 1,
+      "source": "classic-public-client",
+      "importedFields": [
+        "reqLevel",
+        "stamina",
+        "slot",
+        "damagePercent"
+      ],
+      "availableTables": [
+        "Melee_Mastery_DamagePercent"
+      ]
+    },
+    {
+      "code": "SKILL_FIRE_ATTRIBUTE",
+      "job": 1,
+      "source": "classic-public-client",
+      "importedFields": [
+        "reqLevel",
+        "stamina",
+        "slot"
+      ],
+      "availableTables": [
+        "PlusFire"
+      ]
+    },
+    {
+      "code": "SKILL_RAVING",
+      "job": 1,
+      "source": "classic-public-client",
+      "importedFields": [
+        "reqLevel",
+        "stamina",
+        "slot",
+        "mp",
+        "damagePercent"
+      ],
+      "availableTables": [
+        "Raving_Damage",
+        "Ravind_Speed",
+        "Raving_UseLife"
+      ]
+    },
+    {
+      "code": "SKILL_IMPACT",
+      "job": 1,
+      "source": "classic-public-client",
+      "importedFields": [
+        "reqLevel",
+        "stamina",
+        "slot",
+        "mp",
+        "damagePercent"
+      ],
+      "availableTables": [
+        "Impact_Attack_Rating",
+        "Impact_Damage"
+      ]
+    },
+    {
+      "code": "SKILL_TRIPLE_IMPACT",
+      "job": 1,
+      "source": "classic-public-client",
+      "importedFields": [
+        "reqLevel",
+        "stamina",
+        "slot",
+        "mp",
+        "damagePercent",
+        "hitCount"
+      ],
+      "availableTables": [
+        "T_Impact_Damage",
+        "T_Impact_Hit"
+      ]
+    },
+    {
+      "code": "SKILL_BRUTAL_SWING",
+      "job": 1,
+      "source": "classic-public-client",
+      "importedFields": [
+        "reqLevel",
+        "stamina",
+        "slot",
+        "mp",
+        "damagePercent"
+      ],
+      "availableTables": [
+        "B_Swing_Damage",
+        "B_Swing_Critical"
+      ]
+    },
+    {
+      "code": "SKILL_ROAR",
+      "job": 1,
+      "source": "classic-public-client",
+      "importedFields": [
+        "reqLevel",
+        "stamina",
+        "slot",
+        "mp",
+        "duration"
+      ],
+      "availableTables": [
+        "Roar_Range",
+        "Roar_Time"
+      ]
+    },
+    {
+      "code": "SKILL_RAGE_OF_ZECRAM",
+      "job": 1,
+      "source": "classic-public-client",
+      "importedFields": [
+        "reqLevel",
+        "stamina",
+        "slot",
+        "mp",
+        "damagePercent"
+      ],
+      "availableTables": [
+        "R_Zecram_Damage"
+      ]
+    },
+    {
+      "code": "SKILL_CONCENTRATION",
+      "job": 1,
+      "source": "classic-public-client",
+      "importedFields": [
+        "reqLevel",
+        "stamina",
+        "slot",
+        "mp",
+        "duration"
+      ],
+      "availableTables": [
+        "Concentration_AttackRate",
+        "Concentration_Time"
+      ]
+    },
+    {
+      "code": "SKILL_AVANGING_CRASH",
+      "job": 1,
+      "source": "classic-public-client",
+      "importedFields": [
+        "reqLevel",
+        "stamina",
+        "slot",
+        "mp",
+        "damagePercent"
+      ],
+      "availableTables": [
+        "A_Crash_AttackRate",
+        "A_Crash_Damage"
+      ]
+    },
+    {
+      "code": "SKILL_SWIFT_AXE",
+      "job": 1,
+      "source": "classic-public-client",
+      "importedFields": [
+        "reqLevel",
+        "stamina",
+        "slot",
+        "mp",
+        "duration"
+      ],
+      "availableTables": [
+        "Swift_Axe_Speed",
+        "Swift_Axe_Time"
+      ]
+    },
+    {
+      "code": "SKILL_BONE_CRASH",
+      "job": 1,
+      "source": "classic-public-client",
+      "importedFields": [
+        "reqLevel",
+        "stamina",
+        "slot",
+        "mp",
+        "damagePercent"
+      ],
+      "availableTables": [
+        "B_Crash_Damage",
+        "B_Crash_DemonDamage"
+      ]
+    },
+    {
+      "code": "SKILL_DETORYER",
+      "job": 1,
+      "source": "classic-public-client",
+      "importedFields": [
+        "reqLevel",
+        "stamina",
+        "slot",
+        "mp",
+        "damagePercent"
+      ],
+      "availableTables": [
+        "Destoryer_DamagePercent",
+        "Destoryer_AddCritical"
+      ]
+    },
+    {
+      "code": "SKILL_BERSERKER",
+      "job": 1,
+      "source": "classic-public-client",
+      "importedFields": [
+        "reqLevel",
+        "stamina",
+        "slot",
+        "mp",
+        "duration"
+      ],
+      "availableTables": [
+        "Berserker_AddAttack",
+        "Berserker_SubAbsorb",
+        "Berserker_Time"
+      ]
+    },
+    {
+      "code": "SKILL_CYCLONE_STRIKE",
+      "job": 1,
+      "source": "classic-public-client",
+      "importedFields": [
+        "reqLevel",
+        "stamina",
+        "slot",
+        "mp",
+        "damagePercent"
+      ],
+      "availableTables": [
+        "Cyclone_Strike_DamagePercent",
+        "Cyclone_Strike_AreaDamage",
+        "Cyclone_Strike_AttackNum",
+        "Cyclone_Strike_Area"
+      ]
+    },
+    {
+      "code": "SKILL_BOOST_HEALTH",
+      "job": 1,
+      "source": "classic-public-client",
+      "importedFields": [
+        "reqLevel",
+        "stamina",
+        "slot"
+      ],
+      "availableTables": [
+        "Boost_Health_Life"
+      ]
+    },
+    {
+      "code": "SKILL_EXTREME_SHIELD",
+      "job": 2,
+      "source": "classic-public-client",
+      "importedFields": [
+        "reqLevel",
+        "stamina",
+        "slot",
+        "mp",
+        "duration"
+      ],
+      "availableTables": [
+        "E_Shield_BlockRate",
+        "E_Shield_UseTime"
+      ]
+    },
+    {
+      "code": "SKILL_MECHANIC_BOMB",
+      "job": 2,
+      "source": "classic-public-client",
+      "importedFields": [
+        "reqLevel",
+        "stamina",
+        "slot",
+        "mp"
+      ],
+      "availableTables": [
+        "Mechanic_Bomb_Damage",
+        "Mechanic_Bomb_Attack_Range"
+      ]
+    },
+    {
+      "code": "SKILL_POISON_ATTRIBUTE",
+      "job": 2,
+      "source": "classic-public-client",
+      "importedFields": [
+        "reqLevel",
+        "stamina",
+        "slot"
+      ],
+      "availableTables": [
+        "PlusPoison"
+      ]
+    },
+    {
+      "code": "SKILL_PHYSICAL_ABSORB",
+      "job": 2,
+      "source": "classic-public-client",
+      "importedFields": [
+        "reqLevel",
+        "stamina",
+        "slot",
+        "mp",
+        "duration"
+      ],
+      "availableTables": [
+        "P_Absorb",
+        "P_Absorb_UseTime"
+      ]
+    },
+    {
+      "code": "SKILL_GREAT_SMASH",
+      "job": 2,
+      "source": "classic-public-client",
+      "importedFields": [
+        "reqLevel",
+        "stamina",
+        "slot",
+        "mp"
+      ],
+      "availableTables": [
+        "G_Smash_Attack_Rate",
+        "G_Smash_Attack_Rage"
+      ]
+    },
+    {
+      "code": "SKILL_MAXIMIZE",
+      "job": 2,
+      "source": "classic-public-client",
+      "importedFields": [
+        "reqLevel",
+        "stamina",
+        "slot",
+        "mp",
+        "damagePercent",
+        "duration"
+      ],
+      "availableTables": [
+        "Maximize_Damage",
+        "Maximize_Time"
+      ]
+    },
+    {
+      "code": "SKILL_AUTOMATION",
+      "job": 2,
+      "source": "classic-public-client",
+      "importedFields": [
+        "reqLevel",
+        "stamina",
+        "slot",
+        "mp",
+        "damagePercent",
+        "duration"
+      ],
+      "availableTables": [
+        "Automation_Damage",
+        "Automation_Speed",
+        "Automation_Time"
+      ]
+    },
+    {
+      "code": "SKILL_SPARK",
+      "job": 2,
+      "source": "classic-public-client",
+      "importedFields": [
+        "reqLevel",
+        "stamina",
+        "slot",
+        "mp"
+      ],
+      "availableTables": [
+        "Spark_Damage",
+        "Spark_Area"
+      ]
+    },
+    {
+      "code": "SKILL_METAL_ARMOR",
+      "job": 2,
+      "source": "classic-public-client",
+      "importedFields": [
+        "reqLevel",
+        "stamina",
+        "slot",
+        "mp",
+        "duration"
+      ],
+      "availableTables": [
+        "Metal_Armor_Defense",
+        "Metal_Armor_Time"
+      ]
+    },
+    {
+      "code": "SKILL_GRAND_SMASH",
+      "job": 2,
+      "source": "classic-public-client",
+      "importedFields": [
+        "reqLevel",
+        "stamina",
+        "slot",
+        "mp",
+        "damagePercent"
+      ],
+      "availableTables": [
+        "Grand_Smash_AttackRate",
+        "Grand_Smash_Damage"
+      ]
+    },
+    {
+      "code": "SKILL_MECHANIC_WEAPON",
+      "job": 2,
+      "source": "classic-public-client",
+      "importedFields": [
+        "reqLevel",
+        "stamina",
+        "slot"
+      ],
+      "availableTables": [
+        "M_Weapon_Mastey"
+      ]
+    },
+    {
+      "code": "SKILL_SPARK_SHIELD",
+      "job": 2,
+      "source": "classic-public-client",
+      "importedFields": [
+        "reqLevel",
+        "stamina",
+        "slot",
+        "mp",
+        "damagePercent",
+        "duration"
+      ],
+      "availableTables": [
+        "Spark_Shield_Damage",
+        "Spark_Shield_Defense",
+        "Spark_Shield_Time"
+      ]
+    },
+    {
+      "code": "SKILL_IMPULSION",
+      "job": 2,
+      "source": "classic-public-client",
+      "importedFields": [
+        "reqLevel",
+        "stamina",
+        "slot",
+        "mp"
+      ],
+      "availableTables": [
+        "Impulsion_LightingDamage",
+        "Impulsion_Range",
+        "Impulsion_LightingNum"
+      ]
+    },
+    {
+      "code": "SKILL_COMPULSION",
+      "job": 2,
+      "source": "classic-public-client",
+      "importedFields": [
+        "reqLevel",
+        "stamina",
+        "slot",
+        "mp",
+        "duration"
+      ],
+      "availableTables": [
+        "Compulsion_AddAbsorb",
+        "Compulsion_Area",
+        "Compulsion_Time"
+      ]
+    },
+    {
+      "code": "SKILL_MAGNETIC_SPHERE",
+      "job": 2,
+      "source": "classic-public-client",
+      "importedFields": [
+        "reqLevel",
+        "stamina",
+        "slot",
+        "mp",
+        "duration"
+      ],
+      "availableTables": [
+        "Magnetic_Sphere_AddDamage",
+        "Magnetic_Sphere_Area",
+        "Magnetic_Sphere_AttackDelay",
+        "Magnetic_Sphere_Time"
+      ]
+    },
+    {
+      "code": "SKILL_METAL_GOLEM",
+      "job": 2,
+      "source": "classic-public-client",
+      "importedFields": [
+        "reqLevel",
+        "stamina",
+        "slot",
+        "mp"
+      ],
+      "availableTables": [
+        "Metal_Golem_Damage",
+        "Metal_Golem_Hit",
+        "Metal_Golem_Defense",
+        "Metal_Golem_Life"
+      ]
+    },
+    {
+      "code": "SKILL_SCOUT_HAWK",
+      "job": 3,
+      "source": "classic-public-client",
+      "importedFields": [
+        "reqLevel",
+        "stamina",
+        "slot",
+        "mp"
+      ],
+      "availableTables": [
+        "Scout_Hawk_Attack_Rate",
+        "Scout_Hawk_UseTime"
+      ]
+    },
+    {
+      "code": "SKILL_SHOOTING_MASTERY",
+      "job": 3,
+      "source": "classic-public-client",
+      "importedFields": [
+        "reqLevel",
+        "stamina",
+        "slot",
+        "damagePercent"
+      ],
+      "availableTables": [
+        "S_Mastery_DamagePercent"
+      ]
+    },
+    {
+      "code": "SKILL_WIND_ARROW",
+      "job": 3,
+      "source": "classic-public-client",
+      "importedFields": [
+        "reqLevel",
+        "stamina",
+        "slot",
+        "mp",
+        "damagePercent"
+      ],
+      "availableTables": [
+        "Wind_Arrow_Speed",
+        "Wind_Arrow_Damage"
+      ]
+    },
+    {
+      "code": "SKILL_PERFECT_AIM",
+      "job": 3,
+      "source": "classic-public-client",
+      "importedFields": [
+        "reqLevel",
+        "stamina",
+        "slot",
+        "mp"
+      ],
+      "availableTables": [
+        "Perfect_Aim_Attack_Rate",
+        "Perfect_Aim_Damage",
+        "Perfect_Aim_Damage_LV"
+      ]
+    },
+    {
+      "code": "SKILL_DIONS_EYE",
+      "job": 3,
+      "source": "classic-public-client",
+      "importedFields": [
+        "reqLevel",
+        "stamina",
+        "slot"
+      ],
+      "availableTables": [
+        "D_Eye_Attack_Rate"
+      ]
+    },
+    {
+      "code": "SKILL_FALCON",
+      "job": 3,
+      "source": "classic-public-client",
+      "importedFields": [
+        "reqLevel",
+        "stamina",
+        "slot",
+        "mp"
+      ],
+      "availableTables": [
+        "Falcon_Damage",
+        "Falcon_Time"
+      ]
+    },
+    {
+      "code": "SKILL_ARROW_OF_RAGE",
+      "job": 3,
+      "source": "classic-public-client",
+      "importedFields": [
+        "reqLevel",
+        "stamina",
+        "slot",
+        "mp"
+      ],
+      "availableTables": [
+        "A_Rage_Damage",
+        "A_Rage_Area"
+      ]
+    },
+    {
+      "code": "SKILL_AVALANCHE",
+      "job": 3,
+      "source": "classic-public-client",
+      "importedFields": [
+        "reqLevel",
+        "stamina",
+        "slot",
+        "mp",
+        "damagePercent"
+      ],
+      "availableTables": [
+        "Avalanche_Speed",
+        "Avalanche_Damage",
+        "Avalanche_ArrowNum"
+      ]
+    },
+    {
+      "code": "SKILL_ELEMENTAL_SHOT",
+      "job": 3,
+      "source": "classic-public-client",
+      "importedFields": [
+        "reqLevel",
+        "stamina",
+        "slot",
+        "mp"
+      ],
+      "availableTables": [
+        "Elemental_Shot_Fire",
+        "Elemental_Shot_Lightning"
+      ]
+    },
+    {
+      "code": "SKILL_GOLDEN_FALCON",
+      "job": 3,
+      "source": "classic-public-client",
+      "importedFields": [
+        "reqLevel",
+        "stamina",
+        "slot",
+        "mp",
+        "damagePercent"
+      ],
+      "availableTables": [
+        "Golden_Falcon_Damage",
+        "Golden_Falcon_LifeRegen",
+        "Golden_Falcon_Time"
+      ]
+    },
+    {
+      "code": "SKILL_BOMB_SHOT",
+      "job": 3,
+      "source": "classic-public-client",
+      "importedFields": [
+        "reqLevel",
+        "stamina",
+        "slot",
+        "mp",
+        "damagePercent"
+      ],
+      "availableTables": [
+        "BombShot_Damage",
+        "BombShot_DemonDamage",
+        "BombShot_AddDamage",
+        "BombShot_Area"
+      ]
+    },
+    {
+      "code": "SKILL_PERFORATION",
+      "job": 3,
+      "source": "classic-public-client",
+      "importedFields": [
+        "reqLevel",
+        "stamina",
+        "slot",
+        "mp",
+        "damagePercent"
+      ],
+      "availableTables": [
+        "Perforation_Attack_Range",
+        "Perforation_Damage",
+        "Perforation_Critical"
+      ]
+    },
+    {
+      "code": "SKILL_RECALL_WOLVERIN",
+      "job": 3,
+      "source": "classic-public-client",
+      "importedFields": [
+        "reqLevel",
+        "stamina",
+        "slot",
+        "mp"
+      ],
+      "availableTables": [
+        "Recall_Wolverin_Damage",
+        "Recall_Wolverin_Hit",
+        "Recall_Wolverin_Defense",
+        "Recall_Wolverin_Life"
+      ]
+    },
+    {
+      "code": "SKILL_EVASION_MASTERY",
+      "job": 3,
+      "source": "classic-public-client",
+      "importedFields": [
+        "reqLevel",
+        "stamina",
+        "slot"
+      ],
+      "availableTables": [
+        "Evasion_Mastery_AddPercent"
+      ]
+    },
+    {
+      "code": "SKILL_PHOENIX_SHOT",
+      "job": 3,
+      "source": "classic-public-client",
+      "importedFields": [
+        "reqLevel",
+        "stamina",
+        "slot",
+        "mp",
+        "damagePercent"
+      ],
+      "availableTables": [
+        "Phoenix_Shot_DamagePercent",
+        "Phoenix_Shot_Time"
+      ]
+    },
+    {
+      "code": "SKILL_FORCE_OF_NATURE",
+      "job": 3,
+      "source": "classic-public-client",
+      "importedFields": [
+        "reqLevel",
+        "stamina",
+        "slot",
+        "mp",
+        "duration"
+      ],
+      "availableTables": [
+        "Force_Of_Nature_AddDamage",
+        "Force_Of_Nature_AddHit",
+        "Force_Of_Nature_FalconAddDamage",
+        "Force_Of_Nature_Time"
+      ]
+    },
+    {
+      "code": "SKILL_PIKE_WIND",
+      "job": 4,
+      "source": "classic-public-client",
+      "importedFields": [
+        "reqLevel",
+        "stamina",
+        "slot",
+        "mp"
+      ],
+      "availableTables": [
+        "Pike_Wind_Damage",
+        "Pike_Wind_Push_Lenght"
+      ]
+    },
+    {
+      "code": "SKILL_ICE_ATTRIBUTE",
+      "job": 4,
+      "source": "classic-public-client",
+      "importedFields": [
+        "reqLevel",
+        "stamina",
+        "slot"
+      ],
+      "availableTables": [
+        "PlusIce"
+      ]
+    },
+    {
+      "code": "SKILL_CRITICAL_HIT",
+      "job": 4,
+      "source": "classic-public-client",
+      "importedFields": [
+        "reqLevel",
+        "stamina",
+        "slot",
+        "mp"
+      ],
+      "availableTables": [
+        "Critical_Hit_Critical"
+      ]
+    },
+    {
+      "code": "SKILL_JUMPING_CRASH",
+      "job": 4,
+      "source": "classic-public-client",
+      "importedFields": [
+        "reqLevel",
+        "stamina",
+        "slot",
+        "mp",
+        "damagePercent"
+      ],
+      "availableTables": [
+        "Jumping_Crash_Attack_Rating",
+        "Jumping_Crash_Damage"
+      ]
+    },
+    {
+      "code": "SKILL_GROUND_PIKE",
+      "job": 4,
+      "source": "classic-public-client",
+      "importedFields": [
+        "reqLevel",
+        "stamina",
+        "slot",
+        "mp"
+      ],
+      "availableTables": [
+        "G_Pike_Time",
+        "G_Pike_Damage",
+        "G_Pike_Range"
+      ]
+    },
+    {
+      "code": "SKILL_TORNADO",
+      "job": 4,
+      "source": "classic-public-client",
+      "importedFields": [
+        "reqLevel",
+        "stamina",
+        "slot",
+        "mp",
+        "damagePercent"
+      ],
+      "availableTables": [
+        "Tornado_Damage",
+        "Tornado_Range"
+      ]
+    },
+    {
+      "code": "SKILL_WEAPONE_DEFENCE_MASTERY",
+      "job": 4,
+      "source": "classic-public-client",
+      "importedFields": [
+        "reqLevel",
+        "stamina",
+        "slot"
+      ],
+      "availableTables": [
+        "W_D_Mastery_Block"
+      ]
+    },
+    {
+      "code": "SKILL_EXPANSION",
+      "job": 4,
+      "source": "classic-public-client",
+      "importedFields": [
+        "reqLevel",
+        "stamina",
+        "slot",
+        "mp",
+        "damagePercent"
+      ],
+      "availableTables": [
+        "Expansion_Size",
+        "Expansion_Damage"
+      ]
+    },
+    {
+      "code": "SKILL_VENOM_SPEAR",
+      "job": 4,
+      "source": "classic-public-client",
+      "importedFields": [
+        "reqLevel",
+        "stamina",
+        "slot",
+        "mp",
+        "duration"
+      ],
+      "availableTables": [
+        "VenomSpear_Damage",
+        "VenomSpear_Num",
+        "VenomSpear_Time",
+        "VenomSpear_Range"
+      ]
+    },
+    {
+      "code": "SKILL_VANISH",
+      "job": 4,
+      "source": "classic-public-client",
+      "importedFields": [
+        "reqLevel",
+        "stamina",
+        "slot",
+        "mp",
+        "damagePercent",
+        "duration"
+      ],
+      "availableTables": [
+        "Vanish_Damage",
+        "Vanish_Range",
+        "Vanish_Time"
+      ]
+    },
+    {
+      "code": "SKILL_CRITICAL_MASTERY",
+      "job": 4,
+      "source": "classic-public-client",
+      "importedFields": [
+        "reqLevel",
+        "stamina",
+        "slot"
+      ],
+      "availableTables": [
+        "Critical_Mastery_Critical"
+      ]
+    },
+    {
+      "code": "SKILL_CHAIN_LANCE",
+      "job": 4,
+      "source": "classic-public-client",
+      "importedFields": [
+        "reqLevel",
+        "stamina",
+        "slot",
+        "mp",
+        "damagePercent"
+      ],
+      "availableTables": [
+        "Chain_Lance_Damage"
+      ]
+    },
+    {
+      "code": "SKILL_ASSASSIN_EYE",
+      "job": 4,
+      "source": "classic-public-client",
+      "importedFields": [
+        "reqLevel",
+        "stamina",
+        "slot",
+        "mp",
+        "duration"
+      ],
+      "availableTables": [
+        "Assassin_Eye_AddCritical",
+        "Assassin_Eye_M_SubCritical",
+        "Assassin_Eye_Time"
+      ]
+    },
+    {
+      "code": "SKILL_CHARGING_STRIKE",
+      "job": 4,
+      "source": "classic-public-client",
+      "importedFields": [
+        "reqLevel",
+        "stamina",
+        "slot",
+        "mp",
+        "damagePercent"
+      ],
+      "availableTables": [
+        "Charging_Strike_DamagePercent",
+        "Charging_Strike_CharingDamagePercent"
+      ]
+    },
+    {
+      "code": "SKILL_VAGUE",
+      "job": 4,
+      "source": "classic-public-client",
+      "importedFields": [
+        "reqLevel",
+        "stamina",
+        "slot",
+        "mp",
+        "duration"
+      ],
+      "availableTables": [
+        "Vague_EvasionPercent",
+        "Vague_Time"
+      ]
+    },
+    {
+      "code": "SKILL_SHADOW_MASTER",
+      "job": 4,
+      "source": "classic-public-client",
+      "importedFields": [
+        "reqLevel",
+        "stamina",
+        "slot",
+        "mp",
+        "damagePercent"
+      ],
+      "availableTables": [
+        "Shadow_Master_DamagePercent",
+        "Shadow_Master_ShadowNum"
+      ]
+    },
+    {
+      "code": "SKILL_SHIELD_STRIKE",
+      "job": 5,
+      "source": "classic-public-client",
+      "importedFields": [
+        "reqLevel",
+        "stamina",
+        "slot",
+        "mp"
+      ],
+      "availableTables": [
+        "S_Strike_Damage"
+      ]
+    },
+    {
+      "code": "SKILL_FARINA",
+      "job": 5,
+      "source": "classic-public-client",
+      "importedFields": [
+        "reqLevel",
+        "stamina",
+        "slot",
+        "mp"
+      ],
+      "availableTables": [
+        "Farina_Speed",
+        "Farina_AttackRate"
+      ]
+    },
+    {
+      "code": "SKILL_THROWING_MASTERY",
+      "job": 5,
+      "source": "classic-public-client",
+      "importedFields": [
+        "reqLevel",
+        "stamina",
+        "slot",
+        "damagePercent"
+      ],
+      "availableTables": [
+        "T_Mastery_Damage"
+      ]
+    },
+    {
+      "code": "SKILL_VIGOR_SPEAR",
+      "job": 5,
+      "source": "classic-public-client",
+      "importedFields": [
+        "reqLevel",
+        "stamina",
+        "slot",
+        "mp"
+      ],
+      "availableTables": [
+        "V_Spear_Damage"
+      ]
+    },
+    {
+      "code": "SKILL_WINDY",
+      "job": 5,
+      "source": "classic-public-client",
+      "importedFields": [
+        "reqLevel",
+        "stamina",
+        "slot",
+        "mp",
+        "duration"
+      ],
+      "availableTables": [
+        "Windy_Attack_Rating",
+        "Windy_Time"
+      ]
+    },
+    {
+      "code": "SKILL_TWIST_JAVELIN",
+      "job": 5,
+      "source": "classic-public-client",
+      "importedFields": [
+        "reqLevel",
+        "stamina",
+        "slot",
+        "mp",
+        "damagePercent"
+      ],
+      "availableTables": [
+        "Twist_Javelin_Damage",
+        "Twist_Javelin_Attack_Rating"
+      ]
+    },
+    {
+      "code": "SKILL_SOUL_SUCKER",
+      "job": 5,
+      "source": "classic-public-client",
+      "importedFields": [
+        "reqLevel",
+        "stamina",
+        "slot",
+        "mp"
+      ],
+      "availableTables": [
+        "Soul_Sucker_Absorb"
+      ]
+    },
+    {
+      "code": "SKILL_FIRE_JAVELIN",
+      "job": 5,
+      "source": "classic-public-client",
+      "importedFields": [
+        "reqLevel",
+        "stamina",
+        "slot",
+        "mp"
+      ],
+      "availableTables": [
+        "Fire_Javelin_Damage"
+      ]
+    },
+    {
+      "code": "SKILL_SPLIT_JAVELIN",
+      "job": 5,
+      "source": "classic-public-client",
+      "importedFields": [
+        "reqLevel",
+        "stamina",
+        "slot",
+        "mp",
+        "damagePercent"
+      ],
+      "availableTables": [
+        "Split_Javelin_AttackNum",
+        "Split_Javelin_Damage",
+        "Split_Javelin_AttackRate"
+      ]
+    },
+    {
+      "code": "SKILL_TRIUMPH_OF_VALHALLA",
+      "job": 5,
+      "source": "classic-public-client",
+      "importedFields": [
+        "reqLevel",
+        "stamina",
+        "slot",
+        "mp",
+        "duration"
+      ],
+      "availableTables": [
+        "T_Of_Valhalla_Damage",
+        "T_Of_Valhalla_Time"
+      ]
+    },
+    {
+      "code": "SKILL_LIGHTNING_JAVELIN",
+      "job": 5,
+      "source": "classic-public-client",
+      "importedFields": [
+        "reqLevel",
+        "stamina",
+        "slot",
+        "mp"
+      ],
+      "availableTables": [
+        "Lightning_Javelin_Damage"
+      ]
+    },
+    {
+      "code": "SKILL_STORM_JAVELIN",
+      "job": 5,
+      "source": "classic-public-client",
+      "importedFields": [
+        "reqLevel",
+        "stamina",
+        "slot",
+        "mp",
+        "damagePercent"
+      ],
+      "availableTables": [
+        "Storm_Javelin_Damage"
+      ]
+    },
+    {
+      "code": "SKILL_HALL_OF_VALHALLA",
+      "job": 5,
+      "source": "classic-public-client",
+      "importedFields": [
+        "reqLevel",
+        "stamina",
+        "slot",
+        "mp",
+        "duration"
+      ],
+      "availableTables": [
+        "Hall_Of_Valhalla_AddEvation",
+        "Hall_Of_Valhalla_Time"
+      ]
+    },
+    {
+      "code": "SKILL_X_RAGE",
+      "job": 5,
+      "source": "classic-public-client",
+      "importedFields": [
+        "reqLevel",
+        "stamina",
+        "slot",
+        "mp",
+        "damagePercent"
+      ],
+      "availableTables": [
+        "X_Rage_DamagePercent",
+        "X_Rage_Area"
+      ]
+    },
+    {
+      "code": "SKILL_FROST_JAVELIN",
+      "job": 5,
+      "source": "classic-public-client",
+      "importedFields": [
+        "reqLevel",
+        "stamina",
+        "slot",
+        "mp",
+        "duration"
+      ],
+      "availableTables": [
+        "Frost_Javelin_IceAddDamage",
+        "Frost_Javelin_SpeedSubPercent",
+        "Frost_Javelin_IceTime",
+        "Frost_Javelin_Time"
+      ]
+    },
+    {
+      "code": "SKILL_VENGEANCE",
+      "job": 5,
+      "source": "classic-public-client",
+      "importedFields": [
+        "reqLevel",
+        "stamina",
+        "slot",
+        "mp",
+        "damagePercent"
+      ],
+      "availableTables": [
+        "Vengeance_DamagePercent",
+        "Vengeance_AddCritical",
+        "Vengeance_Range"
+      ]
+    },
+    {
+      "code": "SKILL_SWORD_BLAST",
+      "job": 6,
+      "source": "classic-public-client",
+      "importedFields": [
+        "reqLevel",
+        "stamina",
+        "slot",
+        "mp"
+      ],
+      "availableTables": [
+        "Sword_Blast_Damage",
+        "Sword_Blast_ShootingRange"
+      ]
+    },
+    {
+      "code": "SKILL_HOLY_BODY",
+      "job": 6,
+      "source": "classic-public-client",
+      "importedFields": [
+        "reqLevel",
+        "stamina",
+        "slot",
+        "mp",
+        "duration"
+      ],
+      "availableTables": [
+        "HolyBody_Absorb",
+        "HolyBody_Time"
+      ]
+    },
+    {
+      "code": "SKILL_PHYSICAL_TRANING",
+      "job": 6,
+      "source": "classic-public-client",
+      "importedFields": [
+        "reqLevel",
+        "stamina",
+        "slot"
+      ],
+      "availableTables": [
+        "P_Traning_Stamina"
+      ]
+    },
+    {
+      "code": "SKILL_DOUBLE_CRASH",
+      "job": 6,
+      "source": "classic-public-client",
+      "importedFields": [
+        "reqLevel",
+        "stamina",
+        "slot",
+        "mp",
+        "damagePercent"
+      ],
+      "availableTables": [
+        "D_Crash_Damage",
+        "D_Crash_Critical"
+      ]
+    },
+    {
+      "code": "SKILL_HOLY_VALOR",
+      "job": 6,
+      "source": "classic-public-client",
+      "importedFields": [
+        "reqLevel",
+        "stamina",
+        "slot",
+        "mp",
+        "damagePercent",
+        "duration"
+      ],
+      "availableTables": [
+        "Holy_Valor_Damage",
+        "Holy_Valor_Time"
+      ]
+    },
+    {
+      "code": "SKILL_BRANDISH",
+      "job": 6,
+      "source": "classic-public-client",
+      "importedFields": [
+        "reqLevel",
+        "stamina",
+        "slot",
+        "mp",
+        "damagePercent"
+      ],
+      "availableTables": [
+        "Brandish_Range",
+        "Brandish_Damage"
+      ]
+    },
+    {
+      "code": "SKILL_PIERCING",
+      "job": 6,
+      "source": "classic-public-client",
+      "importedFields": [
+        "reqLevel",
+        "stamina",
+        "slot",
+        "mp",
+        "damagePercent"
+      ],
+      "availableTables": [
+        "Piercing_Damage",
+        "Piercing_Attack_Rating"
+      ]
+    },
+    {
+      "code": "SKILL_DRASTIC_SPIRIT",
+      "job": 6,
+      "source": "classic-public-client",
+      "importedFields": [
+        "reqLevel",
+        "stamina",
+        "slot",
+        "mp",
+        "duration"
+      ],
+      "availableTables": [
+        "Drastic_Spirit_Defense",
+        "Drastic_Spirit_Time"
+      ]
+    },
+    {
+      "code": "SKILL_SWORD_MASTERY",
+      "job": 6,
+      "source": "classic-public-client",
+      "importedFields": [
+        "reqLevel",
+        "stamina",
+        "slot",
+        "damagePercent"
+      ],
+      "availableTables": [
+        "Sword_Mastery_DamagePercent"
+      ]
+    },
+    {
+      "code": "SKILL_DIVINE_INHALATION",
+      "job": 6,
+      "source": "classic-public-client",
+      "importedFields": [
+        "reqLevel",
+        "stamina",
+        "slot",
+        "mp",
+        "duration"
+      ],
+      "availableTables": [
+        "D_Inhalation_Block",
+        "D_Inhalation_Life",
+        "D_Inhalation_Time"
+      ]
+    },
+    {
+      "code": "SKILL_HOLY_INCANTATION",
+      "job": 6,
+      "source": "classic-public-client",
+      "importedFields": [
+        "reqLevel",
+        "stamina",
+        "slot",
+        "mp",
+        "duration"
+      ],
+      "availableTables": [
+        "H_Incantation_Success",
+        "H_Incantation_AddLife",
+        "H_Incantation_Time"
+      ]
+    },
+    {
+      "code": "SKILL_GRAND_CROSS",
+      "job": 6,
+      "source": "classic-public-client",
+      "importedFields": [
+        "reqLevel",
+        "stamina",
+        "slot",
+        "mp",
+        "damagePercent"
+      ],
+      "availableTables": [
+        "Grand_Cross_Damage",
+        "Grand_Cross_AttackRate",
+        "Grand_Cross_UndeadDamage"
+      ]
+    },
+    {
+      "code": "SKILL_SWORD_OF_JUSTICE",
+      "job": 6,
+      "source": "classic-public-client",
+      "importedFields": [
+        "reqLevel",
+        "stamina",
+        "slot",
+        "mp",
+        "damagePercent"
+      ],
+      "availableTables": [
+        "Sword_Of_Justice_DamagePercent",
+        "Sword_Of_Justice_Area"
+      ]
+    },
+    {
+      "code": "SKILL_GODLY_SHIELD",
+      "job": 6,
+      "source": "classic-public-client",
+      "importedFields": [
+        "reqLevel",
+        "stamina",
+        "slot",
+        "mp",
+        "duration"
+      ],
+      "availableTables": [
+        "Godly_Shield_AbsorbPercent",
+        "Godly_Shield_Time"
+      ]
+    },
+    {
+      "code": "SKILL_GOD_BLESS",
+      "job": 6,
+      "source": "classic-public-client",
+      "importedFields": [
+        "reqLevel",
+        "stamina",
+        "slot",
+        "mp",
+        "duration"
+      ],
+      "availableTables": [
+        "God_Bless_AddDamage",
+        "God_Bless_Time"
+      ]
+    },
+    {
+      "code": "SKILL_DIVINE_PIERCING",
+      "job": 6,
+      "source": "classic-public-client",
+      "importedFields": [
+        "reqLevel",
+        "stamina",
+        "slot",
+        "mp",
+        "damagePercent"
+      ],
+      "availableTables": [
+        "Divine_Piercing_DamagePercent",
+        "Divine_Piercing_AttackNum"
+      ]
+    },
+    {
+      "code": "SKILL_AGONY",
+      "job": 7,
+      "source": "classic-public-client",
+      "importedFields": [
+        "reqLevel",
+        "stamina",
+        "slot",
+        "mp"
+      ],
+      "availableTables": [
+        "Agony_ConvLife"
+      ]
+    },
+    {
+      "code": "SKILL_FIRE_BOLT",
+      "job": 7,
+      "source": "classic-public-client",
+      "importedFields": [
+        "reqLevel",
+        "stamina",
+        "slot",
+        "mp"
+      ],
+      "availableTables": [
+        "FireBolt_Damage"
+      ]
+    },
+    {
+      "code": "SKILL_ZENITH",
+      "job": 7,
+      "source": "classic-public-client",
+      "importedFields": [
+        "reqLevel",
+        "stamina",
+        "slot",
+        "mp",
+        "duration"
+      ],
+      "availableTables": [
+        "Zenith_Element",
+        "Zenith_Time"
+      ]
+    },
+    {
+      "code": "SKILL_FIRE_BALL",
+      "job": 7,
+      "source": "classic-public-client",
+      "importedFields": [
+        "reqLevel",
+        "stamina",
+        "slot",
+        "mp"
+      ],
+      "availableTables": [
+        "FireBall_Damage",
+        "FireBall_Range",
+        "FireBall_Area"
+      ]
+    },
+    {
+      "code": "SKILL_MENTAL_MASTERY",
+      "job": 7,
+      "source": "classic-public-client",
+      "importedFields": [
+        "reqLevel",
+        "stamina",
+        "slot"
+      ],
+      "availableTables": [
+        "Mental_Mastery_Mana"
+      ]
+    },
+    {
+      "code": "SKILL_WATORNADO",
+      "job": 7,
+      "source": "classic-public-client",
+      "importedFields": [
+        "reqLevel",
+        "stamina",
+        "slot",
+        "mp"
+      ],
+      "availableTables": [
+        "Watornado_Damage",
+        "Watornado_Range",
+        "Watornado_Area"
+      ]
+    },
+    {
+      "code": "SKILL_ENCHANT_WEAPON",
+      "job": 7,
+      "source": "classic-public-client",
+      "importedFields": [
+        "reqLevel",
+        "stamina",
+        "slot",
+        "mp",
+        "duration"
+      ],
+      "availableTables": [
+        "Enchant_Weapon_Damage_Fire",
+        "Enchant_Weapon_Damage_Ice",
+        "Enchant_Weapon_Damage_Lightning",
+        "Enchant_Weapon_Time"
+      ]
+    },
+    {
+      "code": "SKILL_DEAD_RAY",
+      "job": 7,
+      "source": "classic-public-client",
+      "importedFields": [
+        "reqLevel",
+        "stamina",
+        "slot",
+        "mp"
+      ],
+      "availableTables": [
+        "Dead_Ray_Damage",
+        "Dead_Ray_Range"
+      ]
+    },
+    {
+      "code": "SKILL_ENERGY_SHIELD",
+      "job": 7,
+      "source": "classic-public-client",
+      "importedFields": [
+        "reqLevel",
+        "stamina",
+        "slot",
+        "mp",
+        "damagePercent",
+        "duration"
+      ],
+      "availableTables": [
+        "Energy_Shield_DecDamage",
+        "Energy_Shield_Time"
+      ]
+    },
+    {
+      "code": "SKILL_DIASTROPHISM",
+      "job": 7,
+      "source": "classic-public-client",
+      "importedFields": [
+        "reqLevel",
+        "stamina",
+        "slot",
+        "mp"
+      ],
+      "availableTables": [
+        "Diastrophism_Damage",
+        "Diastrophism_Area"
+      ]
+    },
+    {
+      "code": "SKILL_SPIRIT_ELEMENTAL",
+      "job": 7,
+      "source": "classic-public-client",
+      "importedFields": [
+        "reqLevel",
+        "stamina",
+        "slot",
+        "mp",
+        "damagePercent",
+        "duration"
+      ],
+      "availableTables": [
+        "Spirit_Elemental_Damage",
+        "Spirit_Elemental_Time"
+      ]
+    },
+    {
+      "code": "SKILL_DANCING_SWORD",
+      "job": 7,
+      "source": "classic-public-client",
+      "importedFields": [
+        "reqLevel",
+        "stamina",
+        "slot",
+        "mp",
+        "duration"
+      ],
+      "availableTables": [
+        "Dancing_Sword_FireDamage",
+        "Dancing_Sword_IceDamage",
+        "Dancing_Sword_AttackDelay",
+        "Dancing_Sword_Time"
+      ]
+    },
+    {
+      "code": "SKILL_FIRE_ELEMENTAL",
+      "job": 7,
+      "source": "classic-public-client",
+      "importedFields": [
+        "reqLevel",
+        "stamina",
+        "slot",
+        "mp"
+      ],
+      "availableTables": [
+        "Fire_Elemental_Damage",
+        "Fire_Elemental_Hit",
+        "Fire_Elemental_Life"
+      ]
+    },
+    {
+      "code": "SKILL_FLAME_WAVE",
+      "job": 7,
+      "source": "classic-public-client",
+      "importedFields": [
+        "reqLevel",
+        "stamina",
+        "slot",
+        "mp"
+      ],
+      "availableTables": [
+        "Flame_Wave_FireDamage",
+        "Flame_Wave_Area"
+      ]
+    },
+    {
+      "code": "SKILL_DISTORTION",
+      "job": 7,
+      "source": "classic-public-client",
+      "importedFields": [
+        "reqLevel",
+        "stamina",
+        "slot",
+        "mp",
+        "duration"
+      ],
+      "availableTables": [
+        "Distortion_SpeedSubPercent",
+        "Distortion_DamageSubPercent",
+        "Distortion_Area",
+        "Distortion_Time"
+      ]
+    },
+    {
+      "code": "SKILL_M_METEO",
+      "job": 7,
+      "source": "classic-public-client",
+      "importedFields": [
+        "reqLevel",
+        "stamina",
+        "slot",
+        "mp"
+      ],
+      "availableTables": []
+    },
+    {
+      "code": "SKILL_HEALING",
+      "job": 8,
+      "source": "classic-public-client",
+      "importedFields": [
+        "reqLevel",
+        "stamina",
+        "slot",
+        "mp"
+      ],
+      "availableTables": [
+        "Healing_Heal"
+      ]
+    },
+    {
+      "code": "SKILL_HOLY_BOLT",
+      "job": 8,
+      "source": "classic-public-client",
+      "importedFields": [
+        "reqLevel",
+        "stamina",
+        "slot",
+        "mp"
+      ],
+      "availableTables": [
+        "HolyBolt_Damage"
+      ]
+    },
+    {
+      "code": "SKILL_MULTISPARK",
+      "job": 8,
+      "source": "classic-public-client",
+      "importedFields": [
+        "reqLevel",
+        "stamina",
+        "slot",
+        "mp"
+      ],
+      "availableTables": [
+        "M_Spark_Damage",
+        "M_Spark_Num"
+      ]
+    },
+    {
+      "code": "SKILL_HOLY_MIND",
+      "job": 8,
+      "source": "classic-public-client",
+      "importedFields": [
+        "reqLevel",
+        "stamina",
+        "slot",
+        "mp",
+        "damagePercent"
+      ],
+      "availableTables": [
+        "HolyMind_DecDamage"
+      ]
+    },
+    {
+      "code": "SKILL_MEDITATION",
+      "job": 8,
+      "source": "classic-public-client",
+      "importedFields": [
+        "reqLevel",
+        "stamina",
+        "slot"
+      ],
+      "availableTables": [
+        "Meditation_Regen"
+      ]
+    },
+    {
+      "code": "SKILL_DIVINE_LIGHTNING",
+      "job": 8,
+      "source": "classic-public-client",
+      "importedFields": [
+        "reqLevel",
+        "stamina",
+        "slot",
+        "mp"
+      ],
+      "availableTables": [
+        "Divine_Lightning_Damage",
+        "Divine_Lightning_Num"
+      ]
+    },
+    {
+      "code": "SKILL_HOLY_REFLECTION",
+      "job": 8,
+      "source": "classic-public-client",
+      "importedFields": [
+        "reqLevel",
+        "stamina",
+        "slot",
+        "mp",
+        "damagePercent",
+        "duration"
+      ],
+      "availableTables": [
+        "Holy_Reflection_Return_Damage",
+        "Holy_Reflection_Time"
+      ]
+    },
+    {
+      "code": "SKILL_GRAND_HEALING",
+      "job": 8,
+      "source": "classic-public-client",
+      "importedFields": [
+        "reqLevel",
+        "stamina",
+        "slot",
+        "mp"
+      ],
+      "availableTables": [
+        "Grand_Healing",
+        "Grand_Healing_Range"
+      ]
+    },
+    {
+      "code": "SKILL_VIGOR_BALL",
+      "job": 8,
+      "source": "classic-public-client",
+      "importedFields": [
+        "reqLevel",
+        "stamina",
+        "slot",
+        "mp"
+      ],
+      "availableTables": [
+        "Vigor_Ball_Damage"
+      ]
+    },
+    {
+      "code": "SKILL_RESURRECTION",
+      "job": 8,
+      "source": "classic-public-client",
+      "importedFields": [
+        "reqLevel",
+        "stamina",
+        "slot",
+        "mp"
+      ],
+      "availableTables": [
+        "Resurrection_Percent"
+      ]
+    },
+    {
+      "code": "SKILL_EXTINCTION",
+      "job": 8,
+      "source": "classic-public-client",
+      "importedFields": [
+        "reqLevel",
+        "stamina",
+        "slot",
+        "mp"
+      ],
+      "availableTables": [
+        "Extinction_Percent",
+        "Extinction_Amount"
+      ]
+    },
+    {
+      "code": "SKILL_VIRTUAL_LIFE",
+      "job": 8,
+      "source": "classic-public-client",
+      "importedFields": [
+        "reqLevel",
+        "stamina",
+        "slot",
+        "mp",
+        "duration"
+      ],
+      "availableTables": [
+        "Virtual_Life_Percent",
+        "Virtual_Life_Time"
+      ]
+    },
+    {
+      "code": "SKILL_GLACIAL_SPIKE",
+      "job": 8,
+      "source": "classic-public-client",
+      "importedFields": [
+        "reqLevel",
+        "stamina",
+        "slot",
+        "mp"
+      ],
+      "availableTables": [
+        "Glacial_Spike_Damage",
+        "Glacial_Spike_Area"
+      ]
+    },
+    {
+      "code": "SKILL_REGENERATION_FIELD",
+      "job": 8,
+      "source": "classic-public-client",
+      "importedFields": [
+        "reqLevel",
+        "stamina",
+        "slot",
+        "mp",
+        "duration"
+      ],
+      "availableTables": [
+        "Regeneration_Field_LifeRegen",
+        "Regeneration_Field_ManaRegen",
+        "Regeneration_Field_Time",
+        "Regeneration_Field_Area"
+      ]
+    },
+    {
+      "code": "SKILL_CHAIN_LIGHTNING",
+      "job": 8,
+      "source": "classic-public-client",
+      "importedFields": [
+        "reqLevel",
+        "stamina",
+        "slot",
+        "mp"
+      ],
+      "availableTables": [
+        "Chain_Lightning_Damage",
+        "Chain_Lightning_Num",
+        "Chain_Lightning_Range"
+      ]
+    },
+    {
+      "code": "SKILL_SUMMON_MUSPELL",
+      "job": 8,
+      "source": "classic-public-client",
+      "importedFields": [
+        "reqLevel",
+        "stamina",
+        "slot",
+        "mp",
+        "duration"
+      ],
+      "availableTables": [
+        "Summon_Muspell_Damage",
+        "Summon_Muspell_Attack_Delay",
+        "Summon_Muspell_UndeadAbsorbPercent",
+        "Summon_Muspell_BlockPercent",
+        "Summon_Muspell_Time"
+      ]
+    },
+    {
+      "code": "SKILL_STINGGER",
+      "job": 9,
+      "source": "local-fallback",
+      "importedFields": [],
+      "availableTables": []
+    },
+    {
+      "code": "SKILL_RUNNING_HIT",
+      "job": 9,
+      "source": "local-fallback",
+      "importedFields": [],
+      "availableTables": []
+    },
+    {
+      "code": "SKILL_DUALSWORDMASTERY",
+      "job": 9,
+      "source": "local-fallback",
+      "importedFields": [],
+      "availableTables": []
+    },
+    {
+      "code": "SKILL_WISP",
+      "job": 9,
+      "source": "local-fallback",
+      "importedFields": [],
+      "availableTables": []
+    },
+    {
+      "code": "SKILL_VENOM_THRONE",
+      "job": 9,
+      "source": "local-fallback",
+      "importedFields": [],
+      "availableTables": []
+    },
+    {
+      "code": "SKILL_ALAS",
+      "job": 9,
+      "source": "local-fallback",
+      "importedFields": [],
+      "availableTables": []
+    },
+    {
+      "code": "SKILL_SOUL_SHOCK",
+      "job": 9,
+      "source": "local-fallback",
+      "importedFields": [],
+      "availableTables": []
+    },
+    {
+      "code": "SKILL_ATTACK_MASTERY",
+      "job": 9,
+      "source": "local-fallback",
+      "importedFields": [],
+      "availableTables": []
+    },
+    {
+      "code": "SKILL_SORE_SWORD",
+      "job": 9,
+      "source": "local-fallback",
+      "importedFields": [],
+      "availableTables": []
+    },
+    {
+      "code": "SKILL_BEAT_UP",
+      "job": 9,
+      "source": "local-fallback",
+      "importedFields": [],
+      "availableTables": []
+    },
+    {
+      "code": "SKILL_INPES",
+      "job": 9,
+      "source": "local-fallback",
+      "importedFields": [],
+      "availableTables": []
+    },
+    {
+      "code": "SKILL_BLIND",
+      "job": 9,
+      "source": "local-fallback",
+      "importedFields": [],
+      "availableTables": []
+    },
+    {
+      "code": "SKILL_FROST_WIND",
+      "job": 9,
+      "source": "local-fallback",
+      "importedFields": [],
+      "availableTables": []
+    },
+    {
+      "code": "SKILL_FATAL_MASTERY",
+      "job": 9,
+      "source": "local-fallback",
+      "importedFields": [],
+      "availableTables": []
+    },
+    {
+      "code": "SKILL_POLLUTED",
+      "job": 9,
+      "source": "local-fallback",
+      "importedFields": [],
+      "availableTables": []
+    },
+    {
+      "code": "SKILL_PASTING_SHADOW",
+      "job": 9,
+      "source": "local-fallback",
+      "importedFields": [],
+      "availableTables": []
+    },
+    {
+      "code": "SKILL_DARK_BOLT",
+      "job": 10,
+      "source": "local-fallback",
+      "importedFields": [],
+      "availableTables": []
+    },
+    {
+      "code": "SKILL_DARK_WAVE",
+      "job": 10,
+      "source": "local-fallback",
+      "importedFields": [],
+      "availableTables": []
+    },
+    {
+      "code": "SKILL_CURSE_LAZY",
+      "job": 10,
+      "source": "local-fallback",
+      "importedFields": [],
+      "availableTables": []
+    },
+    {
+      "code": "SKILL_INNER_PEACE",
+      "job": 10,
+      "source": "local-fallback",
+      "importedFields": [],
+      "availableTables": []
+    },
+    {
+      "code": "SKILL_SPIRITUAL_FLARE",
+      "job": 10,
+      "source": "local-fallback",
+      "importedFields": [],
+      "availableTables": []
+    },
+    {
+      "code": "SKILL_SOUL_MANACLE",
+      "job": 10,
+      "source": "local-fallback",
+      "importedFields": [],
+      "availableTables": []
+    },
+    {
+      "code": "SKILL_CHASING_HUNT",
+      "job": 10,
+      "source": "local-fallback",
+      "importedFields": [],
+      "availableTables": []
+    },
+    {
+      "code": "SKILL_ADVENT_MIGAL",
+      "job": 10,
+      "source": "local-fallback",
+      "importedFields": [],
+      "availableTables": []
+    },
+    {
+      "code": "SKILL_RAIN_MAKER",
+      "job": 10,
+      "source": "local-fallback",
+      "importedFields": [],
+      "availableTables": []
+    },
+    {
+      "code": "SKILL_LAND_OF_GHOST",
+      "job": 10,
+      "source": "local-fallback",
+      "importedFields": [],
+      "availableTables": []
+    },
+    {
+      "code": "SKILL_HAUNT",
+      "job": 10,
+      "source": "local-fallback",
+      "importedFields": [],
+      "availableTables": []
+    },
+    {
+      "code": "SKILL_SCRATCH",
+      "job": 10,
+      "source": "local-fallback",
+      "importedFields": [],
+      "availableTables": []
+    },
+    {
+      "code": "SKILL_RECALL_BLOODY_KNIGHT",
+      "job": 10,
+      "source": "local-fallback",
+      "importedFields": [],
+      "availableTables": []
+    },
+    {
+      "code": "SKILL_JUDGEMENT",
+      "job": 10,
+      "source": "local-fallback",
+      "importedFields": [],
+      "availableTables": []
+    },
+    {
+      "code": "SKILL_ADVENT_MIDRANDA",
+      "job": 10,
+      "source": "local-fallback",
+      "importedFields": [],
+      "availableTables": []
+    },
+    {
+      "code": "SKILL_MOURNING_OF_PRAY",
+      "job": 10,
+      "source": "local-fallback",
+      "importedFields": [],
+      "availableTables": []
+    },
+    {
+      "code": "SKILL_LOW_KICK",
+      "job": 11,
+      "source": "local-fallback",
+      "importedFields": [],
+      "availableTables": []
+    },
+    {
+      "code": "SKILL_STRENGTH_MASTERY",
+      "job": 11,
+      "source": "local-fallback",
+      "importedFields": [],
+      "availableTables": []
+    },
+    {
+      "code": "SKILL_DOUBLE_BACKSPIN_BLOW",
+      "job": 11,
+      "source": "local-fallback",
+      "importedFields": [],
+      "availableTables": []
+    },
+    {
+      "code": "SKILL_HYPER_STRAIGHT",
+      "job": 11,
+      "source": "local-fallback",
+      "importedFields": [],
+      "availableTables": []
+    },
+    {
+      "code": "SKILL_RAGE_UP",
+      "job": 11,
+      "source": "local-fallback",
+      "importedFields": [],
+      "availableTables": []
+    },
+    {
+      "code": "SKILL_PATRIOT",
+      "job": 11,
+      "source": "local-fallback",
+      "importedFields": [],
+      "availableTables": []
+    },
+    {
+      "code": "SKILL_RUSH_ELBOW",
+      "job": 11,
+      "source": "local-fallback",
+      "importedFields": [],
+      "availableTables": []
+    },
+    {
+      "code": "SKILL_STAMINA_MASTERY",
+      "job": 11,
+      "source": "local-fallback",
+      "importedFields": [],
+      "availableTables": []
+    },
+    {
+      "code": "SKILL_INSTANT_BULK_UP",
+      "job": 11,
+      "source": "local-fallback",
+      "importedFields": [],
+      "availableTables": []
+    },
+    {
+      "code": "SKILL_TIGER_CANNON",
+      "job": 11,
+      "source": "local-fallback",
+      "importedFields": [],
+      "availableTables": []
+    },
+    {
+      "code": "SKILL_TYPHOON",
+      "job": 11,
+      "source": "local-fallback",
+      "importedFields": [],
+      "availableTables": []
+    },
+    {
+      "code": "SKILL_JUMPING_HEEL_KICK",
+      "job": 11,
+      "source": "local-fallback",
+      "importedFields": [],
+      "availableTables": []
+    },
+    {
+      "code": "SKILL_COMBINATION",
+      "job": 11,
+      "source": "local-fallback",
+      "importedFields": [],
+      "availableTables": []
+    },
+    {
+      "code": "SKILL_STEELERS",
+      "job": 11,
+      "source": "local-fallback",
+      "importedFields": [],
+      "availableTables": []
+    },
+    {
+      "code": "SKILL_BODY_CHECK",
+      "job": 11,
+      "source": "local-fallback",
+      "importedFields": [],
+      "availableTables": []
+    },
+    {
+      "code": "SKILL_WAR_CRY",
+      "job": 11,
+      "source": "local-fallback",
+      "importedFields": [],
+      "availableTables": []
+    }
+  ]
+}

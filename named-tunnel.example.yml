@@ -1,0 +1,8 @@
+# Exemplo: este arquivo NAO cria dominio nem credenciais.
+# Configure um tunel nomeado na sua conta Cloudflare antes de usar.
+tunnel: COLOQUE_O_ID_DO_TUNEL
+credentials-file: C:/Users/SEU_USUARIO/.cloudflared/ID_DO_TUNEL.json
+ingress:
+  - hostname: jogo.seudominio.com
+    service: http://127.0.0.1:19065
+  - service: http_status:404

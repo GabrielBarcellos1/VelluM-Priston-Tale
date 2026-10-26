@@ -1,0 +1,124 @@
+FREEston Tale — revisão 23
+Imagens do Priston Brasil nas 176 skills Tiers 1–4. Sem Tier 5.
+Regras de combate não alteradas nesta revisão. Veja audit/freeston-23.md.
+
+FREEston Tale — revisão 22
+Correções de combate, NPCs, missões, atributos e renascimento.
+Veja audit/freeston-22.md. Mantenha backup de .local-data antes de atualizar.
+
+FREEston Tale - REVISAO 21
+
+INSTALAR
+1. Feche a versao antiga e extraia o ZIP em outra pasta.
+2. Copie .local-data da pasta antiga para preservar personagens e contas.
+3. Pode copiar .original-cache para reaproveitar os downloads.
+4. Abra INICIAR.bat (rede local) ou INICIAR_INTERNET.bat (Internet).
+Python 3.10+ e navegador com WebGL. Internet no primeiro download.
+O iniciador de Internet suporta Windows 64 bits.
+
+AJUSTES 21
+Entre na conta para selecionar, criar ou excluir personagens (um de cada classe).
+Dentro do jogo, Personagens salva no servidor e retorna a selecao.
+Exclusao exige nome e senha; coins/premiums/skins da conta sao preservados.
+Corrige orientacao de mobs/NPCs, dano por skill e efeitos de Presa/Drena.
+Golpe da Vinganca nivel10 sem recarga adicional; respeita animacao do golpe.
+Forca de Awell aumenta peso, nao HP. Veja audit/freeston-21.md.
+Salve na versao anterior antes de atualizar; reinicie e recarregue todas as abas.
+Combate ainda individual: nao e um servidor publico com PvP compartilhado.
+
+AJUSTES 20
+Painel: acrescente /painel ao endereco do jogo e use a conta ADM existente.
+Novas abas: Aging, Drops, Historico de drops, Logs e alertas, Loja de Skins.
+Chances de Aging e sorteios de drops no Python; salvas pelo painel, sem reinicio.
+Historico por conta/codigo/nivel de item/periodo/situacao; alerta de volume.
+415 modelos cosmeticos: publique as ofertas desejadas na aba Loja de Skins.
+No jogo, botao Skins ou /skins. Compra em coins e propriedade no servidor.
+Adequado para alfa FECHADA; combate/inventario comum ainda dependem do cliente.
+Abates sao relatos do cliente; logs NAO sao um anticheat completo.
+Veja audit/freeston-20.md para cobertura e limitacoes.
+Esta instalacao altera Python: feche a anterior uma vez e recarregue os clientes.
+Copie .local-data para preservar contas, personagens, loja e historicos.
+
+AJUSTES 19
+Buffs de skills no topo esquerdo, premiums a direita. Efeitos separados por skill.
+Correcao de absorcao dos bosses, atributos por arma/classe e ataques de resposta.
+Aura com brilho/particulas do cliente. Mix, Force, Aging e Nadia operacionais.
+Materiais de Aging usam receitas proprias deste servidor, nao oficiais confirmadas.
+Duas contas distintas no MESMO iniciador/mapa se veem, movem e conversam.
+IMPORTANTE: so presenca/chat sao compartilhados; monstros/combate/drops ainda locais.
+Nao e um MMO pronto para lancamento. Detalhes: audit/freeston-19.md.
+Link externo: INICIAR_INTERNET.bat; botao Link do jogo, /painel, LINK_DO_JOGO.txt.
+Esta revisao altera Python e exige reiniciar o servidor uma vez.
+
+AJUSTES 18
+Recarga por skill e nivel, com barra nativa e bloqueio real de repeticao.
+Meteoro 17,5 s; Onda de Fogo 8,5 s (regra CLASSICA, proficiencia 100%).
+ADM/GM respeitam a recarga. Recarregar a pagina preserva o tempo restante.
+A pesquisa enviada foi comparada: audit/freeston-18.md.
+Tempos privados do servidor Zephira ainda nao foram confirmados.
+
+AJUSTES 17
+Grade 12x6, organizar, duas bolsas e troca dos conjuntos de arma/escudo.
+T alterna a visualizacao do traje; equipar nao troca o modo automaticamente.
+128 progressoes de skills importadas de fonte publica CLASSICA.
+EXP, drops e varias formulas do Zephira NAO foram recuperados.
+Veja audit/freeston-17.md para cobertura, fontes e limites.
+
+PAINEL ADMINISTRATIVO 16
+Abra http://localhost:19065/painel no computador do servidor.
+Em outro aparelho, use o IP ou link do jogo e acrescente /painel.
+Entre com o ID admin e sua senha do jogo (nick VelluM).
+Loja: adicionar/editar/pausar/remover/restaurar ofertas e alterar precos.
+Usuarios: criar, alterar papel/senha, bloquear, excluir, adicionar coins,
+encerrar sessoes e ver personagens. Inclui historico de acoes.
+Apenas ADM acessa o painel. GM e jogador nao tem acesso ao painel.
+As configuracoes sao salvas no servidor; loja atualiza em ate 10 segundos.
+A instalacao desta revisao exige fechar a anterior uma vez.
+Depois, alteracoes feitas no painel nao exigem reiniciar.
+Veja PAINEL-ADMIN.md para mais detalhes.
+
+NOVIDADES 15
+O login admin agora usa o nick VelluM. ADM/GM entram sempre no cla Staff.
+A coroa da Staff independe do dono de BC. Staff e top de classe de jogador
+recebem aura dourada; Staff nao ocupa vagas do ranking dos jogadores.
+A conta huss abre no Teio, mecanico 149. Use a senha informada.
+Martelo +20 equipado; garra + escudo +20 na bolsa, amuleto Kelvezu.
+Botao direito na garra e depois no escudo alterna para uma mao.
+Trajes na loja nativa: 50 modelos, 1000 coins cada, permanentes.
+Botao direito veste; T alterna o visual. A armadura continua equipada.
+
+SKILLS
+Digite /habilidades ou pressione S. A janela nativa mostra as skills da classe, com nome e requisito. Oito classes usam 128 artes classicas recuperadas.
+Assassin, Shaman e Martial Artist ainda usam ilustracoes provisorias.
+As artes classicas nao foram confirmadas contra a revisao atual do pweb.world.
+Aprenda com Mestre Verkan em Ricarten ou Mestre Raymon em Pillai.
+Na conta admin, /habilidades liberar maximiza somente a classe atual.
+/equipar prepara um personagem para teste. /ajuda abre os comandos.
+O X fecha a janela nativa. A ajuda tambem fecha com Esc.
+
+LOJA E COINS
+/loja, F9 ou Loja premium abre o Item Shop nativo. Compre com coins e ative
+com o botao direito no item da bolsa. Premiums ativos ficam a direita.
+/coins 1000 adiciona para voce (admin). /coins bielbt 1000 adiciona para a ID bielbt.
+O ID e o login da conta. Os coins valem para todas as classes e ficam no servidor.
+
+LINK
+INICIAR_INTERNET.bat abre http://127.0.0.1:19065/painel.
+Entre como admin e clique Copiar link. O endereco tambem fica em LINK_DO_JOGO.txt.
+O painel informa se o link esta pendente, verificado ou offline.
+Falha de DNS e verificada novamente automaticamente.
+Mantenha PC e tunel ligados; fechar o tunel encerra o acesso.
+URL permanente depende de dominio e tunel nomeado configurado pelo operador.
+O painel permite criar contas de jogador e trocar a senha inicial.
+
+ATUALIZAR
+ATUALIZAR.bat abre um seletor de ZIP. Pacotes compativeis atualizam a interface,
+guardam backup em .updates e preservam os dados sem desligar servidor/tunel.
+No jogo, clique Salvar e atualizar. A pagina recarrega com progresso salvo.
+Mudancas no backend Python exigem reiniciar/instalar o pacote completo.
+
+SITUACAO
+Esta versao e de testes. Ainda nao existe um mundo multiplayer compartilhado
+nem validacao autoritativa de combate/economia. Formulas de skills e varios
+servicos sao parciais/locais. Leia LANCAMENTO.md e AUDITORIA-FREESTON-12.md.
+Os monstros perseguem e atacam fora das cidades. /deus off permite receber dano.

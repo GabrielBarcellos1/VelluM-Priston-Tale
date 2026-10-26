@@ -1,0 +1,217 @@
+{
+  "source": "Public pinned client _st/KCe/fEt (local runtime extraction, no original server login)",
+  "clientSha256": "309822294b926934160b35d034a4b15e0985d539520a04dc2a684b06b9a155ac",
+  "groups": [
+    {
+      "name": "Terceiro Olho",
+      "kind": "thirdEyes",
+      "codes": [
+        "BI320",
+        "BI112",
+        "BI321",
+        "BI322"
+      ],
+      "icon": "thirdeyes"
+    },
+    {
+      "name": "Poção EXPup10%",
+      "kind": "expUp",
+      "value": 10,
+      "codes": [
+        "BI323",
+        "BI113",
+        "BI324",
+        "BI325"
+      ],
+      "icon": "expuppotion"
+    },
+    {
+      "name": "Poção EXPup30%",
+      "kind": "expUp",
+      "value": 30,
+      "codes": [
+        "BI326",
+        "BI124",
+        "BI327",
+        "BI328"
+      ],
+      "icon": "expuppotion"
+    },
+    {
+      "name": "Presa Vampírica",
+      "kind": "vampiric",
+      "codes": [
+        "BI119",
+        "BI120",
+        "BI329",
+        "BI330"
+      ],
+      "icon": "vampiric"
+    },
+    {
+      "name": "Presa Vampírica Superior",
+      "kind": "vampiricEx",
+      "codes": [
+        "BI331",
+        "BI188",
+        "BI332",
+        "BI333"
+      ],
+      "icon": "vampiric_ex"
+    },
+    {
+      "name": "Drena Almas (Recarga de Mana)",
+      "kind": "manaRecharge",
+      "codes": [
+        "BI121",
+        "BI122",
+        "BI334",
+        "BI335"
+      ],
+      "icon": "m_rechar"
+    },
+    {
+      "name": "Poção de Redução de Mana",
+      "kind": "manaReduce",
+      "value": 30,
+      "codes": [
+        "BI336",
+        "BI128",
+        "BI337",
+        "BI338"
+      ],
+      "icon": "m_reduce"
+    },
+    {
+      "name": "Poção de Redução de Stamina",
+      "kind": "staminaReduce",
+      "value": 30,
+      "codes": [
+        "BI339",
+        "BI191",
+        "BI340",
+        "BI341"
+      ],
+      "icon": "s_reduce"
+    },
+    {
+      "name": "Fênix",
+      "kind": "phoenix",
+      "codes": [
+        "BI134",
+        "BI132",
+        "BI342",
+        "BI343"
+      ],
+      "icon": "m_phoenix"
+    },
+    {
+      "name": "Força de Awell",
+      "kind": "mightOfAwell",
+      "value": 1000,
+      "codes": [
+        "BI344",
+        "BI126",
+        "BI345",
+        "BI131"
+      ],
+      "icon": "m_might"
+    },
+    {
+      "name": "Terry",
+      "kind": "helpPet",
+      "type": 1,
+      "codes": [
+        "BI346",
+        "BI152",
+        "BI347",
+        "BI169"
+      ],
+      "icon": "pet_terry-pose"
+    },
+    {
+      "name": "Nepsys",
+      "kind": "helpPet",
+      "type": 2,
+      "codes": [
+        "BI348",
+        "BI153",
+        "BI349",
+        "BI170"
+      ],
+      "icon": "pet_nepsys-pose"
+    },
+    {
+      "name": "Eor",
+      "kind": "helpPet",
+      "type": 3,
+      "codes": [
+        "BI350",
+        "BI154",
+        "BI351",
+        "BI171"
+      ],
+      "icon": "pet_io-pose"
+    },
+    {
+      "name": "Mut",
+      "kind": "helpPet",
+      "type": 4,
+      "codes": [
+        "BI352",
+        "BI155",
+        "BI353",
+        "BI172"
+      ],
+      "icon": "pet-mute-pose"
+    },
+    {
+      "name": "Poção do Sorriso",
+      "kind": "bighead",
+      "type": 1,
+      "codes": [
+        "BI354",
+        "BI195",
+        "BI355",
+        "BI356"
+      ],
+      "icon": "bighead"
+    },
+    {
+      "name": "Poção do Amor",
+      "kind": "bighead",
+      "type": 2,
+      "codes": [
+        "BI357",
+        "BI196",
+        "BI358",
+        "BI359"
+      ],
+      "icon": "bighead"
+    },
+    {
+      "name": "Poção da Tristeza",
+      "kind": "bighead",
+      "type": 3,
+      "codes": [
+        "BI360",
+        "BI197",
+        "BI361",
+        "BI362"
+      ],
+      "icon": "bighead"
+    },
+    {
+      "name": "Poção Fofa",
+      "kind": "bighead",
+      "type": 4,
+      "codes": [
+        "BI363",
+        "BI198",
+        "BI364",
+        "BI365"
+      ],
+      "icon": "bighead"
+    }
+  ]
+}

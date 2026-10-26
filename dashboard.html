@@ -1,0 +1,394 @@
+<!doctype html>
+<html lang="pt-BR">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width,initial-scale=1" />
+    <meta name="theme-color" content="#101614" />
+    <title>FREEston Tale · Administração</title>
+    <link rel="stylesheet" href="/dashboard.css" />
+  </head>
+  <body>
+    <div class="app-shell">
+      <aside>
+        <a class="brand" href="/painel"
+          ><span class="brand-mark">F</span
+          ><span>FREEston <em>Tale</em><small>ADMINISTRAÇÃO</small></span></a
+        >
+        <nav aria-label="Administração">
+          <button data-tab="overview" aria-selected="true">Visão geral</button
+          ><button data-tab="products">Loja do jogo <span id="product-count">—</span></button
+          ><button data-tab="users">Usuários <span id="user-count">—</span></button
+          ><button data-tab="aging">Aging</button><button data-tab="drops">Drops</button
+          ><button data-tab="drop-history">Histórico de drops</button
+          ><button data-tab="security">Logs e alertas</button
+          ><button data-tab="skins">Loja de Skins</button
+          ><button data-tab="audit">Histórico de ações</button
+          ><button data-tab="settings">Acesso e servidor</button>
+        </nav>
+        <div class="sidebar-bottom">
+          <span class="status-dot"></span> Vinculado ao servidor<a href="/">← Voltar ao jogo</a>
+        </div>
+      </aside>
+      <main>
+        <header class="page-header">
+          <div>
+            <p class="eyebrow">CENTRAL DO SERVIDOR</p>
+            <h1 id="page-title">Visão geral</h1>
+            <p id="page-description">Acompanhe sua comunidade e prepare a loja.</p>
+          </div>
+          <div class="header-actions">
+            <span id="admin-name" class="identity">ADM</span
+            ><button id="refresh" class="secondary">Atualizar</button
+            ><button id="logout" class="text-button">Sair</button>
+          </div>
+        </header>
+        <p id="page-error" class="error" role="alert" hidden></p>
+        <section data-panel="overview">
+          <div class="stats">
+            <article>
+              <span>Contas cadastradas</span><strong id="stat-users">—</strong
+              ><small id="stat-staff">—</small>
+            </article>
+            <article>
+              <span>Produtos publicados</span><strong id="stat-products">—</strong
+              ><small>Visíveis no Item Shop</small>
+            </article>
+            <article>
+              <span>Sessões autenticadas</span><strong id="stat-sessions">—</strong
+              ><small>Sessões válidas, incluindo o painel</small>
+            </article>
+            <article>
+              <span>Contas bloqueadas</span><strong id="stat-blocked">—</strong
+              ><small>Sem acesso ao servidor</small>
+            </article>
+          </div>
+          <div class="two-columns">
+            <article class="card">
+              <div class="section-heading">
+                <h2>Sua loja, dentro do jogo</h2>
+                <span class="pill">Sincronização automática</span>
+              </div>
+              <p>
+                Defina produtos e preços por aqui. A loja do NPC, <b>/loja</b> e <b>F9</b> recebem o
+                mesmo catálogo.
+              </p>
+              <button class="primary" data-go="products">Gerenciar produtos →</button>
+              <p class="muted">
+                Alterações aparecem nos jogos abertos em até 10 segundos. Abrir a loja consulta o
+                catálogo imediatamente.
+              </p>
+            </article>
+            <article class="card">
+              <h2>Acesso dos jogadores</h2>
+              <p>
+                Crie contas, gerencie a equipe e acompanhe os personagens. A administração usa o
+                mesmo login do jogo.
+              </p>
+              <button class="secondary" data-go="users">Gerenciar usuários →</button>
+              <p class="muted">ADM e GM pertencem à Staff. Somente ADM tem acesso a este painel.</p>
+            </article>
+          </div>
+          <article class="card notice">
+            <span class="pill">Ambiente de testes</span>
+            <p>
+              Alfa fechada: jogadores no mesmo servidor/mapa se veem e conversam. Combate e monstros
+              continuam por navegador; relatos de abate ainda dependem do cliente. Use contas de
+              teste e convide poucos jogadores de confiança. Ainda não é um MMO pronto para abertura
+              pública ou economia competitiva.
+            </p>
+          </article>
+        </section>
+        <section data-panel="products" hidden>
+          <div class="toolbar">
+            <label class="search"
+              ><span>Buscar produto</span
+              ><input
+                id="product-search"
+                type="search"
+                placeholder="Nome ou código do item" /></label
+            ><label
+              ><span>Categoria</span
+              ><select id="product-category">
+                <option value="">Todas</option>
+                <option value="premium">Premiums</option>
+                <option value="costume">Trajes</option>
+                <option value="items">Itens</option>
+              </select></label
+            ><label
+              ><span>Situação</span
+              ><select id="product-state">
+                <option value="active">Cadastrados</option>
+                <option value="visible">Publicados</option>
+                <option value="paused">Pausados</option>
+                <option value="archived">Removidos</option>
+                <option value="all">Todos</option>
+              </select></label
+            ><button id="new-product" class="primary">+ Adicionar produto</button>
+          </div>
+          <p class="muted">
+            Preços em coins. Compras de itens são vinculadas à conta. Pausar ou remover uma oferta
+            não retira itens já comprados.
+          </p>
+          <div class="table-wrap">
+            <table>
+              <thead>
+                <tr>
+                  <th>Produto</th>
+                  <th>Categoria</th>
+                  <th>Preço</th>
+                  <th>Situação</th>
+                  <th>Ações</th>
+                </tr>
+              </thead>
+              <tbody id="products-body"></tbody>
+            </table>
+          </div>
+          <p id="products-empty" class="empty" hidden>
+            Nenhum produto encontrado. Altere os filtros ou adicione uma oferta.
+          </p>
+        </section>
+        <section data-panel="users" hidden>
+          <div class="toolbar">
+            <label class="search"
+              ><span>Buscar usuário</span
+              ><input
+                id="user-search"
+                type="search"
+                placeholder="ID ou nome do personagem" /></label
+            ><label
+              ><span>Papel</span
+              ><select id="user-role">
+                <option value="">Todos</option>
+                <option value="player">Jogador</option>
+                <option value="gm">GM</option>
+                <option value="admin">ADM</option>
+              </select></label
+            ><button id="new-user" class="primary">+ Criar usuário</button>
+          </div>
+          <div class="table-wrap">
+            <table>
+              <thead>
+                <tr>
+                  <th>Usuário / personagens</th>
+                  <th>Papel</th>
+                  <th>Acesso</th>
+                  <th>Coins</th>
+                  <th>Sessões</th>
+                  <th>Ações</th>
+                </tr>
+              </thead>
+              <tbody id="users-body"></tbody>
+            </table>
+          </div>
+          <p id="users-empty" class="empty" hidden>Nenhum usuário encontrado.</p>
+        </section>
+        <section data-panel="aging" hidden></section>
+        <section data-panel="drops" hidden></section>
+        <section data-panel="drop-history" hidden></section>
+        <section data-panel="security" hidden></section>
+        <section data-panel="skins" hidden></section>
+        <section data-panel="audit" hidden>
+          <article class="card">
+            <div class="section-heading">
+              <h2>Histórico administrativo</h2>
+              <span class="pill">Últimas 200 ações</span>
+            </div>
+            <p class="muted">
+              Quem alterou, o que mudou e quando. Senhas nunca aparecem neste histórico.
+            </p>
+            <div class="table-wrap">
+              <table>
+                <thead>
+                  <tr>
+                    <th>Quando</th>
+                    <th>Administrador</th>
+                    <th>Ação</th>
+                    <th>Alvo</th>
+                    <th>Detalhes</th>
+                  </tr>
+                </thead>
+                <tbody id="audit-body"></tbody>
+              </table>
+            </div>
+            <p id="audit-empty" class="empty" hidden>As ações do painel aparecerão aqui.</p>
+          </article>
+        </section>
+        <section data-panel="settings" hidden>
+          <div class="two-columns">
+            <article class="card">
+              <h2>Link para divulgar</h2>
+              <p id="link-status" role="status">Consultando…</p>
+              <input id="public-url" aria-label="Link do jogo" readonly />
+              <div class="actions">
+                <button id="copy-link" class="primary">Copiar link</button
+                ><button id="open-link" class="secondary">Abrir jogo</button>
+              </div>
+              <p class="muted">
+                Sem link ativo, execute INICIAR_INTERNET.bat. Um túnel temporário precisa do
+                computador ligado.
+              </p>
+            </article>
+            <article class="card">
+              <h2>Versão do servidor</h2>
+              <p id="build"></p>
+              <p>As configurações deste painel são salvas no servidor e não exigem reinício.</p>
+              <p class="muted">
+                Atualizações de interface compatíveis usam ATUALIZAR.bat. Mudanças em Python exigem
+                instalar o pacote completo.
+              </p>
+            </article>
+          </div>
+          <article class="card">
+            <h2>Senha da sua conta</h2>
+            <p class="muted">A troca encerra as outras sessões da sua conta.</p>
+            <form id="change-password" class="inline-form">
+              <label
+                >Senha atual<input
+                  name="currentPassword"
+                  type="password"
+                  autocomplete="current-password"
+                  required /></label
+              ><label
+                >Nova senha<input
+                  name="newPassword"
+                  type="password"
+                  autocomplete="new-password"
+                  minlength="8"
+                  required /></label
+              ><button class="primary">Alterar senha</button>
+              <p id="password-result" role="status"></p>
+            </form>
+          </article>
+        </section>
+        <footer>
+          FREEston Tale <span id="footer-version"></span> · Configurações persistidas no servidor
+        </footer>
+      </main>
+    </div>
+    <dialog id="product-dialog">
+      <form id="product-form">
+        <div class="dialog-heading">
+          <div>
+            <p class="eyebrow">LOJA DO JOGO</p>
+            <h2 id="product-title">Adicionar produto</h2>
+          </div>
+          <button type="button" class="icon-button" data-close aria-label="Fechar produto">
+            ×
+          </button>
+        </div>
+        <input name="version" type="hidden" /><label
+          >Buscar no catálogo<input
+            id="library-search"
+            type="search"
+            placeholder="Ex.: Terceiro Olho, Mechanic, espada" /></label
+        ><label>Item disponível<select name="code" id="product-code" required></select></label>
+        <p id="product-kind" class="muted"></p>
+        <label>Nome na loja<input name="name" required maxlength="100" /></label>
+        <div class="form-grid">
+          <label
+            >Preço em coins<input
+              name="price"
+              type="number"
+              required
+              min="0"
+              max="1000000000"
+              step="1" /></label
+          ><label class="check"
+            ><input name="enabled" type="checkbox" checked /> Publicar na loja</label
+          >
+        </div>
+        <label>Descrição<textarea name="description" maxlength="1000" rows="3"></textarea></label>
+        <p class="form-error" role="alert"></p>
+        <div class="dialog-footer">
+          <button type="button" class="secondary" data-close>Cancelar</button
+          ><button class="primary" type="submit">Salvar produto</button>
+        </div>
+      </form>
+    </dialog>
+    <dialog id="user-dialog">
+      <form id="user-form">
+        <div class="dialog-heading">
+          <div>
+            <p class="eyebrow">GESTÃO DE CONTAS</p>
+            <h2 id="user-title">Criar usuário</h2>
+          </div>
+          <button type="button" class="icon-button" data-close aria-label="Fechar usuário">
+            ×
+          </button>
+        </div>
+        <input name="version" type="hidden" /><input
+          name="operation"
+          type="hidden"
+          value="create"
+        /><label
+          >ID de login<input
+            name="username"
+            required
+            pattern="[a-zA-Z0-9_]{3,24}"
+            autocomplete="off" /></label
+        ><label
+          >Papel<select name="role">
+            <option value="player">Jogador</option>
+            <option value="gm">GM · Staff</option>
+            <option value="admin">ADM · Staff e painel</option>
+          </select></label
+        ><label id="user-password-label"
+          >Senha<input
+            name="password"
+            type="password"
+            minlength="8"
+            maxlength="256"
+            autocomplete="new-password" /></label
+        ><label class="check" id="blocked-label"
+          ><input name="blocked" type="checkbox" /> Bloquear acesso</label
+        >
+        <p id="user-characters" class="muted"></p>
+        <p class="muted">
+          Bloqueio, troca de papel ou redefinição de senha encerram as sessões da conta. O ID
+          permanece fixo após a criação.
+        </p>
+        <p class="form-error" role="alert"></p>
+        <div class="dialog-footer">
+          <button type="button" class="secondary" data-close>Cancelar</button
+          ><button class="primary" type="submit">Salvar usuário</button>
+        </div>
+      </form>
+    </dialog>
+    <dialog id="coins-dialog">
+      <form id="coins-form">
+        <div class="dialog-heading">
+          <h2>Adicionar coins</h2>
+          <button type="button" class="icon-button" data-close aria-label="Fechar coins">×</button>
+        </div>
+        <label>ID de login<input name="username" readonly required /></label
+        ><label
+          >Quantidade<input name="amount" type="number" min="1" max="1000000000" step="1" required
+        /></label>
+        <p class="muted">
+          O saldo é compartilhado pelas classes da conta e atualizado no jogo automaticamente.
+        </p>
+        <p class="form-error" role="alert"></p>
+        <div class="dialog-footer">
+          <button type="button" class="secondary" data-close>Cancelar</button
+          ><button class="primary" type="submit">Adicionar coins</button>
+        </div>
+      </form>
+    </dialog>
+    <dialog id="confirm-dialog">
+      <form id="confirm-form">
+        <h2 id="confirm-title"></h2>
+        <p id="confirm-description"></p>
+        <label id="confirm-label"
+          >Digite o ID para confirmar<input id="confirm-value" autocomplete="off"
+        /></label>
+        <p class="form-error" role="alert"></p>
+        <div class="dialog-footer">
+          <button type="button" class="secondary" data-close>Cancelar</button
+          ><button type="submit" class="danger">Confirmar</button>
+        </div>
+      </form>
+    </dialog>
+    <div id="toast" role="status" hidden></div>
+    <script type="module" src="/dashboard.mjs"></script>
+  </body>
+</html>

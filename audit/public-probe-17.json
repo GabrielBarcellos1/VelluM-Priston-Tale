@@ -1,0 +1,21 @@
+{
+  "checkedAt": "2026-10-23T15:43:04.033129+00:00",
+  "requests": [
+    {
+      "url": "https://pweb.world",
+      "status": 403
+    },
+    {
+      "url": "https://pweb.world/api/wiki",
+      "status": 403
+    },
+    {
+      "url": "https://pweb.world/api/wiki/skills",
+      "status": 403
+    },
+    {
+      "url": "https://pweb.world/api/wiki/drops",
+      "status": 403
+    }
+  ]
+}

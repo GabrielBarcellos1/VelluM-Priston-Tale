@@ -1,0 +1,122 @@
+html,
+body {
+  overscroll-behavior: none;
+}
+button,
+input,
+select,
+summary {
+  touch-action: manipulation;
+}
+.local-mobile-menu > summary {
+  display: none;
+}
+.local-mobile-menu:not([open]) > .local-controls {
+  display: flex;
+}
+@media (pointer: coarse), (max-width: 700px) {
+  .local-mobile-menu {
+    position: fixed;
+    top: max(6px, env(safe-area-inset-top));
+    left: max(6px, env(safe-area-inset-left));
+    z-index: 60;
+    max-width: calc(100vw - 24px);
+    color: #eddfb6;
+    font: 14px system-ui;
+  }
+  .local-mobile-menu > summary {
+    display: block;
+    padding: 12px 16px;
+    min-height: 44px;
+    background: #172019ed;
+    border: 1px solid #a78b52;
+    border-radius: 9px;
+    cursor: pointer;
+    list-style: none;
+  }
+  .local-mobile-menu:not([open]) > .local-controls {
+    display: none;
+  }
+  .local-mobile-menu > .local-controls {
+    position: static;
+    max-width: min(340px, calc(100vw - 24px));
+    max-height: 55dvh;
+    overflow: auto;
+    gap: 8px;
+    padding: 10px;
+    font: 13px system-ui;
+    border-radius: 9px;
+    background: #172019f5;
+  }
+  .local-mobile-menu .local-controls button,
+  .local-mobile-menu .local-controls select {
+    min-height: 44px;
+    min-width: 44px;
+    font: 13px system-ui;
+    padding: 10px;
+  }
+  .local-mobile-menu .local-controls label {
+    flex-wrap: wrap;
+    align-items: center;
+  }
+  .local-mobile-menu .local-controls > span {
+    width: 100%;
+    font-size: 12px;
+  }
+  #local-command-help {
+    max-height: calc(100dvh - 24px);
+  }
+  #local-command-help button {
+    min-height: 44px;
+  }
+  #local-command-help .help-results {
+    max-height: 45dvh;
+  }
+}
+@media (max-height: 500px) and (pointer: coarse) {
+  .local-mobile-menu > .local-controls {
+    max-height: 65dvh;
+  }
+  #local-command-help header {
+    padding-top: 10px;
+    padding-bottom: 8px;
+  }
+  #local-command-help .help-results {
+    max-height: 35dvh;
+  }
+}
+@media (pointer: coarse), (max-width: 700px) {
+  body:has(.ms-shade:not(.hidden)) .local-mobile-menu {
+    display: none;
+  }
+}
+.local-account-close {
+  display: none;
+}
+@media (pointer: coarse), (max-width: 700px) {
+  .local-account-trigger {
+    display: flex !important;
+    min-width: 44px;
+    min-height: 44px;
+  }
+  .local-account-trigger > i {
+    font: 24px system-ui;
+    text-align: center;
+  }
+  .local-mobile-menu.has-native-trigger {
+    left: 50%;
+    top: 50%;
+    transform: translate(-50%, -50%);
+    max-width: calc(100vw - 24px);
+  }
+  .local-mobile-menu.has-native-trigger > summary {
+    display: none;
+  }
+  .local-mobile-menu.has-native-trigger:not([open]) {
+    display: none;
+  }
+  .local-mobile-menu .local-account-close {
+    display: block;
+    margin-left: auto;
+  }
+}

@@ -1,0 +1,1064 @@
+{
+  "source": "https://github.com/yweenzy/pristontale-1/blob/299c615ed9a13f9ac394c6d0ac32f19e126b308d/src/Language/Brazil/b_sinSkill_Info.h",
+  "sourceSha256": "f5d4ce9543ffca4132cd18354248bd194c73be5f56f0f01b829522eed61e4046",
+  "classicNames": 128,
+  "localTranslations": 48,
+  "skills": [
+    {
+      "code": "SKILL_MELEE_MASTERY",
+      "name": "Mestre das Armas",
+      "nameOriginal": "Melee Mastery",
+      "nameSource": "classic-brazil-client"
+    },
+    {
+      "code": "SKILL_FIRE_ATTRIBUTE",
+      "name": "Resistência a Fogo",
+      "nameOriginal": "Fire Attribute",
+      "nameSource": "classic-brazil-client"
+    },
+    {
+      "code": "SKILL_RAVING",
+      "name": "Raiva",
+      "nameOriginal": "Raving",
+      "nameSource": "classic-brazil-client"
+    },
+    {
+      "code": "SKILL_IMPACT",
+      "name": "Impacto",
+      "nameOriginal": "Impact",
+      "nameSource": "classic-brazil-client"
+    },
+    {
+      "code": "SKILL_TRIPLE_IMPACT",
+      "name": "Impacto Triplo",
+      "nameOriginal": "Triple Impact",
+      "nameSource": "classic-brazil-client"
+    },
+    {
+      "code": "SKILL_BRUTAL_SWING",
+      "name": "Girada Brutal",
+      "nameOriginal": "Brutal Swing",
+      "nameSource": "classic-brazil-client"
+    },
+    {
+      "code": "SKILL_ROAR",
+      "name": "Rugido",
+      "nameOriginal": "Roar",
+      "nameSource": "classic-brazil-client"
+    },
+    {
+      "code": "SKILL_RAGE_OF_ZECRAM",
+      "name": "Fúria de Zecram",
+      "nameOriginal": "Rage Of Zecram",
+      "nameSource": "classic-brazil-client"
+    },
+    {
+      "code": "SKILL_CONCENTRATION",
+      "name": "Concentração",
+      "nameOriginal": "Concentration",
+      "nameSource": "classic-brazil-client"
+    },
+    {
+      "code": "SKILL_AVANGING_CRASH",
+      "name": "Golpe da Vingança",
+      "nameOriginal": "Avenging Crash",
+      "nameSource": "classic-brazil-client"
+    },
+    {
+      "code": "SKILL_SWIFT_AXE",
+      "name": "Machado Veloz",
+      "nameOriginal": "Swift Axe",
+      "nameSource": "classic-brazil-client"
+    },
+    {
+      "code": "SKILL_BONE_CRASH",
+      "name": "Quebra Ossos",
+      "nameOriginal": "Bone Crash",
+      "nameSource": "classic-brazil-client"
+    },
+    {
+      "code": "SKILL_DETORYER",
+      "name": "Destroyer",
+      "nameOriginal": "Destroyer",
+      "nameSource": "classic-brazil-client"
+    },
+    {
+      "code": "SKILL_BERSERKER",
+      "name": "Fúria",
+      "nameOriginal": "Berserker",
+      "nameSource": "classic-brazil-client"
+    },
+    {
+      "code": "SKILL_CYCLONE_STRIKE",
+      "name": "Golpe Giratório",
+      "nameOriginal": "Cyclone Strike",
+      "nameSource": "classic-brazil-client"
+    },
+    {
+      "code": "SKILL_BOOST_HEALTH",
+      "name": "Bônus de Vitalidade",
+      "nameOriginal": "Boost Health",
+      "nameSource": "classic-brazil-client"
+    },
+    {
+      "code": "SKILL_EXTREME_SHIELD",
+      "name": "Escudo Extremo",
+      "nameOriginal": "Extreme Shield",
+      "nameSource": "classic-brazil-client"
+    },
+    {
+      "code": "SKILL_MECHANIC_BOMB",
+      "name": "Bomba Mecânica",
+      "nameOriginal": "Mechanic Bomb",
+      "nameSource": "classic-brazil-client"
+    },
+    {
+      "code": "SKILL_POISON_ATTRIBUTE",
+      "name": "Resistência a Veneno",
+      "nameOriginal": "Poison Attribute",
+      "nameSource": "classic-brazil-client"
+    },
+    {
+      "code": "SKILL_PHYSICAL_ABSORB",
+      "name": "Absorção Física",
+      "nameOriginal": "Physical Absorb",
+      "nameSource": "classic-brazil-client"
+    },
+    {
+      "code": "SKILL_GREAT_SMASH",
+      "name": "Grande Golpe",
+      "nameOriginal": "Great Smash",
+      "nameSource": "classic-brazil-client"
+    },
+    {
+      "code": "SKILL_MAXIMIZE",
+      "name": "Maximizar",
+      "nameOriginal": "Maximize",
+      "nameSource": "classic-brazil-client"
+    },
+    {
+      "code": "SKILL_AUTOMATION",
+      "name": "Automação",
+      "nameOriginal": "Automation",
+      "nameSource": "classic-brazil-client"
+    },
+    {
+      "code": "SKILL_SPARK",
+      "name": "Spark",
+      "nameOriginal": "Spark",
+      "nameSource": "classic-brazil-client"
+    },
+    {
+      "code": "SKILL_METAL_ARMOR",
+      "name": "Armadura Metálica",
+      "nameOriginal": "Metal Armor",
+      "nameSource": "classic-brazil-client"
+    },
+    {
+      "code": "SKILL_GRAND_SMASH",
+      "name": "Golpe Grandioso",
+      "nameOriginal": "Grand Smash",
+      "nameSource": "classic-brazil-client"
+    },
+    {
+      "code": "SKILL_MECHANIC_WEAPON",
+      "name": "Mestre dos Mecânicos",
+      "nameOriginal": "Mechanic Weapon",
+      "nameSource": "classic-brazil-client"
+    },
+    {
+      "code": "SKILL_SPARK_SHIELD",
+      "name": "Escudo Espinhoso",
+      "nameOriginal": "Spark Shield",
+      "nameSource": "classic-brazil-client"
+    },
+    {
+      "code": "SKILL_IMPULSION",
+      "name": "Impulso",
+      "nameOriginal": "Impulsion",
+      "nameSource": "classic-brazil-client"
+    },
+    {
+      "code": "SKILL_COMPULSION",
+      "name": "Implosão",
+      "nameOriginal": "Compulsion",
+      "nameSource": "classic-brazil-client"
+    },
+    {
+      "code": "SKILL_MAGNETIC_SPHERE",
+      "name": "Esfera Magnética",
+      "nameOriginal": "Magnetic Sphere",
+      "nameSource": "classic-brazil-client"
+    },
+    {
+      "code": "SKILL_METAL_GOLEM",
+      "name": "Golem de Metal",
+      "nameOriginal": "Metal Golem",
+      "nameSource": "classic-brazil-client"
+    },
+    {
+      "code": "SKILL_SCOUT_HAWK",
+      "name": "Falcão Vigia",
+      "nameOriginal": "Scout Hawk",
+      "nameSource": "classic-brazil-client"
+    },
+    {
+      "code": "SKILL_SHOOTING_MASTERY",
+      "name": "Mestra do Tiro",
+      "nameOriginal": "Shooting Mastery",
+      "nameSource": "classic-brazil-client"
+    },
+    {
+      "code": "SKILL_WIND_ARROW",
+      "name": "Flecha de Vento",
+      "nameOriginal": "Wind Arrow",
+      "nameSource": "classic-brazil-client"
+    },
+    {
+      "code": "SKILL_PERFECT_AIM",
+      "name": "Mira Perfeita",
+      "nameOriginal": "Perfect Aim",
+      "nameSource": "classic-brazil-client"
+    },
+    {
+      "code": "SKILL_DIONS_EYE",
+      "name": "Olho de Dion",
+      "nameOriginal": "Dion's Eye",
+      "nameSource": "classic-brazil-client"
+    },
+    {
+      "code": "SKILL_FALCON",
+      "name": "Falcão",
+      "nameOriginal": "Falcon",
+      "nameSource": "classic-brazil-client"
+    },
+    {
+      "code": "SKILL_ARROW_OF_RAGE",
+      "name": "Flecha da Fúria",
+      "nameOriginal": "Arrow Of Rage",
+      "nameSource": "classic-brazil-client"
+    },
+    {
+      "code": "SKILL_AVALANCHE",
+      "name": "Avalanche",
+      "nameOriginal": "Avalanche",
+      "nameSource": "classic-brazil-client"
+    },
+    {
+      "code": "SKILL_ELEMENTAL_SHOT",
+      "name": "Tiro Elemental",
+      "nameOriginal": "Elemental Shot",
+      "nameSource": "classic-brazil-client"
+    },
+    {
+      "code": "SKILL_GOLDEN_FALCON",
+      "name": "Falcão Dourado",
+      "nameOriginal": "Golden Falcon",
+      "nameSource": "classic-brazil-client"
+    },
+    {
+      "code": "SKILL_BOMB_SHOT",
+      "name": "Tiro Explosivo",
+      "nameOriginal": "Bomb Shot",
+      "nameSource": "classic-brazil-client"
+    },
+    {
+      "code": "SKILL_PERFORATION",
+      "name": "Perfuração",
+      "nameOriginal": "Perforation",
+      "nameSource": "classic-brazil-client"
+    },
+    {
+      "code": "SKILL_RECALL_WOLVERIN",
+      "name": "Invocar Wolverine",
+      "nameOriginal": "Recall Wolverine",
+      "nameSource": "classic-brazil-client"
+    },
+    {
+      "code": "SKILL_EVASION_MASTERY",
+      "name": "Mestra da Esquiva",
+      "nameOriginal": "Evasion Mastery",
+      "nameSource": "classic-brazil-client"
+    },
+    {
+      "code": "SKILL_PHOENIX_SHOT",
+      "name": "Tiro Fênix",
+      "nameOriginal": "Phoenix Shot",
+      "nameSource": "classic-brazil-client"
+    },
+    {
+      "code": "SKILL_FORCE_OF_NATURE",
+      "name": "Força da Natureza",
+      "nameOriginal": "Force Of Nature",
+      "nameSource": "classic-brazil-client"
+    },
+    {
+      "code": "SKILL_PIKE_WIND",
+      "name": "Sopro Afiado",
+      "nameOriginal": "Pike Wind",
+      "nameSource": "classic-brazil-client"
+    },
+    {
+      "code": "SKILL_ICE_ATTRIBUTE",
+      "name": "Resistência a Gelo",
+      "nameOriginal": "Ice Attribute",
+      "nameSource": "classic-brazil-client"
+    },
+    {
+      "code": "SKILL_CRITICAL_HIT",
+      "name": "Ataque Crítico",
+      "nameOriginal": "Critical Hit",
+      "nameSource": "classic-brazil-client"
+    },
+    {
+      "code": "SKILL_JUMPING_CRASH",
+      "name": "Pulo Fatal",
+      "nameOriginal": "Jumping Crash",
+      "nameSource": "classic-brazil-client"
+    },
+    {
+      "code": "SKILL_GROUND_PIKE",
+      "name": "Espinhos de Gelo",
+      "nameOriginal": "Ground Pike",
+      "nameSource": "classic-brazil-client"
+    },
+    {
+      "code": "SKILL_TORNADO",
+      "name": "Tornado",
+      "nameOriginal": "Tornado",
+      "nameSource": "classic-brazil-client"
+    },
+    {
+      "code": "SKILL_WEAPONE_DEFENCE_MASTERY",
+      "name": "Mestre da Def.",
+      "nameOriginal": "Weapon Defense Mastery",
+      "nameSource": "classic-brazil-client"
+    },
+    {
+      "code": "SKILL_EXPANSION",
+      "name": "Expansão",
+      "nameOriginal": "Expansion",
+      "nameSource": "classic-brazil-client"
+    },
+    {
+      "code": "SKILL_VENOM_SPEAR",
+      "name": "Lanças Venenosas",
+      "nameOriginal": "Venom Spear",
+      "nameSource": "classic-brazil-client"
+    },
+    {
+      "code": "SKILL_VANISH",
+      "name": "Desaparecer",
+      "nameOriginal": "Vanish",
+      "nameSource": "classic-brazil-client"
+    },
+    {
+      "code": "SKILL_CRITICAL_MASTERY",
+      "name": "Mestre do ATQ Crítico",
+      "nameOriginal": "Critical Mastery",
+      "nameSource": "classic-brazil-client"
+    },
+    {
+      "code": "SKILL_CHAIN_LANCE",
+      "name": "Foice de Aço",
+      "nameOriginal": "Chain Lance",
+      "nameSource": "classic-brazil-client"
+    },
+    {
+      "code": "SKILL_ASSASSIN_EYE",
+      "name": "Olho Assassino",
+      "nameOriginal": "Assassin Eye",
+      "nameSource": "classic-brazil-client"
+    },
+    {
+      "code": "SKILL_CHARGING_STRIKE",
+      "name": "Golpe Carregado",
+      "nameOriginal": "Charging Strike",
+      "nameSource": "classic-brazil-client"
+    },
+    {
+      "code": "SKILL_VAGUE",
+      "name": "Furtivo",
+      "nameOriginal": "Vague",
+      "nameSource": "classic-brazil-client"
+    },
+    {
+      "code": "SKILL_SHADOW_MASTER",
+      "name": "Mestre das Sombras",
+      "nameOriginal": "Shadow Master",
+      "nameSource": "classic-brazil-client"
+    },
+    {
+      "code": "SKILL_SHIELD_STRIKE",
+      "name": "Golpe do Escudo",
+      "nameOriginal": "Shield Strike",
+      "nameSource": "classic-brazil-client"
+    },
+    {
+      "code": "SKILL_FARINA",
+      "name": "Farina",
+      "nameOriginal": "Farina",
+      "nameSource": "classic-brazil-client"
+    },
+    {
+      "code": "SKILL_THROWING_MASTERY",
+      "name": "Mestra do Arremesso",
+      "nameOriginal": "Throwing Mastery",
+      "nameSource": "classic-brazil-client"
+    },
+    {
+      "code": "SKILL_VIGOR_SPEAR",
+      "name": "Lança Gigante",
+      "nameOriginal": "Vigor Spear",
+      "nameSource": "classic-brazil-client"
+    },
+    {
+      "code": "SKILL_WINDY",
+      "name": "Windy",
+      "nameOriginal": "Windy",
+      "nameSource": "classic-brazil-client"
+    },
+    {
+      "code": "SKILL_TWIST_JAVELIN",
+      "name": "Lança Giratória",
+      "nameOriginal": "Twist Javelin",
+      "nameSource": "classic-brazil-client"
+    },
+    {
+      "code": "SKILL_SOUL_SUCKER",
+      "name": "Ladrão de Almas",
+      "nameOriginal": "Soul Sucker",
+      "nameSource": "classic-brazil-client"
+    },
+    {
+      "code": "SKILL_FIRE_JAVELIN",
+      "name": "Lança de Fogo",
+      "nameOriginal": "Fire Javelin",
+      "nameSource": "classic-brazil-client"
+    },
+    {
+      "code": "SKILL_SPLIT_JAVELIN",
+      "name": "Lança Partida",
+      "nameOriginal": "Split Javelin",
+      "nameSource": "classic-brazil-client"
+    },
+    {
+      "code": "SKILL_TRIUMPH_OF_VALHALLA",
+      "name": "Triunfo de Valhalla",
+      "nameOriginal": "Triumph Of Valhalla",
+      "nameSource": "classic-brazil-client"
+    },
+    {
+      "code": "SKILL_LIGHTNING_JAVELIN",
+      "name": "Lança de Raio",
+      "nameOriginal": "Lightning Javelin",
+      "nameSource": "classic-brazil-client"
+    },
+    {
+      "code": "SKILL_STORM_JAVELIN",
+      "name": "Chuva de Lanças",
+      "nameOriginal": "Storm Javelin",
+      "nameSource": "classic-brazil-client"
+    },
+    {
+      "code": "SKILL_HALL_OF_VALHALLA",
+      "name": "Inferno de Valhalla",
+      "nameOriginal": "Hall Of Valhalla",
+      "nameSource": "classic-brazil-client"
+    },
+    {
+      "code": "SKILL_X_RAGE",
+      "name": "Fúria-X",
+      "nameOriginal": "X Rage",
+      "nameSource": "classic-brazil-client"
+    },
+    {
+      "code": "SKILL_FROST_JAVELIN",
+      "name": "Lança de Gelo",
+      "nameOriginal": "Frost Javelin",
+      "nameSource": "classic-brazil-client"
+    },
+    {
+      "code": "SKILL_VENGEANCE",
+      "name": "Vingança",
+      "nameOriginal": "Vengeance",
+      "nameSource": "classic-brazil-client"
+    },
+    {
+      "code": "SKILL_SWORD_BLAST",
+      "name": "Rajada Sagrada",
+      "nameOriginal": "Sword Blast",
+      "nameSource": "classic-brazil-client"
+    },
+    {
+      "code": "SKILL_HOLY_BODY",
+      "name": "Corpo Sagrado",
+      "nameOriginal": "Holy Body",
+      "nameSource": "classic-brazil-client"
+    },
+    {
+      "code": "SKILL_PHYSICAL_TRANING",
+      "name": "Treinamento Físico",
+      "nameOriginal": "Physical Training",
+      "nameSource": "classic-brazil-client"
+    },
+    {
+      "code": "SKILL_DOUBLE_CRASH",
+      "name": "Golpe Duplo",
+      "nameOriginal": "Double Crash",
+      "nameSource": "classic-brazil-client"
+    },
+    {
+      "code": "SKILL_HOLY_VALOR",
+      "name": "Valor Sagrado",
+      "nameOriginal": "Holy Valor",
+      "nameSource": "classic-brazil-client"
+    },
+    {
+      "code": "SKILL_BRANDISH",
+      "name": "Brandish",
+      "nameOriginal": "Brandish",
+      "nameSource": "classic-brazil-client"
+    },
+    {
+      "code": "SKILL_PIERCING",
+      "name": "Piercing",
+      "nameOriginal": "Piercing",
+      "nameSource": "classic-brazil-client"
+    },
+    {
+      "code": "SKILL_DRASTIC_SPIRIT",
+      "name": "Espírito Drástico",
+      "nameOriginal": "Drastic Spirit",
+      "nameSource": "classic-brazil-client"
+    },
+    {
+      "code": "SKILL_SWORD_MASTERY",
+      "name": "Mestre da Espada",
+      "nameOriginal": "Sword Mastery",
+      "nameSource": "classic-brazil-client"
+    },
+    {
+      "code": "SKILL_DIVINE_INHALATION",
+      "name": "Escudo Divino",
+      "nameOriginal": "Divine Inhalation",
+      "nameSource": "classic-brazil-client"
+    },
+    {
+      "code": "SKILL_HOLY_INCANTATION",
+      "name": "Encantamento Sagrado",
+      "nameOriginal": "Holy Incantation",
+      "nameSource": "classic-brazil-client"
+    },
+    {
+      "code": "SKILL_GRAND_CROSS",
+      "name": "Grande Cruzada",
+      "nameOriginal": "Grand Cross",
+      "nameSource": "classic-brazil-client"
+    },
+    {
+      "code": "SKILL_SWORD_OF_JUSTICE",
+      "name": "Espada da Justiça",
+      "nameOriginal": "Sword Of Justice",
+      "nameSource": "classic-brazil-client"
+    },
+    {
+      "code": "SKILL_GODLY_SHIELD",
+      "name": "Escudo dos deuses",
+      "nameOriginal": "Godly Shield",
+      "nameSource": "classic-brazil-client"
+    },
+    {
+      "code": "SKILL_GOD_BLESS",
+      "name": "Bênção Divina",
+      "nameOriginal": "God Bless",
+      "nameSource": "classic-brazil-client"
+    },
+    {
+      "code": "SKILL_DIVINE_PIERCING",
+      "name": "Piercing Divino",
+      "nameOriginal": "Divine Piercing",
+      "nameSource": "classic-brazil-client"
+    },
+    {
+      "code": "SKILL_AGONY",
+      "name": "Agonia",
+      "nameOriginal": "Agony",
+      "nameSource": "classic-brazil-client"
+    },
+    {
+      "code": "SKILL_FIRE_BOLT",
+      "name": "Fagulha",
+      "nameOriginal": "Fire Bolt",
+      "nameSource": "classic-brazil-client"
+    },
+    {
+      "code": "SKILL_ZENITH",
+      "name": "Zenith",
+      "nameOriginal": "Zenith",
+      "nameSource": "classic-brazil-client"
+    },
+    {
+      "code": "SKILL_FIRE_BALL",
+      "name": "Bola de Fogo",
+      "nameOriginal": "Fire Ball",
+      "nameSource": "classic-brazil-client"
+    },
+    {
+      "code": "SKILL_MENTAL_MASTERY",
+      "name": "Mestre da Mente",
+      "nameOriginal": "Mental Mastery",
+      "nameSource": "classic-brazil-client"
+    },
+    {
+      "code": "SKILL_WATORNADO",
+      "name": "Watornado",
+      "nameOriginal": "Water Tornado",
+      "nameSource": "classic-brazil-client"
+    },
+    {
+      "code": "SKILL_ENCHANT_WEAPON",
+      "name": "Encanto",
+      "nameOriginal": "Enchant Weapon",
+      "nameSource": "classic-brazil-client"
+    },
+    {
+      "code": "SKILL_DEAD_RAY",
+      "name": "Raio da Morte",
+      "nameOriginal": "Dead Ray",
+      "nameSource": "classic-brazil-client"
+    },
+    {
+      "code": "SKILL_ENERGY_SHIELD",
+      "name": "Escudo Energético",
+      "nameOriginal": "Energy Shield",
+      "nameSource": "classic-brazil-client"
+    },
+    {
+      "code": "SKILL_DIASTROPHISM",
+      "name": "Terremoto",
+      "nameOriginal": "Diastrophism",
+      "nameSource": "classic-brazil-client"
+    },
+    {
+      "code": "SKILL_SPIRIT_ELEMENTAL",
+      "name": "Espírito Elemental",
+      "nameOriginal": "Spirit Elemental",
+      "nameSource": "classic-brazil-client"
+    },
+    {
+      "code": "SKILL_DANCING_SWORD",
+      "name": "Espada Dançante",
+      "nameOriginal": "Dancing Sword",
+      "nameSource": "classic-brazil-client"
+    },
+    {
+      "code": "SKILL_FIRE_ELEMENTAL",
+      "name": "Chama Elemental",
+      "nameOriginal": "Fire Elemental",
+      "nameSource": "classic-brazil-client"
+    },
+    {
+      "code": "SKILL_FLAME_WAVE",
+      "name": "Ondas de Fogo",
+      "nameOriginal": "Flame Wave",
+      "nameSource": "classic-brazil-client"
+    },
+    {
+      "code": "SKILL_DISTORTION",
+      "name": "Distorção",
+      "nameOriginal": "Distortion",
+      "nameSource": "classic-brazil-client"
+    },
+    {
+      "code": "SKILL_M_METEO",
+      "name": "Meteóro",
+      "nameOriginal": "Meteorite",
+      "nameSource": "classic-brazil-client"
+    },
+    {
+      "code": "SKILL_HEALING",
+      "name": "Cura",
+      "nameOriginal": "Healing",
+      "nameSource": "classic-brazil-client"
+    },
+    {
+      "code": "SKILL_HOLY_BOLT",
+      "name": "Fagulha Sagrada",
+      "nameOriginal": "Holy Bolt",
+      "nameSource": "classic-brazil-client"
+    },
+    {
+      "code": "SKILL_MULTISPARK",
+      "name": "Espinhos Múltiplos",
+      "nameOriginal": "Multispark",
+      "nameSource": "classic-brazil-client"
+    },
+    {
+      "code": "SKILL_HOLY_MIND",
+      "name": "Feitiço Divino",
+      "nameOriginal": "Holy Mind",
+      "nameSource": "classic-brazil-client"
+    },
+    {
+      "code": "SKILL_MEDITATION",
+      "name": "Meditação",
+      "nameOriginal": "Meditation",
+      "nameSource": "classic-brazil-client"
+    },
+    {
+      "code": "SKILL_DIVINE_LIGHTNING",
+      "name": "Raios Divinos",
+      "nameOriginal": "Divine Lightning",
+      "nameSource": "classic-brazil-client"
+    },
+    {
+      "code": "SKILL_HOLY_REFLECTION",
+      "name": "Reflexão Divina",
+      "nameOriginal": "Holy Reflection",
+      "nameSource": "classic-brazil-client"
+    },
+    {
+      "code": "SKILL_GRAND_HEALING",
+      "name": "Cura Máxima",
+      "nameOriginal": "Grand Healing",
+      "nameSource": "classic-brazil-client"
+    },
+    {
+      "code": "SKILL_VIGOR_BALL",
+      "name": "Esferas de Vigor",
+      "nameOriginal": "Vigor Ball",
+      "nameSource": "classic-brazil-client"
+    },
+    {
+      "code": "SKILL_RESURRECTION",
+      "name": "Ressurreição",
+      "nameOriginal": "Resurrection",
+      "nameSource": "classic-brazil-client"
+    },
+    {
+      "code": "SKILL_EXTINCTION",
+      "name": "Extinção",
+      "nameOriginal": "Extinction",
+      "nameSource": "classic-brazil-client"
+    },
+    {
+      "code": "SKILL_VIRTUAL_LIFE",
+      "name": "HP Virtual",
+      "nameOriginal": "Virtual Life",
+      "nameSource": "classic-brazil-client"
+    },
+    {
+      "code": "SKILL_GLACIAL_SPIKE",
+      "name": "Espinhos Glaciais",
+      "nameOriginal": "Glacial Spike",
+      "nameSource": "classic-brazil-client"
+    },
+    {
+      "code": "SKILL_REGENERATION_FIELD",
+      "name": "Campo de Regen",
+      "nameOriginal": "Regeneration Field",
+      "nameSource": "classic-brazil-client"
+    },
+    {
+      "code": "SKILL_CHAIN_LIGHTNING",
+      "name": "Raios Contínuos",
+      "nameOriginal": "Chain Lightning",
+      "nameSource": "classic-brazil-client"
+    },
+    {
+      "code": "SKILL_SUMMON_MUSPELL",
+      "name": "Invocar Muspell",
+      "nameOriginal": "Summon Muspell",
+      "nameSource": "classic-brazil-client"
+    },
+    {
+      "code": "SKILL_STINGGER",
+      "name": "Ferroada",
+      "nameOriginal": "Stinger",
+      "nameSource": "local-portuguese-translation"
+    },
+    {
+      "code": "SKILL_RUNNING_HIT",
+      "name": "Ataque Corrido",
+      "nameOriginal": "Running Hit",
+      "nameSource": "local-portuguese-translation"
+    },
+    {
+      "code": "SKILL_DUALSWORDMASTERY",
+      "name": "Mestre das Adagas",
+      "nameOriginal": "Dual Sword Mastery",
+      "nameSource": "local-portuguese-translation"
+    },
+    {
+      "code": "SKILL_WISP",
+      "name": "Wisp",
+      "nameOriginal": "Wisp",
+      "nameSource": "local-portuguese-translation"
+    },
+    {
+      "code": "SKILL_VENOM_THRONE",
+      "name": "Trono Venenoso",
+      "nameOriginal": "Venom Throne",
+      "nameSource": "local-portuguese-translation"
+    },
+    {
+      "code": "SKILL_ALAS",
+      "name": "Alas",
+      "nameOriginal": "Alas",
+      "nameSource": "local-portuguese-translation"
+    },
+    {
+      "code": "SKILL_SOUL_SHOCK",
+      "name": "Choque da Alma",
+      "nameOriginal": "Soul Shock",
+      "nameSource": "local-portuguese-translation"
+    },
+    {
+      "code": "SKILL_ATTACK_MASTERY",
+      "name": "Mestre do Ataque",
+      "nameOriginal": "Attack Mastery",
+      "nameSource": "local-portuguese-translation"
+    },
+    {
+      "code": "SKILL_SORE_SWORD",
+      "name": "Espada Dolorosa",
+      "nameOriginal": "Sore Sword",
+      "nameSource": "local-portuguese-translation"
+    },
+    {
+      "code": "SKILL_BEAT_UP",
+      "name": "Espancamento",
+      "nameOriginal": "Beat Up",
+      "nameSource": "local-portuguese-translation"
+    },
+    {
+      "code": "SKILL_INPES",
+      "name": "Inpes",
+      "nameOriginal": "Inpes",
+      "nameSource": "local-portuguese-translation"
+    },
+    {
+      "code": "SKILL_BLIND",
+      "name": "Cegueira",
+      "nameOriginal": "Blind",
+      "nameSource": "local-portuguese-translation"
+    },
+    {
+      "code": "SKILL_FROST_WIND",
+      "name": "Vento Gélido",
+      "nameOriginal": "Frost Wind",
+      "nameSource": "local-portuguese-translation"
+    },
+    {
+      "code": "SKILL_FATAL_MASTERY",
+      "name": "Mestre Fatal",
+      "nameOriginal": "Fatal Mastery",
+      "nameSource": "local-portuguese-translation"
+    },
+    {
+      "code": "SKILL_POLLUTED",
+      "name": "Poluição",
+      "nameOriginal": "Polluted",
+      "nameSource": "local-portuguese-translation"
+    },
+    {
+      "code": "SKILL_PASTING_SHADOW",
+      "name": "Sombra Persistente",
+      "nameOriginal": "Pasting Shadow",
+      "nameSource": "local-portuguese-translation"
+    },
+    {
+      "code": "SKILL_DARK_BOLT",
+      "name": "Raio Negro",
+      "nameOriginal": "Dark Bolt",
+      "nameSource": "local-portuguese-translation"
+    },
+    {
+      "code": "SKILL_DARK_WAVE",
+      "name": "Onda Negra",
+      "nameOriginal": "Dark Wave",
+      "nameSource": "local-portuguese-translation"
+    },
+    {
+      "code": "SKILL_CURSE_LAZY",
+      "name": "Maldição da Lentidão",
+      "nameOriginal": "Curse Lazy",
+      "nameSource": "local-portuguese-translation"
+    },
+    {
+      "code": "SKILL_INNER_PEACE",
+      "name": "Paz Interior",
+      "nameOriginal": "Inner Peace",
+      "nameSource": "local-portuguese-translation"
+    },
+    {
+      "code": "SKILL_SPIRITUAL_FLARE",
+      "name": "Labareda Espiritual",
+      "nameOriginal": "Spiritual Flare",
+      "nameSource": "local-portuguese-translation"
+    },
+    {
+      "code": "SKILL_SOUL_MANACLE",
+      "name": "Algemas da Alma",
+      "nameOriginal": "Soul Manacle",
+      "nameSource": "local-portuguese-translation"
+    },
+    {
+      "code": "SKILL_CHASING_HUNT",
+      "name": "Caçada Perseguidora",
+      "nameOriginal": "Chasing Hunt",
+      "nameSource": "local-portuguese-translation"
+    },
+    {
+      "code": "SKILL_ADVENT_MIGAL",
+      "name": "Advento de Migal",
+      "nameOriginal": "Advent Migal",
+      "nameSource": "local-portuguese-translation"
+    },
+    {
+      "code": "SKILL_RAIN_MAKER",
+      "name": "Invocar Chuva",
+      "nameOriginal": "Rain Maker",
+      "nameSource": "local-portuguese-translation"
+    },
+    {
+      "code": "SKILL_LAND_OF_GHOST",
+      "name": "Terra dos Fantasmas",
+      "nameOriginal": "Land Of Ghost",
+      "nameSource": "local-portuguese-translation"
+    },
+    {
+      "code": "SKILL_HAUNT",
+      "name": "Assombração",
+      "nameOriginal": "Haunt",
+      "nameSource": "local-portuguese-translation"
+    },
+    {
+      "code": "SKILL_SCRATCH",
+      "name": "Arranhar",
+      "nameOriginal": "Scratch",
+      "nameSource": "local-portuguese-translation"
+    },
+    {
+      "code": "SKILL_RECALL_BLOODY_KNIGHT",
+      "name": "Invocar Cavaleiro Sanguinário",
+      "nameOriginal": "Recall Bloody Knight",
+      "nameSource": "local-portuguese-translation"
+    },
+    {
+      "code": "SKILL_JUDGEMENT",
+      "name": "Julgamento",
+      "nameOriginal": "Judgement",
+      "nameSource": "local-portuguese-translation"
+    },
+    {
+      "code": "SKILL_ADVENT_MIDRANDA",
+      "name": "Advento de Midranda",
+      "nameOriginal": "Advent Midranda",
+      "nameSource": "local-portuguese-translation"
+    },
+    {
+      "code": "SKILL_MOURNING_OF_PRAY",
+      "name": "Lamento da Prece",
+      "nameOriginal": "Mourning Of Pray",
+      "nameSource": "local-portuguese-translation"
+    },
+    {
+      "code": "SKILL_LOW_KICK",
+      "name": "Chute Baixo",
+      "nameOriginal": "Low Kick",
+      "nameSource": "local-portuguese-translation"
+    },
+    {
+      "code": "SKILL_STRENGTH_MASTERY",
+      "name": "Mestre da Força",
+      "nameOriginal": "Strength Mastery",
+      "nameSource": "local-portuguese-translation"
+    },
+    {
+      "code": "SKILL_DOUBLE_BACKSPIN_BLOW",
+      "name": "Golpe Duplo Reverso",
+      "nameOriginal": "Double Backspin Blow",
+      "nameSource": "local-portuguese-translation"
+    },
+    {
+      "code": "SKILL_HYPER_STRAIGHT",
+      "name": "Direto Poderoso",
+      "nameOriginal": "Hyper Straight",
+      "nameSource": "local-portuguese-translation"
+    },
+    {
+      "code": "SKILL_RAGE_UP",
+      "name": "Fúria Crescente",
+      "nameOriginal": "Rage Up",
+      "nameSource": "local-portuguese-translation"
+    },
+    {
+      "code": "SKILL_PATRIOT",
+      "name": "Patriota",
+      "nameOriginal": "Patriot",
+      "nameSource": "local-portuguese-translation"
+    },
+    {
+      "code": "SKILL_RUSH_ELBOW",
+      "name": "Cotovelada Avassaladora",
+      "nameOriginal": "Rush Elbow",
+      "nameSource": "local-portuguese-translation"
+    },
+    {
+      "code": "SKILL_STAMINA_MASTERY",
+      "name": "Mestre da Resistência",
+      "nameOriginal": "Stamina Mastery",
+      "nameSource": "local-portuguese-translation"
+    },
+    {
+      "code": "SKILL_INSTANT_BULK_UP",
+      "name": "Fortalecimento Instantâneo",
+      "nameOriginal": "Instant Bulk Up",
+      "nameSource": "local-portuguese-translation"
+    },
+    {
+      "code": "SKILL_TIGER_CANNON",
+      "name": "Canhão do Tigre",
+      "nameOriginal": "Tiger Cannon",
+      "nameSource": "local-portuguese-translation"
+    },
+    {
+      "code": "SKILL_TYPHOON",
+      "name": "Tufão",
+      "nameOriginal": "Typhoon",
+      "nameSource": "local-portuguese-translation"
+    },
+    {
+      "code": "SKILL_JUMPING_HEEL_KICK",
+      "name": "Chute de Calcanhar Saltado",
+      "nameOriginal": "Jumping Heel Kick",
+      "nameSource": "local-portuguese-translation"
+    },
+    {
+      "code": "SKILL_COMBINATION",
+      "name": "Combinação",
+      "nameOriginal": "Combination",
+      "nameSource": "local-portuguese-translation"
+    },
+    {
+      "code": "SKILL_STEELERS",
+      "name": "Defesa de Aço",
+      "nameOriginal": "Steelers",
+      "nameSource": "local-portuguese-translation"
+    },
+    {
+      "code": "SKILL_BODY_CHECK",
+      "name": "Golpe Corporal",
+      "nameOriginal": "Body Check",
+      "nameSource": "local-portuguese-translation"
+    },
+    {
+      "code": "SKILL_WAR_CRY",
+      "name": "Grito de Guerra",
+      "nameOriginal": "War Cry",
+      "nameSource": "local-portuguese-translation"
+    }
+  ]
+}

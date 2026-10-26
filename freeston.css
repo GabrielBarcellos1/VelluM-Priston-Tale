@@ -1,0 +1,235 @@
+.ft-dialog {
+  box-sizing: border-box;
+  width: min(1050px, 95vw);
+  max-height: 90dvh;
+  padding: 0;
+  border: 1px solid #b79754;
+  border-radius: 14px;
+  background: #101b1b;
+  color: #e8e6d8;
+  font: 14px/1.5 system-ui;
+  overflow: auto;
+}
+.ft-dialog::backdrop {
+  background: #000b;
+}
+.ft-dialog header {
+  position: sticky;
+  top: 0;
+  padding: 20px 60px 14px 22px;
+  background: #142827;
+  z-index: 1;
+  border-bottom: 1px solid #576347;
+}
+.ft-dialog h2 {
+  margin: 0;
+  color: #f6da95;
+  font:
+    600 25px Georgia,
+    serif;
+}
+.ft-dialog header p {
+  color: #becab6;
+  margin: 8px 0;
+}
+.ft-close {
+  position: absolute;
+  right: 12px;
+  top: 12px;
+  width: 44px;
+  height: 44px;
+  font-size: 26px;
+}
+.ft-dialog button {
+  min-height: 44px;
+  border: 1px solid #a78b52;
+  border-radius: 6px;
+  padding: 8px 12px;
+  background: #304a37;
+  color: #eee7ce;
+  cursor: pointer;
+}
+.ft-dialog button:disabled {
+  opacity: 0.45;
+  cursor: default;
+}
+.ft-skill-summary,
+.ft-message {
+  margin: 12px 22px;
+}
+.ft-shop-note {
+  margin: 12px 22px;
+  color: #becab6;
+}
+.ft-message {
+  color: #f5d490;
+  min-height: 21px;
+}
+.ft-skill-grid {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 12px;
+  padding: 4px 22px 24px;
+}
+.ft-skill-grid article {
+  padding: 16px;
+  border: 1px solid #465947;
+  background: #1a2b24;
+  border-radius: 9px;
+}
+.ft-skill-grid h3 {
+  margin: 6px 0;
+  font-size: 18px;
+  color: #f2dfa9;
+}
+.ft-skill-grid p {
+  margin: 6px 0;
+  color: #c1cabc;
+}
+.ft-skill-badge {
+  color: #dcbd70;
+  font-size: 11px;
+  letter-spacing: 0.1em;
+}
+.ft-skill-actions {
+  display: flex;
+  gap: 8px;
+  flex-wrap: wrap;
+  margin-top: 12px;
+}
+#ft-update {
+  position: fixed;
+  left: 50%;
+  top: 8px;
+  transform: translateX(-50%);
+  z-index: 2000;
+  max-width: 90vw;
+  padding: 12px;
+  background: #20382c;
+  color: #f2e7c7;
+  border: 1px solid #bda25e;
+  border-radius: 8px;
+  font: 14px system-ui;
+  display: flex;
+  gap: 14px;
+  align-items: center;
+}
+#ft-update button {
+  padding: 10px;
+  min-height: 44px;
+  color: #10221c;
+  background: #e2c178;
+  border: 0;
+  border-radius: 5px;
+}
+@media (max-width: 600px) {
+  .ft-skill-grid {
+    grid-template-columns: 1fr;
+    padding: 4px 14px 20px;
+  }
+  .ft-dialog header {
+    padding-left: 14px;
+  }
+  .ft-dialog h2 {
+    font-size: 22px;
+  }
+  #ft-update {
+    flex-direction: column;
+    width: 85vw;
+  }
+}
+.ft-skill-badge {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+/* Keep the native left skill/event tray below the FREEston control bar. */
+.hud-body:has(> .hud-buff.hud-keep-glow) {
+  transform: translateY(52px);
+}
+.freeston-online-status {
+  white-space: nowrap;
+}
+
+#freeston-skins {
+  width: min(950px, 96vw);
+  max-height: 90dvh;
+  padding: 22px;
+  border: 1px solid #8d784f;
+  border-radius: 12px;
+  background: #141e18;
+  color: #f5e8c4;
+}
+#freeston-skins::backdrop {
+  background: #080d0bd6;
+}
+#freeston-skins header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 12px;
+}
+#freeston-skins button,
+#freeston-skins input,
+#freeston-skins select {
+  min-height: 44px;
+  padding: 8px 12px;
+  color: inherit;
+  background: #28372b;
+  border: 1px solid #796a48;
+  border-radius: 6px;
+}
+#freeston-skins button {
+  cursor: pointer;
+}
+#freeston-skins button:disabled {
+  opacity: 0.5;
+}
+#freeston-skins header button {
+  font-size: 24px;
+}
+.skin-filters {
+  display: flex;
+  gap: 10px;
+  flex-wrap: wrap;
+}
+.skin-filters input {
+  flex: 1;
+  min-width: 170px;
+}
+.skin-cards {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(190px, 1fr));
+  gap: 12px;
+}
+.skin-cards article {
+  padding: 16px;
+  border: 1px solid #536049;
+  border-radius: 8px;
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  background: #1c2a21;
+}
+.skin-cards img {
+  height: 110px;
+  width: 100%;
+  object-fit: contain;
+}
+.skin-cards h3,
+.skin-cards p {
+  margin: 0;
+}
+.skin-cards p,
+.skin-cards small {
+  font-size: 12px;
+  color: #c2cab6;
+}
+.skin-cards button {
+  margin-top: auto;
+}
+#freeston-skins [role="status"] {
+  color: #f0cf88;
+  min-height: 20px;
+}

@@ -1,0 +1,31 @@
+{
+  "recordedAt": "2026-10-22T19:52:42.268094+00:00",
+  "description": "Public unauthenticated GET responses captured for local reconstruction; not private server source.",
+  "sources": [
+    {
+      "path": "data/map-fields.json",
+      "url": "https://pweb.world/api/map-fields",
+      "sha256": "263bf64164df47f4baac1abbb3bcd78a73bbdaa136f873c4edd5f19710c781fe"
+    },
+    {
+      "path": "data/map-npcs.json",
+      "url": "https://pweb.world/api/map-npcs",
+      "sha256": "c38a6cfad1368d0ec211530b3e1aa5e8c720d1fe9e2f5905d2644ffbe9bdf329"
+    },
+    {
+      "path": "data/map-spawns.json",
+      "url": "https://pweb.world/api/map-spawns",
+      "sha256": "139b3e52ad0b6212c9fb391082721b5ff847aa2e31be320a35854fa581be558c"
+    },
+    {
+      "path": "data/wiki.json",
+      "url": "https://pweb.world/api/wiki",
+      "sha256": "448cce89816f05e62ca574e106786fcc749ed219461dd066025a6a95a5d34598"
+    },
+    {
+      "path": "data/quests.json",
+      "url": "https://pweb.world/api/wiki/quests",
+      "sha256": "548a76f02b217568f0985b2d9ac34edeb70e0b5045002f9d64eba47be8ee2dcf"
+    }
+  ]
+}

@@ -1,0 +1,57 @@
+{
+  "recordedAt": "2026-10-23T01:01:22.482550+00:00",
+  "sources": [
+    {
+      "url": "https://pweb.world/api/wiki",
+      "status": 200,
+      "sha256": "f729a231b98866d50e1efb7a53030b18f0e12c26201c006d914afc0eb61a2fc6",
+      "keys": [
+        "ok",
+        "wiki"
+      ],
+      "bytes": 148821
+    },
+    {
+      "url": "https://pweb.world/api/wiki/quests",
+      "status": 200,
+      "sha256": "614276a48562570938eab81fdeb1222fab7d05dc0056a49d383c934ec2636df0",
+      "keys": [
+        "ok",
+        "quests"
+      ],
+      "bytes": 359384
+    },
+    {
+      "url": "https://pweb.world/api/map-fields",
+      "status": 200,
+      "sha256": "263bf64164df47f4baac1abbb3bcd78a73bbdaa136f873c4edd5f19710c781fe",
+      "keys": [
+        "ok",
+        "fields"
+      ],
+      "bytes": 5684
+    },
+    {
+      "url": "https://pweb.world/api/map-npcs",
+      "status": 200,
+      "sha256": "c38a6cfad1368d0ec211530b3e1aa5e8c720d1fe9e2f5905d2644ffbe9bdf329",
+      "keys": [
+        "ok",
+        "stages"
+      ],
+      "bytes": 12016
+    },
+    {
+      "url": "https://pweb.world/api/map-spawns",
+      "status": 200,
+      "sha256": "08ac5a1ef00109fca08a13399aa4c5e878f50b6222dc5c6e3c54b14e41279d1e",
+      "keys": [
+        "ok",
+        "now",
+        "stages",
+        "bosses"
+      ],
+      "bytes": 51680
+    }
+  ]
+}

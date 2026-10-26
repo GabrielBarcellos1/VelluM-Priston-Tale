@@ -1,0 +1,2313 @@
+{
+  "source": "https://github.com/yweenzy/pristontale-1",
+  "revision": "299c615ed9a13f9ac394c6d0ac32f19e126b308d",
+  "mappingPath": "src/sinbaram/sinSkill.cpp",
+  "mappingSha256": "f8d799b7ade7aef2776eeb92ba297991aa528846040a75703d803bb14150353b",
+  "description": "Classic Priston Tale artwork, independently recovered from public client files. Not verified byte-for-byte against current pweb.world. Header restored; PNG encoding preserves all 49x46 RGB pixels and original black color-key transparency. Missing official artwork for jobs 9, 10 and 11.",
+  "images": {
+    "SKILL_MELEE_MASTERY": {
+      "job": 1,
+      "name": "Melee Mastery",
+      "width": 49,
+      "height": 46,
+      "normal": {
+        "sourcePath": "bin/Client/image/Sinimage/skill/Fighter/Button/TF10 M_mastery.bmp",
+        "sourceSha256": "4b25fa2ed0bfdb1d81dc2a32511973bd6a72b44e38ad9e4792c1c25c3aa24c4f",
+        "pngSha256": "91c13c5f4eb3ec468343c89ade32dfed1c15732c5b20aebd8d2a4c4809558133",
+        "rgbSha256": "eb111390ebd9fce6f8488bd3e3a716202f4be563ca65d18e6d3736f1a54e110c"
+      },
+      "disabled": {
+        "sourcePath": "bin/Client/image/Sinimage/skill/Fighter/Button/TF10 M_mastery_.bmp",
+        "sourceSha256": "8445a5b758a3e0a7b2c7c09e427b53c24e0ccec1e004286707bec98c40cb0b47",
+        "pngSha256": "19c9c3e18e91166f3194c5c77d3275be03659458e118be9bf54e5fef9be4ae5f",
+        "rgbSha256": "0284352be4c54e701c571149c83413f2344b57136cd8b8b3f421463296e0b426"
+      }
+    },
+    "SKILL_FIRE_ATTRIBUTE": {
+      "job": 1,
+      "name": "Fire Attribute",
+      "width": 49,
+      "height": 46,
+      "normal": {
+        "sourcePath": "bin/Client/image/Sinimage/skill/Fighter/Button/TF12 F_attribute.bmp",
+        "sourceSha256": "2292f54060f24df450004d71f53b582b7d4fae02d31319a380ce7b4628784119",
+        "pngSha256": "255620b55f6058eeeaccaccd59f908e4fd9f3c2aaa95812b28f091b30949bff4",
+        "rgbSha256": "f9ba79573e0467ea87f4098b424eb764618ce0a65462573b7fa6210c36720e0a"
+      },
+      "disabled": {
+        "sourcePath": "bin/Client/image/Sinimage/skill/Fighter/Button/TF12 F_attribute_.bmp",
+        "sourceSha256": "07b839ce47bcd8a123481ef528155340484ad5a7988a37030585f09b28a52c02",
+        "pngSha256": "b377bfd9e8bbc459cfca7c4b3fda73aae972a0739cdc2489b2e83fb090b3418e",
+        "rgbSha256": "57ed028c594493d0f7d0f7db89a5cffa2e86a0365b84ca5ab2084c8cc8eab523"
+      }
+    },
+    "SKILL_RAVING": {
+      "job": 1,
+      "name": "Raving",
+      "width": 49,
+      "height": 46,
+      "normal": {
+        "sourcePath": "bin/Client/image/Sinimage/skill/Fighter/Button/TF14 raving.bmp",
+        "sourceSha256": "6124099be86d4db6c21429a0b300261bb6ca739df7b200b6e3371d65f0b03533",
+        "pngSha256": "051f7f437a4b2e38e063fe06eccccf5ab95121b642bd0de3695f4ec6f4e3bc13",
+        "rgbSha256": "b6bad3a912d59efac9ec84182e0f33dde4ffc02bc3735bb64cad6f8c05a00803"
+      },
+      "disabled": {
+        "sourcePath": "bin/Client/image/Sinimage/skill/Fighter/Button/TF14 raving_.bmp",
+        "sourceSha256": "f6083e05aaa4d38ccdbd2142186cec09f9e061fb9c0dd055a7f53180798c768b",
+        "pngSha256": "1ab85cd9af493e929dfcdbcf83bd1a506a21d9d1b1e092712a825afc80c9870e",
+        "rgbSha256": "e06e95110edefebb05f49c4ed32cdb791c488673f6db5772183270c36747902f"
+      }
+    },
+    "SKILL_IMPACT": {
+      "job": 1,
+      "name": "Impact",
+      "width": 49,
+      "height": 46,
+      "normal": {
+        "sourcePath": "bin/Client/image/Sinimage/skill/Fighter/Button/TF17 impact.bmp",
+        "sourceSha256": "48461eab3b60d392e98f3c06e7b9c7b80fdc79919cccb1118b0e9d28e75e646a",
+        "pngSha256": "38330833e5e1c5c985de7199c4f526e7c2ba5e14b4da0228969241afc4be89f1",
+        "rgbSha256": "a60fc98213fa7a61ee07cbb1522db26e6723a2e34e75b04ad925195a4fd2178a"
+      },
+      "disabled": {
+        "sourcePath": "bin/Client/image/Sinimage/skill/Fighter/Button/TF17 impact_.bmp",
+        "sourceSha256": "7b4d24386e656c589cbd05096de31508e282fc14b800e7613a84228697799f3b",
+        "pngSha256": "76e3c815c263216f9073f10ef009e86134bd152fa403d9d81b6d497890ca2732",
+        "rgbSha256": "33fbf5bda3e1619b6b99d39ba6ac991ee74e8d44d4e6d8591ea7ffd31cfc0313"
+      }
+    },
+    "SKILL_TRIPLE_IMPACT": {
+      "job": 1,
+      "name": "Triple Impact",
+      "width": 49,
+      "height": 46,
+      "normal": {
+        "sourcePath": "bin/Client/image/Sinimage/skill/Fighter/Button/TF20 T_Impact.bmp",
+        "sourceSha256": "b2acac521f3f4d6c44d6079527cce782ad3f7d74a78b1e590276f6254805490a",
+        "pngSha256": "ff3720a836c2d436dc89f6f8debbd5cc564a9098cb1a9bb399684bc0a692a50d",
+        "rgbSha256": "e632dc5e40be366bacc1e3e631fc1c05622129528f7799095437de9deff97df6"
+      },
+      "disabled": {
+        "sourcePath": "bin/Client/image/Sinimage/skill/Fighter/Button/TF20 T_Impact_.bmp",
+        "sourceSha256": "f70b69f521b1cf62d40236324d75e3eaf36d7e6bb180ab1d6693fc8b680232ed",
+        "pngSha256": "c534326ba5944af0f882fed21884499b242ba727cb345c943cd4d670a01df6a6",
+        "rgbSha256": "1573d96b1575db25eca91beebab6fc5de473fb33efcecb3be4ddf70824ebf4f1"
+      }
+    },
+    "SKILL_BRUTAL_SWING": {
+      "job": 1,
+      "name": "Brutal Swing",
+      "width": 49,
+      "height": 46,
+      "normal": {
+        "sourcePath": "bin/Client/image/Sinimage/skill/Fighter/Button/TF23 B_Swing.bmp",
+        "sourceSha256": "53715e16785b09ae4ca3313efda8e1095114326d2fdd3e7040849792e60c7d8a",
+        "pngSha256": "0b7c3ab2ceb12cb408e2b348c73336f258541f982732fc3544383e77531ce025",
+        "rgbSha256": "3a0658a5742fe4ca2fe9c8fb4427ddc7a134787cc67d14906568312fee06876a"
+      },
+      "disabled": {
+        "sourcePath": "bin/Client/image/Sinimage/skill/Fighter/Button/TF23 B_Swing_.bmp",
+        "sourceSha256": "ed185e6ac1e2ed84c26f0c8435f022f2416d1e5d88471a687f64877e49ef5e2c",
+        "pngSha256": "b4807e8e4761d64f73edba8970a3c45c5a43b67a0056d9bfbb9ba03e68cccd33",
+        "rgbSha256": "6dfbb9db293b6cf293f1d943c9f4d2168ea7bec746af34eb12ec2e5b831c1e61"
+      }
+    },
+    "SKILL_ROAR": {
+      "job": 1,
+      "name": "Roar",
+      "width": 49,
+      "height": 46,
+      "normal": {
+        "sourcePath": "bin/Client/image/Sinimage/skill/Fighter/Button/TF26 Roar.bmp",
+        "sourceSha256": "0dbf5e7875d0edcb93a9bbe977a0ac9240c7b6095b16be1b7a4caf7cc29b415e",
+        "pngSha256": "06ab11af68c7574b8ed665c4e0834c0092b86a8b5f695cc370b9588c72a35995",
+        "rgbSha256": "05b77e8e9aba1f1baea9fc7098660137944faea752f5c3a777edc9c5ab01a157"
+      },
+      "disabled": {
+        "sourcePath": "bin/Client/image/Sinimage/skill/Fighter/Button/TF26 Roar_.bmp",
+        "sourceSha256": "2f96294c80ecf84d472caa6b0c05d31d12e99f7fadf69774147cdef1ed31096a",
+        "pngSha256": "c6bd269ceb6176c0dc55367aca9ae74cafce1bbcce1ce648be15c077614b7cc3",
+        "rgbSha256": "cb59f32aed48c25df68cf385456ed38e132f21bf29b9afe000b5ede1f31b2105"
+      }
+    },
+    "SKILL_RAGE_OF_ZECRAM": {
+      "job": 1,
+      "name": "Rage Of Zecram",
+      "width": 49,
+      "height": 46,
+      "normal": {
+        "sourcePath": "bin/Client/image/Sinimage/skill/Fighter/Button/TF30 R_Zecram.bmp",
+        "sourceSha256": "326fdbfd6bdae93d544b7da057044b43cca51a6acff7e2a8d73ead2048c9cc25",
+        "pngSha256": "9abf7cc6e295ed15cb163737205230238447db6b38fea80a480ab1b9ea32b2a8",
+        "rgbSha256": "72236a16cfc0af40613fa9e3fd750f4cfb71c72d54e8b369c89975394aa6e647"
+      },
+      "disabled": {
+        "sourcePath": "bin/Client/image/Sinimage/skill/Fighter/Button/TF30 R_Zecram_.bmp",
+        "sourceSha256": "30488cfe337a9e80abcfec9191756ce2c940ab79e9ce0c8fdfefb2ee5118c257",
+        "pngSha256": "8baf99923d3b6d6fdead217713f9035203cf71d1b5725f9328b1ebcd48c457c7",
+        "rgbSha256": "3dbf1064504b1a3878f57060942ca7a7fff20031744082919a98b431935ccb9d"
+      }
+    },
+    "SKILL_CONCENTRATION": {
+      "job": 1,
+      "name": "Concentration",
+      "width": 49,
+      "height": 46,
+      "normal": {
+        "sourcePath": "bin/Client/image/Sinimage/skill/Fighter/Button/TF40 Concentration.bmp",
+        "sourceSha256": "e6589ee2e27f7da851c9760f3169c9ffc79832d471fcfe0c26727a32a10b69a6",
+        "pngSha256": "599efa05b27eaae0f3bd7fa9d067c7c43c8493e9e9c24e5d91339926c0a4c1ff",
+        "rgbSha256": "e59b7efa56e34c49e7a06989070243daabdc0a1811bcf66429507835a86fc452"
+      },
+      "disabled": {
+        "sourcePath": "bin/Client/image/Sinimage/skill/Fighter/Button/TF40 Concentration_.bmp",
+        "sourceSha256": "7153ce7839990a6997443b0ac4b4d412ed0d32deb41d1fd612d0ab6b82af0b9d",
+        "pngSha256": "edf772ddf09b166bd40bb691a22ad7c690d1af7125796d52ce1862b254a0e71e",
+        "rgbSha256": "3c7f05c91bed0259036d74eb85b43cea413807a61be4c2cfc44d4557822ffabd"
+      }
+    },
+    "SKILL_AVANGING_CRASH": {
+      "job": 1,
+      "name": "Avenging Crash",
+      "width": 49,
+      "height": 46,
+      "normal": {
+        "sourcePath": "bin/Client/image/Sinimage/skill/Fighter/Button/TF43 A_Crash.bmp",
+        "sourceSha256": "749e82fbc14e51aa0be1f9cebe4ee2ce06ff09e765ed62759f7595c20558d16c",
+        "pngSha256": "687194fd250e0ddab32963abbe3a23d9c9feadd61e0d5d2777252a6f2653b94a",
+        "rgbSha256": "40d523d54b1188fdf98222fa9459eeac805f1a57debbd49370f134ac11bb6521"
+      },
+      "disabled": {
+        "sourcePath": "bin/Client/image/Sinimage/skill/Fighter/Button/TF43 A_Crash_.bmp",
+        "sourceSha256": "f31ed432b63eb7362e3d7b95cd9c00d90e601177fda22c420178c8a859f56147",
+        "pngSha256": "d5a1b660731f329845e5f53b958399c8dac082e9e296068cdd6374ca5c69386a",
+        "rgbSha256": "2164d78673f5c3a61b9508bebe148215b5f1c0b6567929d29265eeead7da0d18"
+      }
+    },
+    "SKILL_SWIFT_AXE": {
+      "job": 1,
+      "name": "Swift Axe",
+      "width": 49,
+      "height": 46,
+      "normal": {
+        "sourcePath": "bin/Client/image/Sinimage/skill/Fighter/Button/TF46 S_Axe.bmp",
+        "sourceSha256": "a4924b654d83634d3eaaf4c7d192923195840702cb5ab57adf6f69bc034f4069",
+        "pngSha256": "a0a7cb84023227363224049da264980d77b4a41fb4f339b782818db70b72a90f",
+        "rgbSha256": "105c0a6b0ddc2bfbdbbcff9441f9c440665dd792fbe4fdb5427825ed360b2a6a"
+      },
+      "disabled": {
+        "sourcePath": "bin/Client/image/Sinimage/skill/Fighter/Button/TF46 S_Axe_.bmp",
+        "sourceSha256": "6b4cdb122db57052adadd1549edd0f48ec31acb1db228cfc20e48fea8c2420fc",
+        "pngSha256": "b0c0abb40228390cd62065f40e3d9740e88a57b11d047cbe0ef6fbb34136fcfe",
+        "rgbSha256": "802fc893acf3da5755c03b6f1945260a19126f32d87f15e310481042e7b4baa8"
+      }
+    },
+    "SKILL_BONE_CRASH": {
+      "job": 1,
+      "name": "Bone Crash",
+      "width": 49,
+      "height": 46,
+      "normal": {
+        "sourcePath": "bin/Client/image/Sinimage/skill/Fighter/Button/TF50 B_Crash.bmp",
+        "sourceSha256": "b4b1c624854038095c4cafa11cd9065f1f7a95e3c3bb733e02e7dfca5a363714",
+        "pngSha256": "41b4ab263d861bd6ef2a169c9d6fdcb78b2adbeceeb5e7cd965b1e000cbeaf1f",
+        "rgbSha256": "46aff1e90859580c386cdc4c4d432e0d62ac5af5c11c4b5b71db62ee95774f74"
+      },
+      "disabled": {
+        "sourcePath": "bin/Client/image/Sinimage/skill/Fighter/Button/TF50 B_Crash_.bmp",
+        "sourceSha256": "a1be732d5ebb3ff9b755842d81dc373d4b1a683b9b45cc3d642e1bca23409746",
+        "pngSha256": "1e3e2aa9fc87d5918d4ea510960f0c0191c9597a6bc1f4e27c9bba368c17b032",
+        "rgbSha256": "9e4b2dc846ebbd6a350ad6a3294f725d6ce7dd29d7c0812a256e27d77bc292c4"
+      }
+    },
+    "SKILL_DETORYER": {
+      "job": 1,
+      "name": "Destroyer",
+      "width": 49,
+      "height": 46,
+      "normal": {
+        "sourcePath": "bin/Client/image/Sinimage/skill/Fighter/Button/TF60 Destoryer.bmp",
+        "sourceSha256": "fb4fe28fcb48fc5098fc0a02110aface3ab79b55a48fe67712e1d75887b8cf87",
+        "pngSha256": "3e362ce3fd48ff8490ef462081a9bdd1ef7c8bde326424a708b4a2236e8dba59",
+        "rgbSha256": "c67bd5f7f8150343108d7ed4b5ad24d19c58eb6e4821be079dda0793c3269807"
+      },
+      "disabled": {
+        "sourcePath": "bin/Client/image/Sinimage/skill/Fighter/Button/TF60 Destoryer_.bmp",
+        "sourceSha256": "bf6b98a1ae6077e619ff585a7893a0e8142ab451e66df1fb809d0b6c5c7973bf",
+        "pngSha256": "03a5333d22ef111fb75313fa74726053891e7c5a34ccd1c69e2dc922d1c2e998",
+        "rgbSha256": "2184f7b670989b70f3d069dd3a52eaac09df72ddd73ce8a2c1d2ada87fb91835"
+      }
+    },
+    "SKILL_BERSERKER": {
+      "job": 1,
+      "name": "Berserker",
+      "width": 49,
+      "height": 46,
+      "normal": {
+        "sourcePath": "bin/Client/image/Sinimage/skill/Fighter/Button/TF63 Berserker.bmp",
+        "sourceSha256": "0a40cde45f77243d609c02b07b57c6b1947a349e2e08023011fb969e308b5ae7",
+        "pngSha256": "25f62176a31516034f961d1557264b3f7a9cddaeb288d3c28c40a35d0d5ed00d",
+        "rgbSha256": "bb064aac3bf53c4c3cd8d7fa0a25b1e37f9e7c1b6cdf0028224013aea03ad5fb"
+      },
+      "disabled": {
+        "sourcePath": "bin/Client/image/Sinimage/skill/Fighter/Button/TF63 Berserker_.bmp",
+        "sourceSha256": "b55398086ceae95b9ad88c70efefcad4bcea382e87901acbb288f95ae6c0dc2f",
+        "pngSha256": "8d15f31429c35eb39078a07a188fe56f75de31826a413f753b73f8a1bfbb7343",
+        "rgbSha256": "3072a8037f983a938216a9a14ba8481ea70f180bfd3a3ba8396cb85143b62567"
+      }
+    },
+    "SKILL_CYCLONE_STRIKE": {
+      "job": 1,
+      "name": "Cyclone Strike",
+      "width": 49,
+      "height": 46,
+      "normal": {
+        "sourcePath": "bin/Client/image/Sinimage/skill/Fighter/Button/TF66 C_Strike.bmp",
+        "sourceSha256": "9cb5558f119c6fe6abb75e07638f27fa9b703cc792d52245aa06486d8873790b",
+        "pngSha256": "813c7141452f8a0bcc355b13ae1a10ab6f349393ce5de9319cac1b9ebc374584",
+        "rgbSha256": "728eb8fa337d751851f21628beaff3d4d1eb8eafd5b00080eaf996dc4713ebd9"
+      },
+      "disabled": {
+        "sourcePath": "bin/Client/image/Sinimage/skill/Fighter/Button/TF66 C_Strike_.bmp",
+        "sourceSha256": "4c0c24a3ffc09e7ef5f4eb0d1f5a763c1ba840899ff1caaf897aba2e22210611",
+        "pngSha256": "c7b5ed8ceaa82300edc36a41be7834754b9c32cbb76ccb2e9734c3d41b6928f4",
+        "rgbSha256": "96cd129bf785be6738ca147cf2165166bebc63dd1a8eb4284a29068f011c0e53"
+      }
+    },
+    "SKILL_BOOST_HEALTH": {
+      "job": 1,
+      "name": "Boost Health",
+      "width": 49,
+      "height": 46,
+      "normal": {
+        "sourcePath": "bin/Client/image/Sinimage/skill/Fighter/Button/TF70 B_Health.bmp",
+        "sourceSha256": "de642ea5395254f7af1d027b125d42b74c97009df37ca20e611aaad343f9d872",
+        "pngSha256": "5444ea3d7c27d9745409c4949c149783b5ad9597b4d0a8ab0268fdcb4fbc16be",
+        "rgbSha256": "6609f17a5bf310b3dafead8554bb0d37374e473b7e4d32b87098ac76dc9096c3"
+      },
+      "disabled": {
+        "sourcePath": "bin/Client/image/Sinimage/skill/Fighter/Button/TF70 B_Health_.bmp",
+        "sourceSha256": "e8f3d2b94e6ce696d01138391a4a064e7a1723aea98096adbc234da605f4d4ce",
+        "pngSha256": "5aba84b649dd2f644eee3ff3c6847effe5759ae695095b0383772f65f7fd069d",
+        "rgbSha256": "188067852ea40585092fe3487095e1e989f996842c538f8e90e593606408fb8f"
+      }
+    },
+    "SKILL_EXTREME_SHIELD": {
+      "job": 2,
+      "name": "Extreme Shield",
+      "width": 49,
+      "height": 46,
+      "normal": {
+        "sourcePath": "bin/Client/image/Sinimage/skill/Mecha/Button/TM10 Ex_shield.bmp",
+        "sourceSha256": "2ee4695466260f4edffcd7ae2422fdafe35633447b6d527f39b04876ee16938b",
+        "pngSha256": "0e85077592eb7e7e0fae95a09ee9c557b84623ca3eb9ce4a30018168b9875b2c",
+        "rgbSha256": "123f960947b2d6c0b30041663c91abe257dbd61a30c14bfd68f829134093d848"
+      },
+      "disabled": {
+        "sourcePath": "bin/Client/image/Sinimage/skill/Mecha/Button/TM10 Ex_shield_.bmp",
+        "sourceSha256": "16fa735307af387e4d0df405bae550630ee82b91b8d35e697f648f3d488ee46c",
+        "pngSha256": "4304ab3c0873cc5d5f86b5316d7ba5614e79e6c69d434cf3dfaa74762d2e95ba",
+        "rgbSha256": "bd117ada356776bae268191746de327c9049f104e4e0d36de1000f2b5855e5cc"
+      }
+    },
+    "SKILL_MECHANIC_BOMB": {
+      "job": 2,
+      "name": "Mechanic Bomb",
+      "width": 49,
+      "height": 46,
+      "normal": {
+        "sourcePath": "bin/Client/image/Sinimage/skill/Mecha/Button/TM12 M_bomb.bmp",
+        "sourceSha256": "77046d54ba89b0a3e963c47f770326b003772ce9cef386f94d4cce5ce8a75786",
+        "pngSha256": "a62894aaae59cf0eb0f5ab4c163a9c8a95d89fcd951692e22dab5696f06a47ca",
+        "rgbSha256": "6158483bb328804ddbd39f41595d6762a32ef44ec2e026f9ea583e6568f847ea"
+      },
+      "disabled": {
+        "sourcePath": "bin/Client/image/Sinimage/skill/Mecha/Button/TM12 M_bomb_.bmp",
+        "sourceSha256": "a8dd3e1950b418e833661a7f713a7597535c0608d45f5434cfe70a2a3718b46e",
+        "pngSha256": "57cdaf083ff0f420f2c5cf8c62b011f9894342f421bc61a60e0f527434198773",
+        "rgbSha256": "0484a8a7ef57c87e47e33b022b0349905684247a1b6cea02fa04c7961f2afcf0"
+      }
+    },
+    "SKILL_POISON_ATTRIBUTE": {
+      "job": 2,
+      "name": "Poison Attribute",
+      "width": 49,
+      "height": 46,
+      "normal": {
+        "sourcePath": "bin/Client/image/Sinimage/skill/Mecha/Button/TM14 P_attribute.bmp",
+        "sourceSha256": "a91644d2a75b0db0117f35b05d44c6864e418f0941f53fe6d7d5004474edc61d",
+        "pngSha256": "50f0fbc64b631368409458200e3702255b36a2f0e6aad56eca745d5392f67d6e",
+        "rgbSha256": "39ec3eaafa0d13d23b49f5b6b8b75c7bd1cbd1e14f34a03b57232cab99d1ac9d"
+      },
+      "disabled": {
+        "sourcePath": "bin/Client/image/Sinimage/skill/Mecha/Button/TM14 P_attribute_.bmp",
+        "sourceSha256": "e916969ba160a33768e1976cc751d04c1f234898f8703dee7d46fae6300b4666",
+        "pngSha256": "2d7b3058dd4b53e623d1742087459f7a359f988049c21312c2bab09d7719ce26",
+        "rgbSha256": "283b34fec3119231c0f3f335f90f6f19cf4f3596172cc249865950714fc4b945"
+      }
+    },
+    "SKILL_PHYSICAL_ABSORB": {
+      "job": 2,
+      "name": "Physical Absorb",
+      "width": 49,
+      "height": 46,
+      "normal": {
+        "sourcePath": "bin/Client/image/Sinimage/skill/Mecha/Button/TM17 Ph_absorb.bmp",
+        "sourceSha256": "f825c3574df1ef8cee38f666ad7d02721d4ab835418eccf994287fd815a56e88",
+        "pngSha256": "30a82a48cb13d796660cc88830ec64c36f8bda0a5e6ef933f296147d918862db",
+        "rgbSha256": "0686ee318664cfbcff2e2c8b1fb74632faab9c96fe2924d73e0a6f057855687e"
+      },
+      "disabled": {
+        "sourcePath": "bin/Client/image/Sinimage/skill/Mecha/Button/TM17 Ph_absorb_.bmp",
+        "sourceSha256": "5cde901c1ab606e767b9fd70a18ae944d70a253f9ed8ce375c9b9ce2f805891f",
+        "pngSha256": "d8f255967482e44905ee4ead2ab3042f2d1604cb51b68814e6147f959ed60294",
+        "rgbSha256": "a8573f27280cd2a9fa9718148ee0e956a5da801f0745e3c99f6718ae82b8c725"
+      }
+    },
+    "SKILL_GREAT_SMASH": {
+      "job": 2,
+      "name": "Great Smash",
+      "width": 49,
+      "height": 46,
+      "normal": {
+        "sourcePath": "bin/Client/image/Sinimage/skill/Mecha/Button/TM20 G_Smash.bmp",
+        "sourceSha256": "2b85190a6eba81e3509610732172d125a514bb3e22e65f76777f4f15c2ae8b60",
+        "pngSha256": "3a0e3add3488cd40380578168fa80431ec3420e3d6b88b692cc11ccacd8148d3",
+        "rgbSha256": "04689ab839b9231541262ef0e9c449ebe809b785559687cf93aecbb35df0d7c8"
+      },
+      "disabled": {
+        "sourcePath": "bin/Client/image/Sinimage/skill/Mecha/Button/TM20 G_Smash_.bmp",
+        "sourceSha256": "8406bec1a3776c36c56569359ea100f7afcc76ecd77a7a9228fdd7ce1ac13480",
+        "pngSha256": "8509867ae600322ab2923282cc8ccf96df0bc412b0392763cd89dee17fa340d9",
+        "rgbSha256": "82ad0a351d598632c8ac5dfd33c1de50c3ba88ede79785f79c30669792c62f6b"
+      }
+    },
+    "SKILL_MAXIMIZE": {
+      "job": 2,
+      "name": "Maximize",
+      "width": 49,
+      "height": 46,
+      "normal": {
+        "sourcePath": "bin/Client/image/Sinimage/skill/Mecha/Button/TM23 Maximize.bmp",
+        "sourceSha256": "b59240fbb7b80bcb520b8318189984602ccf6a6e43c0287982dca77193f2ee5e",
+        "pngSha256": "b9e989855db383c30fb6e276994d7e462852a15f6314af0a685f4e89230c91d1",
+        "rgbSha256": "41c30d71c1c817413c7a8dd38a4c2ab23c4ac77d3abc86b218d470e218ff0151"
+      },
+      "disabled": {
+        "sourcePath": "bin/Client/image/Sinimage/skill/Mecha/Button/TM23 Maximize_.bmp",
+        "sourceSha256": "9350df2e03eaba012b83bafe74b18d6fbaacfde4abf34e4d573ed240f5bd285e",
+        "pngSha256": "f1b0879ec20a0efed301e0a2c867eb316ec7ab6529a560f0f68e446e53dd87a4",
+        "rgbSha256": "0c6c1fce42a5355243bf5d916645ccae9ab8e2a275e02feaea5bc4757fd52dbe"
+      }
+    },
+    "SKILL_AUTOMATION": {
+      "job": 2,
+      "name": "Automation",
+      "width": 49,
+      "height": 46,
+      "normal": {
+        "sourcePath": "bin/Client/image/Sinimage/skill/Mecha/Button/TM26 Automation.bmp",
+        "sourceSha256": "fa8af0273aa634ac7573c882c0e7a4c7bba41f8b8d20a7248d7b945556777237",
+        "pngSha256": "048b98f3ee41aa2306d76a702e5f332f8ab6bbfddc6d0b89ad93cda2d7d33d60",
+        "rgbSha256": "f51c71e683bec456de04a6135184423391e5596cc4c8578f26125dc36b807028"
+      },
+      "disabled": {
+        "sourcePath": "bin/Client/image/Sinimage/skill/Mecha/Button/TM26 Automation_.bmp",
+        "sourceSha256": "7915ccf20c62952306df2152619d51954047807ecd24c5775a8932da85f536e4",
+        "pngSha256": "37cac45bd3f78a9ba59d3b030b570e48c809f28100547f4442954526acc7a0cf",
+        "rgbSha256": "681af286bcffa5124bfd3baac35058ed6d1e4a7a5b0b731905fc7aef676390ac"
+      }
+    },
+    "SKILL_SPARK": {
+      "job": 2,
+      "name": "Spark",
+      "width": 49,
+      "height": 46,
+      "normal": {
+        "sourcePath": "bin/Client/image/Sinimage/skill/Mecha/Button/TM30 Spark.bmp",
+        "sourceSha256": "a448e69a2d548164c1d7b183302f1ce5226659e014ca2ca156b70a342ceca339",
+        "pngSha256": "eebfe552c27f6b4e2b996ca6b46cf19a3282ed4cde9bce2e7046b358b628288e",
+        "rgbSha256": "119c9073f70008da6c30d3a433fcef74bb5c02b573154b6486e57d89476ea806"
+      },
+      "disabled": {
+        "sourcePath": "bin/Client/image/Sinimage/skill/Mecha/Button/TM30 Spark_.bmp",
+        "sourceSha256": "bbbe961a81262245933831712c83f4366ba42d7606d865b8f2495a0019b55ec5",
+        "pngSha256": "8f53025ee7a6b581f02584e9a3295e344a7c8801600632a49626a37df7cca2a5",
+        "rgbSha256": "fd661134977359cd3d837c57efb8e90dd34fd1d872382f9de4b86f081b97c3be"
+      }
+    },
+    "SKILL_METAL_ARMOR": {
+      "job": 2,
+      "name": "Metal Armor",
+      "width": 49,
+      "height": 46,
+      "normal": {
+        "sourcePath": "bin/Client/image/Sinimage/skill/Mecha/Button/TM40 M_Armor.bmp",
+        "sourceSha256": "05fc930e680e38ab6fac1b3ed35f2cf4fb6621bde2114e6570ad2ae9655732d4",
+        "pngSha256": "8cfad90a74bb297b46aac9ba1f22b04cbc278261ecfe127aa8cb513462d551f1",
+        "rgbSha256": "605d9f4306113c1a8b31456be16ec703b3fcb012329b64a39995c3d4789e534f"
+      },
+      "disabled": {
+        "sourcePath": "bin/Client/image/Sinimage/skill/Mecha/Button/TM40 M_Armor_.bmp",
+        "sourceSha256": "925061b647e69d22763af3e4ec449d698d9c3e7a0813d408fdeddbd9bcb75ae3",
+        "pngSha256": "58ea07adb70865700b1ce488cc20fde89bbc6c72a79aa1563ecbb08a58aa9dda",
+        "rgbSha256": "37feb4b67262f54bb4df7da5ff870b5aaa3f1f0b5736db90b03babf06ce626d6"
+      }
+    },
+    "SKILL_GRAND_SMASH": {
+      "job": 2,
+      "name": "Grand Smash",
+      "width": 49,
+      "height": 46,
+      "normal": {
+        "sourcePath": "bin/Client/image/Sinimage/skill/Mecha/Button/TM43 Grand_Smash.bmp",
+        "sourceSha256": "4d7ed08eb8414c28aac82f3320455cdf35ef328a798d2f306684352f7341e1d2",
+        "pngSha256": "1069b36766905c24a62beca88ebe465f2ff69b7f1f36511c67b606e255df3c01",
+        "rgbSha256": "fd61a04f9ec8cc362fc8360a91fdf1b35e779be1646e26d1b4ac668c8965a1b5"
+      },
+      "disabled": {
+        "sourcePath": "bin/Client/image/Sinimage/skill/Mecha/Button/TM43 Grand_Smash_.bmp",
+        "sourceSha256": "db5066534a4c1a8532f8c4f2cf137eb28fd9237ccdde089476e657f7b3d57e58",
+        "pngSha256": "c2f6801975d364f07f93264b42af738071f6f40de7e67393f1c6196533f418d6",
+        "rgbSha256": "09ffb6de5bb8bd17cb1d31cd414530b9b26a674e301c0d9db50a8c2b6e3e8b07"
+      }
+    },
+    "SKILL_MECHANIC_WEAPON": {
+      "job": 2,
+      "name": "Mechanic Weapon",
+      "width": 49,
+      "height": 46,
+      "normal": {
+        "sourcePath": "bin/Client/image/Sinimage/skill/Mecha/Button/TM44 M_Weapon.bmp",
+        "sourceSha256": "5c532b4292da4c63c6d242ecbf408debd973e037a5267e97869ce1a56e41182c",
+        "pngSha256": "27d8ae6f09686fc52cc5dc55df5ec01f33c5aa67316f665c888e5d7bd0181c33",
+        "rgbSha256": "6233ae471ead33e04f162b2273db12050e074a8a7ac4e1dda665246443c423d9"
+      },
+      "disabled": {
+        "sourcePath": "bin/Client/image/Sinimage/skill/Mecha/Button/TM44 M_Weapon_.bmp",
+        "sourceSha256": "b521337400957f12cc804bc698e29d7f3aa6688a774a7e931dfc91f97508a80d",
+        "pngSha256": "01886b37ca3c4dc110a56019b78750a30d8142384e60d5f9a26bfcf7692fc4e8",
+        "rgbSha256": "06cc0fa13b7b7cc410f49d86391ec00a8674c824944d8c589313fdfda7c98831"
+      }
+    },
+    "SKILL_SPARK_SHIELD": {
+      "job": 2,
+      "name": "Spark Shield",
+      "width": 49,
+      "height": 46,
+      "normal": {
+        "sourcePath": "bin/Client/image/Sinimage/skill/Mecha/Button/TM50 S_Shield.bmp",
+        "sourceSha256": "62fe7e40fed7fdb66bb7ce770082efce47c13f8b264c179545e3193b468c6c3c",
+        "pngSha256": "b3acc55f6cbea91d98cda1a02fb8d7655cb14d4281beae2ba36d402618a13942",
+        "rgbSha256": "d0c6374186b99c421aa61a10ed269e39320aab36c53d7275cffe09db6f4461bd"
+      },
+      "disabled": {
+        "sourcePath": "bin/Client/image/Sinimage/skill/Mecha/Button/TM50 S_Shield_.bmp",
+        "sourceSha256": "fce1eb548c0dff0d4ffac576e2ed1ddde6d2ae9f1edeb1c476ae5de037560687",
+        "pngSha256": "75780242f3d2e287d6fac9134136d54af2d86e086cdd7b14f24708ea5927e279",
+        "rgbSha256": "cbd924c26763617ee71d25b7864c19b5d3b6c4173d4645fe9f87fcd8d25ed7e2"
+      }
+    },
+    "SKILL_IMPULSION": {
+      "job": 2,
+      "name": "Impulsion",
+      "width": 49,
+      "height": 46,
+      "normal": {
+        "sourcePath": "bin/Client/image/Sinimage/skill/Mecha/Button/TM60 Impulsion.bmp",
+        "sourceSha256": "1574dca8febd6d03d32545ed8d50d31b1b9c8be3b09b81ad446d978558e349ef",
+        "pngSha256": "264b0113c44fb702590ae9ddc4f5d9f65bed11cf49c9f0151c5d194a7de876b0",
+        "rgbSha256": "68932c1d885421ff0c7b0844b15d1e2eda63bc59ea1575715bb382ed20bc711d"
+      },
+      "disabled": {
+        "sourcePath": "bin/Client/image/Sinimage/skill/Mecha/Button/TM60 Impulsion_.bmp",
+        "sourceSha256": "3393466673e46db8facab88f617448dec3f6fe19116877097a3a49a158c0bc89",
+        "pngSha256": "eb816cfe924c4794507227e0890b1bf3c126fc434bd6010972bf0e442d44d14c",
+        "rgbSha256": "4cd17a6716aa89945e2f3fc1bc32243abe0e4410b7a2f7668c8218c851a7b6cb"
+      }
+    },
+    "SKILL_COMPULSION": {
+      "job": 2,
+      "name": "Compulsion",
+      "width": 49,
+      "height": 46,
+      "normal": {
+        "sourcePath": "bin/Client/image/Sinimage/skill/Mecha/Button/TM63 Compulsion.bmp",
+        "sourceSha256": "60ff4eb7dafff2b23faac417758ea36cbd152357d6eb397847277e2938b0f873",
+        "pngSha256": "11a34f9c4d298e4638dfc46c6790336be9fa2334d8410229dd766de3e6d034e0",
+        "rgbSha256": "f6ced0708409c0e69708ab3eb90d0ccf50e6ac1a6a1f7f1fa8d14429d5dc402c"
+      },
+      "disabled": {
+        "sourcePath": "bin/Client/image/Sinimage/skill/Mecha/Button/TM63 Compulsion_.bmp",
+        "sourceSha256": "541b56e388e9dd411e06dbf33ad495db8aa2d66718970245e952f08d3b7707bb",
+        "pngSha256": "036d88c012fef14ac06c019bb6af0758ee406222f7a6e36a36296682f9b53ea6",
+        "rgbSha256": "23ef05e713ae48b27534c92b57364c717e2d717bec246986c24fdc9c9c47802b"
+      }
+    },
+    "SKILL_MAGNETIC_SPHERE": {
+      "job": 2,
+      "name": "Magnetic Sphere",
+      "width": 49,
+      "height": 46,
+      "normal": {
+        "sourcePath": "bin/Client/image/Sinimage/skill/Mecha/Button/TM66 M_Sphere.bmp",
+        "sourceSha256": "992eeae9a9e382ff5b96596cf168e60cda52a60d44da84e6a97159277da27dcb",
+        "pngSha256": "d689605b12cf73a80988cd9c19981482611295b86f894ee5ca26f610dd6ffef6",
+        "rgbSha256": "8fec4916a0b875219b2a3e34d2ccb6f51ac01366066c178ac28638141fb200b8"
+      },
+      "disabled": {
+        "sourcePath": "bin/Client/image/Sinimage/skill/Mecha/Button/TM66 M_Sphere_.bmp",
+        "sourceSha256": "a77c6b43d27de1b93adf4224c9ee0626cac8a619c3dbf160bad6c29a639c7692",
+        "pngSha256": "7ff2aa7b82989769e04bff218795b5648847da5b7743eb735878c0724e11f22f",
+        "rgbSha256": "484e592f2ca1843f07284e78cb254b48fc7f0cc30d9b96403b928a0adaeccf90"
+      }
+    },
+    "SKILL_METAL_GOLEM": {
+      "job": 2,
+      "name": "Metal Golem",
+      "width": 49,
+      "height": 46,
+      "normal": {
+        "sourcePath": "bin/Client/image/Sinimage/skill/Mecha/Button/TM70 M_Golem.bmp",
+        "sourceSha256": "1b30cddbd714a09bbf6c6693a939899d0044e6536feac48633b0c99ea81686c6",
+        "pngSha256": "e80abcaf3d1e22fc91399dfff39edeb788dae557bcfd113c2bf459ebac9d5776",
+        "rgbSha256": "6077a751e5aec13c653e7395feba11fa0571769325a1d494502a6b8f93b0925b"
+      },
+      "disabled": {
+        "sourcePath": "bin/Client/image/Sinimage/skill/Mecha/Button/TM70 M_Golem_.bmp",
+        "sourceSha256": "0a6c064f8a93d5c62ff687833e0b4dcf486a2110ca871e5e891c9957056aba53",
+        "pngSha256": "02b8ac9f139627ba6656f49a90854a5e84c1fe9877bff952f673cf612a45924a",
+        "rgbSha256": "db56123d4e062ac4910ac60d5991b0b6f270271afd662223744029137b9aef7c"
+      }
+    },
+    "SKILL_SCOUT_HAWK": {
+      "job": 3,
+      "name": "Scout Hawk",
+      "width": 49,
+      "height": 46,
+      "normal": {
+        "sourcePath": "bin/Client/image/Sinimage/skill/Archer/Button/TA10 S_hawk.bmp",
+        "sourceSha256": "1f64946b3666d6623701a4933bc98573ff6bc23015906a29d00f4f1dce2cb5e2",
+        "pngSha256": "38320aa10080be705a81cbe1c766389aece307c4c4463b802f9a94f3da903a65",
+        "rgbSha256": "34e99a661140433a0288c666ae78a408288d9e6128ec68e38cdd278b00830409"
+      },
+      "disabled": {
+        "sourcePath": "bin/Client/image/Sinimage/skill/Archer/Button/TA10 S_hawk_.bmp",
+        "sourceSha256": "f94f580283491005662a765724ae755c4ffce25d390316ae8db5a28800e8543a",
+        "pngSha256": "cc618ffde8fe24975bbdd3ab663231144102d9e9470d6ea745f09bb6b7ed9ff0",
+        "rgbSha256": "6059f4996814e53c58ea46c559b275253b4871fff0cdf72be0443c042848540e"
+      }
+    },
+    "SKILL_SHOOTING_MASTERY": {
+      "job": 3,
+      "name": "Shooting Mastery",
+      "width": 49,
+      "height": 46,
+      "normal": {
+        "sourcePath": "bin/Client/image/Sinimage/skill/Archer/Button/TA12 S_mastery.bmp",
+        "sourceSha256": "282ad1c9a29b9197585d2cebfbdabe62798d651c0401fe3d3d2c7cc3f173d84b",
+        "pngSha256": "7bcbb1d69ae7d2992682176610b21dca4b102a4314eb30bdc046bfb69b84c261",
+        "rgbSha256": "ef5fd74290b9def420d98faae9fd5b31c03efb4a46a8f1540c661e5090c9bc13"
+      },
+      "disabled": {
+        "sourcePath": "bin/Client/image/Sinimage/skill/Archer/Button/TA12 S_mastery_.bmp",
+        "sourceSha256": "85e23365cbf1b2261c6cf56eb9b1859e3f6f27fd14e042e2006ae88cb1297146",
+        "pngSha256": "842866aea44e000d728d7aad1d5c9e8493b5e6a35a765f6a3adbb6ed43afa071",
+        "rgbSha256": "158eb2fe25904f17b4a023b9d773103d8849bcb58ed16ae87dd67f7781191524"
+      }
+    },
+    "SKILL_WIND_ARROW": {
+      "job": 3,
+      "name": "Wind Arrow",
+      "width": 49,
+      "height": 46,
+      "normal": {
+        "sourcePath": "bin/Client/image/Sinimage/skill/Archer/Button/TA14 W_arrow.bmp",
+        "sourceSha256": "00dfe137fb719eb021ff4bded5754f29b53cd8ba826b25fbc56982fac6339e96",
+        "pngSha256": "d4a7b547df7c591f02aeff2f1aedac00d8b2296954a1e0bdb01bdce4952b25cc",
+        "rgbSha256": "7cd2b77df554aae4eed12e9d8e12921287740650fbadb300bdbeaa2177c53eaf"
+      },
+      "disabled": {
+        "sourcePath": "bin/Client/image/Sinimage/skill/Archer/Button/TA14 W_arrow_.bmp",
+        "sourceSha256": "dd8f920515e245b3e7c3d602bddc4066bddf9a55e041d880ea6433669206c1e0",
+        "pngSha256": "b343ca46e467efb7cca260f4c3bb07c8386b98302c7d447a9e2d9cf965dd6dea",
+        "rgbSha256": "e640049fbfb469a767b13b691e27249db8c5f7841906cb907a6e1a0a9d0d3847"
+      }
+    },
+    "SKILL_PERFECT_AIM": {
+      "job": 3,
+      "name": "Perfect Aim",
+      "width": 49,
+      "height": 46,
+      "normal": {
+        "sourcePath": "bin/Client/image/Sinimage/skill/Archer/Button/TA17 P_aim.bmp",
+        "sourceSha256": "8c79ff3ecc9a6d4f9d3281cb67c00ac70619f4a2806ea541d3a9f9da20091878",
+        "pngSha256": "b27b1add4920385f6c19ad1c118db40235d74902d554add5d8bb8136be73daec",
+        "rgbSha256": "ea3197715319fc13f4ebe57b33a7354b7dddbe58213e6722e0d7e34abd9f882e"
+      },
+      "disabled": {
+        "sourcePath": "bin/Client/image/Sinimage/skill/Archer/Button/TA17 P_aim_.bmp",
+        "sourceSha256": "d05d951aa1b58d8c5baa0e7dbbc90b1a325676e91a80b706042378f38a6f56f8",
+        "pngSha256": "2047989738abe5d759a0c419a55931aa983c9a6d298b488852a9efff6f880793",
+        "rgbSha256": "b5bf39870d4989e5416f2ff57f4aa0e91518bd15d3b2db14f5ff4f9d062009b8"
+      }
+    },
+    "SKILL_DIONS_EYE": {
+      "job": 3,
+      "name": "Dion's Eye",
+      "width": 49,
+      "height": 46,
+      "normal": {
+        "sourcePath": "bin/Client/image/Sinimage/skill/Archer/Button/TA20 D_Eye.bmp",
+        "sourceSha256": "feb51f7671f626dc9c7ad866970b959c7e4469fee08b42716bde6bcfbc2b1160",
+        "pngSha256": "3330828528a9e9a3ec27f118d6c93bad8626cb34b99f16437e052d2d8499e6ce",
+        "rgbSha256": "ca8da9bc2279bccb9d37c5815d339af9d2e240b9e77d2ec96dafabe9bf2144bc"
+      },
+      "disabled": {
+        "sourcePath": "bin/Client/image/Sinimage/skill/Archer/Button/TA20 D_Eye_.bmp",
+        "sourceSha256": "ec9f8f02e3a004946c2f6d1a0f6c98c5e962dc92fac62d103042e27c9680e1b9",
+        "pngSha256": "4dbf1991cfb49ab8bce3d544c54c6b07c7004732408dbea1e5aba89d231f92b0",
+        "rgbSha256": "61135e70c9365dc0f51e75409eb3a9a8150ecbf6480a3452a69033f10309ad2c"
+      }
+    },
+    "SKILL_FALCON": {
+      "job": 3,
+      "name": "Falcon",
+      "width": 49,
+      "height": 46,
+      "normal": {
+        "sourcePath": "bin/Client/image/Sinimage/skill/Archer/Button/TA23 Falcon.bmp",
+        "sourceSha256": "5f0aaca4fb74a7f317bce9ec9ca03db9fd5459a9fd8d3df3372af3dddd7e7458",
+        "pngSha256": "1ddc7fad22c1eec874263be52383475f7e6d4e8b6645b98a1a51e7a9deb0025b",
+        "rgbSha256": "e7d15d72aa8391532f72d768d9a2b5e1f07b49db9ba8e23a56542c3dc7f3a2cf"
+      },
+      "disabled": {
+        "sourcePath": "bin/Client/image/Sinimage/skill/Archer/Button/TA23 Falcon_.bmp",
+        "sourceSha256": "5df490ebe593f90e06cf6988b5626a44bf40f073dacc2552e8b156a44f8f9f45",
+        "pngSha256": "ce0f6c56225147cef65eda539a07c9ba399f1faf51cda6904f174c9ceac78b03",
+        "rgbSha256": "a3e9c95200fc173474c9a5e8f16b12dff39676915800b0d39df404da25b2a2e1"
+      }
+    },
+    "SKILL_ARROW_OF_RAGE": {
+      "job": 3,
+      "name": "Arrow Of Rage",
+      "width": 49,
+      "height": 46,
+      "normal": {
+        "sourcePath": "bin/Client/image/Sinimage/skill/Archer/Button/TA26 A_Rage.bmp",
+        "sourceSha256": "a71cc75c573909b8a8da9b813c778522f3de202ff2be350355115438e3180e42",
+        "pngSha256": "edd833a8193de516d052a6b82efa94a4832d6480813109822355678a5b035894",
+        "rgbSha256": "8f8edd6fc21ea1d5c3f9009a9a17d336d8fa4f3a5d15cfd280f1a09f9bb11fc3"
+      },
+      "disabled": {
+        "sourcePath": "bin/Client/image/Sinimage/skill/Archer/Button/TA26 A_Rage_.bmp",
+        "sourceSha256": "a2498ae034815524711796777c24802701d97989bdca9e3c78b7a3c7d4a3b580",
+        "pngSha256": "a66fc947f9ce63f60df94badbbdc6a06bed50c787ff03fe5bb247de7aa8fc389",
+        "rgbSha256": "9f7c41b33e20705d0b8f2599748bb14d44272f739e537265a41339fade0b5a72"
+      }
+    },
+    "SKILL_AVALANCHE": {
+      "job": 3,
+      "name": "Avalanche",
+      "width": 49,
+      "height": 46,
+      "normal": {
+        "sourcePath": "bin/Client/image/Sinimage/skill/Archer/Button/TA30 Avalanchie.bmp",
+        "sourceSha256": "3a9d5cdfbe24db9cc89a53b6acebdad0ab1867b49881601edf54504e866dbfe4",
+        "pngSha256": "b01adfccdc394e5424a85c750593eda364ec7872d87c20a6010a1b0c17dac654",
+        "rgbSha256": "165484c7e64134f1addea8be8da504f68f93626314f1585804bb2c1082839701"
+      },
+      "disabled": {
+        "sourcePath": "bin/Client/image/Sinimage/skill/Archer/Button/TA30 Avalanchie_.bmp",
+        "sourceSha256": "62b78d6d60feaa1779a8a4911c299d2f748ba7fd3d0aa69525d62445f9601f85",
+        "pngSha256": "813b99b497a2b603e5b55c48b2f8959a4a02ae26115e30a7551d07f7e860b9fd",
+        "rgbSha256": "a349b8e33a1b4e4f1a0b0b8e8b349d4162e67289dbfa820eaf85cb5fb3e77b9b"
+      }
+    },
+    "SKILL_ELEMENTAL_SHOT": {
+      "job": 3,
+      "name": "Elemental Shot",
+      "width": 49,
+      "height": 46,
+      "normal": {
+        "sourcePath": "bin/Client/image/Sinimage/skill/Archer/Button/TA40 E_Shot.bmp",
+        "sourceSha256": "004b27a2f6a7b74ecd23f8bf445cd8c1718e5e1605605cb96cac3a9faa810085",
+        "pngSha256": "4f79570d6e17dbcad35aaa832cb90c7c6afccfae7ddff708c220209199a63662",
+        "rgbSha256": "4086160580756c369f6d3e8a6f49085f9ae3798af4b7c499474c1e1f3218bd30"
+      },
+      "disabled": {
+        "sourcePath": "bin/Client/image/Sinimage/skill/Archer/Button/TA40 E_Shot_.bmp",
+        "sourceSha256": "c4d78f30cf5c30cca42f9a2d21bddd0e8a4b9794bf962e7bc991508addfaec17",
+        "pngSha256": "51670aac5ce86917b65e4de8d8215a932878a14a64e81f4a05131ff2aee517e8",
+        "rgbSha256": "f99a7fe88b8f6bfcb65b8f33fb5135c65f95be03f4f91c05e14c4385a3aa8ba3"
+      }
+    },
+    "SKILL_GOLDEN_FALCON": {
+      "job": 3,
+      "name": "Golden Falcon",
+      "width": 49,
+      "height": 46,
+      "normal": {
+        "sourcePath": "bin/Client/image/Sinimage/skill/Archer/Button/TA43 G_Falcon.bmp",
+        "sourceSha256": "3c70d0eb2eac17ea5f9bf81e447fe0572cb431cdad7ffd096d43655e233b5b07",
+        "pngSha256": "b34d853f3f63ec2b4a08846db83fafbead4ccf0512d2266de09265d0f7a291bc",
+        "rgbSha256": "405fc7bade5ff2b69cba0bd9cc0daafc71130a1b3e871b25628cfca43210c861"
+      },
+      "disabled": {
+        "sourcePath": "bin/Client/image/Sinimage/skill/Archer/Button/TA43 G_Falcon_.bmp",
+        "sourceSha256": "281fdbea07f1930ed3b8742adb3d1cd0ef5d4794f6cdce127f11362580725428",
+        "pngSha256": "adf268705b7a63a31bdef14e0cd2b56704e8b056f13922895548406395adecf1",
+        "rgbSha256": "4d5f640701e23056528da99780c412fce6a525f5e099909a0e109e68db30c1c2"
+      }
+    },
+    "SKILL_BOMB_SHOT": {
+      "job": 3,
+      "name": "Bomb Shot",
+      "width": 49,
+      "height": 46,
+      "normal": {
+        "sourcePath": "bin/Client/image/Sinimage/skill/Archer/Button/TA46 B_Shot.bmp",
+        "sourceSha256": "a347cbb78a84cbbd60a2e890699993eb2cf188e35e725cde39265276b50d2b12",
+        "pngSha256": "4069f301c8de4a9246870737a8c434de1d5129a884ec0ebda810564ab5f4c95d",
+        "rgbSha256": "e849b45d22fb066c0231c8cad83a6972ff5a58559505a642999084a174f8ec78"
+      },
+      "disabled": {
+        "sourcePath": "bin/Client/image/Sinimage/skill/Archer/Button/TA46 B_Shot_.bmp",
+        "sourceSha256": "3aa985400df15a6ceea1f538ca78469308c446af938112b3723cb53a21583f2b",
+        "pngSha256": "00bd7a8537535a52d4985eb6b491c561f1fdb62da155f205a3d1537b5af03c14",
+        "rgbSha256": "95eb62a64b5e381ce3088238743c2cd9249fadfd8fdc1dc163df7fb70e4797f8"
+      }
+    },
+    "SKILL_PERFORATION": {
+      "job": 3,
+      "name": "Perforation",
+      "width": 49,
+      "height": 46,
+      "normal": {
+        "sourcePath": "bin/Client/image/Sinimage/skill/Archer/Button/TA50 Perforation.bmp",
+        "sourceSha256": "ebd15afeb671671093bd8dbd799dddcdf1e6ebc9dc3aa23d9165f56aa193fbdb",
+        "pngSha256": "091baa4623fbd0a6992ff913f02a6e316293262d5baf0f5e191c8cb571fef7c3",
+        "rgbSha256": "529a47a1704e9e75fda2b90bb23a1aed493c1163340cf9bbecc1be7da3fa2857"
+      },
+      "disabled": {
+        "sourcePath": "bin/Client/image/Sinimage/skill/Archer/Button/TA50 Perforation_.bmp",
+        "sourceSha256": "92ef71058a61375836b2e5e1f85bcc31a3559a8aac654bdb2d55c45e1ca861b9",
+        "pngSha256": "0f911f1982638cb67bd56b3d783ae902449b0bb90914778d618cf3e3a35e3e82",
+        "rgbSha256": "27566d7b149ccad49acd69062cf380eff7e37aaf4793c94dcbad84f7f97eeb88"
+      }
+    },
+    "SKILL_RECALL_WOLVERIN": {
+      "job": 3,
+      "name": "Recall Wolverine",
+      "width": 49,
+      "height": 46,
+      "normal": {
+        "sourcePath": "bin/Client/image/Sinimage/skill/Archer/Button/TA60 R_Wolverin.bmp",
+        "sourceSha256": "cf42f7ea5e49d7f1f5528950abd75289e00ea3f531b656623ff890492f09f089",
+        "pngSha256": "8ead4d5a2e9c7a57b09909c0b343bf0e3d812d7ae9212afd666988f3ed09a0f5",
+        "rgbSha256": "2ff2b8bfe56cd5df6ef2e60e51b3ed7fb61abfecfb24c23cc133c5500a06dfd8"
+      },
+      "disabled": {
+        "sourcePath": "bin/Client/image/Sinimage/skill/Archer/Button/TA60 R_Wolverin_.bmp",
+        "sourceSha256": "f847b3f146c97a7094e3f97189f3b68b605787475511719411c522c0d21c1d6d",
+        "pngSha256": "0eef62fcd2f2f92b1d6dfe74fa845d508d965290ac8d0d7e55a71f28a2e4c06f",
+        "rgbSha256": "4c6fed0301b4325e8279bcbabc6c3143b11fb25719ff593198ace90b205ab8eb"
+      }
+    },
+    "SKILL_EVASION_MASTERY": {
+      "job": 3,
+      "name": "Evasion Mastery",
+      "width": 49,
+      "height": 46,
+      "normal": {
+        "sourcePath": "bin/Client/image/Sinimage/skill/Archer/Button/TA63 E_Mastery.bmp",
+        "sourceSha256": "4be731fba392903bfee4b222d6a7675c94509389b78828c43099e1dbe1029b00",
+        "pngSha256": "3e25d4ab6d339526886007c825937441277ed077559cde32475066286e6ea889",
+        "rgbSha256": "a1b2af79a1223da34a2a18ad6c1ff80366b17da5bd3a24fcc47a87681a2ece3f"
+      },
+      "disabled": {
+        "sourcePath": "bin/Client/image/Sinimage/skill/Archer/Button/TA63 E_Mastery_.bmp",
+        "sourceSha256": "957a21bdf06d0f9a95f8ebe79e5aff1e1cc237183856dffb88ea1d1deb2dbdbd",
+        "pngSha256": "e8e5538c3be4af0c8ff2fe57743938b4cb801a79b33f4e516c7f1e9e9c7cdbdd",
+        "rgbSha256": "46c53fa2e1b919e45fb8606e94ec133bb3a37e45742573c47525d305ec4b446c"
+      }
+    },
+    "SKILL_PHOENIX_SHOT": {
+      "job": 3,
+      "name": "Phoenix Shot",
+      "width": 49,
+      "height": 46,
+      "normal": {
+        "sourcePath": "bin/Client/image/Sinimage/skill/Archer/Button/TA66 P_Shot.bmp",
+        "sourceSha256": "fda7dedcc64d0e301ba1c3782bd24ec65d9f766e1d3f97733b65f2d0135235d5",
+        "pngSha256": "86750f0538f511b3f6e1863cd3f0761b0228d02eb6516ea396ec2c08d8776122",
+        "rgbSha256": "b642313fdcac27dc18dd108e2b0ca84eeb91bed96d3a3ae6b435fe023ea89acb"
+      },
+      "disabled": {
+        "sourcePath": "bin/Client/image/Sinimage/skill/Archer/Button/TA66 P_Shot_.bmp",
+        "sourceSha256": "f7ab358c9d13b60f81cea9ba3fd033daebeb3052209ad755d94293e16f7e12e0",
+        "pngSha256": "7e3cd8f2d9186ade8c4ec047ceca6e77a0c5849f30062ae4bd5ad098694fae27",
+        "rgbSha256": "b29351f1791dbdfed5d30acbe1504a4dff04561f0bc4d392cec67a35e1715f99"
+      }
+    },
+    "SKILL_FORCE_OF_NATURE": {
+      "job": 3,
+      "name": "Force Of Nature",
+      "width": 49,
+      "height": 46,
+      "normal": {
+        "sourcePath": "bin/Client/image/Sinimage/skill/Archer/Button/TA70 F_O_Nature.bmp",
+        "sourceSha256": "2d70b8de68f6fa89d04a539473127b963e4a0f538c48c81d7d5f0de5a9771e60",
+        "pngSha256": "8c36e6b6be0dad9370d89fb28a9088bea59880734c8363d898797b0a679a8038",
+        "rgbSha256": "f50098ed1246b9cfad9c4cf09ed0e076af2377450d9b2e5849a2dfa28d82eb56"
+      },
+      "disabled": {
+        "sourcePath": "bin/Client/image/Sinimage/skill/Archer/Button/TA70 F_O_Nature_.bmp",
+        "sourceSha256": "637d7731a31fe79c76a711125659cd9721bf7e95f52dced15dc2658b7aa16a55",
+        "pngSha256": "8bd2e30228347765cbde9efd4635f175369ea10f3c672b532373ce8780f918cb",
+        "rgbSha256": "1a0c6db270140bf6298dcd0bab1990aad07e5c4c4403c66f9aeaf921e19a017b"
+      }
+    },
+    "SKILL_PIKE_WIND": {
+      "job": 4,
+      "name": "Pike Wind",
+      "width": 49,
+      "height": 46,
+      "normal": {
+        "sourcePath": "bin/Client/image/Sinimage/skill/Pikeman/Button/TP10 P_wind.bmp",
+        "sourceSha256": "73df223204e7dd86e55525d893f39a4154025fdef1fe1056fea3d7c4554d6bbc",
+        "pngSha256": "83d8d5fb8984031ec17af00d853e220a7c7e062cb91da46a5a1b8c3b925839f9",
+        "rgbSha256": "648e9f9b4582dc54746d03cfdcf5106f8f00eb7654fdb9350ec07c4b9da6af26"
+      },
+      "disabled": {
+        "sourcePath": "bin/Client/image/Sinimage/skill/Pikeman/Button/TP10 P_wind_.bmp",
+        "sourceSha256": "9fa5fabaaeb55c07fe2c31bc9ad00c0f4399c7674c489c2bdc8724f234e2d885",
+        "pngSha256": "2f2e970264ca731f27c3d4caf7ddac71a8de9dae71402ab6d8db3d7cf6578899",
+        "rgbSha256": "5fdb5dfd70c68aae6db2f67f1bbaf2a3ee14caf8a22cbc2a67b1aac39f2592a5"
+      }
+    },
+    "SKILL_ICE_ATTRIBUTE": {
+      "job": 4,
+      "name": "Ice Attribute",
+      "width": 49,
+      "height": 46,
+      "normal": {
+        "sourcePath": "bin/Client/image/Sinimage/skill/Pikeman/Button/TP12 I_attribute.bmp",
+        "sourceSha256": "54bc17aabdcf73c872cf9f0f71f9704872e27a0078fd39ad631be1125f755911",
+        "pngSha256": "80f022a1d425b93f07b4f118846a44a0cdd27adb5e5557e85a53aa31083c0d9d",
+        "rgbSha256": "9cbd87cff8c546c25d5b8fe7ff8afdf6fc4d6d62e04a6f3bf81f7b1256d1e4fa"
+      },
+      "disabled": {
+        "sourcePath": "bin/Client/image/Sinimage/skill/Pikeman/Button/TP12 I_attribute_.bmp",
+        "sourceSha256": "314478c48fb2a47932493cb06ce047a5c745afb1c0ab58f89744003892c40f17",
+        "pngSha256": "97d63fb7c9f6f8491c0b8f98aa0f8688859a30ec2902c3e887b4940191ce94b4",
+        "rgbSha256": "eac92b8b626a943ff8550e6ff22af43ab6723e0d26c9ce0d3cd731b4a019fa1f"
+      }
+    },
+    "SKILL_CRITICAL_HIT": {
+      "job": 4,
+      "name": "Critical Hit",
+      "width": 49,
+      "height": 46,
+      "normal": {
+        "sourcePath": "bin/Client/image/Sinimage/skill/Pikeman/Button/TP14 Cri_hit.bmp",
+        "sourceSha256": "bf7a02a0748bc93107112a141a3ea9bed495e22ea3f38d8590b28f33f8051530",
+        "pngSha256": "cd596530ad3f8b9b9297049a38fdc84811e99564fd15ee332ba2456b28e06f29",
+        "rgbSha256": "78b433e4be10b3b9fd97fe485ba25a4c69bdb29552100baa6479dfa8ba47294e"
+      },
+      "disabled": {
+        "sourcePath": "bin/Client/image/Sinimage/skill/Pikeman/Button/TP14 Cri_hit_.bmp",
+        "sourceSha256": "84640c3a4b173fd284a157cfcfb7d5c71f6f07ede4aec70698c9e99be038cf27",
+        "pngSha256": "edd05ac77556cf38562e0544bd86a68abdecda585aea71bf70d84ce32fa2450f",
+        "rgbSha256": "342516a0b9862cdf882339321eb4fef538423baa96a8a0b19cd3f10c6bd1cbc0"
+      }
+    },
+    "SKILL_JUMPING_CRASH": {
+      "job": 4,
+      "name": "Jumping Crash",
+      "width": 49,
+      "height": 46,
+      "normal": {
+        "sourcePath": "bin/Client/image/Sinimage/skill/Pikeman/Button/TP17 J_Crash.bmp",
+        "sourceSha256": "8a6eea4970a7101907abb5f3da5f85739c6218fffa9d876e6fa179af035e6c37",
+        "pngSha256": "2d81d2da87dee87e9c5f635ee9c055dc4591432525586194c61c9b814caff330",
+        "rgbSha256": "184d5b8d64c2fcfc46fb912194ac890a03ea4af2b055f8b2cec8b5c0c368a958"
+      },
+      "disabled": {
+        "sourcePath": "bin/Client/image/Sinimage/skill/Pikeman/Button/TP17 J_Crash_.bmp",
+        "sourceSha256": "9728e4b885d127fcd7c32f15543f6200fe867dd28e2834a3377e9e8f81476ef3",
+        "pngSha256": "db57bba71c3a4462460473d42b61d3ba0ac15b56d80db7a3d993bb9cb144316c",
+        "rgbSha256": "43c2f18070fe158c94e69c4a7aea2ab448b56ed54a550f5977ea24c246a02bb4"
+      }
+    },
+    "SKILL_GROUND_PIKE": {
+      "job": 4,
+      "name": "Ground Pike",
+      "width": 49,
+      "height": 46,
+      "normal": {
+        "sourcePath": "bin/Client/image/Sinimage/skill/Pikeman/Button/TP20 G_Pike.bmp",
+        "sourceSha256": "4fc69e14eb1e2eb26bbe5a568568576216ad6e01189954a0358ed209c8495bd8",
+        "pngSha256": "55657f00d5010320c3440e4d5b87e3294d4dd84fba98cf804c8bb19fe91ffa9d",
+        "rgbSha256": "bfe0776320ec1f1b0128dc84c7614f1d944ae723013b7c413b9f4b91ac9a56ac"
+      },
+      "disabled": {
+        "sourcePath": "bin/Client/image/Sinimage/skill/Pikeman/Button/TP20 G_Pike_.bmp",
+        "sourceSha256": "2ab0253765629363c515958e886bd1a067a369ccb2ba53b43aed4a8bbb6db26f",
+        "pngSha256": "3afd01a778919f843d838b98deda0639ad027aaf782bedb1e3371cdc636c6fd8",
+        "rgbSha256": "a4ddd4fee8eb6000feeb98d3746e72f2de4810e75363123fd792e4187a1e6789"
+      }
+    },
+    "SKILL_TORNADO": {
+      "job": 4,
+      "name": "Tornado",
+      "width": 49,
+      "height": 46,
+      "normal": {
+        "sourcePath": "bin/Client/image/Sinimage/skill/Pikeman/Button/TP23 Tornado.bmp",
+        "sourceSha256": "609d33063be19d3c3dc007311cafae276dfc7ef8e419c0635ddc7a7a14a2defe",
+        "pngSha256": "368c3d8c24a0968c4c435ee6a90b03c0d8ac25448264a2efda647235e90d60cb",
+        "rgbSha256": "190fc03af9ddddffc0588b57840647327b7bdfdfe94b3e69ec57a9bfa93d8b8c"
+      },
+      "disabled": {
+        "sourcePath": "bin/Client/image/Sinimage/skill/Pikeman/Button/TP23 Tornado_.bmp",
+        "sourceSha256": "d6c710df25d344ac04244f696711322e3516c806b7fb5c54220e2ed1f35e3528",
+        "pngSha256": "e353f746d2641814a08765683cb43bae0a89c7c67b021ceeeef10195f3444d10",
+        "rgbSha256": "5d550c68cea1c5282f26784ac0c13a25ea03cd71cd1ff945ceef97b98bd54dce"
+      }
+    },
+    "SKILL_WEAPONE_DEFENCE_MASTERY": {
+      "job": 4,
+      "name": "Weapon Defense Mastery",
+      "width": 49,
+      "height": 46,
+      "normal": {
+        "sourcePath": "bin/Client/image/Sinimage/skill/Pikeman/Button/TP26 W_D_Mastery.bmp",
+        "sourceSha256": "d59232723dd9f5f92ea9f63abba1b36745e14245476316821d2f7187f7f8b743",
+        "pngSha256": "377872f883f5d7e0158ee5dfc1bf4fe52b48dab3e1b418abbf56d9195a16ca86",
+        "rgbSha256": "50ef80a0789814c1b4a11035475d664f541b00657e1e572210ed742b21e6746d"
+      },
+      "disabled": {
+        "sourcePath": "bin/Client/image/Sinimage/skill/Pikeman/Button/TP26 W_D_Mastery_.bmp",
+        "sourceSha256": "f270776a43c0628dfd7ecb98b0988faa30f07f04eb65c9ffc7fc0d9c715d7b49",
+        "pngSha256": "6eec93a615f1847d6756a85fa4883d3b6893d471a8817b8070bcf5a20ea70f6c",
+        "rgbSha256": "21414a638f84da8c797d2d587d32445d059e2b4eb568f64ef2498d7a818a2f8c"
+      }
+    },
+    "SKILL_EXPANSION": {
+      "job": 4,
+      "name": "Expansion",
+      "width": 49,
+      "height": 46,
+      "normal": {
+        "sourcePath": "bin/Client/image/Sinimage/skill/Pikeman/Button/TP30 Expasion.bmp",
+        "sourceSha256": "cbaee8b11aa701eb6dca7125d4c9cc3b3e1de16c13eb9ea0e15cea64465f4723",
+        "pngSha256": "757f85dbcc77fdae6e47f689623a7c9cc9ad13e91ad608928a9fa410a8259aae",
+        "rgbSha256": "fe1e8dbc07d886161bfa160e6fc2a6425830b206f7d57f9a7a6ca8b0903d9156"
+      },
+      "disabled": {
+        "sourcePath": "bin/Client/image/Sinimage/skill/Pikeman/Button/TP30 Expasion_.bmp",
+        "sourceSha256": "4724519a6f9d49ac3af011ab3545ccb4bb2952be3cf87c1c1f1111109114dd48",
+        "pngSha256": "b9684d2bbad38c0bd477bb5ef5322b75af69378fd9a32bce0d7371790b47e9a4",
+        "rgbSha256": "e64dc00a01adec44d69a1b3201b2f27e8cd0d85ddb7dfe23d907762e7a831f35"
+      }
+    },
+    "SKILL_VENOM_SPEAR": {
+      "job": 4,
+      "name": "Venom Spear",
+      "width": 49,
+      "height": 46,
+      "normal": {
+        "sourcePath": "bin/Client/image/Sinimage/skill/Pikeman/Button/TP40 V_Spear.bmp",
+        "sourceSha256": "e262c041510a82d187682d6d44526a20ae1ae3bdcf6adceeaeff215554b45488",
+        "pngSha256": "2a117d47cdb9978bd9baecde49d927a16280ea21b08d854d449ee261907ea5ec",
+        "rgbSha256": "0e35cea777a77a36b1e3c36a466e5a1eb22723f33417fed8bc1a55e03bdb853a"
+      },
+      "disabled": {
+        "sourcePath": "bin/Client/image/Sinimage/skill/Pikeman/Button/TP40 V_Spear_.bmp",
+        "sourceSha256": "2d1dae05a8550b5f6ba293fda1dc53bc71e2aea7bac184b6ae74e98e4f6f0328",
+        "pngSha256": "574ba82fb7fe66d5bc8ecb9519f7f583d2ab2093bb83d62427af8813e5b0d71a",
+        "rgbSha256": "2ec4c4cb025344188e9643c150ef6e31064c837d0bd312f5c151a836c81f728b"
+      }
+    },
+    "SKILL_VANISH": {
+      "job": 4,
+      "name": "Vanish",
+      "width": 49,
+      "height": 46,
+      "normal": {
+        "sourcePath": "bin/Client/image/Sinimage/skill/Pikeman/Button/TP43 Vanish.bmp",
+        "sourceSha256": "e2f46c7dbe3d4950bbec2faeb8ca9170ef4d55d42512e50fa4321ce739db30f9",
+        "pngSha256": "1ec1a70a3a34fe1fb9bd487dc611da60fc709b69e7d911abbb966215f69ccbfe",
+        "rgbSha256": "14f1b01a8cc9a7451710176b44994074862448c066d6beac61a30ddf8cc5bf4d"
+      },
+      "disabled": {
+        "sourcePath": "bin/Client/image/Sinimage/skill/Pikeman/Button/TP43 Vanish_.bmp",
+        "sourceSha256": "2e5be948fd16631e79bcf9f0f09b62f813057687b473c0608bb2dd254b5856eb",
+        "pngSha256": "3de2a00f29259a4caccd13049fc5539206d3a478edbfc43af1fdb5e13df4d33d",
+        "rgbSha256": "37cf6f687f7bd731fc062658d32144d1866826631c2c313ef3d8525c73866730"
+      }
+    },
+    "SKILL_CRITICAL_MASTERY": {
+      "job": 4,
+      "name": "Critical Mastery",
+      "width": 49,
+      "height": 46,
+      "normal": {
+        "sourcePath": "bin/Client/image/Sinimage/skill/Pikeman/Button/TP46 C_Mastery.bmp",
+        "sourceSha256": "b9082fb6ddb4b680d376272b3826e4798f7a58e06591f766cf0c29631718ee8c",
+        "pngSha256": "bd895628c9fac730f0ef22d3834e0246ea206c35609b4ff757c773cafaa2d89e",
+        "rgbSha256": "8c8ee0ed699891d23a1961fcdabe3614ade68ea1d48826197740b4f48e310fc8"
+      },
+      "disabled": {
+        "sourcePath": "bin/Client/image/Sinimage/skill/Pikeman/Button/TP46 C_Mastery_.bmp",
+        "sourceSha256": "baa726e97ae55f4bd74bc4b1b8fa3791d5246d990d368ed1ad0eef74b5659314",
+        "pngSha256": "afeb70a290c17b28b3da6c94b1f3ddd12ce2a674bb1bde2a532d39b43ea3ef1b",
+        "rgbSha256": "052202cb36572fdb6a4e4907e114dfa39675a9b92b85a41d2cb50e2cadfc3c53"
+      }
+    },
+    "SKILL_CHAIN_LANCE": {
+      "job": 4,
+      "name": "Chain Lance",
+      "width": 49,
+      "height": 46,
+      "normal": {
+        "sourcePath": "bin/Client/image/Sinimage/skill/Pikeman/Button/TP50 C_Lance.bmp",
+        "sourceSha256": "2aec9573247351f66cf287f25a4a41130cc53d5c8524aab7f838edf9adff2ad2",
+        "pngSha256": "f7e5e07c82190a1ea3fcca7f2ee624635bd8adcc8548acc02b349ee1a0530100",
+        "rgbSha256": "016c123dfa96a1c5027b1733ef2fcb8504f2550a9559dd741d8acadb0adefdd6"
+      },
+      "disabled": {
+        "sourcePath": "bin/Client/image/Sinimage/skill/Pikeman/Button/TP50 C_Lance_.bmp",
+        "sourceSha256": "ec038fc295ec30f7f5f4079827914d97f4f7ee97378c840de526052b39ed4b32",
+        "pngSha256": "74a446daaa5352ae87e11f5f3c462f970f45472790c15dbbb8014682b032fdf1",
+        "rgbSha256": "ed9ba0d8db416878340add34a38ca27c287ee2f0c55d7fa2bc0861f6bc4d1212"
+      }
+    },
+    "SKILL_ASSASSIN_EYE": {
+      "job": 4,
+      "name": "Assassin Eye",
+      "width": 49,
+      "height": 46,
+      "normal": {
+        "sourcePath": "bin/Client/image/Sinimage/skill/Pikeman/Button/TP60 A_Eye.bmp",
+        "sourceSha256": "022130751b4083e3720b4317c48b4168bcdbf989ab449f99178604f0595d0539",
+        "pngSha256": "a54f39cbd0939cae6fb725ebb524fbf46d5e005f52e5cec72b1d382c7636f9d9",
+        "rgbSha256": "a43275d1d281368327bbfbc359d3d22cfe375713614d7ab410736a31b670aee2"
+      },
+      "disabled": {
+        "sourcePath": "bin/Client/image/Sinimage/skill/Pikeman/Button/TP60 A_Eye_.bmp",
+        "sourceSha256": "b06d5b7192f52c1975465359e3286ee7fc2a433dfa8b5137cb1349cce0bec102",
+        "pngSha256": "9eb3d803458fb74e39e05f7e672c953b233a90e177aceeb58e7a5f3f0a8afa16",
+        "rgbSha256": "c7cc4b20341d617cfa67fc1a15b1e822c8dfa70cce1455e854c938a2f1532cd2"
+      }
+    },
+    "SKILL_CHARGING_STRIKE": {
+      "job": 4,
+      "name": "Charging Strike",
+      "width": 49,
+      "height": 46,
+      "normal": {
+        "sourcePath": "bin/Client/image/Sinimage/skill/Pikeman/Button/TP63 C_Strike.bmp",
+        "sourceSha256": "dbe3cc4fccf5ec60e57188549cb0d1b1ca33b68032a725a97fd2dccbc3d4e482",
+        "pngSha256": "a9079a183db6c240b5673bc5efedca95332a045b0a58f58c3c456c7c824434ae",
+        "rgbSha256": "a8a456f7a64d8cb70a3d45e1ed5eef1da9a82a0b8b592296635ae851c645fc24"
+      },
+      "disabled": {
+        "sourcePath": "bin/Client/image/Sinimage/skill/Pikeman/Button/TP63 C_Strike_.bmp",
+        "sourceSha256": "a1800f1237af1c2b0cee2aa4ad96622ada81ddef4bf8e7a0711a072675e1f952",
+        "pngSha256": "6203ce6f2d0418f6318d6b35ffbe93c342dff3bb13a4cf65d7b45ae6a84bfa0d",
+        "rgbSha256": "34b877a489a0176d7d3b83665579f47f5f34e72e591aede3e07fcbdc1bb3c4a9"
+      }
+    },
+    "SKILL_VAGUE": {
+      "job": 4,
+      "name": "Vague",
+      "width": 49,
+      "height": 46,
+      "normal": {
+        "sourcePath": "bin/Client/image/Sinimage/skill/Pikeman/Button/TP66 Vague.bmp",
+        "sourceSha256": "a1c32f2e9fcddb82370c0fae80dfc7ae5e69f3a803db5ad36213d2ac07c308f7",
+        "pngSha256": "c93c3eb771696d7253ad14f7ac715e5fc2ab2f2f031e987cbe06cc7505de4b5e",
+        "rgbSha256": "31b6795ef6eb3fe5ff3933d406ef344020f03693f5b73985a73eb25d7cdc6b16"
+      },
+      "disabled": {
+        "sourcePath": "bin/Client/image/Sinimage/skill/Pikeman/Button/TP66 Vague_.bmp",
+        "sourceSha256": "b858ed6cb4ee2135ca13bcab928eba8b07cfeab2a337287d5ab7dc1c5f32b943",
+        "pngSha256": "4b762a9eab187b989ccbc828239684fb68e8fc7464cd761504de9aad8f704106",
+        "rgbSha256": "bfc0733bb44cecf296f688dd7ba09acd85812d5be4ef5dbeb1a961becdfa4531"
+      }
+    },
+    "SKILL_SHADOW_MASTER": {
+      "job": 4,
+      "name": "Shadow Master",
+      "width": 49,
+      "height": 46,
+      "normal": {
+        "sourcePath": "bin/Client/image/Sinimage/skill/Pikeman/Button/TP70 S_Master.bmp",
+        "sourceSha256": "e1df0bdbb754b7f23e33d8d1ba907cb80fe65727fac5be4ec8655d81aa1637bc",
+        "pngSha256": "02cb03424324b1d676580a05511c31c99948a85a0796231dd1fe890bc88b9060",
+        "rgbSha256": "90d998ab70ccefaec12ad580f8bf19d6327169a13f5fa6821b825feeffb2ad40"
+      },
+      "disabled": {
+        "sourcePath": "bin/Client/image/Sinimage/skill/Pikeman/Button/TP70 S_Master_.bmp",
+        "sourceSha256": "068eb971440228357886b9e1fc4faf6c77321ef534a9e4dde60ea534b77c45ad",
+        "pngSha256": "e9ad9acdb78521c59fc1c0d4e0c1c08496e1a3082264544ab44d5a0a79b09591",
+        "rgbSha256": "b0442846a9aacdb530e168588216cc3388a184cfa2f237b7bba8b330402e9689"
+      }
+    },
+    "SKILL_SHIELD_STRIKE": {
+      "job": 5,
+      "name": "Shield Strike",
+      "width": 49,
+      "height": 46,
+      "normal": {
+        "sourcePath": "bin/Client/image/Sinimage/skill/Atalanta/Button/MA10 S_Strike.bmp",
+        "sourceSha256": "269dab1f84c835d553144cdf34e6c8f2ae4a7f17144882ad2d275809d4d594ce",
+        "pngSha256": "0a352ecd2241cd5370e1cfe4e7d1c604bfd0c75da4e2bac541220f93330382d4",
+        "rgbSha256": "0181d21a6e3ee6cabdedebe102daac067dc36ee3172059285fc94666021b56a5"
+      },
+      "disabled": {
+        "sourcePath": "bin/Client/image/Sinimage/skill/Atalanta/Button/MA10 S_Strike_.bmp",
+        "sourceSha256": "38ecbbf6cf79a29e70b7679d72cbb15e660cd6a4be1c5787eb8bb409c4ac8b83",
+        "pngSha256": "e6059ba82d1eb15bad927ef5765968e27f50aa3ceccc1b80bc98c7b2cb627c5f",
+        "rgbSha256": "e93b60baf8dce8e3411b6badad49544ed5f38d4deeb23f6309fab7e80480330d"
+      }
+    },
+    "SKILL_FARINA": {
+      "job": 5,
+      "name": "Farina",
+      "width": 49,
+      "height": 46,
+      "normal": {
+        "sourcePath": "bin/Client/image/Sinimage/skill/Atalanta/Button/MA12 Farina.bmp",
+        "sourceSha256": "7c3a5e4c7eadbe01528b3c2fc047de4871976e71398586156d6e8113d8975892",
+        "pngSha256": "deea4a8f2b53af9771ea23eb254f279329da26de55a1995329b8de0503e4e77d",
+        "rgbSha256": "02c20497b7890e977b62d3fcbd5a931e336355beb94a291db6a4171c4b881720"
+      },
+      "disabled": {
+        "sourcePath": "bin/Client/image/Sinimage/skill/Atalanta/Button/MA12 Farina_.bmp",
+        "sourceSha256": "0e5b2bb2c1ba2fdfa12a9b44eaa99e2e7510076a5a6d33dc217e2a0cfbb48da8",
+        "pngSha256": "591c7a8adc6aeaefe23e34d06e3abbc2b1645b236a9a4549b24a2cd334fc8702",
+        "rgbSha256": "21f8cdeb314cb1faadc59a61bb289f68080fff26ecfb7f282fb788a0882e1f53"
+      }
+    },
+    "SKILL_THROWING_MASTERY": {
+      "job": 5,
+      "name": "Throwing Mastery",
+      "width": 49,
+      "height": 46,
+      "normal": {
+        "sourcePath": "bin/Client/image/Sinimage/skill/Atalanta/Button/MA14 T_Mastery.bmp",
+        "sourceSha256": "a18ba16c3664cd7c7d3f967fd6cd27f63267a2e3adcb9d62f3953d5d15549952",
+        "pngSha256": "4a93ca98a7690b41f7c895a108109f51560478770ebf28aee3af43ba8d211385",
+        "rgbSha256": "cfd3c879b03c0190997b3dcbfecb8c3e4b8585c31c7d27e7a6e63e79dc233689"
+      },
+      "disabled": {
+        "sourcePath": "bin/Client/image/Sinimage/skill/Atalanta/Button/MA14 T_Mastery_.bmp",
+        "sourceSha256": "ab236bca1230bc32c7630ffbe07814da7f3d68150444bff0fe6b6b2122e16e6a",
+        "pngSha256": "95499f30ce34d7060a30a379a82883cd151755b30b435bc6690a5dd065e3fd4a",
+        "rgbSha256": "97039e0b2857b99f0a502802dde92d2167837557f15710fc6e8e6f53cfd0aeee"
+      }
+    },
+    "SKILL_VIGOR_SPEAR": {
+      "job": 5,
+      "name": "Vigor Spear",
+      "width": 49,
+      "height": 46,
+      "normal": {
+        "sourcePath": "bin/Client/image/Sinimage/skill/Atalanta/Button/MA17 V_Spear.bmp",
+        "sourceSha256": "34d96af26844e8ce4199e4278a792d26d68e59c3c0a2f0a24c3f50787f2b5758",
+        "pngSha256": "1614d20aed5194fbf8330e0f4fa003a07d5e0df474c5c7486c344eefc6c3d27a",
+        "rgbSha256": "942f767bc594c1645d2162977eb02373b999b2cab796bd1eba6d959afdd446c9"
+      },
+      "disabled": {
+        "sourcePath": "bin/Client/image/Sinimage/skill/Atalanta/Button/MA17 V_Spear_.bmp",
+        "sourceSha256": "476ad68926afcf2a1f08df1ced29b8ebd25870371fc086f1b2a81a6ed40fe22f",
+        "pngSha256": "9f3b5dff81878fa4c8e632f180bdf015a6ae63a81660e88e33bf7fda362b4283",
+        "rgbSha256": "4e8acd7296d0d0732b9b4b50ef4a79358831ea8e2c763e1b6583c32bcdf9b723"
+      }
+    },
+    "SKILL_WINDY": {
+      "job": 5,
+      "name": "Windy",
+      "width": 49,
+      "height": 46,
+      "normal": {
+        "sourcePath": "bin/Client/image/Sinimage/skill/Atalanta/Button/MA20 Windy.bmp",
+        "sourceSha256": "3022ad331dc6199abbe4c2d123fb918a4f036f7ca36d86f4631909ca2929bd5b",
+        "pngSha256": "6b42d8e246f8dd28dce08a136d79113dc9e29513987b28be6ee43d78f2f4f8ba",
+        "rgbSha256": "c22754eafcca00ad5f054687554eeb8656b1f4f11920db7ba5aef0f0ec0b9644"
+      },
+      "disabled": {
+        "sourcePath": "bin/Client/image/Sinimage/skill/Atalanta/Button/MA20 Windy_.bmp",
+        "sourceSha256": "1e34e8504aadc0cec6e46928935bb5d636bc1a2128ae208227b3ab3707034c4e",
+        "pngSha256": "91e45870d34a606c262bbddb27fb739f358a2776f4140cad5021fe31eb92efe4",
+        "rgbSha256": "5a39204410e81fccbcc35ab468c599a1dfc2e68c43cb1515a59fa00ce86222db"
+      }
+    },
+    "SKILL_TWIST_JAVELIN": {
+      "job": 5,
+      "name": "Twist Javelin",
+      "width": 49,
+      "height": 46,
+      "normal": {
+        "sourcePath": "bin/Client/image/Sinimage/skill/Atalanta/Button/MA23 T_Javelin.bmp",
+        "sourceSha256": "57ec451d04bafd7aec1e5cb3f768d14e8cfdee0d9dc0da97f756cf7703623370",
+        "pngSha256": "a8ebfa348951de7951c91b62fcd7b9ad6b42335fa35fd941974c4d69768c5e17",
+        "rgbSha256": "3c7f55c694d3370b2f15d2ea4b62a9fe29ae38aa04839c3c63b68d640dbf457e"
+      },
+      "disabled": {
+        "sourcePath": "bin/Client/image/Sinimage/skill/Atalanta/Button/MA23 T_Javelin_.bmp",
+        "sourceSha256": "92a20b4cea9e668d168d49307b6a4ae52cd3dfba6e91a2ffd93de7552c603685",
+        "pngSha256": "d4c268efde09b6accadef36a5a6fe01f9875ac02c40d5fb52143e77f065fab8a",
+        "rgbSha256": "054b4bde616c4429afd40597d4258bd34def5a33b616de9ca1a8dd9e1be253ab"
+      }
+    },
+    "SKILL_SOUL_SUCKER": {
+      "job": 5,
+      "name": "Soul Sucker",
+      "width": 49,
+      "height": 46,
+      "normal": {
+        "sourcePath": "bin/Client/image/Sinimage/skill/Atalanta/Button/MA26 S_Sucker.bmp",
+        "sourceSha256": "10ccc98543f75a605050d06ef1041b235f7fd3b4cad4a7c2a29c74d5996de9c5",
+        "pngSha256": "69888f7c1fc338108804bfe05256b157f7f7187a175d89ef938d541755cad930",
+        "rgbSha256": "d8b4dfb51caa0f28236e382aeaf2866c600df908304008eaca9a1c90d0d1d1c2"
+      },
+      "disabled": {
+        "sourcePath": "bin/Client/image/Sinimage/skill/Atalanta/Button/MA26 S_Sucker_.bmp",
+        "sourceSha256": "93c22009d62f01f9e7f30c195bf749fdff9b145b5ca923f5174981b9f432b180",
+        "pngSha256": "7a4746f3b77d8db7ed1d548324a6d327938aa633c9bb952e37b5a660a4c55add",
+        "rgbSha256": "9e60107bac7ed2ed9dd5601102edafe2d6aa617675ecdf5c025bd455cd435dff"
+      }
+    },
+    "SKILL_FIRE_JAVELIN": {
+      "job": 5,
+      "name": "Fire Javelin",
+      "width": 49,
+      "height": 46,
+      "normal": {
+        "sourcePath": "bin/Client/image/Sinimage/skill/Atalanta/Button/MA30 F_Javelin.bmp",
+        "sourceSha256": "9049724225db40297a643a3e7ea06bf71aaa38ed10e82adb2ccdfef3014b83f7",
+        "pngSha256": "bef01e6eb15246a6e9b86c672e0d039ea082cb75aa4eaaaeb521cced5f0bb9e6",
+        "rgbSha256": "6c37f3fabe6dda52936cbc112b1a4e34e5e5693e993dcba6cfe02a5b46a01fd5"
+      },
+      "disabled": {
+        "sourcePath": "bin/Client/image/Sinimage/skill/Atalanta/Button/MA30 F_Javelin_.bmp",
+        "sourceSha256": "489898f311a0c5bd7d12bb50995838d4ae2215242d58ecf525568d6ca2b6bdc4",
+        "pngSha256": "09f8c2016ed1044e921a6d624622e58f20217636f6e9cead0822d8a8764d4e85",
+        "rgbSha256": "faf43bad293cf7756a19f88cae414776f57fd607805ff9334de0615e8d923466"
+      }
+    },
+    "SKILL_SPLIT_JAVELIN": {
+      "job": 5,
+      "name": "Split Javelin",
+      "width": 49,
+      "height": 46,
+      "normal": {
+        "sourcePath": "bin/Client/image/Sinimage/skill/Atalanta/Button/MA40 Split_Javelin.bmp",
+        "sourceSha256": "97ac0585d8df914da6f3f602e0f1565b6608bf3896cb90e5295fa100403fc788",
+        "pngSha256": "7286e1657111d1d8e808ba3f04d7c3286575740b61649a804d495533c6f5ce50",
+        "rgbSha256": "e2e6e268a9fd3c02ffc9eccedb9cf554f0cfcedfee211d5407bfa565a2bc6479"
+      },
+      "disabled": {
+        "sourcePath": "bin/Client/image/Sinimage/skill/Atalanta/Button/MA40 Split_Javelin_.bmp",
+        "sourceSha256": "52e37c4619ed0a22df1ce4ae87881eb4a56f73950ac1c806921e5d08e9aae4eb",
+        "pngSha256": "7f6c185ccf2989aeb6895c3b23c700734a32cc2097e42b09680d5a94d1b469fe",
+        "rgbSha256": "2f89a8410b79306f75caca6e29b255e8cb5f37b7e0712012b95d0dadf523ea7b"
+      }
+    },
+    "SKILL_TRIUMPH_OF_VALHALLA": {
+      "job": 5,
+      "name": "Triumph Of Valhalla",
+      "width": 49,
+      "height": 46,
+      "normal": {
+        "sourcePath": "bin/Client/image/Sinimage/skill/Atalanta/Button/MA43 T_Of_Valhalla.bmp",
+        "sourceSha256": "673188601016a43dfcea370a766bd7563822107a8092948f13e723bb36f73d47",
+        "pngSha256": "c0152353439b8c5f8147e47eaabe6c8618caac4d850a88cd5c38b9d59c20025e",
+        "rgbSha256": "46a0ff339cac5cc0aac326cc77a059bebb570db92fe8172c25ee8fc3ec22a28b"
+      },
+      "disabled": {
+        "sourcePath": "bin/Client/image/Sinimage/skill/Atalanta/Button/MA43 T_Of_Valhalla_.bmp",
+        "sourceSha256": "bf12b3dfb0e42f9bdf6a0e509441eaa51fa90ad64de273b2fd15be1a46768146",
+        "pngSha256": "1a0eac79ceb51d8ae1debf446b443cad3f77c4b612375da90afe876648f89c13",
+        "rgbSha256": "53696efc2d669fc1f038bea7fb691cd9c509fd2081d34c1b50c0313efe1e4b2b"
+      }
+    },
+    "SKILL_LIGHTNING_JAVELIN": {
+      "job": 5,
+      "name": "Lightning Javelin",
+      "width": 49,
+      "height": 46,
+      "normal": {
+        "sourcePath": "bin/Client/image/Sinimage/skill/Atalanta/Button/MA46 L_Javelin.bmp",
+        "sourceSha256": "cb4bc44988408fcd6a8460ac2a0da276f988429b9d5cea10afac022bcb98b0ae",
+        "pngSha256": "8a40be0fb74f8f4d26f4a57d71bce3d2e803ba16f41ebc62088be6c2dc8333ba",
+        "rgbSha256": "8d7fbe439ee2972004c0c22df1a1a05b1e25980af3ff3a5020a57cfd6b118d50"
+      },
+      "disabled": {
+        "sourcePath": "bin/Client/image/Sinimage/skill/Atalanta/Button/MA46 L_Javelin_.bmp",
+        "sourceSha256": "1dfa4d3a5174698945e7864759f51d098103c0c0065fa5f53e2955c39df04cca",
+        "pngSha256": "cd0b284992c5fdd178f311d8d7cf0fb4ddbc5ab6833ea01cbc6a9e387593dab3",
+        "rgbSha256": "64b3429ebaa505c221e5efdac7ab5d0b4ea77f890a6de619f6d5663b966db1b6"
+      }
+    },
+    "SKILL_STORM_JAVELIN": {
+      "job": 5,
+      "name": "Storm Javelin",
+      "width": 49,
+      "height": 46,
+      "normal": {
+        "sourcePath": "bin/Client/image/Sinimage/skill/Atalanta/Button/MA50 Storm_Javelin.bmp",
+        "sourceSha256": "9c91b2df237164e76deb5e34b60d4d239e191dcbe6c6b9dfddd44c5b6e126eb1",
+        "pngSha256": "a97525eb1eb400e18c809fbe27c64c41f14d089434f4651486fa1be5ee68177c",
+        "rgbSha256": "567bb42df6ca8e1d0e029ca806775fed991007c062fa41a84af80373aef127e8"
+      },
+      "disabled": {
+        "sourcePath": "bin/Client/image/Sinimage/skill/Atalanta/Button/MA50 Storm_Javelin_.bmp",
+        "sourceSha256": "12e10b5b0274ea2ef1dbb3ea0bc8ea244472ec0aac8f82089183ab747c8ac128",
+        "pngSha256": "ed86a3741a1449cff633bb2efb770148e3932740b6606a5c4a1f2325761cde0e",
+        "rgbSha256": "10640bd7eab4917465624b30afba37daa65f9021f9ec3bc34e0f86265d959a6d"
+      }
+    },
+    "SKILL_HALL_OF_VALHALLA": {
+      "job": 5,
+      "name": "Hall Of Valhalla",
+      "width": 49,
+      "height": 46,
+      "normal": {
+        "sourcePath": "bin/Client/image/Sinimage/skill/Atalanta/Button/MA60 H_O_Valhalla.bmp",
+        "sourceSha256": "11a96342cf39210128de195762b2112e662657a0fbd15e63bc91fa72b88c6742",
+        "pngSha256": "7c2a418eb750b4caa5a1c2c67e4b6c7fb950b062a2b87cc88600e9576aed6909",
+        "rgbSha256": "45857542c5ecc043d210b544522b30970499dc4d42a895e18f8bbf4230bc0209"
+      },
+      "disabled": {
+        "sourcePath": "bin/Client/image/Sinimage/skill/Atalanta/Button/MA60 H_O_Valhalla_.bmp",
+        "sourceSha256": "fdb176e28e5bb8554e7eef8a6624e758df50bb7c96d5b19e7416b78e102e756a",
+        "pngSha256": "1c5a29344227983a97ae7f52f5a452327b0babdc84426ff6194a911caaf85aa6",
+        "rgbSha256": "ed6818111f7897452d706be4869081bbaf1cafffebd2e9922050ff8160e26f12"
+      }
+    },
+    "SKILL_X_RAGE": {
+      "job": 5,
+      "name": "X Rage",
+      "width": 49,
+      "height": 46,
+      "normal": {
+        "sourcePath": "bin/Client/image/Sinimage/skill/Atalanta/Button/MA63 X_Rage.bmp",
+        "sourceSha256": "43456e43a2feb874171d0826deebf4979b78802a07350a7278d583f62634973b",
+        "pngSha256": "32c74ed1f0c346eeedae0ea4d4f10f577afe604b9efeab5a001f1d9af2fadf2b",
+        "rgbSha256": "e98b9fca6d4c0b4453553ea059eda8ccae27faa31a56256660ed3e534b77acf6"
+      },
+      "disabled": {
+        "sourcePath": "bin/Client/image/Sinimage/skill/Atalanta/Button/MA63 X_Rage_.bmp",
+        "sourceSha256": "60ab6c2594e9d33dda40f84ee7d4fdf85dd7776bb318e3187520ca5595add0ac",
+        "pngSha256": "38fb4c9030b08a208ae8216d69c412148a4be1a8853b3ed29581e4be4c22ebbb",
+        "rgbSha256": "49090094530ac0792b4c8d52871d2e8e9d508a0b5755bf5d25f2fe1452c3b0db"
+      }
+    },
+    "SKILL_FROST_JAVELIN": {
+      "job": 5,
+      "name": "Frost Javelin",
+      "width": 49,
+      "height": 46,
+      "normal": {
+        "sourcePath": "bin/Client/image/Sinimage/skill/Atalanta/Button/MA66 F_Javelin.bmp",
+        "sourceSha256": "6fd4687ff3867d080b5ec4176cb1f84e184bfc27ceb390c15e111fe996c0f319",
+        "pngSha256": "b8e3769c4f0d77261f647ff87b8316fbc870062fa0d7a923fdca8a015c0cf368",
+        "rgbSha256": "b9911db4027811ade401580c013c77fde9a4964adb0ea28c45b00f254000e406"
+      },
+      "disabled": {
+        "sourcePath": "bin/Client/image/Sinimage/skill/Atalanta/Button/MA66 F_Javelin_.bmp",
+        "sourceSha256": "ee77ad5f7bf1705ef511efd07403226401e0538bcd64664665f06beff8513ab6",
+        "pngSha256": "9c613cc069094a8c3c952157052e9d7111bd29d4eab5dfcbc1b15a335c05e70d",
+        "rgbSha256": "6a1650147cc47ed1305b9ea031ed7f99a0dcb8cf807aa5e1b068d68c34b8e040"
+      }
+    },
+    "SKILL_VENGEANCE": {
+      "job": 5,
+      "name": "Vengeance",
+      "width": 49,
+      "height": 46,
+      "normal": {
+        "sourcePath": "bin/Client/image/Sinimage/skill/Atalanta/Button/MA70 Vengeance.bmp",
+        "sourceSha256": "5f683cef9494b2bc732881aaf4af44600b4903f25914056854dbad29b3fecfaf",
+        "pngSha256": "38c679e250b48137b2e174cee0e385854835d7c50df7f9becf284d6ca38e53d4",
+        "rgbSha256": "8c1bde8250c31c0a1d674e12ff66f12a121ece887a29d174820d16b429aeaa20"
+      },
+      "disabled": {
+        "sourcePath": "bin/Client/image/Sinimage/skill/Atalanta/Button/MA70 Vengeance_.bmp",
+        "sourceSha256": "4ed7946621ce516db4d69251c407ee70c4849d339ac25e1b906a8645f700f291",
+        "pngSha256": "1ae79c154bd208d22878ee64668e98277d05350a2d8ed3d58dcdcda4dbcf7449",
+        "rgbSha256": "6c73b3f9283578c1e51ce7e648046831eb6ec5f274e68074c3c544035df28ac6"
+      }
+    },
+    "SKILL_SWORD_BLAST": {
+      "job": 6,
+      "name": "Sword Blast",
+      "width": 49,
+      "height": 46,
+      "normal": {
+        "sourcePath": "bin/Client/image/Sinimage/skill/Knight/Button/MN10 S_Blast.bmp",
+        "sourceSha256": "f605f681444b5774df2fc9af954f5b9e38d251dac019dc796bea396e7ac69d12",
+        "pngSha256": "b6408206b75138b83ade19c2654e0989478239a6769a75f495a0e9a274b63e7c",
+        "rgbSha256": "255d134e58d5eea2852d53201a557ce0507747f6615a936aa6c0124698a9fd94"
+      },
+      "disabled": {
+        "sourcePath": "bin/Client/image/Sinimage/skill/Knight/Button/MN10 S_Blast_.bmp",
+        "sourceSha256": "f4b99cef78eac32e7d1944e169ddfc436f4e3c50cd96bbe1f4a9b16422b124f5",
+        "pngSha256": "e9e55b8137b8f7906dbee6247d50f23e63f27f6e0bbb8fe60c0862b80c128cd6",
+        "rgbSha256": "efc90ee82e914b4ae070b0165f9edd923def9ffb17040f06deadcdeec83aa265"
+      }
+    },
+    "SKILL_HOLY_BODY": {
+      "job": 6,
+      "name": "Holy Body",
+      "width": 49,
+      "height": 46,
+      "normal": {
+        "sourcePath": "bin/Client/image/Sinimage/skill/Knight/Button/MN12 H_Body.bmp",
+        "sourceSha256": "5634fdeb2177890f962d81115fdef5cbdacf2677317cef3e159d1479f64e43f7",
+        "pngSha256": "8df962079190dd21314c6fb1ffface6504c107cd68928522289720e5f620cbe1",
+        "rgbSha256": "62e5d36b8e8fc05d40ee5837ada2ecaa0e4789a756a816640ec949f74457032f"
+      },
+      "disabled": {
+        "sourcePath": "bin/Client/image/Sinimage/skill/Knight/Button/MN12 H_Body_.bmp",
+        "sourceSha256": "edbb18982473713776c86e2f9bf2b968f17117a836e503dd8c54188c7b14abe9",
+        "pngSha256": "688248b59a1eaab286339042ec8a03d6c69ca6b1708101ee01547149c64dc457",
+        "rgbSha256": "fe05bc1f6cdaf63ba3ef5499f5aaaee22abbd0e770f9a9d39b8da419810e046b"
+      }
+    },
+    "SKILL_PHYSICAL_TRANING": {
+      "job": 6,
+      "name": "Physical Training",
+      "width": 49,
+      "height": 46,
+      "normal": {
+        "sourcePath": "bin/Client/image/Sinimage/skill/Knight/Button/MN14 P_Traning.bmp",
+        "sourceSha256": "1c47ae97c6177ec6c68bf0a8eaff9a340b9ad952baab7a0d74b9127d184a52b4",
+        "pngSha256": "f14acc05963e013183f689875d2c1698957ccac54033a2eb2f22073e6e63929b",
+        "rgbSha256": "3fd7c96d0adaf45ba848befb3c90ac11b4999238ee0f964b8ed621bbc7f05b3e"
+      },
+      "disabled": {
+        "sourcePath": "bin/Client/image/Sinimage/skill/Knight/Button/MN14 P_Traning_.bmp",
+        "sourceSha256": "553ab4fef532c53473a7f3ef5d37262fdabb5237918d57ba31f7d69f5b5715ef",
+        "pngSha256": "ac7dc61a889abf5421e291aa0823f78c01a8c2d0202eb133c31f6a4bb5b1b443",
+        "rgbSha256": "990d86d2fa91f28c75d605cc02434edab4d31eee8944337aeb49f52c6fbc8eed"
+      }
+    },
+    "SKILL_DOUBLE_CRASH": {
+      "job": 6,
+      "name": "Double Crash",
+      "width": 49,
+      "height": 46,
+      "normal": {
+        "sourcePath": "bin/Client/image/Sinimage/skill/Knight/Button/MN17 D_Crash.bmp",
+        "sourceSha256": "32f908a0e01456ce7662ea75831e7fd667bbdb6e2ccb48a3aba51b2f98aead8e",
+        "pngSha256": "34eda9095ce8a6fe732c16dac7f505de4aeb4108fa75e342ef313819ab511a02",
+        "rgbSha256": "d22a67c7a4d989a682d703d390bd4ff1313f2c49cbf2aaf05cff93065f8e8576"
+      },
+      "disabled": {
+        "sourcePath": "bin/Client/image/Sinimage/skill/Knight/Button/MN17 D_Crash_.bmp",
+        "sourceSha256": "6bd3043781cb38658ae41bf6803256a93a5988e43a48d8d4f22b6da574104f58",
+        "pngSha256": "bdb3bb066bf58b20cd37080952825f80faf16e859ed2488fbd2bbb4ecacd2a73",
+        "rgbSha256": "20a0223774cda08cd0db1778d74dfacb73a17612358c3c82b86bfbe86d0453f0"
+      }
+    },
+    "SKILL_HOLY_VALOR": {
+      "job": 6,
+      "name": "Holy Valor",
+      "width": 49,
+      "height": 46,
+      "normal": {
+        "sourcePath": "bin/Client/image/Sinimage/skill/Knight/Button/MN20 H_Valor.bmp",
+        "sourceSha256": "862d1ebbd491e25b758ad41e21cfbcaca95d1ac7bead59c30ca07f08f70e6738",
+        "pngSha256": "066ef6e827fee0fff2e92f2e88bc2f44d5ee43c0059352f70df82c099b5b326c",
+        "rgbSha256": "d603fe9f74f2bbf97a7910dd2ec4759d07a873ca874db6d7e0fa446fc4dedd07"
+      },
+      "disabled": {
+        "sourcePath": "bin/Client/image/Sinimage/skill/Knight/Button/MN20 H_Valor_.bmp",
+        "sourceSha256": "553795db2db2aeaa8b1fdd718781a6ea1f04c4ab7189e9fb7727413a1b1ed77b",
+        "pngSha256": "1805a61d2510b3e6eb826744e368582a3f550763ed540ea4a5ad61499ca63762",
+        "rgbSha256": "34b856ed12329d0dab78f875aa84c2dc3eec85eaef1038d6dec3f622be015d33"
+      }
+    },
+    "SKILL_BRANDISH": {
+      "job": 6,
+      "name": "Brandish",
+      "width": 49,
+      "height": 46,
+      "normal": {
+        "sourcePath": "bin/Client/image/Sinimage/skill/Knight/Button/MN23 Brandish.bmp",
+        "sourceSha256": "5a94a9fb7c1361a4e7fa0e6684f98e0926ad5a40ad7724cd8fdc3b455cab2774",
+        "pngSha256": "8d2671c18bf9d3781afb80f30c86cac5a561b1874217f65859bee09a3185daf5",
+        "rgbSha256": "b5aefe37126fc3ef88204300bdafb19a5d37c7f070d7390013920efdab51e716"
+      },
+      "disabled": {
+        "sourcePath": "bin/Client/image/Sinimage/skill/Knight/Button/MN23 Brandish_.bmp",
+        "sourceSha256": "d19dd8f7df6dccd3ff5dc993cf8ccb0b87c24fd69b1795f3de1d114e2c2630af",
+        "pngSha256": "f138932bfa01c5666e090516824e5d3c186ad300a007d54da92342df27957951",
+        "rgbSha256": "f5bbb396651da96be7d1ce305c7765c806d6ccb77e39a30a380182e711ab3286"
+      }
+    },
+    "SKILL_PIERCING": {
+      "job": 6,
+      "name": "Piercing",
+      "width": 49,
+      "height": 46,
+      "normal": {
+        "sourcePath": "bin/Client/image/Sinimage/skill/Knight/Button/MN26 Piercing.bmp",
+        "sourceSha256": "f5d0384da162e086d0059c513bdb7f9946b7f8d1d12e57db07283c1b54a7ae05",
+        "pngSha256": "e3aa1ed471986b85704b4e851dfca13ad98ec073f86164c3f3ae008ebdd402aa",
+        "rgbSha256": "c727baa029eca33d22f2462142f8a1ecabf14d1ca5f4ffb64176691fa5e7dca9"
+      },
+      "disabled": {
+        "sourcePath": "bin/Client/image/Sinimage/skill/Knight/Button/MN26 Piercing_.bmp",
+        "sourceSha256": "3168850af47103536fc4861abaa66fba391d3403c93593ab6fd7faae8653960c",
+        "pngSha256": "9e548ad45e8fdb91577de9469c6a841b6d2a242c3eebcadb73e092789112458d",
+        "rgbSha256": "aaf54dee423a64faadd5bca88f9710399a821a6857336ae93e30dd02c441d830"
+      }
+    },
+    "SKILL_DRASTIC_SPIRIT": {
+      "job": 6,
+      "name": "Drastic Spirit",
+      "width": 49,
+      "height": 46,
+      "normal": {
+        "sourcePath": "bin/Client/image/Sinimage/skill/Knight/Button/MN30 D_Spirit.bmp",
+        "sourceSha256": "ee61438188e4ed2afebfe6e88af25b5c099db1fc61bebbe7982ab707c57ccf68",
+        "pngSha256": "50d46cc6c644af0e66741bf0b2418e7e14f16dc593d2b05613d489309484b4e2",
+        "rgbSha256": "f927e2d74d78201e941d5e3e2deab507c223d95c35ae5636b9d0ff9c30cf688e"
+      },
+      "disabled": {
+        "sourcePath": "bin/Client/image/Sinimage/skill/Knight/Button/MN30 D_Spirit_.bmp",
+        "sourceSha256": "7f80d8dd2a8b8ee9550f9c8f621d5a48e2f10ffcbe2a85d1557911d942d2608d",
+        "pngSha256": "e46022a950ce25ae4a025f854a07a571130193f2b8b2febcb09dbca10f2afd86",
+        "rgbSha256": "c02d59c9b3d3d6aebfb7269d1bf3414290c4df2811c9ca4a477adbd30e124622"
+      }
+    },
+    "SKILL_SWORD_MASTERY": {
+      "job": 6,
+      "name": "Sword Mastery",
+      "width": 49,
+      "height": 46,
+      "normal": {
+        "sourcePath": "bin/Client/image/Sinimage/skill/Knight/Button/MN40 S_Mastery.bmp",
+        "sourceSha256": "381fa60a563fdc9d2d7c79907a7299250aa2451bf37e4ad0fd75f8f3f46d7471",
+        "pngSha256": "12a5ae700e47c79faa7b2be0a11cd1a9bceeed0a456df71d416ec78f8b0047a9",
+        "rgbSha256": "7201606d5c14af88eb0367cf0162f6a904a7ffa9bb39622fef17d0761c3aeb29"
+      },
+      "disabled": {
+        "sourcePath": "bin/Client/image/Sinimage/skill/Knight/Button/MN40 S_Mastery_.bmp",
+        "sourceSha256": "2da735f5441affcbce621073bc7e1f95f7b77d4524be9c6876a3102c17e01238",
+        "pngSha256": "b1d2b1cdf90c8da499866424c56f2c4b7403e5bc2989e905f66840eb2bdc1d77",
+        "rgbSha256": "aa33a819d075e8120cab9400fa089f6e96ccbe516fc42db8740f5a70065e1499"
+      }
+    },
+    "SKILL_DIVINE_INHALATION": {
+      "job": 6,
+      "name": "Divine Inhalation",
+      "width": 49,
+      "height": 46,
+      "normal": {
+        "sourcePath": "bin/Client/image/Sinimage/skill/Knight/Button/MN43 D_Inhalation.bmp",
+        "sourceSha256": "cc61fceeaa9541c7c22d41fe9a9afb025b0db1cbc4302afb36639bed56b620ef",
+        "pngSha256": "5fba18e9cbb6f4bbd1dc1f3f36faec02b89ddf78e5e43c8c19df9708ef304810",
+        "rgbSha256": "3607694f65e1803fe9c0385afa73d35d1b32b6bf9d27a4c3c56d88ea0324dcea"
+      },
+      "disabled": {
+        "sourcePath": "bin/Client/image/Sinimage/skill/Knight/Button/MN43 D_Inhalation_.bmp",
+        "sourceSha256": "d565f6847086f661a7d52971d22c815aa2a938dad223e894cd8d8ca827d3a077",
+        "pngSha256": "d120b7138bd1b771e3641867d53c6c269c143acb29bf43bfe558414df1e87216",
+        "rgbSha256": "f1ed0d97d93654a0a176c058bd96df305ce0ee8a95d97907de253b1a613869bf"
+      }
+    },
+    "SKILL_HOLY_INCANTATION": {
+      "job": 6,
+      "name": "Holy Incantation",
+      "width": 49,
+      "height": 46,
+      "normal": {
+        "sourcePath": "bin/Client/image/Sinimage/skill/Knight/Button/MN46 H_Incantation.bmp",
+        "sourceSha256": "2b0d3c2f9b4ca3d32f03cb5d2271daa434b5073918088745b6a1b775cba3d89b",
+        "pngSha256": "2c64841ee4e26a59d601622989843b7203f93869d53f7e1293bd39976e86b85b",
+        "rgbSha256": "6c1734d0fbae9f25f94a65681c4355688d846dba7ff29ba822c24191a5d97605"
+      },
+      "disabled": {
+        "sourcePath": "bin/Client/image/Sinimage/skill/Knight/Button/MN46 H_Incantation_.bmp",
+        "sourceSha256": "f4a8f69475eea7b40e85732db9611c83019bb727b9c40037264da73fe1f75dce",
+        "pngSha256": "35c87052b6f1ede7fb94ddcda349b6bccf76812ec56ac005fb052c34507d48e3",
+        "rgbSha256": "06978b87588f102867422bd28700340ce1260ece1d30a171a3fb3d985b00298f"
+      }
+    },
+    "SKILL_GRAND_CROSS": {
+      "job": 6,
+      "name": "Grand Cross",
+      "width": 49,
+      "height": 46,
+      "normal": {
+        "sourcePath": "bin/Client/image/Sinimage/skill/Knight/Button/MN50 G_Cross.bmp",
+        "sourceSha256": "281eb3432b4366b297b458a5a8688ba28fc1f4e33ef1bd4fb23db9f07fe5a487",
+        "pngSha256": "aa461791343716ca70efe845253b26da10b7603b47276b0175a5c73e39c4000d",
+        "rgbSha256": "28b117b02e3f3216b354c05afb256936995c797f8fb65a976e1caa3f7779e123"
+      },
+      "disabled": {
+        "sourcePath": "bin/Client/image/Sinimage/skill/Knight/Button/MN50 G_Cross_.bmp",
+        "sourceSha256": "9ff3906f472442cb62eea42b5737f815de890622dad5602ca316b50d280c73cc",
+        "pngSha256": "037c2aa8ff27ef3a3705dcdfb074e444fbb12a9e7434964b4816661b3075f802",
+        "rgbSha256": "e587dee577a689eb520c8201cb085af4d2449a4c7857030a852f800ecf77402a"
+      }
+    },
+    "SKILL_SWORD_OF_JUSTICE": {
+      "job": 6,
+      "name": "Sword Of Justice",
+      "width": 49,
+      "height": 46,
+      "normal": {
+        "sourcePath": "bin/Client/image/Sinimage/skill/Knight/Button/MN60 S_O_Justice.bmp",
+        "sourceSha256": "383444e5e84a1e7e7ac0fc0fb1049be2e1e084dabca190a62ab029c26c49a51e",
+        "pngSha256": "e51f5fca8574560abe16b1f7ca5dbc93633b228e69affc340a3976dfb935238b",
+        "rgbSha256": "35913d129afbc590991e63aa8c6578d511ce502c33d2aa856d037211bc0546ad"
+      },
+      "disabled": {
+        "sourcePath": "bin/Client/image/Sinimage/skill/Knight/Button/MN60 S_O_Justice_.bmp",
+        "sourceSha256": "c5879daeaadee09bd1251c17cc8567957d523e5f5053e46947b24221f0c04963",
+        "pngSha256": "a5efe0e58a08b06f9e61b9b00b0c578b8a8ddb220e5c5ecf88095b2e6c5a6b4d",
+        "rgbSha256": "b8258867ddb6de61ca32088e6dfc2f76363130ea9627fd4033f14b441ec6af3c"
+      }
+    },
+    "SKILL_GODLY_SHIELD": {
+      "job": 6,
+      "name": "Godly Shield",
+      "width": 49,
+      "height": 46,
+      "normal": {
+        "sourcePath": "bin/Client/image/Sinimage/skill/Knight/Button/MN63 G_Shield.bmp",
+        "sourceSha256": "63f81fb91906434f21b77757b7d25b1ef6f78a605d97d06e735329c2dcaa9968",
+        "pngSha256": "62944b00f6f6e0db3ade62846f1bd0e64ca4c59ddb2003b2b2c3396767215a2d",
+        "rgbSha256": "85fb1051566f741bcf65d90d175df8dcccce5143b00e1bd113d28bee099e144c"
+      },
+      "disabled": {
+        "sourcePath": "bin/Client/image/Sinimage/skill/Knight/Button/MN63 G_Shield_.bmp",
+        "sourceSha256": "a33053a112cbad8d8d5c56e224aa9f3ce2a9a59f8950bd26683b1acf60535ee2",
+        "pngSha256": "3865fbf5b4cb9ff7b5edb625b69f44ea0443f1cad809156959fb1ed4f1a6aa55",
+        "rgbSha256": "1f14b97a6f89cfbad8491833f85eeb34913337d7f68182f8df16fe92661dcb97"
+      }
+    },
+    "SKILL_GOD_BLESS": {
+      "job": 6,
+      "name": "God Bless",
+      "width": 49,
+      "height": 46,
+      "normal": {
+        "sourcePath": "bin/Client/image/Sinimage/skill/Knight/Button/MN66 G_Bless.bmp",
+        "sourceSha256": "61e2bff2a58be4a9498590043d1058ad51573cd39bd429fda2efc17e0c4281a8",
+        "pngSha256": "37dd08daa89a88085d8e831ec941b8ed05f8e1d8dbeba3ba10b8424a214e323a",
+        "rgbSha256": "b8cafeef95cc4eb6662f2f8ebb78839c88a28da611edbcabde77ecbf493367b2"
+      },
+      "disabled": {
+        "sourcePath": "bin/Client/image/Sinimage/skill/Knight/Button/MN66 G_Bless_.bmp",
+        "sourceSha256": "4532b518c79080da31c33155690c9f41bea53da3399e1fc859cf4924ad6c2c6f",
+        "pngSha256": "dddc027150a08444f456cd2f1d7ffa9dcaf53a62baa6bc47ae09b3438603491f",
+        "rgbSha256": "95a3c88f9dfba6ba6056cc9ebc621c23ea245a44ddbae50fca69c39d5e170fad"
+      }
+    },
+    "SKILL_DIVINE_PIERCING": {
+      "job": 6,
+      "name": "Divine Piercing",
+      "width": 49,
+      "height": 46,
+      "normal": {
+        "sourcePath": "bin/Client/image/Sinimage/skill/Knight/Button/MN70 D_Piercing.bmp",
+        "sourceSha256": "120212263a92372ca57478975aa995ab8b92908abf79859ec5fa9c7a2146ef9d",
+        "pngSha256": "262f4b9479ded502e990e65521cfe53fa90ea430868e395cb3154921d7638b71",
+        "rgbSha256": "fe658c7bee3df9c1bcd1d8bc6749e7cdc8ea12adb19800bb05340123f2a0a11d"
+      },
+      "disabled": {
+        "sourcePath": "bin/Client/image/Sinimage/skill/Knight/Button/MN70 D_Piercing_.bmp",
+        "sourceSha256": "8912a8e267cd363b90be69d8e801329e9a7832a414b4254feb5172a892799ee1",
+        "pngSha256": "a3845692e1ae742eb7f6aff7deb695f809a08e88b75da335853aa526b7759f38",
+        "rgbSha256": "b05a02a78215cedc54e558ff314bd9e980fb53604ec5f99ce53987a3d74f0ec5"
+      }
+    },
+    "SKILL_AGONY": {
+      "job": 7,
+      "name": "Agony",
+      "width": 49,
+      "height": 46,
+      "normal": {
+        "sourcePath": "bin/Client/image/Sinimage/skill/Magician/Button/MM10 Agony.bmp",
+        "sourceSha256": "7e6d453cdeeece30cf9aa4d65da4c64186d93194870a76c5c53baae80cecd68a",
+        "pngSha256": "87cc61e86bf787b656c9e92335b8500a9fc68bfcc9e96f3ef292917f1241db89",
+        "rgbSha256": "d2e2a87e1625fc2b1182a4bb2f368ac4222d6ad3bcf8836435c1ace4c6754786"
+      },
+      "disabled": {
+        "sourcePath": "bin/Client/image/Sinimage/skill/Magician/Button/MM10 Agony_.bmp",
+        "sourceSha256": "0d0f8db62a75edac245a2e8782d81a7dcc92a12fea3b555e515b84a39b41d905",
+        "pngSha256": "b6c6c153571ff8d745dfe1af7f03c35bf1e27078f653689c9e48e9367a222991",
+        "rgbSha256": "f87d134a87ce4303b71ff22d51b4300c47b8ab3c7acfc5337c39081a35e48b34"
+      }
+    },
+    "SKILL_FIRE_BOLT": {
+      "job": 7,
+      "name": "Fire Bolt",
+      "width": 49,
+      "height": 46,
+      "normal": {
+        "sourcePath": "bin/Client/image/Sinimage/skill/Magician/Button/MM12 FireBolt.bmp",
+        "sourceSha256": "b7fe6fda5967322a29688c5b56f5f2fc2ab80ffbe86d583bf03209fd42d1e27e",
+        "pngSha256": "f576fab98fb87c0a55e4f4bd3ee33729009029f5e8ca1c17f19b81812645bed6",
+        "rgbSha256": "8f9231871f8b0c34d552dfc75799f4745657e132ff3a24b58d6589c967651091"
+      },
+      "disabled": {
+        "sourcePath": "bin/Client/image/Sinimage/skill/Magician/Button/MM12 FireBolt_.bmp",
+        "sourceSha256": "70b225aa3a32162fe36c1216604970614e9a589172c76a91fc16a723b1ccfe3b",
+        "pngSha256": "97ebf54e694b02fa2fbe11d515c8d66bc425c6f3559b72aee131e11c7a71e6e8",
+        "rgbSha256": "91ab59abb86bacced249fc6e934e3d30566bd9460bd9e06de68960d228fab86f"
+      }
+    },
+    "SKILL_ZENITH": {
+      "job": 7,
+      "name": "Zenith",
+      "width": 49,
+      "height": 46,
+      "normal": {
+        "sourcePath": "bin/Client/image/Sinimage/skill/Magician/Button/MM14 Zenith.bmp",
+        "sourceSha256": "c71578c03a4aa377032ffdc423432cb833ff9410fc75157d775b7f2a106692ed",
+        "pngSha256": "842f4a78e9aaf397d92315c1baa02d92f13e65c3ef376935785ae8f26baf0fca",
+        "rgbSha256": "65979217b805a5aa2e7e93eeb2c7b72bd202223f0c0ba056a99b7ad5bf5c9671"
+      },
+      "disabled": {
+        "sourcePath": "bin/Client/image/Sinimage/skill/Magician/Button/MM14 Zenith_.bmp",
+        "sourceSha256": "34fbd2dd2c9a5bbb87e0baeec1ac59a4ef36614a363695f4a85852274a74aac2",
+        "pngSha256": "2699b219d5c5a85d20d3150129b4b09f7dbd63e2465b637b3cb275765463dd2a",
+        "rgbSha256": "f4e987b22b56b9610628c7c42d67bae25152218823f523aaad79ac8c944bed0b"
+      }
+    },
+    "SKILL_FIRE_BALL": {
+      "job": 7,
+      "name": "Fire Ball",
+      "width": 49,
+      "height": 46,
+      "normal": {
+        "sourcePath": "bin/Client/image/Sinimage/skill/Magician/Button/MM17 FireBall.bmp",
+        "sourceSha256": "8f0e722986334641b290eb157dbdab9836b28804add6fa93c042f39ab7ff246b",
+        "pngSha256": "e1f01b4b35f76b977215bc4e9c28e09988a61ba811f9ac556438028bfc875d94",
+        "rgbSha256": "16aeef699dae284c3e8b6412045718685a494b6d0de0703617d2cb63083dfcee"
+      },
+      "disabled": {
+        "sourcePath": "bin/Client/image/Sinimage/skill/Magician/Button/MM17 FireBall_.bmp",
+        "sourceSha256": "d6439fe100021fe2f2380cd4163c003a81b2d18f3234f2fa8130cb0865bbf0cb",
+        "pngSha256": "0e6a31d8a220263c8df276b223303a2d8ecac4e1b0ddbea0d4203b37a33abb2a",
+        "rgbSha256": "27d8e2cd99d1af90551b850a9483cf47c79a78944f744ea6c3b5773cd6ed906f"
+      }
+    },
+    "SKILL_MENTAL_MASTERY": {
+      "job": 7,
+      "name": "Mental Mastery",
+      "width": 49,
+      "height": 46,
+      "normal": {
+        "sourcePath": "bin/Client/image/Sinimage/skill/Magician/Button/MM20 M_Mastery.bmp",
+        "sourceSha256": "22afc700e155afd1c36062c8b42ab67a28e9119442f920f5f219366f498b6024",
+        "pngSha256": "594c81fe785edb821ed17261c2e7877101316f477df7f72453e6e8910962e725",
+        "rgbSha256": "f21a4c8d10e3b3a7730bfe917dc1acc1f7b9955a595ab734bfbb5b8051e2396f"
+      },
+      "disabled": {
+        "sourcePath": "bin/Client/image/Sinimage/skill/Magician/Button/MM20 M_Mastery_.bmp",
+        "sourceSha256": "15f52deaf4914151edc0c28da4045c82da9ba9ebf15a26c69c41db0e1d06f257",
+        "pngSha256": "67496d23f85ea2ce269769b2484f0517b505a89a88643bbab1285035cf895af3",
+        "rgbSha256": "4c55687ad95416e7616b6522bf06124612f204cf9665e6563a6b2c29a4375a5a"
+      }
+    },
+    "SKILL_WATORNADO": {
+      "job": 7,
+      "name": "Water Tornado",
+      "width": 49,
+      "height": 46,
+      "normal": {
+        "sourcePath": "bin/Client/image/Sinimage/skill/Magician/Button/MM23 Watornado.bmp",
+        "sourceSha256": "186395aa6b7a843585772b2e08fda196c92682f84ff2acce80ac4cda799b5015",
+        "pngSha256": "fb458639f713ac8b7f704ff188112b398caab88b48d66b1f995ec400129dc36a",
+        "rgbSha256": "58ca407cb548c20b3064c73879f4502b112de330dc4ec512929d1676b8c6e2ee"
+      },
+      "disabled": {
+        "sourcePath": "bin/Client/image/Sinimage/skill/Magician/Button/MM23 Watornado_.bmp",
+        "sourceSha256": "8c894a1b9efa69b441e56cf8d9b56343c2ba9581b466af9d1195480d90a76d30",
+        "pngSha256": "4d64c20e20fd8fae5a725401e41fd9bbeb289d29dfdfc9c022b418863003abc5",
+        "rgbSha256": "8ed0dbe355e10df35e1a98ec91bb2b42240aebaa00d7b2f1d391adf70f7c0a6b"
+      }
+    },
+    "SKILL_ENCHANT_WEAPON": {
+      "job": 7,
+      "name": "Enchant Weapon",
+      "width": 49,
+      "height": 46,
+      "normal": {
+        "sourcePath": "bin/Client/image/Sinimage/skill/Magician/Button/MM26 E_Weapon.bmp",
+        "sourceSha256": "952df7846c5c0098aef64ea2d65cc4340c7453595ef603feea1494b483755dfd",
+        "pngSha256": "c853a42e35825034537fc2ef06249cf3004a8c3978585d352d24518adccac981",
+        "rgbSha256": "f49e8a376bdfcfa3596f7c2dfeab80a99777919dc47b063a3ff7a4e8e4b46039"
+      },
+      "disabled": {
+        "sourcePath": "bin/Client/image/Sinimage/skill/Magician/Button/MM26 E_Weapon_.bmp",
+        "sourceSha256": "601ccf425065d40b5fc00ad1ea9c3303bf33e8037342cd481697ebee1727a06f",
+        "pngSha256": "23cb845ff224d6b8a3fc9f651a57faeb7e8fd322e956dfbbe8943a305bd1e1df",
+        "rgbSha256": "3a0d3ef434bd5fe9a7ae90ec0289f92075ad5c46c4058f17ea47ad95d4c49770"
+      }
+    },
+    "SKILL_DEAD_RAY": {
+      "job": 7,
+      "name": "Dead Ray",
+      "width": 49,
+      "height": 46,
+      "normal": {
+        "sourcePath": "bin/Client/image/Sinimage/skill/Magician/Button/MM30 D_Ray.bmp",
+        "sourceSha256": "8c975f75b15603ed76e44026a6da2ff1e3e18a07f2c18c7e25dd90344cac46ba",
+        "pngSha256": "0cab260369ebcbc46aca61844e45dc49450093fa0f46ce5768664bce87fa3994",
+        "rgbSha256": "d07916af66dbcd7c11cdf086bec97718e710ab85cdb5d7952cb19754904a5921"
+      },
+      "disabled": {
+        "sourcePath": "bin/Client/image/Sinimage/skill/Magician/Button/MM30 D_Ray_.bmp",
+        "sourceSha256": "a27089e577aeb2420607ffab6da701b1cc3b6e11b4edfeba68debccd0c24ba1e",
+        "pngSha256": "f2f2f19ed32c4baf7e3acc65fe8af0b1bbeed93d429f264c30781bd38722c423",
+        "rgbSha256": "2977c1383439a4f3bc79b4c88616a8cb6b2c19eb95b728add5143511e43bb048"
+      }
+    },
+    "SKILL_ENERGY_SHIELD": {
+      "job": 7,
+      "name": "Energy Shield",
+      "width": 49,
+      "height": 46,
+      "normal": {
+        "sourcePath": "bin/Client/image/Sinimage/skill/Magician/Button/MM40 E_Shield.bmp",
+        "sourceSha256": "3724607a78fa0b72c42d2219665f138d7104fce4e9c191c36f7db5ca05de637b",
+        "pngSha256": "b5ffad287191210a1d59ba0547e9c37f9f28c30cd87fb70f6841c234faa50d7c",
+        "rgbSha256": "b7d19b6df43d75f9f37a819ae79d4c777135d59bcd5f5f4ffb95364352acb96f"
+      },
+      "disabled": {
+        "sourcePath": "bin/Client/image/Sinimage/skill/Magician/Button/MM40 E_Shield_.bmp",
+        "sourceSha256": "9d954bc84b7e955b004a20c3971226575fd4e769c690720ac0f38828767e3877",
+        "pngSha256": "561c04974401748a3c02376b0d64c97943fb66ef74eed18a6652d3f8cde81640",
+        "rgbSha256": "ab51378632af102de1c11f41e2c4889b29c3c5f3ba362f84865e7df7fd887a5a"
+      }
+    },
+    "SKILL_DIASTROPHISM": {
+      "job": 7,
+      "name": "Diastrophism",
+      "width": 49,
+      "height": 46,
+      "normal": {
+        "sourcePath": "bin/Client/image/Sinimage/skill/Magician/Button/MM43 Diastrophism.bmp",
+        "sourceSha256": "61b841de47b33b842826bf3206a20cfa392711dc206c63b033ee052df8d6b128",
+        "pngSha256": "ce09f88e38863dc30201ae9ee67c94cd1bc645011162cfe5cf9a00fe10af3cc3",
+        "rgbSha256": "4494a68537d14e19d4426c205c6f2cc679912a88c4ae4a0220a40f305ef841ec"
+      },
+      "disabled": {
+        "sourcePath": "bin/Client/image/Sinimage/skill/Magician/Button/MM43 Diastrophism_.bmp",
+        "sourceSha256": "fc6d89a985df653820428545f0a68870c1550488b4fd7a69159d81fb26856b15",
+        "pngSha256": "5a97166b4b0f5011f1c581fc11ebf8d72d62bc1c298eb7f2f095846f0c142f88",
+        "rgbSha256": "0f2d20fbf8ec65365cc203ca7aad2cbccfe584b980df5b02132ceab43ca812c3"
+      }
+    },
+    "SKILL_SPIRIT_ELEMENTAL": {
+      "job": 7,
+      "name": "Spirit Elemental",
+      "width": 49,
+      "height": 46,
+      "normal": {
+        "sourcePath": "bin/Client/image/Sinimage/skill/Magician/Button/MM46 S_Elemental.bmp",
+        "sourceSha256": "ab08e5c16ed2f2a031e82a2378ff3ee303cbcb3b09a24d7be8822926f3e6ab36",
+        "pngSha256": "22b69d994afe483e0ceaa44274c48112c21b2c3412717a20b0c5e7f15cda5652",
+        "rgbSha256": "1048c8634b8fb195c597d5fd6483ebff3f1c7b0367977a76967169df9b3a1126"
+      },
+      "disabled": {
+        "sourcePath": "bin/Client/image/Sinimage/skill/Magician/Button/MM46 S_Elemental_.bmp",
+        "sourceSha256": "95d1e3d17d346ec8a115db067dda83c0ea86ee11ff0a1440fdbc7108d0b89006",
+        "pngSha256": "e2143280950cc89b9743cbb6dadfab7a4152f0534d3143a730b10c58cdff1d70",
+        "rgbSha256": "9030733f38f59d1238d9011eb642074f5eef9da634eacb1040dbeaf756359686"
+      }
+    },
+    "SKILL_DANCING_SWORD": {
+      "job": 7,
+      "name": "Dancing Sword",
+      "width": 49,
+      "height": 46,
+      "normal": {
+        "sourcePath": "bin/Client/image/Sinimage/skill/Magician/Button/MM50 D_Sword.bmp",
+        "sourceSha256": "41442993cb6c7d239b6d96a0d1653a415b204871f988880bfb67097a05da5ae5",
+        "pngSha256": "783f691518e943b7394f1d73092bfa63d086166aabce0eacfa55c90fb7ac0329",
+        "rgbSha256": "2e6acb64d4f5e1316e53ad4f4e52152e06265e8b6c2cee3c05ae4835074628f4"
+      },
+      "disabled": {
+        "sourcePath": "bin/Client/image/Sinimage/skill/Magician/Button/MM50 D_Sword_.bmp",
+        "sourceSha256": "c3a6d35be9a3676d85a087609e6400f10785b31933f722da5eef5d9496b372fa",
+        "pngSha256": "4cd5d420eac85af2ec06e4ab8dc371908b5688bb0a77c706d12ce5d885ff03d4",
+        "rgbSha256": "e96d1c0861e22a979e75cd1420431aca08e50fb01aa3986c713d2c8b37b6cc12"
+      }
+    },
+    "SKILL_FIRE_ELEMENTAL": {
+      "job": 7,
+      "name": "Fire Elemental",
+      "width": 49,
+      "height": 46,
+      "normal": {
+        "sourcePath": "bin/Client/image/Sinimage/skill/Magician/Button/MM60 F_Elemental.bmp",
+        "sourceSha256": "0c56a59c385648a6df71e27a15710792d2094302951518bfbac624abb84fbcf6",
+        "pngSha256": "98058d70bf0fbbf1fa2b46af3bbd760a07b03dd942a7446df82d750ec581bb56",
+        "rgbSha256": "36934c841d3245f43d467610a6fc8df75479e4c2800a2d1c745fd541b08ea8ef"
+      },
+      "disabled": {
+        "sourcePath": "bin/Client/image/Sinimage/skill/Magician/Button/MM60 F_Elemental_.bmp",
+        "sourceSha256": "3d3c055524a4a72ef861f188110aeaa182f2838bc5496e117076946261618291",
+        "pngSha256": "8e3a62f04f4fc99a84d4d7fbc7ddfea232f97c0d8c3bb7dd02ff6a595d8bd39d",
+        "rgbSha256": "7d5315240e6c71799f7c0326ec89175654f612c7da5161b8092a515733e161a1"
+      }
+    },
+    "SKILL_FLAME_WAVE": {
+      "job": 7,
+      "name": "Flame Wave",
+      "width": 49,
+      "height": 46,
+      "normal": {
+        "sourcePath": "bin/Client/image/Sinimage/skill/Magician/Button/MM63 F_Wave.bmp",
+        "sourceSha256": "f7cbfe3a97533eb074f4bb01e39576d79983c6260b244073de8166ad6e725429",
+        "pngSha256": "148630297fb8a94b98b0be0711c11b278dff637b00b2f10951f57619243c5d2e",
+        "rgbSha256": "de2710bad9fd0a58b80c2ae7c9eb8087e328c9847157543982d4bdd9f24c71df"
+      },
+      "disabled": {
+        "sourcePath": "bin/Client/image/Sinimage/skill/Magician/Button/MM63 F_Wave_.bmp",
+        "sourceSha256": "e25f076f6503c46087e72be032c3724f02f96299e6ae18d7d89905df148e15d9",
+        "pngSha256": "5360b8b64f8d312b64fc3c1093c719bba16d54fa152b75a953f10ffccd1ffae7",
+        "rgbSha256": "64bbed321403bf753ac1ae2f5ec33cd59eee883ae914f26ec3910b78cfb73e54"
+      }
+    },
+    "SKILL_DISTORTION": {
+      "job": 7,
+      "name": "Distortion",
+      "width": 49,
+      "height": 46,
+      "normal": {
+        "sourcePath": "bin/Client/image/Sinimage/skill/Magician/Button/MM66 Distortion.bmp",
+        "sourceSha256": "e066dd8d860b5a773ae813cc845b995a1c2149afe3e5a4a9df52858d39b1feaa",
+        "pngSha256": "25319aa696390b72e99803664f54e5b2466920d9ce19b02a695eecedbb5b3c70",
+        "rgbSha256": "21b5093c5f8584ae460da57c2785d3bbfd7588c8bb16980f3b228d556d7b4dc4"
+      },
+      "disabled": {
+        "sourcePath": "bin/Client/image/Sinimage/skill/Magician/Button/MM66 Distortion_.bmp",
+        "sourceSha256": "94b722b1402dd4cf3fffaca3046bb913eea04022750d3c583af7e20476a49884",
+        "pngSha256": "88d3c0356ac5a30731cbf10b7a3681188f52e048bf36ee8f96282c241fdff7a7",
+        "rgbSha256": "458521fbd38de5ba99ae8756bef2430aa42584cb7de250127d0385f7a176afbf"
+      }
+    },
+    "SKILL_M_METEO": {
+      "job": 7,
+      "name": "Meteorite",
+      "width": 49,
+      "height": 46,
+      "normal": {
+        "sourcePath": "bin/Client/image/Sinimage/skill/Magician/Button/MM70 Meteo.bmp",
+        "sourceSha256": "283e727720997bf64943ca6d6aca9c6a3cb445421d92b68a843f2261e83d5734",
+        "pngSha256": "a0d1a81a4d36f537477d3cd326a5ce691a05ac00539458c2b17b93607def89c8",
+        "rgbSha256": "b491179816b54f1dbcfea4e98987c1682fbb2a586e43c622646f214e7c1f8177"
+      },
+      "disabled": {
+        "sourcePath": "bin/Client/image/Sinimage/skill/Magician/Button/MM70 Meteo_.bmp",
+        "sourceSha256": "4d543143c9d02462483fa1d2f9c24fef994b829fb067a29ead5368d4f0caf5a3",
+        "pngSha256": "857afb0a6316965cb72c3c723077bee3183983b45d2079da401636057f4f61e4",
+        "rgbSha256": "ff25f806b86ccd284676706409ebe4da08dc733f380d292a55a68bf6e7a521bf"
+      }
+    },
+    "SKILL_HEALING": {
+      "job": 8,
+      "name": "Healing",
+      "width": 49,
+      "height": 46,
+      "normal": {
+        "sourcePath": "bin/Client/image/Sinimage/skill/Priestess/Button/MP10 Healing.bmp",
+        "sourceSha256": "56445d041edcb9e51df372d885f97b3475208e51d6632e421d1a7f99cdd77e5c",
+        "pngSha256": "a3fcce79f4f4ca14cd1c22b8e6b14bfd32bfed073fd19d72496c05085824d1c0",
+        "rgbSha256": "dce5bd9a4dd4fc9b1d875cd6267fba7a7dc46dce29efaa96722b618fd6d89a30"
+      },
+      "disabled": {
+        "sourcePath": "bin/Client/image/Sinimage/skill/Priestess/Button/MP10 Healing_.bmp",
+        "sourceSha256": "edac60fb455cca367d90fa87c47933c2e3733d1d9411d24fdb7e77b0791d513e",
+        "pngSha256": "05ec84597e85ed3c0606698a3ae4c774cf4d6e3ff5cf0c9a58bc042251bbeb05",
+        "rgbSha256": "a2d6ac1bc7b6d37288b3d607eb9ecb2a20db9935840c40e72456563cef87d7b9"
+      }
+    },
+    "SKILL_HOLY_BOLT": {
+      "job": 8,
+      "name": "Holy Bolt",
+      "width": 49,
+      "height": 46,
+      "normal": {
+        "sourcePath": "bin/Client/image/Sinimage/skill/Priestess/Button/MP12 HolyBolt.bmp",
+        "sourceSha256": "b8b79d7d16b07f75f732e719f1d259aeb7296e14882f2ff26caad47d17285ad1",
+        "pngSha256": "2469f93535f7921d372c7e337238617263ea4b8ac0b48ca0cb2b10b9f84318e4",
+        "rgbSha256": "cfc62405226ef669a8ec181acefcc3349dd064f28507165f7975fde715e020ca"
+      },
+      "disabled": {
+        "sourcePath": "bin/Client/image/Sinimage/skill/Priestess/Button/MP12 HolyBolt_.bmp",
+        "sourceSha256": "009a97df291031ff07d7ffea8ba643d735cc1d52ddae49e02864139bbdf52c2b",
+        "pngSha256": "3a1824d4ec401682095f2c721317569169c57e2360c4931eedb8357fe44d6488",
+        "rgbSha256": "072aed5aea0b114a516615932965dacb20ff23259fb807b8b452bfbe9f367049"
+      }
+    },
+    "SKILL_MULTISPARK": {
+      "job": 8,
+      "name": "Multispark",
+      "width": 49,
+      "height": 46,
+      "normal": {
+        "sourcePath": "bin/Client/image/Sinimage/skill/Priestess/Button/MP14 M_Spark.bmp",
+        "sourceSha256": "92c636e500313a759ea43be7197fde7222806116ab0a7d9f760dc94ace7357e8",
+        "pngSha256": "e0a3b513568d2ef13136fd4e021110e11c44e0e2fa00a8dcbcdf4ebc268f13b6",
+        "rgbSha256": "45a583b18510b778b50948541321d38e6ca6cac9079cd6d6ee504db0accd4a4c"
+      },
+      "disabled": {
+        "sourcePath": "bin/Client/image/Sinimage/skill/Priestess/Button/MP14 M_Spark_.bmp",
+        "sourceSha256": "a7c09238f21019ad0972cb202665d9c882a779fa3e77737c69355bdb9c9bac52",
+        "pngSha256": "ea2c007f6d557860f13eb300226e02bc857779b6d2d0b522ab1ce78138e17d63",
+        "rgbSha256": "ada84f664e673c3e69f28fdaaf70c4d917cb4d9bc42652e408e17e48c83fbbc8"
+      }
+    },
+    "SKILL_HOLY_MIND": {
+      "job": 8,
+      "name": "Holy Mind",
+      "width": 49,
+      "height": 46,
+      "normal": {
+        "sourcePath": "bin/Client/image/Sinimage/skill/Priestess/Button/MP17 HolyMind.bmp",
+        "sourceSha256": "aff607adbf1f97a7c7c93298e2a360a65ee07c85b378f8a5c2a057e414712b0d",
+        "pngSha256": "df35ffda929ddc246a67b2194930ec56fb18a361f2e8aac130c268e3ebe16345",
+        "rgbSha256": "3e68789423b8b8d31c0397de359f5cb6f280956577569ff29814727fb23447f2"
+      },
+      "disabled": {
+        "sourcePath": "bin/Client/image/Sinimage/skill/Priestess/Button/MP17 HolyMind_.bmp",
+        "sourceSha256": "02131d0a648876c20a094d5183811dea6f5e6bbeceb719fb3076ac650caa4256",
+        "pngSha256": "ccd1567ce6ea4fca4b233edbfb8187c9306c43f28a72880a5ff2134320ab7e91",
+        "rgbSha256": "1d0ff63193596cc9bb5060dc5b7c9eb959312978aba2a06f79579665e86247c9"
+      }
+    },
+    "SKILL_MEDITATION": {
+      "job": 8,
+      "name": "Meditation",
+      "width": 49,
+      "height": 46,
+      "normal": {
+        "sourcePath": "bin/Client/image/Sinimage/skill/Priestess/Button/MP20 Meditation.bmp",
+        "sourceSha256": "dfa9718d20c90b1c2720e10ecb4f6dae0a2b654a3d726cdff5b8dc2101e87ce2",
+        "pngSha256": "31e9c844d8c8cdd0bbef1ed5a7c6027df68bc19a9c408258d69abfa76eea6c08",
+        "rgbSha256": "16ba118641365ff8153bb050520ab08ba018750bd0420adb71792f7e7f9cacee"
+      },
+      "disabled": {
+        "sourcePath": "bin/Client/image/Sinimage/skill/Priestess/Button/MP20 Meditation_.bmp",
+        "sourceSha256": "70573360b6c6feaa23e84402a9a2e9f01fd4a949efe5cc39490656c1ed5e1d7e",
+        "pngSha256": "20ab4f87e761ff627628d853e162f25325d791e6dc428b2a9207b5a5ec7ba577",
+        "rgbSha256": "eb38d60a9aea60d786c1c352c484a0e62b04530edbb7826d3549cb902c498dfc"
+      }
+    },
+    "SKILL_DIVINE_LIGHTNING": {
+      "job": 8,
+      "name": "Divine Lightning",
+      "width": 49,
+      "height": 46,
+      "normal": {
+        "sourcePath": "bin/Client/image/Sinimage/skill/Priestess/Button/MP23 D_Lightning.bmp",
+        "sourceSha256": "4a4eacc038c617211ad462573f1e3d2df0d46591f88f67c5c83c09f1eb11ffd9",
+        "pngSha256": "94cf441837765edfc7fb5adb306431e73de42014b25e356f523fe2703775b036",
+        "rgbSha256": "a253622ccf30ba397734aa1d9c337f99ad0de282fc5834f5eb5187739e0f8702"
+      },
+      "disabled": {
+        "sourcePath": "bin/Client/image/Sinimage/skill/Priestess/Button/MP23 D_Lightning_.bmp",
+        "sourceSha256": "8220b2424f6d888351f7fb0f0b22a636483ee13c67a6345b43cf5d283dc93213",
+        "pngSha256": "b24f192d238be126b9d15a8a5986f0a4a731c00bc73a00bdab9ff52d8604dd49",
+        "rgbSha256": "3b1e98c52a41765b31699d59f02ee085df87d7aa79038b84be6f93a38874d240"
+      }
+    },
+    "SKILL_HOLY_REFLECTION": {
+      "job": 8,
+      "name": "Holy Reflection",
+      "width": 49,
+      "height": 46,
+      "normal": {
+        "sourcePath": "bin/Client/image/Sinimage/skill/Priestess/Button/MP26 H_Reflection.bmp",
+        "sourceSha256": "e5c5555d32266581257e8845063923d74ccd5af2ad45457a0a648505c989ec85",
+        "pngSha256": "d2cda4f42211d69b083007dc8b1052e5f6fec3fbb4b0552f12febb31c2000ef7",
+        "rgbSha256": "17aba68f497ee6fa65c5e7c82bf39429400c895bde24e218b1fc448bd229005c"
+      },
+      "disabled": {
+        "sourcePath": "bin/Client/image/Sinimage/skill/Priestess/Button/MP26 H_Reflection_.bmp",
+        "sourceSha256": "b3815b5c4b54fa186cc85bb8ed75353d33f67487ef7622bac1a4af76ea1dd58e",
+        "pngSha256": "924a5e28ddfb71a4b3f1a306d88b571a3a7b0f40012d1824d44bca3f0d18e32c",
+        "rgbSha256": "b5ab9a589f517603f6f4eff64de0195e7c9b0c379ec2f37cc999e08e62648f9c"
+      }
+    },
+    "SKILL_GRAND_HEALING": {
+      "job": 8,
+      "name": "Grand Healing",
+      "width": 49,
+      "height": 46,
+      "normal": {
+        "sourcePath": "bin/Client/image/Sinimage/skill/Priestess/Button/MP30 G_Healing.bmp",
+        "sourceSha256": "32da6498ee60096977953dfedd767576955713bdf3f8f5cbde698372f65be39d",
+        "pngSha256": "6bd214a6b1e9b65542534fe09cc712d8ef895b6dd84cfe8ffa55a69e9f249cbf",
+        "rgbSha256": "699325c5ba728dac29d5ac97c4e668c650faece826028b58e6ea018a2602f873"
+      },
+      "disabled": {
+        "sourcePath": "bin/Client/image/Sinimage/skill/Priestess/Button/MP30 G_Healing_.bmp",
+        "sourceSha256": "1108bbcf3f94f7816562b92052eb8354045600e9db5ce817a1a45fb9261f758b",
+        "pngSha256": "32045a928c099c7ae8e7d0a038119c83c15450b814693a187f72c111772dd962",
+        "rgbSha256": "567a98ef3b01da3f064dc13e558d50df837fb1c9afce92ca8d82e36e72babb12"
+      }
+    },
+    "SKILL_VIGOR_BALL": {
+      "job": 8,
+      "name": "Vigor Ball",
+      "width": 49,
+      "height": 46,
+      "normal": {
+        "sourcePath": "bin/Client/image/Sinimage/skill/Priestess/Button/MP40 V_Ball.bmp",
+        "sourceSha256": "a69ffce61ea07f81c34179531e26b0ac7316f801c5474f9814aa937ec1201800",
+        "pngSha256": "567b6f946d2255ae135e3cd7dba82b343bfbcfc2a77cfe7e9ae69117886c719c",
+        "rgbSha256": "6168265360b5ea348bfdefbb6199c28ba524cf98e85030d9879551bf88e34905"
+      },
+      "disabled": {
+        "sourcePath": "bin/Client/image/Sinimage/skill/Priestess/Button/MP40 V_Ball_.bmp",
+        "sourceSha256": "ee2c80048d84a637513aa2981daf961e2efd03d2d8cc61f1043a4989de109900",
+        "pngSha256": "6288b0ff89b1e231f8896d62fd04bbdc7975d3275ab57660498339ea81929063",
+        "rgbSha256": "f614394545d76b5108f0914f7cbd822815aa8b22fcd094ed44a11e1c93d2a9f5"
+      }
+    },
+    "SKILL_RESURRECTION": {
+      "job": 8,
+      "name": "Resurrection",
+      "width": 49,
+      "height": 46,
+      "normal": {
+        "sourcePath": "bin/Client/image/Sinimage/skill/Priestess/Button/MP43 Resurrection.bmp",
+        "sourceSha256": "b85d2887eb5a563ad18b34994c7adb5297cabf0b19c6bc2888ac93fc8b15a225",
+        "pngSha256": "d04cdbf31be875d563b2aba84659580d082f28c93e0fb97f2c58efd5efd81e2d",
+        "rgbSha256": "0eacbaad68f78de015dc839585e94d356fad8643f5b6672384b931e51fbcf7a9"
+      },
+      "disabled": {
+        "sourcePath": "bin/Client/image/Sinimage/skill/Priestess/Button/MP43 Resurrection_.bmp",
+        "sourceSha256": "56b4b29586ecc491ad6be9a58b13d13aef840a0573cfe72e1fb70fa5eee12ec8",
+        "pngSha256": "0e5c118516e62f7b2744eb59973e15b8e2c5784ed5f14f1e8266f5b939a57009",
+        "rgbSha256": "baba92474aa2a29e86b0b74849854aa25441b718234b5ae244306c88b1cdce78"
+      }
+    },
+    "SKILL_EXTINCTION": {
+      "job": 8,
+      "name": "Extinction",
+      "width": 49,
+      "height": 46,
+      "normal": {
+        "sourcePath": "bin/Client/image/Sinimage/skill/Priestess/Button/MP46 Extinction.bmp",
+        "sourceSha256": "3cf897b04d9e56827965ec8d9fb93e6478ca951a3ff138106a72dd19479868ad",
+        "pngSha256": "987f18f0a74ebbe768c74138715df6dd97d493017d9c11e2639d341e375815aa",
+        "rgbSha256": "b254dedfb996e53c0c092892e6bb119634e57f26be92eeb0601e94881c64c69a"
+      },
+      "disabled": {
+        "sourcePath": "bin/Client/image/Sinimage/skill/Priestess/Button/MP46 Extinction_.bmp",
+        "sourceSha256": "fd0bda4f2eca02802d6fdd64347de7b17c37bd9acbfddd401702a1e551d6772d",
+        "pngSha256": "6108abffbb9e70194513733ba3d74e09382b4d04ece0aa6d8c291ff7b481003f",
+        "rgbSha256": "4fe74c6d605501ff765ff646b99752c5afdd7d152bbc23c0ba019d923ade0cee"
+      }
+    },
+    "SKILL_VIRTUAL_LIFE": {
+      "job": 8,
+      "name": "Virtual Life",
+      "width": 49,
+      "height": 46,
+      "normal": {
+        "sourcePath": "bin/Client/image/Sinimage/skill/Priestess/Button/MP50 V_Life.bmp",
+        "sourceSha256": "8213e83c8e6a5408411705252f50d89b928f2038f65a07dffd372824b3e10059",
+        "pngSha256": "6ec31e2591ca127f0f5056e9327e665c1e937941353fb6957c6a887beb0e2026",
+        "rgbSha256": "0d0700d180f3b0885781fa5def1045bd9bd239b0cb3ca0b9e5410140e0373bd9"
+      },
+      "disabled": {
+        "sourcePath": "bin/Client/image/Sinimage/skill/Priestess/Button/MP50 V_Life_.bmp",
+        "sourceSha256": "fffe9581e91267e08012e9bb8e156e36a8545e16aece22f845e85296cfd368ae",
+        "pngSha256": "7bd9f0eebe1301fe9c2c2a92a27a66b8935f62e3b3e18c4852f5c0c92227af0b",
+        "rgbSha256": "f6cc0f7eb528740701ee4f6da57c95579d7b53163fb0724014ad6a473af68602"
+      }
+    },
+    "SKILL_GLACIAL_SPIKE": {
+      "job": 8,
+      "name": "Glacial Spike",
+      "width": 49,
+      "height": 46,
+      "normal": {
+        "sourcePath": "bin/Client/image/Sinimage/skill/Priestess/Button/MP60 G_Spike.bmp",
+        "sourceSha256": "b064bb05ce67d659ea9af29da142715001b03da14a0871cc8a1b52190f8878b1",
+        "pngSha256": "9ec15ac5acbce383d930e5d59e5359231f6915db2891eeba43ec95aca470d057",
+        "rgbSha256": "31c7b32ed6603ddfc638fe4714457d5616b5263a96726cc54f4b96a6ba20d6a2"
+      },
+      "disabled": {
+        "sourcePath": "bin/Client/image/Sinimage/skill/Priestess/Button/MP60 G_Spike_.bmp",
+        "sourceSha256": "5864ca8d30eb28d68b61fca832cd3bd0ffd00cde0427e3b4f7de1ea82a333021",
+        "pngSha256": "215c601239c457fdd9afdc8d4ddd8d0f009856272e88df9f22b187602a3677ea",
+        "rgbSha256": "61e257bb8005d57692019b6070728d9560614efe51e660cec02e6ba54705d1eb"
+      }
+    },
+    "SKILL_REGENERATION_FIELD": {
+      "job": 8,
+      "name": "Regeneration Field",
+      "width": 49,
+      "height": 46,
+      "normal": {
+        "sourcePath": "bin/Client/image/Sinimage/skill/Priestess/Button/MP63 R_Field.bmp",
+        "sourceSha256": "b7c090e1bb2a0bebf2417f0ee48876802be2b95094019de4214333c7e77ee8c5",
+        "pngSha256": "25c8f15ff489bf4eaaddbd1cd37c878cf3a42985218eb96163e54cbdb018e683",
+        "rgbSha256": "588104644ce8e412e5bd7332cdc6acb99a9f0267a7f3fd0ff0f5ae7607c7cead"
+      },
+      "disabled": {
+        "sourcePath": "bin/Client/image/Sinimage/skill/Priestess/Button/MP63 R_Field_.bmp",
+        "sourceSha256": "50146b64b96b7bb69df321ca251d5ca35a7c2fa001521994d3e3de47f7f6f1b0",
+        "pngSha256": "8b40aa32c589d40d02d837c19e0ae357bc196cebf091f9de1a7b8a0608cd6b67",
+        "rgbSha256": "09afa80c0d2d94b2a100cc528001088b92ff33c82cb99bd4b0ba573094dcf03f"
+      }
+    },
+    "SKILL_CHAIN_LIGHTNING": {
+      "job": 8,
+      "name": "Chain Lightning",
+      "width": 49,
+      "height": 46,
+      "normal": {
+        "sourcePath": "bin/Client/image/Sinimage/skill/Priestess/Button/MP66 C_Lightning.bmp",
+        "sourceSha256": "a892c8cb33826688a7772c494736bf166bc0e47657fc34cce5fe9f1f609453c6",
+        "pngSha256": "3ea554e49b44e74ebfb757050bc164c1634878fd1414236e4928ee3641e0452b",
+        "rgbSha256": "494af73053b61c910842bfacd2b9723be14efb310961858046c30679d0f75fab"
+      },
+      "disabled": {
+        "sourcePath": "bin/Client/image/Sinimage/skill/Priestess/Button/MP66 C_Lightning_.bmp",
+        "sourceSha256": "98e32079a41c07dbcef76a861c5e1557e1038fc3cd49b9e5a73dff273f567c4e",
+        "pngSha256": "8ae0e5d925e4d24bd145e958684f8b0180c255608b79d599f2cdb3b8cbbc30eb",
+        "rgbSha256": "01e7a70578cac11826a91aaa8a0f15ff9f6f6c2d17ca0fefa10ca0c0b1cfd4b0"
+      }
+    },
+    "SKILL_SUMMON_MUSPELL": {
+      "job": 8,
+      "name": "Summon Muspell",
+      "width": 49,
+      "height": 46,
+      "normal": {
+        "sourcePath": "bin/Client/image/Sinimage/skill/Priestess/Button/MP70 S_Muspell.bmp",
+        "sourceSha256": "9195e026274a7087ec0a7e8a5ce27dcaa9e1c7ca0914a024f76bc448b7a2a160",
+        "pngSha256": "27adf6900373629f683c2ca6137f8ba4cab67225390a5921f1770897f245b739",
+        "rgbSha256": "a7ec0c2809649840805a3afd785f4fd363c06e45deee9cb6f86cedaf081d917a"
+      },
+      "disabled": {
+        "sourcePath": "bin/Client/image/Sinimage/skill/Priestess/Button/MP70 S_Muspell_.bmp",
+        "sourceSha256": "50fa5f60e0c89e39b1059a0260bbab946d10bbe2ae37225d065ed8f73017145d",
+        "pngSha256": "43a7ee2dcff021b1de2061b1552db9f4976aa614d7b021fd3b637f1b0d7d4fbb",
+        "rgbSha256": "3260b759c2f231163bae98cf615434aba702331cc9472d3f453ba48ea4b150cf"
+      }
+    }
+  }
+}

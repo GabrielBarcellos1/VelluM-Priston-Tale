@@ -1,0 +1,21 @@
+{
+  "checkedAt": "2026-10-23T10:18:15.723036+00:00",
+  "requests": [
+    {
+      "method": "GET",
+      "url": "https://pweb.world",
+      "status": 403
+    },
+    {
+      "method": "GET",
+      "url": "https://pweb.world/api/wiki",
+      "status": 403
+    },
+    {
+      "method": "GET",
+      "url": "https://pweb.world/api/map-fields",
+      "status": 403
+    }
+  ],
+  "meaning": "Access blocked in this execution environment; no authenticated original game comparison performed. Known public CDN premium artwork remained downloadable and loaded in browser tests."
+}

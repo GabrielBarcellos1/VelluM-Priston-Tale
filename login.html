@@ -1,0 +1,528 @@
+<!doctype html>
+<html lang="pt-BR">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width,initial-scale=1" />
+    <meta name="theme-color" content="#101b19" />
+    <title>FREEston Tale — Seu próximo capítulo</title>
+    <style>
+      :root {
+        color-scheme: dark;
+        --bg: #0b1213;
+        --panel: #13201f;
+        --line: #33453e;
+        --gold: #e3bf79;
+        --muted: #a7bab0;
+        --ink: #f5f1e5;
+        font:
+          15px/1.6 system-ui,
+          sans-serif;
+      }
+      * {
+        box-sizing: border-box;
+      }
+      body {
+        margin: 0;
+        color: var(--ink);
+        background: radial-gradient(ellipse at 10% 0%, #284e4144, transparent 65%), var(--bg);
+        min-height: 100svh;
+      }
+      button,
+      input,
+      select {
+        font: inherit;
+      }
+      button,
+      a,
+      input,
+      select {
+        outline-offset: 4px;
+      }
+      button {
+        cursor: pointer;
+        border: 1px solid var(--line);
+        border-radius: 9px;
+        background: #1d302a;
+        color: var(--ink);
+        padding: 11px 18px;
+        transition:
+          background 0.2s,
+          transform 0.2s;
+      }
+      button:hover {
+        background: #2a4538;
+      }
+      button:disabled {
+        opacity: 0.45;
+        cursor: default;
+      }
+      .primary {
+        background: var(--gold);
+        border-color: var(--gold);
+        color: #18221c;
+        font-weight: 700;
+      }
+      .primary:hover {
+        background: #f4d69b;
+      }
+      .quiet {
+        background: transparent;
+      }
+      .danger {
+        color: #ffc2ac;
+        border-color: #865342;
+      }
+      a {
+        color: var(--gold);
+      }
+      [hidden] {
+        display: none !important;
+      }
+      header,
+      main,
+      footer {
+        max-width: 1180px;
+        margin: auto;
+      }
+      header {
+        padding: 30px 28px;
+        display: flex;
+        gap: 16px;
+        justify-content: space-between;
+        align-items: center;
+      }
+      .brand {
+        font:
+          700 23px Georgia,
+          serif;
+        letter-spacing: 1px;
+        color: var(--gold);
+        text-decoration: none;
+      }
+      .brand small {
+        font: 10px system-ui;
+        display: block;
+        letter-spacing: 4px;
+        color: var(--muted);
+      }
+      nav {
+        display: flex;
+        gap: 10px;
+        align-items: center;
+        flex-wrap: wrap;
+      }
+      .eyebrow {
+        color: var(--gold);
+        text-transform: uppercase;
+        font-size: 11px;
+        letter-spacing: 3px;
+      }
+      .entry {
+        display: grid;
+        grid-template-columns: 1.2fr 1fr;
+        gap: 80px;
+        align-items: center;
+        min-height: 70svh;
+        padding: 40px 28px;
+      }
+      .intro h1 {
+        font:
+          clamp(40px, 5vw, 70px)/1.12 Georgia,
+          serif;
+        margin: 20px 0;
+        max-width: 580px;
+      }
+      .intro p {
+        max-width: 430px;
+        color: var(--muted);
+        font-size: 17px;
+      }
+      .rune {
+        width: 90px;
+        height: 90px;
+        display: grid;
+        place-items: center;
+        border: 1px solid #e3bf7966;
+        transform: rotate(45deg);
+        margin: 32px 20px 50px;
+        box-shadow:
+          0 0 80px #6bc18c22,
+          inset 0 0 40px #afdd9d0a;
+      }
+      .rune span {
+        transform: rotate(-45deg);
+        font: 40px Georgia;
+        color: var(--gold);
+      }
+      .panel {
+        padding: 34px;
+        border: 1px solid var(--line);
+        background: linear-gradient(145deg, #1d3029aa, #14201fe6);
+        border-radius: 18px;
+        box-shadow: 0 20px 70px #0003;
+      }
+      .panel h2 {
+        font: 30px Georgia;
+        margin: 5px 0 10px;
+      }
+      .muted {
+        color: var(--muted);
+      }
+      label {
+        display: block;
+        font-size: 13px;
+        margin: 18px 0;
+      }
+      input,
+      select {
+        width: 100%;
+        margin-top: 7px;
+        padding: 13px;
+        background: #0b1715;
+        border: 1px solid #44594d;
+        border-radius: 8px;
+        color: var(--ink);
+        min-height: 48px;
+      }
+      form > .primary {
+        width: 100%;
+        margin-top: 12px;
+      }
+      .status {
+        min-height: 25px;
+        color: #f3c19c;
+        font-size: 13px;
+        margin: 14px 0 0;
+      }
+      .roster {
+        padding: 30px 28px 60px;
+      }
+      .title-row {
+        display: flex;
+        justify-content: space-between;
+        gap: 20px;
+        align-items: center;
+        margin-bottom: 30px;
+      }
+      .title-row h1 {
+        font: 40px Georgia;
+        margin: 0;
+      }
+      .title-row p {
+        margin: 10px 0;
+      }
+      .roster-layout {
+        display: grid;
+        grid-template-columns: 1.5fr 1fr;
+        gap: 26px;
+        align-items: start;
+      }
+      .cards {
+        display: grid;
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+        gap: 14px;
+      }
+      .character-card {
+        text-align: left;
+        padding: 22px;
+        position: relative;
+        background: linear-gradient(135deg, #1c3028, #14201e);
+        min-height: 165px;
+      }
+      .character-card[aria-pressed="true"] {
+        border-color: var(--gold);
+        box-shadow: 0 0 0 1px var(--gold);
+      }
+      .character-card strong {
+        display: block;
+        font: 22px Georgia;
+        margin: 12px 0 3px;
+        overflow-wrap: anywhere;
+      }
+      .character-card small {
+        color: var(--muted);
+      }
+      .class-icon {
+        width: 42px;
+        height: 42px;
+        image-rendering: auto;
+        object-fit: contain;
+        float: right;
+        border: 1px solid #a68a5144;
+        border-radius: 8px;
+        background: #0c1714;
+        padding: 5px;
+      }
+      .detail {
+        position: sticky;
+        top: 20px;
+      }
+      .detail h2 {
+        overflow-wrap: anywhere;
+      }
+      .detail dl {
+        display: grid;
+        grid-template-columns: 1fr 1fr;
+        margin: 25px 0;
+        gap: 15px;
+      }
+      dt {
+        color: var(--muted);
+        font-size: 12px;
+      }
+      dd {
+        margin: 0;
+      }
+      .detail .primary {
+        width: 100%;
+        margin: 10px 0 16px;
+      }
+      .empty {
+        grid-column: 1/-1;
+        padding: 60px 24px;
+        border: 1px dashed var(--line);
+        border-radius: 14px;
+        text-align: center;
+      }
+      .empty h2 {
+        font: 28px Georgia;
+      }
+      .empty p {
+        color: var(--muted);
+      }
+      .online {
+        color: #a0dbad;
+        font-size: 12px;
+        display: block;
+      }
+      footer {
+        padding: 20px 28px 35px;
+        color: var(--muted);
+        font-size: 12px;
+        border-top: 1px solid #33453e66;
+      }
+      dialog {
+        color: var(--ink);
+        width: min(470px, calc(100% - 28px));
+        max-height: 90svh;
+        overflow: auto;
+        border: 1px solid #6c7555;
+        border-radius: 16px;
+        background: var(--panel);
+        padding: 28px;
+      }
+      dialog::backdrop {
+        background: #020a08cc;
+        backdrop-filter: blur(5px);
+      }
+      dialog h2 {
+        font: 28px Georgia;
+        margin: 0 0 10px;
+      }
+      .dialog-head {
+        display: flex;
+        justify-content: space-between;
+        align-items: start;
+        gap: 10px;
+      }
+      .close {
+        font-size: 20px;
+        padding: 0 12px;
+      }
+      .warning {
+        background: #54332044;
+        border-left: 2px solid #c98b6d;
+        padding: 12px;
+        color: #edc2ae;
+        font-size: 13px;
+      }
+      .form-note {
+        font-size: 12px;
+        color: var(--muted);
+      }
+      @media (max-width: 760px) {
+        header {
+          padding: 22px 20px;
+        }
+        .entry {
+          grid-template-columns: 1fr;
+          gap: 25px;
+          padding: 20px;
+          min-height: auto;
+        }
+        .intro h1 {
+          font-size: 40px;
+        }
+        .intro p {
+          font-size: 14px;
+        }
+        .rune {
+          display: none;
+        }
+        .panel {
+          padding: 25px;
+        }
+        .roster {
+          padding: 20px;
+        }
+        .roster-layout {
+          grid-template-columns: 1fr;
+        }
+        .detail {
+          position: static;
+        }
+        .title-row {
+          align-items: start;
+          flex-wrap: wrap;
+        }
+        .title-row h1 {
+          font-size: 32px;
+        }
+        .cards {
+          gap: 10px;
+        }
+        .character-card {
+          padding: 16px;
+          min-height: 160px;
+        }
+        .character-card strong {
+          font-size: 20px;
+        }
+        .brand {
+          font-size: 20px;
+        }
+        #account-name {
+          width: 100%;
+          font-size: 12px;
+        }
+        header nav {
+          justify-content: flex-end;
+        }
+        footer {
+          margin-top: 30px;
+        }
+      }
+      @media (prefers-reduced-motion: reduce) {
+        * {
+          transition: none !important;
+        }
+      }
+    </style>
+  </head>
+  <body>
+    <header>
+      <a class="brand" href="/personagens">FREEston Tale<small>UM MUNDO. SUA HISTÓRIA.</small></a>
+      <nav id="account-nav" hidden>
+        <span id="account-name" class="muted"></span
+        ><a id="admin-panel" href="/painel" hidden>Painel ADM</a
+        ><button id="logout" class="quiet">Sair da conta</button>
+      </nav>
+    </header>
+    <main>
+      <section id="entry" class="entry">
+        <div class="intro">
+          <div class="rune" aria-hidden="true"><span>F</span></div>
+          <span class="eyebrow">Bem-vindo ao seu mundo</span>
+          <h1>Uma nova jornada começa aqui.</h1>
+          <p>
+            Reencontre seus heróis. Escolha sua classe e escreva o próximo capítulo de FREEston
+            Tale.
+          </p>
+        </div>
+        <div class="panel">
+          <span class="eyebrow">Acesse sua conta</span>
+          <h2>Bom ter você de volta.</h2>
+          <p class="muted">Seus personagens esperam por você.</p>
+          <form id="login">
+            <label
+              >Usuário<input
+                name="username"
+                autocomplete="username"
+                maxlength="24"
+                required
+                autofocus /></label
+            ><label
+              >Senha<input
+                name="password"
+                type="password"
+                autocomplete="current-password"
+                maxlength="256"
+                required /></label
+            ><button class="primary" type="submit">Entrar</button>
+            <p id="message" class="status" role="status" aria-live="polite"></p>
+          </form>
+        </div>
+      </section>
+      <section id="roster" class="roster" hidden>
+        <div class="title-row">
+          <div>
+            <span class="eyebrow">Seleção de personagens</span>
+            <h1>Escolha sua jornada.</h1>
+            <p id="character-count" class="muted"></p>
+          </div>
+          <nav>
+            <button id="refresh" class="quiet">Atualizar</button
+            ><button id="new-character" class="primary">+ Criar personagem</button>
+          </nav>
+        </div>
+        <div class="roster-layout">
+          <div id="character-list" class="cards" aria-label="Personagens da conta"></div>
+          <aside id="character-detail" class="panel detail"></aside>
+        </div>
+        <p id="roster-message" class="status" role="status" aria-live="polite"></p>
+      </section>
+    </main>
+    <footer>FREEston Tale · Seu progresso continua salvo no servidor.</footer>
+    <dialog id="create-dialog" aria-labelledby="create-title">
+      <div class="dialog-head">
+        <h2 id="create-title">Um novo herói</h2>
+        <button type="button" class="quiet close" data-close aria-label="Fechar">×</button>
+      </div>
+      <p class="muted">
+        Um personagem de cada classe por conta. Cada herói tem seu próprio progresso.
+      </p>
+      <form id="create-form">
+        <label>Classe<select name="job" required></select></label>
+        <p id="class-description" class="form-note"></p>
+        <label
+          >Nome do personagem<input
+            name="name"
+            minlength="3"
+            maxlength="18"
+            autocomplete="off"
+            required /></label
+        ><button class="primary" type="submit">Criar personagem</button>
+        <p class="status" role="status"></p>
+      </form>
+    </dialog>
+    <dialog id="delete-dialog" aria-labelledby="delete-title">
+      <div class="dialog-head">
+        <h2 id="delete-title">Excluir personagem</h2>
+        <button type="button" class="quiet close" data-close aria-label="Fechar">×</button>
+      </div>
+      <p id="delete-description" class="warning"></p>
+      <p class="form-note">
+        Coins, premiums e skins da conta são preservados. Inventário, equipamentos e progresso deste
+        personagem serão removidos permanentemente.
+      </p>
+      <form id="delete-form">
+        <label
+          >Digite o nome exato do personagem<input
+            name="confirmation"
+            autocomplete="off"
+            required
+            maxlength="18" /></label
+        ><label
+          >Senha da conta<input
+            name="password"
+            type="password"
+            autocomplete="current-password"
+            maxlength="256"
+            required /></label
+        ><button class="primary danger" type="submit">Excluir permanentemente</button>
+        <p class="status" role="status"></p>
+      </form>
+    </dialog>
+    <script type="module" src="/login.mjs"></script>
+  </body>
+</html>

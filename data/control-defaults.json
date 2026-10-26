@@ -1,0 +1,181 @@
+{
+  "source": "Aging Fg/USt normal table of pinned client; drops remain FREEston local profile.",
+  "aging": [
+    {
+      "plus1": 70.0,
+      "plus2": 30.0,
+      "minus1": 0.0,
+      "minus2": 0.0,
+      "destroy": 0.0,
+      "kept": 0
+    },
+    {
+      "plus1": 75.0,
+      "plus2": 25.0,
+      "minus1": 0.0,
+      "minus2": 0.0,
+      "destroy": 0.0,
+      "kept": 0
+    },
+    {
+      "plus1": 80.0,
+      "plus2": 20.0,
+      "minus1": 0.0,
+      "minus2": 0.0,
+      "destroy": 0.0,
+      "kept": 0
+    },
+    {
+      "plus1": 90.0,
+      "plus2": 10.0,
+      "minus1": 0.0,
+      "minus2": 0.0,
+      "destroy": 0.0,
+      "kept": 0
+    },
+    {
+      "plus1": 90.0,
+      "plus2": 10.0,
+      "minus1": 0.0,
+      "minus2": 0.0,
+      "destroy": 0.0,
+      "kept": 0
+    },
+    {
+      "plus1": 90.5,
+      "plus2": 9.5,
+      "minus1": 0.0,
+      "minus2": 0.0,
+      "destroy": 0.0,
+      "kept": 0
+    },
+    {
+      "plus1": 81.0,
+      "plus2": 9.0,
+      "minus1": 9.0,
+      "minus2": 1.0,
+      "destroy": 0.0,
+      "kept": 0
+    },
+    {
+      "plus1": 80.75,
+      "plus2": 4.25,
+      "minus1": 12.0,
+      "minus2": 3.0,
+      "destroy": 0.0,
+      "kept": 0
+    },
+    {
+      "plus1": 76.0,
+      "plus2": 4.0,
+      "minus1": 14.0,
+      "minus2": 3.0,
+      "destroy": 3.0,
+      "kept": 0
+    },
+    {
+      "plus1": 66.5,
+      "plus2": 3.5,
+      "minus1": 18.0,
+      "minus2": 6.0,
+      "destroy": 6.0,
+      "kept": 0
+    },
+    {
+      "plus1": 65.0,
+      "plus2": 0.0,
+      "minus1": 17.5,
+      "minus2": 7.0,
+      "destroy": 10.5,
+      "kept": 0
+    },
+    {
+      "plus1": 60.0,
+      "plus2": 0.0,
+      "minus1": 16.0,
+      "minus2": 8.0,
+      "destroy": 16.0,
+      "kept": 0
+    },
+    {
+      "plus1": 55.0,
+      "plus2": 0.0,
+      "minus1": 13.5,
+      "minus2": 9.0,
+      "destroy": 22.5,
+      "kept": 0
+    },
+    {
+      "plus1": 50.0,
+      "plus2": 0.0,
+      "minus1": 15.0,
+      "minus2": 5.0,
+      "destroy": 30.0,
+      "kept": 0
+    },
+    {
+      "plus1": 45.0,
+      "plus2": 0.0,
+      "minus1": 11.0,
+      "minus2": 5.5,
+      "destroy": 38.5,
+      "kept": 0
+    },
+    {
+      "plus1": 35.0,
+      "plus2": 0.0,
+      "minus1": 6.5,
+      "minus2": 6.5,
+      "destroy": 52.0,
+      "kept": 0
+    },
+    {
+      "plus1": 25.0,
+      "plus2": 0.0,
+      "minus1": 7.5,
+      "minus2": 7.5,
+      "destroy": 60.0,
+      "kept": 0
+    },
+    {
+      "plus1": 15.0,
+      "plus2": 0.0,
+      "minus1": 8.5,
+      "minus2": 8.5,
+      "destroy": 68.0,
+      "kept": 0
+    },
+    {
+      "plus1": 5.0,
+      "plus2": 0.0,
+      "minus1": 9.5,
+      "minus2": 9.5,
+      "destroy": 76.0,
+      "kept": 0
+    },
+    {
+      "plus1": 5.0,
+      "plus2": 0.0,
+      "minus1": 9.5,
+      "minus2": 9.5,
+      "destroy": 76.0,
+      "kept": 0
+    }
+  ],
+  "drops": {
+    "goldChance": 100,
+    "goldMultiplier": 1,
+    "equipmentChance": 5,
+    "highLevelChance": 5,
+    "potionChance": 25,
+    "bossChance": 1,
+    "bossOverrides": {}
+  },
+  "monitor": {
+    "minLevel": 80,
+    "maxLevel": 150,
+    "codes": [],
+    "windowMinutes": 10,
+    "threshold": 20
+  }
+}

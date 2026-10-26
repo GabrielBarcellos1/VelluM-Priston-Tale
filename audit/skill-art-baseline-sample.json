@@ -1,0 +1,9 @@
+{
+  "classicSource": "https://github.com/yweenzy/pristontale-1/blob/299c615ed9a13f9ac394c6d0ac32f19e126b308d/bin/Client/image/Sinimage/skill/Skill_Normal.bmp",
+  "classicSha256": "288f35916eb2ba546c2e73e0f51ad88f502510302ebad5f071eeba0489f371af",
+  "publicCdnSource": "https://cdn.pweb.world/assets/image/sinimage/skill/skill_normal.png",
+  "publicCdnSha256": "cc298de4a74f4c54fe478bde87396dee351ac3347707985881bebff738a1c43e",
+  "decodedRgbaSha256": "13799d16fd0f1ca2d0725c07475d93a2b5f4eac6e50844edd1e76d7c4d3ecc3b",
+  "rgbaIdentical": true,
+  "description": "One shared baseline sample validates RGB order, orientation and black color-key transparency against the already captured pinned public client asset. Does not establish equivalence of all class icons to current pweb.world."
+}

@@ -1,0 +1,75 @@
+{
+  "checkedAt": "2026-10-24T09:56:36.226260+00:00",
+  "method": "Ordinary unauthenticated HTTPS GET, browser User-Agent; static analysis only. No accounts, protected endpoints or target mutation.",
+  "requests": [
+    {
+      "name": "index",
+      "url": "https://pweb.world/",
+      "status": 200,
+      "bytes": 2311,
+      "sha256": "8522d0109783ebb87c740b21c359538346b25bfdf3f80914c6b16edc5054830a",
+      "contentType": "text/html"
+    },
+    {
+      "name": "wiki",
+      "url": "https://pweb.world/api/wiki",
+      "status": 200,
+      "bytes": 148368,
+      "sha256": "c656ed6b64621777c4f84cb21e55bad6725e2b0db9de94ab192e5c1bf0c35cf1",
+      "contentType": "application/json; charset=utf-8",
+      "sameSemanticDataAsPackaged": false
+    },
+    {
+      "name": "map-fields",
+      "url": "https://pweb.world/api/map-fields",
+      "status": 200,
+      "bytes": 5684,
+      "sha256": "263bf64164df47f4baac1abbb3bcd78a73bbdaa136f873c4edd5f19710c781fe",
+      "contentType": "application/json; charset=utf-8",
+      "sameSemanticDataAsPackaged": true
+    },
+    {
+      "name": "map-npcs",
+      "url": "https://pweb.world/api/map-npcs",
+      "status": 200,
+      "bytes": 11794,
+      "sha256": "75ee18422090ad4f37cc9813bf2494af3d131c3ec0cc18a3d642c89448552e8d",
+      "contentType": "application/json; charset=utf-8",
+      "sameSemanticDataAsPackaged": false
+    },
+    {
+      "name": "map-spawns",
+      "url": "https://pweb.world/api/map-spawns",
+      "status": 200,
+      "bytes": 51679,
+      "sha256": "fa1c449c2a7f7e2553c9117a4de5f7730983a53485e9bb300bbb6ba92e626420",
+      "contentType": "application/json; charset=utf-8",
+      "sameSemanticDataAsPackaged": false
+    },
+    {
+      "name": "quests",
+      "url": "https://pweb.world/api/wiki/quests",
+      "status": 200,
+      "bytes": 359384,
+      "sha256": "614276a48562570938eab81fdeb1222fab7d05dc0056a49d383c934ec2636df0",
+      "contentType": "application/json; charset=utf-8",
+      "sameSemanticDataAsPackaged": false
+    },
+    {
+      "name": "status",
+      "url": "https://pweb.world/api/status",
+      "status": 200,
+      "bytes": 76,
+      "sha256": "1754cba85772c4c693843d717c46afcf1814297b9e332712857a213ecff1c00b",
+      "contentType": "application/json; charset=utf-8"
+    },
+    {
+      "name": "bundle",
+      "url": "https://pweb.world/_app/index-uQp4-Rtd.js",
+      "status": 200,
+      "bytes": 6952899,
+      "sha256": "309822294b926934160b35d034a4b15e0985d539520a04dc2a684b06b9a155ac",
+      "contentType": "text/javascript"
+    }
+  ]
+}

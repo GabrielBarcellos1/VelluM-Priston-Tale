@@ -1,0 +1,1349 @@
+{
+  "auditedAt": "2026-10-23T01:17:00.540Z",
+  "client": {
+    "sha256": "309822294b926934160b35d034a4b15e0985d539520a04dc2a684b06b9a155ac",
+    "decodedSourceSha256": "3dbee235cac43948a49b0bc84781298f615c05e08c8daee540cc6b32c9b5c027",
+    "origin": "https://pweb.world/_app/index-uQp4-Rtd.js"
+  },
+  "scope": "Static public client, public GET metadata and local adapter; not private server access or authenticated game audit.",
+  "classes": [
+    {
+      "job": 1,
+      "name": "Fighter",
+      "skills": [
+        {
+          "code": "SKILL_MELEE_MASTERY",
+          "name": "Melee Mastery",
+          "visualKind": "passive",
+          "localId": 101
+        },
+        {
+          "code": "SKILL_FIRE_ATTRIBUTE",
+          "name": "Fire Attribute",
+          "visualKind": "passive",
+          "localId": 102
+        },
+        {
+          "code": "SKILL_RAVING",
+          "name": "Raving",
+          "visualKind": "melee",
+          "localId": 103
+        },
+        {
+          "code": "SKILL_IMPACT",
+          "name": "Impact",
+          "visualKind": "melee",
+          "localId": 104
+        },
+        {
+          "code": "SKILL_TRIPLE_IMPACT",
+          "name": "Triple Impact",
+          "visualKind": "melee",
+          "localId": 105
+        },
+        {
+          "code": "SKILL_BRUTAL_SWING",
+          "name": "Brutal Swing",
+          "visualKind": "melee",
+          "localId": 106
+        },
+        {
+          "code": "SKILL_ROAR",
+          "name": "Roar",
+          "visualKind": "debuff",
+          "localId": 107
+        },
+        {
+          "code": "SKILL_RAGE_OF_ZECRAM",
+          "name": "Rage Of Zecram",
+          "visualKind": "aoe",
+          "localId": 108
+        },
+        {
+          "code": "SKILL_CONCENTRATION",
+          "name": "Concentration",
+          "visualKind": "buff",
+          "localId": 109
+        },
+        {
+          "code": "SKILL_AVANGING_CRASH",
+          "name": "Avenging Crash",
+          "visualKind": "melee",
+          "localId": 110
+        },
+        {
+          "code": "SKILL_SWIFT_AXE",
+          "name": "Swift Axe",
+          "visualKind": "buff",
+          "localId": 111
+        },
+        {
+          "code": "SKILL_BONE_CRASH",
+          "name": "Bone Crash",
+          "visualKind": "melee",
+          "localId": 112
+        },
+        {
+          "code": "SKILL_DETORYER",
+          "name": "Destroyer",
+          "visualKind": "melee",
+          "localId": 113
+        },
+        {
+          "code": "SKILL_BERSERKER",
+          "name": "Berserker",
+          "visualKind": "buff",
+          "localId": 114
+        },
+        {
+          "code": "SKILL_CYCLONE_STRIKE",
+          "name": "Cyclone Strike",
+          "visualKind": "nova",
+          "localId": 115
+        },
+        {
+          "code": "SKILL_BOOST_HEALTH",
+          "name": "Boost Health",
+          "visualKind": "passive",
+          "localId": 116
+        }
+      ]
+    },
+    {
+      "job": 2,
+      "name": "Mechanician",
+      "skills": [
+        {
+          "code": "SKILL_EXTREME_SHIELD",
+          "name": "Extreme Shield",
+          "visualKind": "buff",
+          "localId": 201
+        },
+        {
+          "code": "SKILL_MECHANIC_BOMB",
+          "name": "Mechanic Bomb",
+          "visualKind": "shot",
+          "localId": 202
+        },
+        {
+          "code": "SKILL_POISON_ATTRIBUTE",
+          "name": "Poison Attribute",
+          "visualKind": "passive",
+          "localId": 203
+        },
+        {
+          "code": "SKILL_PHYSICAL_ABSORB",
+          "name": "Physical Absorb",
+          "visualKind": "buff",
+          "localId": 204
+        },
+        {
+          "code": "SKILL_GREAT_SMASH",
+          "name": "Great Smash",
+          "visualKind": "melee",
+          "localId": 205
+        },
+        {
+          "code": "SKILL_MAXIMIZE",
+          "name": "Maximize",
+          "visualKind": "buff",
+          "localId": 206
+        },
+        {
+          "code": "SKILL_AUTOMATION",
+          "name": "Automation",
+          "visualKind": "buff",
+          "localId": 207
+        },
+        {
+          "code": "SKILL_SPARK",
+          "name": "Spark",
+          "visualKind": "shot",
+          "localId": 208
+        },
+        {
+          "code": "SKILL_METAL_ARMOR",
+          "name": "Metal Armor",
+          "visualKind": "buff",
+          "localId": 209
+        },
+        {
+          "code": "SKILL_GRAND_SMASH",
+          "name": "Grand Smash",
+          "visualKind": "melee",
+          "localId": 210
+        },
+        {
+          "code": "SKILL_MECHANIC_WEAPON",
+          "name": "Mechanic Weapon",
+          "visualKind": "passive",
+          "localId": 211
+        },
+        {
+          "code": "SKILL_SPARK_SHIELD",
+          "name": "Spark Shield",
+          "visualKind": "buff",
+          "localId": 212
+        },
+        {
+          "code": "SKILL_IMPULSION",
+          "name": "Impulsion",
+          "visualKind": "aoe",
+          "localId": 213
+        },
+        {
+          "code": "SKILL_COMPULSION",
+          "name": "Compulsion",
+          "visualKind": "nova",
+          "localId": 214
+        },
+        {
+          "code": "SKILL_MAGNETIC_SPHERE",
+          "name": "Magnetic Sphere",
+          "visualKind": "shot",
+          "localId": 215
+        },
+        {
+          "code": "SKILL_METAL_GOLEM",
+          "name": "Metal Golem",
+          "visualKind": "summon",
+          "localId": 216
+        }
+      ]
+    },
+    {
+      "job": 3,
+      "name": "Archer",
+      "skills": [
+        {
+          "code": "SKILL_SCOUT_HAWK",
+          "name": "Scout Hawk",
+          "visualKind": "summon",
+          "localId": 301
+        },
+        {
+          "code": "SKILL_SHOOTING_MASTERY",
+          "name": "Shooting Mastery",
+          "visualKind": "passive",
+          "localId": 302
+        },
+        {
+          "code": "SKILL_WIND_ARROW",
+          "name": "Wind Arrow",
+          "visualKind": "shot",
+          "localId": 303
+        },
+        {
+          "code": "SKILL_PERFECT_AIM",
+          "name": "Perfect Aim",
+          "visualKind": "shot",
+          "localId": 304
+        },
+        {
+          "code": "SKILL_DIONS_EYE",
+          "name": "Dion's Eye",
+          "visualKind": "passive",
+          "localId": 305
+        },
+        {
+          "code": "SKILL_FALCON",
+          "name": "Falcon",
+          "visualKind": "summon",
+          "localId": 306
+        },
+        {
+          "code": "SKILL_ARROW_OF_RAGE",
+          "name": "Arrow Of Rage",
+          "visualKind": "sky",
+          "localId": 307
+        },
+        {
+          "code": "SKILL_AVALANCHE",
+          "name": "Avalanche",
+          "visualKind": "shot",
+          "localId": 308
+        },
+        {
+          "code": "SKILL_ELEMENTAL_SHOT",
+          "name": "Elemental Shot",
+          "visualKind": "shot",
+          "localId": 309
+        },
+        {
+          "code": "SKILL_GOLDEN_FALCON",
+          "name": "Golden Falcon",
+          "visualKind": "summon",
+          "localId": 310
+        },
+        {
+          "code": "SKILL_BOMB_SHOT",
+          "name": "Bomb Shot",
+          "visualKind": "shot",
+          "localId": 311
+        },
+        {
+          "code": "SKILL_PERFORATION",
+          "name": "Perforation",
+          "visualKind": "shot",
+          "localId": 312
+        },
+        {
+          "code": "SKILL_RECALL_WOLVERIN",
+          "name": "Recall Wolverine",
+          "visualKind": "summon",
+          "localId": 313
+        },
+        {
+          "code": "SKILL_EVASION_MASTERY",
+          "name": "Evasion Mastery",
+          "visualKind": "passive",
+          "localId": 314
+        },
+        {
+          "code": "SKILL_PHOENIX_SHOT",
+          "name": "Phoenix Shot",
+          "visualKind": "shot",
+          "localId": 315
+        },
+        {
+          "code": "SKILL_FORCE_OF_NATURE",
+          "name": "Force Of Nature",
+          "visualKind": "party",
+          "localId": 316
+        }
+      ]
+    },
+    {
+      "job": 4,
+      "name": "Pikeman",
+      "skills": [
+        {
+          "code": "SKILL_PIKE_WIND",
+          "name": "Pike Wind",
+          "visualKind": "nova",
+          "localId": 401
+        },
+        {
+          "code": "SKILL_ICE_ATTRIBUTE",
+          "name": "Ice Attribute",
+          "visualKind": "passive",
+          "localId": 402
+        },
+        {
+          "code": "SKILL_CRITICAL_HIT",
+          "name": "Critical Hit",
+          "visualKind": "melee",
+          "localId": 403
+        },
+        {
+          "code": "SKILL_JUMPING_CRASH",
+          "name": "Jumping Crash",
+          "visualKind": "melee",
+          "localId": 404
+        },
+        {
+          "code": "SKILL_GROUND_PIKE",
+          "name": "Ground Pike",
+          "visualKind": "aoe",
+          "localId": 405
+        },
+        {
+          "code": "SKILL_TORNADO",
+          "name": "Tornado",
+          "visualKind": "nova",
+          "localId": 406
+        },
+        {
+          "code": "SKILL_WEAPONE_DEFENCE_MASTERY",
+          "name": "Weapon Defense Mastery",
+          "visualKind": "passive",
+          "localId": 407
+        },
+        {
+          "code": "SKILL_EXPANSION",
+          "name": "Expansion",
+          "visualKind": "melee",
+          "localId": 408
+        },
+        {
+          "code": "SKILL_VENOM_SPEAR",
+          "name": "Venom Spear",
+          "visualKind": "aoe",
+          "localId": 409
+        },
+        {
+          "code": "SKILL_VANISH",
+          "name": "Vanish",
+          "visualKind": "buff",
+          "localId": 410
+        },
+        {
+          "code": "SKILL_CRITICAL_MASTERY",
+          "name": "Critical Mastery",
+          "visualKind": "passive",
+          "localId": 411
+        },
+        {
+          "code": "SKILL_CHAIN_LANCE",
+          "name": "Chain Lance",
+          "visualKind": "melee",
+          "localId": 412
+        },
+        {
+          "code": "SKILL_ASSASSIN_EYE",
+          "name": "Assassin Eye",
+          "visualKind": "debuff",
+          "localId": 413
+        },
+        {
+          "code": "SKILL_CHARGING_STRIKE",
+          "name": "Charging Strike",
+          "visualKind": "melee",
+          "localId": 414
+        },
+        {
+          "code": "SKILL_VAGUE",
+          "name": "Vague",
+          "visualKind": "buff",
+          "localId": 415
+        },
+        {
+          "code": "SKILL_SHADOW_MASTER",
+          "name": "Shadow Master",
+          "visualKind": "melee",
+          "localId": 416
+        }
+      ]
+    },
+    {
+      "job": 5,
+      "name": "Atalanta",
+      "skills": [
+        {
+          "code": "SKILL_SHIELD_STRIKE",
+          "name": "Shield Strike",
+          "visualKind": "shot",
+          "localId": 501
+        },
+        {
+          "code": "SKILL_FARINA",
+          "name": "Farina",
+          "visualKind": "shot",
+          "localId": 502
+        },
+        {
+          "code": "SKILL_THROWING_MASTERY",
+          "name": "Throwing Mastery",
+          "visualKind": "passive",
+          "localId": 503
+        },
+        {
+          "code": "SKILL_VIGOR_SPEAR",
+          "name": "Vigor Spear",
+          "visualKind": "shot",
+          "localId": 504
+        },
+        {
+          "code": "SKILL_WINDY",
+          "name": "Windy",
+          "visualKind": "buff",
+          "localId": 505
+        },
+        {
+          "code": "SKILL_TWIST_JAVELIN",
+          "name": "Twist Javelin",
+          "visualKind": "shot",
+          "localId": 506
+        },
+        {
+          "code": "SKILL_SOUL_SUCKER",
+          "name": "Soul Sucker",
+          "visualKind": "debuff",
+          "localId": 507
+        },
+        {
+          "code": "SKILL_FIRE_JAVELIN",
+          "name": "Fire Javelin",
+          "visualKind": "shot",
+          "localId": 508
+        },
+        {
+          "code": "SKILL_SPLIT_JAVELIN",
+          "name": "Split Javelin",
+          "visualKind": "shot",
+          "localId": 509
+        },
+        {
+          "code": "SKILL_TRIUMPH_OF_VALHALLA",
+          "name": "Triumph Of Valhalla",
+          "visualKind": "party",
+          "localId": 510
+        },
+        {
+          "code": "SKILL_LIGHTNING_JAVELIN",
+          "name": "Lightning Javelin",
+          "visualKind": "shot",
+          "localId": 511
+        },
+        {
+          "code": "SKILL_STORM_JAVELIN",
+          "name": "Storm Javelin",
+          "visualKind": "shot",
+          "localId": 512
+        },
+        {
+          "code": "SKILL_HALL_OF_VALHALLA",
+          "name": "Hall Of Valhalla",
+          "visualKind": "party",
+          "localId": 513
+        },
+        {
+          "code": "SKILL_X_RAGE",
+          "name": "X Rage",
+          "visualKind": "sky",
+          "localId": 514
+        },
+        {
+          "code": "SKILL_FROST_JAVELIN",
+          "name": "Frost Javelin",
+          "visualKind": "buff",
+          "localId": 515
+        },
+        {
+          "code": "SKILL_VENGEANCE",
+          "name": "Vengeance",
+          "visualKind": "shot",
+          "localId": 516
+        }
+      ]
+    },
+    {
+      "job": 6,
+      "name": "Knight",
+      "skills": [
+        {
+          "code": "SKILL_SWORD_BLAST",
+          "name": "Sword Blast",
+          "visualKind": "shot",
+          "localId": 601
+        },
+        {
+          "code": "SKILL_HOLY_BODY",
+          "name": "Holy Body",
+          "visualKind": "buff",
+          "localId": 602
+        },
+        {
+          "code": "SKILL_PHYSICAL_TRANING",
+          "name": "Physical Training",
+          "visualKind": "passive",
+          "localId": 603
+        },
+        {
+          "code": "SKILL_DOUBLE_CRASH",
+          "name": "Double Crash",
+          "visualKind": "melee",
+          "localId": 604
+        },
+        {
+          "code": "SKILL_HOLY_VALOR",
+          "name": "Holy Valor",
+          "visualKind": "party",
+          "localId": 605
+        },
+        {
+          "code": "SKILL_BRANDISH",
+          "name": "Brandish",
+          "visualKind": "aoe",
+          "localId": 606
+        },
+        {
+          "code": "SKILL_PIERCING",
+          "name": "Piercing",
+          "visualKind": "beam",
+          "localId": 607
+        },
+        {
+          "code": "SKILL_DRASTIC_SPIRIT",
+          "name": "Drastic Spirit",
+          "visualKind": "buff",
+          "localId": 608
+        },
+        {
+          "code": "SKILL_SWORD_MASTERY",
+          "name": "Sword Mastery",
+          "visualKind": "passive",
+          "localId": 609
+        },
+        {
+          "code": "SKILL_DIVINE_INHALATION",
+          "name": "Divine Inhalation",
+          "visualKind": "buff",
+          "localId": 610
+        },
+        {
+          "code": "SKILL_HOLY_INCANTATION",
+          "name": "Holy Incantation",
+          "visualKind": "debuff",
+          "localId": 611
+        },
+        {
+          "code": "SKILL_GRAND_CROSS",
+          "name": "Grand Cross",
+          "visualKind": "melee",
+          "localId": 612
+        },
+        {
+          "code": "SKILL_SWORD_OF_JUSTICE",
+          "name": "Sword Of Justice",
+          "visualKind": "sky",
+          "localId": 613
+        },
+        {
+          "code": "SKILL_GODLY_SHIELD",
+          "name": "Godly Shield",
+          "visualKind": "buff",
+          "localId": 614
+        },
+        {
+          "code": "SKILL_GOD_BLESS",
+          "name": "God Bless",
+          "visualKind": "party",
+          "localId": 615
+        },
+        {
+          "code": "SKILL_DIVINE_PIERCING",
+          "name": "Divine Piercing",
+          "visualKind": "melee",
+          "localId": 616
+        }
+      ]
+    },
+    {
+      "job": 7,
+      "name": "Magician",
+      "skills": [
+        {
+          "code": "SKILL_AGONY",
+          "name": "Agony",
+          "visualKind": "buff",
+          "localId": 701
+        },
+        {
+          "code": "SKILL_FIRE_BOLT",
+          "name": "Fire Bolt",
+          "visualKind": "shot",
+          "localId": 702
+        },
+        {
+          "code": "SKILL_ZENITH",
+          "name": "Zenith",
+          "visualKind": "party",
+          "localId": 703
+        },
+        {
+          "code": "SKILL_FIRE_BALL",
+          "name": "Fire Ball",
+          "visualKind": "shot",
+          "localId": 704
+        },
+        {
+          "code": "SKILL_MENTAL_MASTERY",
+          "name": "Mental Mastery",
+          "visualKind": "passive",
+          "localId": 705
+        },
+        {
+          "code": "SKILL_WATORNADO",
+          "name": "Water Tornado",
+          "visualKind": "shot",
+          "localId": 706
+        },
+        {
+          "code": "SKILL_ENCHANT_WEAPON",
+          "name": "Enchant Weapon",
+          "visualKind": "party",
+          "localId": 707
+        },
+        {
+          "code": "SKILL_DEAD_RAY",
+          "name": "Dead Ray",
+          "visualKind": "beam",
+          "localId": 708
+        },
+        {
+          "code": "SKILL_ENERGY_SHIELD",
+          "name": "Energy Shield",
+          "visualKind": "buff",
+          "localId": 709
+        },
+        {
+          "code": "SKILL_DIASTROPHISM",
+          "name": "Diastrophism",
+          "visualKind": "nova",
+          "localId": 710
+        },
+        {
+          "code": "SKILL_SPIRIT_ELEMENTAL",
+          "name": "Spirit Elemental",
+          "visualKind": "summon",
+          "localId": 711
+        },
+        {
+          "code": "SKILL_DANCING_SWORD",
+          "name": "Dancing Sword",
+          "visualKind": "summon",
+          "localId": 712
+        },
+        {
+          "code": "SKILL_FIRE_ELEMENTAL",
+          "name": "Fire Elemental",
+          "visualKind": "summon",
+          "localId": 713
+        },
+        {
+          "code": "SKILL_FLAME_WAVE",
+          "name": "Flame Wave",
+          "visualKind": "aoe",
+          "localId": 714
+        },
+        {
+          "code": "SKILL_DISTORTION",
+          "name": "Distortion",
+          "visualKind": "debuff",
+          "localId": 715
+        },
+        {
+          "code": "SKILL_M_METEO",
+          "name": "Meteorite",
+          "visualKind": "sky",
+          "localId": 716
+        }
+      ]
+    },
+    {
+      "job": 8,
+      "name": "Priestess",
+      "skills": [
+        {
+          "code": "SKILL_HEALING",
+          "name": "Healing",
+          "visualKind": "heal",
+          "localId": 801
+        },
+        {
+          "code": "SKILL_HOLY_BOLT",
+          "name": "Holy Bolt",
+          "visualKind": "shot",
+          "localId": 802
+        },
+        {
+          "code": "SKILL_MULTISPARK",
+          "name": "Multispark",
+          "visualKind": "shot",
+          "localId": 803
+        },
+        {
+          "code": "SKILL_HOLY_MIND",
+          "name": "Holy Mind",
+          "visualKind": "debuff",
+          "localId": 804
+        },
+        {
+          "code": "SKILL_MEDITATION",
+          "name": "Meditation",
+          "visualKind": "passive",
+          "localId": 805
+        },
+        {
+          "code": "SKILL_DIVINE_LIGHTNING",
+          "name": "Divine Lightning",
+          "visualKind": "sky",
+          "localId": 806
+        },
+        {
+          "code": "SKILL_HOLY_REFLECTION",
+          "name": "Holy Reflection",
+          "visualKind": "buff",
+          "localId": 807
+        },
+        {
+          "code": "SKILL_GRAND_HEALING",
+          "name": "Grand Healing",
+          "visualKind": "heal",
+          "localId": 808
+        },
+        {
+          "code": "SKILL_VIGOR_BALL",
+          "name": "Vigor Ball",
+          "visualKind": "shot",
+          "localId": 809
+        },
+        {
+          "code": "SKILL_RESURRECTION",
+          "name": "Resurrection",
+          "visualKind": "buff",
+          "localId": 810
+        },
+        {
+          "code": "SKILL_EXTINCTION",
+          "name": "Extinction",
+          "visualKind": "sky",
+          "localId": 811
+        },
+        {
+          "code": "SKILL_VIRTUAL_LIFE",
+          "name": "Virtual Life",
+          "visualKind": "buff",
+          "localId": 812
+        },
+        {
+          "code": "SKILL_GLACIAL_SPIKE",
+          "name": "Glacial Spike",
+          "visualKind": "aoe",
+          "localId": 813
+        },
+        {
+          "code": "SKILL_REGENERATION_FIELD",
+          "name": "Regeneration Field",
+          "visualKind": "heal",
+          "localId": 814
+        },
+        {
+          "code": "SKILL_CHAIN_LIGHTNING",
+          "name": "Chain Lightning",
+          "visualKind": "beam",
+          "localId": 815
+        },
+        {
+          "code": "SKILL_SUMMON_MUSPELL",
+          "name": "Summon Muspell",
+          "visualKind": "summon",
+          "localId": 816
+        }
+      ]
+    },
+    {
+      "job": 9,
+      "name": "Assassin",
+      "skills": [
+        {
+          "code": "SKILL_STINGGER",
+          "name": "Stinger",
+          "visualKind": "melee",
+          "localId": 901
+        },
+        {
+          "code": "SKILL_RUNNING_HIT",
+          "name": "Running Hit",
+          "visualKind": "melee",
+          "localId": 902
+        },
+        {
+          "code": "SKILL_DUALSWORDMASTERY",
+          "name": "Dual Sword Mastery",
+          "visualKind": "passive",
+          "localId": 903
+        },
+        {
+          "code": "SKILL_WISP",
+          "name": "Wisp",
+          "visualKind": "debuff",
+          "localId": 904
+        },
+        {
+          "code": "SKILL_VENOM_THRONE",
+          "name": "Venom Throne",
+          "visualKind": "melee",
+          "localId": 905
+        },
+        {
+          "code": "SKILL_ALAS",
+          "name": "Alas",
+          "visualKind": "party",
+          "localId": 906
+        },
+        {
+          "code": "SKILL_SOUL_SHOCK",
+          "name": "Soul Shock",
+          "visualKind": "nova",
+          "localId": 907
+        },
+        {
+          "code": "SKILL_ATTACK_MASTERY",
+          "name": "Attack Mastery",
+          "visualKind": "passive",
+          "localId": 908
+        },
+        {
+          "code": "SKILL_SORE_SWORD",
+          "name": "Sore Sword",
+          "visualKind": "melee",
+          "localId": 909
+        },
+        {
+          "code": "SKILL_BEAT_UP",
+          "name": "Beat Up",
+          "visualKind": "melee",
+          "localId": 910
+        },
+        {
+          "code": "SKILL_INPES",
+          "name": "Inpes",
+          "visualKind": "buff",
+          "localId": 911
+        },
+        {
+          "code": "SKILL_BLIND",
+          "name": "Blind",
+          "visualKind": "buff",
+          "localId": 912
+        },
+        {
+          "code": "SKILL_FROST_WIND",
+          "name": "Frost Wind",
+          "visualKind": "melee",
+          "localId": 913
+        },
+        {
+          "code": "SKILL_FATAL_MASTERY",
+          "name": "Fatal Mastery",
+          "visualKind": "passive",
+          "localId": 914
+        },
+        {
+          "code": "SKILL_POLLUTED",
+          "name": "Polluted",
+          "visualKind": "aoe",
+          "localId": 915
+        },
+        {
+          "code": "SKILL_PASTING_SHADOW",
+          "name": "Pasting Shadow",
+          "visualKind": "melee",
+          "localId": 916
+        }
+      ]
+    },
+    {
+      "job": 10,
+      "name": "Shaman",
+      "skills": [
+        {
+          "code": "SKILL_DARK_BOLT",
+          "name": "Dark Bolt",
+          "visualKind": "shot",
+          "localId": 1001
+        },
+        {
+          "code": "SKILL_DARK_WAVE",
+          "name": "Dark Wave",
+          "visualKind": "shot",
+          "localId": 1002
+        },
+        {
+          "code": "SKILL_CURSE_LAZY",
+          "name": "Curse Lazy",
+          "visualKind": "debuff",
+          "localId": 1003
+        },
+        {
+          "code": "SKILL_INNER_PEACE",
+          "name": "Inner Peace",
+          "visualKind": "passive",
+          "localId": 1004
+        },
+        {
+          "code": "SKILL_SPIRITUAL_FLARE",
+          "name": "Spiritual Flare",
+          "visualKind": "aoe",
+          "localId": 1005
+        },
+        {
+          "code": "SKILL_SOUL_MANACLE",
+          "name": "Soul Manacle",
+          "visualKind": "debuff",
+          "localId": 1006
+        },
+        {
+          "code": "SKILL_CHASING_HUNT",
+          "name": "Chasing Hunt",
+          "visualKind": "buff",
+          "localId": 1007
+        },
+        {
+          "code": "SKILL_ADVENT_MIGAL",
+          "name": "Advent Migal",
+          "visualKind": "summon",
+          "localId": 1008
+        },
+        {
+          "code": "SKILL_RAIN_MAKER",
+          "name": "Rain Maker",
+          "visualKind": "buff",
+          "localId": 1009
+        },
+        {
+          "code": "SKILL_LAND_OF_GHOST",
+          "name": "Land Of Ghost",
+          "visualKind": "summon",
+          "localId": 1010
+        },
+        {
+          "code": "SKILL_HAUNT",
+          "name": "Haunt",
+          "visualKind": "shot",
+          "localId": 1011
+        },
+        {
+          "code": "SKILL_SCRATCH",
+          "name": "Scratch",
+          "visualKind": "melee",
+          "localId": 1012
+        },
+        {
+          "code": "SKILL_RECALL_BLOODY_KNIGHT",
+          "name": "Recall Bloody Knight",
+          "visualKind": "summon",
+          "localId": 1013
+        },
+        {
+          "code": "SKILL_JUDGEMENT",
+          "name": "Judgement",
+          "visualKind": "beam",
+          "localId": 1014
+        },
+        {
+          "code": "SKILL_ADVENT_MIDRANDA",
+          "name": "Advent Midranda",
+          "visualKind": "summon",
+          "localId": 1015
+        },
+        {
+          "code": "SKILL_MOURNING_OF_PRAY",
+          "name": "Mourning Of Pray",
+          "visualKind": "nova",
+          "localId": 1016
+        }
+      ]
+    },
+    {
+      "job": 11,
+      "name": "Martial Artist",
+      "skills": [
+        {
+          "code": "SKILL_LOW_KICK",
+          "name": "Low Kick",
+          "visualKind": "melee",
+          "localId": 1101
+        },
+        {
+          "code": "SKILL_STRENGTH_MASTERY",
+          "name": "Strength Mastery",
+          "visualKind": "passive",
+          "localId": 1102
+        },
+        {
+          "code": "SKILL_DOUBLE_BACKSPIN_BLOW",
+          "name": "Double Backspin Blow",
+          "visualKind": "melee",
+          "localId": 1103
+        },
+        {
+          "code": "SKILL_HYPER_STRAIGHT",
+          "name": "Hyper Straight",
+          "visualKind": "melee",
+          "localId": 1104
+        },
+        {
+          "code": "SKILL_RAGE_UP",
+          "name": "Rage Up",
+          "visualKind": "buff",
+          "localId": 1105
+        },
+        {
+          "code": "SKILL_PATRIOT",
+          "name": "Patriot",
+          "visualKind": "melee",
+          "localId": 1106
+        },
+        {
+          "code": "SKILL_RUSH_ELBOW",
+          "name": "Rush Elbow",
+          "visualKind": "nova",
+          "localId": 1107
+        },
+        {
+          "code": "SKILL_STAMINA_MASTERY",
+          "name": "Stamina Mastery",
+          "visualKind": "passive",
+          "localId": 1108
+        },
+        {
+          "code": "SKILL_INSTANT_BULK_UP",
+          "name": "Instant Bulk Up",
+          "visualKind": "buff",
+          "localId": 1109
+        },
+        {
+          "code": "SKILL_TIGER_CANNON",
+          "name": "Tiger Cannon",
+          "visualKind": "beam",
+          "localId": 1110
+        },
+        {
+          "code": "SKILL_TYPHOON",
+          "name": "Typhoon",
+          "visualKind": "melee",
+          "localId": 1111
+        },
+        {
+          "code": "SKILL_JUMPING_HEEL_KICK",
+          "name": "Jumping Heel Kick",
+          "visualKind": "melee",
+          "localId": 1112
+        },
+        {
+          "code": "SKILL_COMBINATION",
+          "name": "Combination",
+          "visualKind": "melee",
+          "localId": 1113
+        },
+        {
+          "code": "SKILL_STEELERS",
+          "name": "Steelers",
+          "visualKind": "buff",
+          "localId": 1114
+        },
+        {
+          "code": "SKILL_BODY_CHECK",
+          "name": "Body Check",
+          "visualKind": "melee",
+          "localId": 1115
+        },
+        {
+          "code": "SKILL_WAR_CRY",
+          "name": "War Cry",
+          "visualKind": "debuff",
+          "localId": 1116
+        }
+      ]
+    }
+  ],
+  "skillCount": 176,
+  "datasets": {
+    "capturedAt": "2026-10-22T19:52:42.268094+00:00",
+    "fieldEntries": 48,
+    "wikiMaps": 46,
+    "monsters": 200,
+    "npcs": 137,
+    "quests": 305,
+    "spawnStages": 38,
+    "bossSchedules": 28,
+    "npcServices": [
+      {
+        "service": "aging",
+        "npcs": 1,
+        "status": "Pendente: serviço privado não reconstruído"
+      },
+      {
+        "service": "bellatra",
+        "npcs": 3,
+        "status": "Pendente: serviço privado não reconstruído"
+      },
+      {
+        "service": "charity",
+        "npcs": 2,
+        "status": "Pendente: serviço privado não reconstruído"
+      },
+      {
+        "service": "clan",
+        "npcs": 2,
+        "status": "Pendente: serviço privado não reconstruído"
+      },
+      {
+        "service": "event",
+        "npcs": 2,
+        "status": "Pendente: serviço privado não reconstruído"
+      },
+      {
+        "service": "force",
+        "npcs": 3,
+        "status": "Pendente: serviço privado não reconstruído"
+      },
+      {
+        "service": "itemshop",
+        "npcs": 2,
+        "status": "Pendente: serviço privado não reconstruído"
+      },
+      {
+        "service": "levelRanking",
+        "npcs": 2,
+        "status": "Pendente: serviço privado não reconstruído"
+      },
+      {
+        "service": "manufacture",
+        "npcs": 1,
+        "status": "Pendente: serviço privado não reconstruído"
+      },
+      {
+        "service": "mix",
+        "npcs": 1,
+        "status": "Pendente: serviço privado não reconstruído"
+      },
+      {
+        "service": "mixreset",
+        "npcs": 2,
+        "status": "Pendente: serviço privado não reconstruído"
+      },
+      {
+        "service": "post",
+        "npcs": 2,
+        "status": "Pendente: serviço privado não reconstruído"
+      },
+      {
+        "service": "quest",
+        "npcs": 6,
+        "status": "Parcial: interpretador de missões local"
+      },
+      {
+        "service": "shop",
+        "npcs": 25,
+        "status": "Implementado com estoque público e economia local"
+      },
+      {
+        "service": "skill",
+        "npcs": 2,
+        "status": "Parcial: catálogo por classe e fórmulas locais"
+      },
+      {
+        "service": "smelting",
+        "npcs": 1,
+        "status": "Pendente: serviço privado não reconstruído"
+      },
+      {
+        "service": "teleport",
+        "npcs": 7,
+        "status": "Implementado com custo local"
+      },
+      {
+        "service": "warehouse",
+        "npcs": 7,
+        "status": "Implementado com três páginas locais"
+      },
+      {
+        "service": "wing",
+        "npcs": 1,
+        "status": "Teleporte local; regras completas de asas pendentes"
+      }
+    ]
+  },
+  "issues": [],
+  "supportedAdapterCases": [
+    "addStat",
+    "additem",
+    "ajuda",
+    "atributo",
+    "attack",
+    "beltClear",
+    "beltMove",
+    "beltSet",
+    "buy",
+    "charCfg",
+    "chat",
+    "classe",
+    "classes",
+    "clientMode",
+    "congelar",
+    "criar",
+    "curar",
+    "descer",
+    "deus",
+    "diagnostico",
+    "drops",
+    "equip",
+    "equipar",
+    "gm",
+    "habilidades",
+    "invisivel",
+    "invocar",
+    "itens",
+    "learnSkill",
+    "limpar",
+    "mapas",
+    "monstro",
+    "monstros",
+    "move",
+    "moveItem",
+    "myShopViewClose",
+    "nivel",
+    "npcClose",
+    "npcTeleport",
+    "onboard",
+    "ouro",
+    "perf",
+    "pickup",
+    "pos",
+    "questAbandon",
+    "questAccept",
+    "questComplete",
+    "questList",
+    "questTake",
+    "questTips",
+    "questTurnIn",
+    "questUiEvent",
+    "reconectar",
+    "renascer",
+    "repair",
+    "repairAll",
+    "restart",
+    "salvar",
+    "sell",
+    "shot",
+    "skill",
+    "skillCancel",
+    "skillGuide",
+    "skillMaster",
+    "skillRelease",
+    "socialOpen",
+    "stat",
+    "statAdd",
+    "subir",
+    "supportSummary",
+    "tp",
+    "unequip",
+    "useItem",
+    "velocidade",
+    "voar",
+    "warehouseGold",
+    "warehouseMove",
+    "warehouseSort"
+  ],
+  "verifiedClientRules": [
+    "Class numeric IDs",
+    "16 visual skill entries per class",
+    "Dead/locked/air/village casting restrictions",
+    "MP/stamina and cooldown checks",
+    "Class-specific learned skill selection",
+    "Learning via master with points, level and predecessor checks"
+  ],
+  "privateRulesNotRecovered": [
+    "Server skill IDs and full catalogs",
+    "Exact damage/healing/buff formulas",
+    "Weapon restrictions per skill",
+    "Mana/stamina/cooldown tables per level",
+    "Rank quests and full mastery rules",
+    "Official loot probabilities and complete boss pools",
+    "Party/PvP/social/shared-world authority"
+  ],
+  "unimplementedServices": [
+    "Shared multiplayer world",
+    "Player trade and clans",
+    "NPC aging/mix/manufacture",
+    "Mail/auctions/events",
+    "Player-targeted resurrection and party healing"
+  ],
+  "publication": {
+    "cloudTunnel": "Cloudflare API and alternative tunnel domains returned network policy HTTP 403 in this environment; no verified live URL."
+  }
+}

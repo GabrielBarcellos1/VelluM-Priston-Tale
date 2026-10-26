@@ -1,0 +1,75 @@
+{
+  "source": "Public client _app/index-uQp4-Rtd.js, SHA-256 309822294b926934160b35d034a4b15e0985d539520a04dc2a684b06b9a155ac",
+  "method": "Static inspection only. String table jj decoded with 136 bounded rotations; lookup offset 273. No bundle execution and no original account used.",
+  "clientEvidence": {
+    "premiumDrain": {
+      "function": "TEt(kind, attribute, damage, targetCount = 1), client-readable.js:5879",
+      "formula": "trunc((attribute + damage / 10) / divisor * (1 + targetCount / targetScale) * targetCount + 1)",
+      "vampiric": {
+        "attribute": "str",
+        "divisor": 20,
+        "targetScale": 10
+      },
+      "vampiricEx": {
+        "attribute": "str",
+        "divisor": 15,
+        "targetScale": 7
+      },
+      "manaRecharge": {
+        "attribute": "spi",
+        "divisor": 13,
+        "targetScale": 10
+      },
+      "proof": "OEt tooltip calls TEt with Força for HP and Int. for MP. Its example uses attribute 100 and damage 500. Table lookup 621=trunc,395=Força,340=Int.,425=power.",
+      "notRecovered": "Private damage selection, PvP modifiers and aggregation of multi-hit/multi-target casts. FREEston calls this per landed target using effective damage capped at remaining target HP."
+    },
+    "reductions": {
+      "function": "CEt(cost, percent), client-readable.js:5885",
+      "formula": "cost - floor(cost * percent / 100)",
+      "manaReduce": 30,
+      "staminaReduce": 30
+    },
+    "mightOfAwell": {
+      "value": 1000,
+      "effect": "Maximum carrying weight, not HP",
+      "proof": "OEt case mightOfAwell: '+1000 de peso máximo' and 'Carrega mais sem ficar lento'. Table lookup 455=mightOfAwell,312=' de peso máximo'."
+    },
+    "thirdEyes": {
+      "extraDropChance": 50,
+      "proof": "OEt uses ZCe=50 and '% de chance de drop extra'. It does not show a relative base-rate multiplier.",
+      "notRecovered": "Private item/boss generation. FREEston keeps its existing extra common-roll implementation; boss exclusive chance stays independent."
+    },
+    "drainNoAoe": {
+      "proof": "Public feature description explains disabling HP/MP drain on area skills, summons and poison ticks when this feature is enabled. Its original behavior paid for area skills too.",
+      "notRecovered": "Current private feature flag value. No unsupported default is inferred."
+    },
+    "otherPublicPremiums": {
+      "phoenix": "Public tooltip advertises +10% monster EXP and 50% chance of extra drop plus following visual. Not added as a working product without its full gameplay integration.",
+      "helperPets": "Public tooltip distinguishes four helpers, attributes and attack types; they are not enabled as fake working products."
+    },
+    "agingCritical": {
+      "functions": "VSt/Aj, client-readable.js:1368–1372",
+      "families": [
+        "WM1",
+        "WM3",
+        "WM5",
+        "WH1",
+        "WH3",
+        "WN1",
+        "WD1",
+        "WV1"
+      ],
+      "formula": "extra effective critical = floor(clamp(aging,0,20)/2)",
+      "proof": "GSt writes ordinary critical increases into WC1/WP1/WS2/WS1/WT1; VSt adds it only to the listed other families when computing the effective item stat. Do not double-count already-baked GSt families."
+    }
+  },
+  "corrections": [
+    "Drain uses public strength/intelligence arithmetic rather than an invented fixed 5%/10% of damage.",
+    "Normal and superior Presa do not stack.",
+    "Força de Awell increases maximum weight rather than HP.",
+    "ThirdEyes default and existing old 20-value actives migrate to 50, preserving stock, account coins and administrator offer settings.",
+    "Default descriptions migrate; custom administrator descriptions are preserved.",
+    "Hammer/staff/phantom/dagger/fist aging critical now contributes to the effective combat stat, without double counting already-baked weapon families."
+  ],
+  "limits": "These are client-visible arithmetic and descriptions. Shared authoritative PvP and the full private Zephira balance were not recovered or represented as implemented."
+}

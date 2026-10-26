@@ -1,0 +1,45 @@
+{
+  "checkedAt": "2026-10-23T16:26:30.971304+00:00",
+  "requests": [
+    {
+      "url": "https://priston.orgfree.com/arqueira.htm",
+      "error": "<urlopen error Tunnel connection failed: 403 Forbidden>"
+    },
+    {
+      "url": "https://priston.orgfree.com/atalanta.htm",
+      "error": "<urlopen error Tunnel connection failed: 403 Forbidden>"
+    },
+    {
+      "url": "https://priston.orgfree.com/cavaleiro.htm",
+      "error": "<urlopen error Tunnel connection failed: 403 Forbidden>"
+    },
+    {
+      "url": "https://priston.orgfree.com/lutador.htm",
+      "error": "<urlopen error Tunnel connection failed: 403 Forbidden>"
+    },
+    {
+      "url": "https://priston.orgfree.com/mago.htm",
+      "error": "<urlopen error Tunnel connection failed: 403 Forbidden>"
+    },
+    {
+      "url": "https://priston.orgfree.com/mecanico.htm",
+      "error": "<urlopen error Tunnel connection failed: 403 Forbidden>"
+    },
+    {
+      "url": "https://priston.orgfree.com/pikeman.htm",
+      "error": "<urlopen error Tunnel connection failed: 403 Forbidden>"
+    },
+    {
+      "url": "https://priston.orgfree.com/sacerdotiza.htm",
+      "error": "<urlopen error Tunnel connection failed: 403 Forbidden>"
+    },
+    {
+      "url": "https://pweb.world",
+      "status": 403
+    },
+    {
+      "url": "https://pweb.world/api/wiki",
+      "status": 403
+    }
+  ]
+}

@@ -1,0 +1,35 @@
+{
+  "checkedAt": "2026-10-24T01:02:30.935235+00:00",
+  "requests": [
+    {
+      "url": "https://pweb.world/",
+      "status": 200,
+      "bytes": 2311,
+      "sha256": "8522d0109783ebb87c740b21c359538346b25bfdf3f80914c6b16edc5054830a"
+    },
+    {
+      "url": "https://pweb.world/api/wiki",
+      "status": 200,
+      "bytes": 148368,
+      "sha256": "c656ed6b64621777c4f84cb21e55bad6725e2b0db9de94ab192e5c1bf0c35cf1"
+    },
+    {
+      "url": "https://pweb.world/api/map-npcs",
+      "status": 200,
+      "bytes": 11794,
+      "sha256": "75ee18422090ad4f37cc9813bf2494af3d131c3ec0cc18a3d642c89448552e8d"
+    },
+    {
+      "url": "https://pweb.world/_app/index-uQp4-Rtd.js",
+      "status": 200,
+      "bytes": 6952899,
+      "sha256": "309822294b926934160b35d034a4b15e0985d539520a04dc2a684b06b9a155ac"
+    },
+    {
+      "url": "https://cdn.pweb.world/assets/image/sinimage/skill/skill_normal.png",
+      "status": 200,
+      "bytes": 4161,
+      "sha256": "cc298de4a74f4c54fe478bde87396dee351ac3347707985881bebff738a1c43e"
+    }
+  ]
+}

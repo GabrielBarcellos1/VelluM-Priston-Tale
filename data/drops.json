@@ -1,0 +1,116 @@
+{
+  "version": 2,
+  "provenance": "LOCAL calibrated rates. Public catalog only provides monster/item/map definitions; exact official server probabilities were not recovered. Exclusive drops now require the boss original map and are never guaranteed.",
+  "common": {
+    "potionChance": 0.25,
+    "equipmentChance": 0.05,
+    "specializationChance": 0.25
+  },
+  "bosses": {
+    "Valento": [
+      {
+        "code": "OR205",
+        "chance": 0.01,
+        "count": 1
+      }
+    ],
+    "Babel": [
+      {
+        "code": "OR231",
+        "chance": 0.01,
+        "count": 1
+      }
+    ],
+    "Kelvezu": [
+      {
+        "code": "OA130",
+        "chance": 0.01,
+        "count": 1
+      }
+    ],
+    "Zzangpi": [
+      {
+        "code": "OR206",
+        "chance": 0.01,
+        "count": 1
+      }
+    ],
+    "Mekhist": [
+      {
+        "code": "OR207",
+        "chance": 0.01,
+        "count": 1
+      }
+    ],
+    "Eed": [
+      {
+        "code": "OR208",
+        "chance": 0.01,
+        "count": 1
+      }
+    ],
+    "Platin Mav": [
+      {
+        "code": "OR209",
+        "chance": 0.01,
+        "count": 1
+      }
+    ],
+    "Bauton": [
+      {
+        "code": "OR212",
+        "chance": 0.01,
+        "count": 1
+      }
+    ],
+    "Apostasy": [
+      {
+        "code": "OR216",
+        "chance": 0.01,
+        "count": 1
+      }
+    ],
+    "Cavaleiro Profano": [
+      {
+        "code": "OR217",
+        "chance": 0.01,
+        "count": 1
+      }
+    ],
+    "Vega Demir": [
+      {
+        "code": "OR218",
+        "chance": 0.01,
+        "count": 1
+      }
+    ],
+    "Bloody Rose": [
+      {
+        "code": "OR221",
+        "chance": 0.01,
+        "count": 1
+      }
+    ],
+    "Vermun Actarun": [
+      {
+        "code": "OR223",
+        "chance": 0.01,
+        "count": 1
+      }
+    ],
+    "Arqueiro STYX": [
+      {
+        "code": "OR224",
+        "chance": 0.01,
+        "count": 1
+      }
+    ],
+    "Rasha": [
+      {
+        "code": "OR225",
+        "chance": 0.01,
+        "count": 1
+      }
+    ]
+  }
+}
