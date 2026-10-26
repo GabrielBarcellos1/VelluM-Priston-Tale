@@ -1,7 +1,7 @@
 import test from 'node:test';
 import assert from 'node:assert/strict';
 import {readFile} from 'node:fs/promises';
-import {gmProtection,protectGm,applyGmAttack,gmTrainingActive} from '../gm-tools.mjs';
+import {gmProtection,gmClientLevel,protectGm,applyGmAttack,gmTrainingActive} from '../gm-tools.mjs';
 import {experienceSpan,killExperience} from '../balance-rules.mjs';
 const read=async name=>JSON.parse(await readFile(new URL('../data/'+name+'.json',import.meta.url),'utf8'));
 const [profile,balance,wiki,fields]=await Promise.all(['gm-training','balance','wiki','map-fields'].map(read));
@@ -46,4 +46,8 @@ test('GM Sheltom adds 50 to both damage limits only when equipped by staff',()=>
   applyGmAttack(s,gmProtection(staff,equip));
   assert.deepEqual(s,{damageMin:10+expected,damageMax:20+expected,attackStep:80});
  }
+});
+test('gameplay validation uses normal NPC interaction and native player controls',()=>{
+ for(const role of ['admin','gm','player'])assert.equal(gmClientLevel(role,true),0);
+ assert.equal(gmClientLevel('admin'),3);assert.equal(gmClientLevel('gm'),2);assert.equal(gmClientLevel('player'),0);
 });

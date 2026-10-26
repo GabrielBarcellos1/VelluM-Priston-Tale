@@ -7,3 +7,5 @@ export function applyGmAttack(stats,enabled){if(enabled){stats.damageMin+=50;sta
 
 export function gmProtectionEnabled(staff,equip,gameplayTest=false){return gmProtection(staff,equip)&&!gameplayTest;}
 export function gmCombatEquipment(staff,equip,gameplayTest=false){return gameplayTest&&gmProtection(staff,equip)?{...equip,sheltom:null}:equip;}
+
+export function gmClientLevel(role,gameplayTest=false){return gameplayTest?0:role==='admin'?3:role==='gm'?2:0;}

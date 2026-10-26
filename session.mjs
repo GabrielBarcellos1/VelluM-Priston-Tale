@@ -13,7 +13,7 @@ import {
 import { craftAtNpc, decorateCraftItem } from "/npc-crafting.mjs";
 import { mountOnlineSession } from "/online-session.mjs";
 import { worldFacingAngle, faceNearbyNpcs } from "/character-facing.mjs";
-import {GM_SHELTOM,GM_POTION,gmProtection,gmProtectionEnabled,gmCombatEquipment,protectGm,applyGmAttack,gmTrainingActive} from "/gm-tools.mjs";
+import {GM_SHELTOM,GM_POTION,gmProtection,gmClientLevel,gmProtectionEnabled,gmCombatEquipment,protectGm,applyGmAttack,gmTrainingActive} from "/gm-tools.mjs";
 import { premiumRecovery } from "/premium-effects.mjs";
 import { captureBaseRolls, restoreItemRolls } from "/item-save.mjs";
 import { combatStats } from "/character-stats.mjs";
@@ -288,7 +288,7 @@ const stats = {
 migrateExperience(stats, balanceRules);
 stats.classRank=promotionRank(stored?.completed,characterClass.job);
 const fieldMinimum=balanceRules.maps?.find(m=>m.id===field.id)?.minimum??1;
-if(!isAdmin&&stats.level<fieldMinimum&&!((field.id===30&&stored?.questMeta?.trial?.expires>serverNow()/1000)||(field.id===32&&stored?.questMeta?.duel?.expires>serverNow()/1000))){location.replace(`?classe=${characterClass.job}&mapa=${characterClass.tribe==='morion'?21:3}`);throw Error(`Este mapa requer nível ${fieldMinimum}.`);}
+if((!isAdmin||gameplayTestMode)&&stats.level<fieldMinimum&&!((field.id===30&&stored?.questMeta?.trial?.expires>serverNow()/1000)||(field.id===32&&stored?.questMeta?.duel?.expires>serverNow()/1000))){location.replace(`?classe=${characterClass.job}&mapa=${characterClass.tribe==='morion'?21:3}`);throw Error(`Este mapa requer nível ${fieldMinimum}.`);}
 const inv = {
   costumeOn:
     typeof stored?.inv?.costumeOn === "boolean"
@@ -608,7 +608,7 @@ addEventListener("unhandledrejection", (e) => recordDiagnostic(e.reason?.message
 function syncGm() {
   deliver({
     t: "gm",
-    level: account.role === "admin" ? 3 : account.role === "gm" ? 2 : 0,
+    level: gmClientLevel(account.role,gameplayTestMode),
     speed: adminState.speed,
     god: adminState.god,
     hidden: adminState.hidden,
@@ -2113,7 +2113,7 @@ async function handle(message) {
         return;
       const dest = travelDestinations()[message.index ?? 0];
       if (!dest) return;
-      if(!isAdmin&&stats.level<dest.level)return notice(`Este destino requer nível ${dest.level}.`);
+      if((!isAdmin||gameplayTestMode)&&stats.level<dest.level)return notice(`Este destino requer nível ${dest.level}.`);
       if (stats.gold < dest.fee) return notice("Ouro insuficiente para teleportar.");
       stats.gold -= dest.fee;
       save();
@@ -2688,7 +2688,7 @@ async function activateMap(next) {
   mapBackup = null;
 }
 
-const canEnterWalking = target => isAdmin ||
+const canEnterWalking = target => (isAdmin&&!gameplayTestMode) ||
   stats.level >= (balanceRules.maps?.find(m => m.id === target.id)?.minimum ?? 1);
 mapTravel = createMapTravel({
   fields: fieldData.fields, current: field.id, portals: mapLinks.portals,
