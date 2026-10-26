@@ -20,7 +20,7 @@ def installation_id():
 
 def build_info():
     global _cache
-    files=sorted([*ROOT.glob('*.mjs'),*ROOT.glob('*.css'),*ROOT.glob('*.html'),*ROOT.glob('data/*.json')])
+    files=sorted([*ROOT.glob('*.py'),*ROOT.glob('*.mjs'),*ROOT.glob('*.css'),*ROOT.glob('*.html'),*ROOT.glob('data/*.json')])
     fingerprint=tuple((p.name,p.stat().st_mtime_ns,p.stat().st_size) for p in files)
     with _guard:
         if _cache[0]!=fingerprint:
@@ -29,7 +29,16 @@ def build_info():
                 digest.update(path.relative_to(ROOT).as_posix().encode())
                 digest.update(path.read_bytes())
             _cache=(fingerprint,digest.hexdigest()[:16])
-        return {'name':BRAND,'version':VERSION,'revision':_cache[1],'world':'shared-presence','publicLaunchReady':False,'installation':installation_id()}
+        return {'name':BRAND,'version':VERSION,'revision':_cache[1],'world':'shared-presence','publicLaunchReady':False,'installation':installation_id(),'deployment':deployment_info()}
+
+
+def deployment_info():
+    """Expose only the public source revision, without local paths or credentials."""
+    try:
+        record=json.loads(link_path().with_name('deployment.json').read_text(encoding='utf-8'))
+        return {'commit':record.get('commit'),'status':record.get('status'),'updatedAt':record.get('updatedAt')}
+    except (OSError,ValueError,TypeError,AttributeError):
+        return None
 
 
 def link_path():
@@ -52,3 +61,4 @@ def read_link():
         if time.time()-data.get('updatedAt',0)>90:return {**data,'status':'offline','verified':False}
         return data
     except (OSError,ValueError,TypeError):return {'status':'offline','url':None,'verified':False}
+
