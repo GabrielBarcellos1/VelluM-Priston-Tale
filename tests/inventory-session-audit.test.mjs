@@ -89,3 +89,14 @@ test('force crafting rollback restores materials and gold when the output has no
  assert.throws(()=>craftAtNpc({t:'force',npcId:1,sheltoms:[1]},{inv,stats,npcs:[{id:1,x:0,z:0,services:['force']}],position:{x:0,z:0},bridge:{forceRecipe:()=>({price:10,code:'FO101'})},instance:code=>({code}),addBag:()=>false}),/Sem espaço/);
  assert.deepEqual(inv,before);assert.equal(stats.gold,100);
 });
+
+test('town cores consume one unit before travel, restore after failure and reject dead characters',async()=>{
+ const f=fixture(); const core={uid:700,code:'EC101',slot:'ECORE',w:2,h:1,count:2};f.inv.bag.push({x:0,y:0,item:core});
+ const visited=[];f.context.gameFeatures={travel:async id=>{visited.push(id);assert.equal(core.count,1);}};
+ await f.handle({t:'useItem',uid:700});assert.deepEqual(visited,[3]);assert.equal(core.count,1);
+ f.context.gameFeatures.travel=async()=>{throw Error('save failed');};
+ await f.handle({t:'useItem',uid:700});assert.equal(f.inv.bag[0].item.count,1);assert.match(f.notices.at(-1),/Core preservado/);
+ f.context.game.dead=true;await f.handle({t:'useItem',uid:700});assert.equal(f.inv.bag[0].item.count,1);
+ f.context.game.dead=false;f.inv.bag[0].item.code='EC104';f.context.gameFeatures.travel=async id=>visited.push(id);
+ await f.handle({t:'useItem',uid:700});assert.deepEqual(visited,[3,21]);assert.equal(f.inv.bag.length,0);
+});

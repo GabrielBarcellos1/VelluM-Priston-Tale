@@ -2234,6 +2234,23 @@ async function handle(message) {
     case "useItem": {
       const item = findItem(message.uid);
       if(item?.code===GM_POTION){try{await gmOperation("activate",{uid:item.uid});}catch(e){notice(e.message);}break;}
+      if (item?.slot === "ECORE") {
+        const destination = { EC101: 3, EC104: 21 }[item.code];
+        if (destination == null) return notice("Este tipo de core ainda não tem destino disponível.");
+        if (game.dead || stats.hp <= 0) return notice("Não é possível usar core enquanto estiver morto.");
+        const unit = { ...item, count: 1 };
+        consume(item);
+        recalculate();
+        try { await gameFeatures.travel(destination); }
+        catch (error) {
+          const remaining = findItem(unit.uid);
+          if (remaining) remaining.count++;
+          else if (!addBag(unit)) throw Error("Não foi possível restaurar o core: " + error.message);
+          recalculate(); save(true);
+          notice("Core preservado: " + error.message);
+        }
+        return;
+      }
       if (item?.slot === "FORCEORB") {
         const force = B.forceInfo(item.code);
         if (!force || stats.level < force.level[0] || stats.level > force.level[1])
