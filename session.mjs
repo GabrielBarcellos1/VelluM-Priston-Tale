@@ -2569,6 +2569,7 @@ mapTravel = createMapTravel({
     if (game) {
       game.currentStage = field.stage;
       game.stagePicker.reset();
+      game.emitField();
       teleportHere(enter.x, enter.z);
     }
   }, notice,
@@ -2576,7 +2577,7 @@ mapTravel = createMapTravel({
 syncPremiumInventory();
 recalculate();
 conn.gameBacklog.push(
-  { t: "fields", current: field.id, stages: walkingStages(fieldData.fields, field.id, canEnterWalking).map(f => ({ ...f, bgm: f.village ? "town2" : "forest" })), gates: [] },
+  { t: "fields", current: field.id, stages: walkingStages(fieldData.fields, field.id).map(f => ({ ...f, bgm: f.village ? "town2" : "forest" })), gates: [] },
   skills.snapshot(),
   { t: "pets", list: [] },
   { t: "quests", list: questViews() },
