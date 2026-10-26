@@ -1,7 +1,7 @@
 # Hospedagem VelluM
 
 Instalacao ativa: C:\VelluM, no DESKTOP-UFGKQ0O.
-Tarefa Windows: VelluM-Hosting, inicio no boot e execucao independente de login.
+Tarefa Windows: VelluM-Hosting, inicio no boot e verificacao a cada minuto, com bloqueio de instancias duplicadas e execucao independente de login.
 Python fixado: Python 3.13 em C:\Users\Usuario\AppData\Local\Programs\Python\Python313\python.exe.
 
 ## Pastas no servidor
@@ -34,8 +34,8 @@ O jogo usa um Quick Tunnel separado do tunel do Guacamole. O endereco trycloudfl
 ## Operacao no PowerShell como administrador
 
 Consultar: Get-ScheduledTask -TaskName VelluM-Hosting
-Parar: Stop-ScheduledTask -TaskName VelluM-Hosting
-Iniciar: Start-ScheduledTask -TaskName VelluM-Hosting
+Parar: Disable-ScheduledTask -TaskName VelluM-Hosting; Stop-ScheduledTask -TaskName VelluM-Hosting
+Iniciar: Enable-ScheduledTask -TaskName VelluM-Hosting; Start-ScheduledTask -TaskName VelluM-Hosting
 Link: Get-Content C:\VelluM\LINK_DO_JOGO.txt
 Estado: Get-Content C:\VelluM\data\hosting-status.json
 Logs: Get-Content C:\VelluM\logs\host.log -Tail 40
@@ -43,3 +43,5 @@ Logs: Get-Content C:\VelluM\logs\host.log -Tail 40
 Nao execute outro INICIAR.bat enquanto esta hospedagem estiver ativa. Para parar manualmente, confirme tambem que os filhos Python/cloudflared do supervisor terminaram; nao encerre o servico Cloudflared do Guacamole.
 
 O supervisor nao pode atualizar a si mesmo em execucao. Este mecanismo cobre a aplicacao, nao uma garantia de atualizacao sem interrupcao de qualquer backend. Nao inclua segredos em commits: este repositorio e publico.
+
+
