@@ -18,7 +18,7 @@ export function watchRelease(ctx) {
         button = document.createElement("button");
       box.id = "ft-update";
       box.setAttribute("role", "status");
-      text.textContent = "FREEston Tale: atualização disponível. Seu progresso será salvo.";
+      text.textContent = "VelluM Priston Tale: atualização disponível. Seu progresso será salvo.";
       button.textContent = "Salvar e atualizar";
       button.onclick = async () => {
         button.disabled = true;
@@ -40,3 +40,4 @@ export function watchRelease(ctx) {
   document.addEventListener("visibilitychange", () => check().catch(() => {}));
   return { check, dispose: () => clearInterval(timer) };
 }
+
