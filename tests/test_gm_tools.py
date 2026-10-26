@@ -86,7 +86,15 @@ class GmTools(ServerAudit):
             game.setup(db)
             s=gm.snapshot(db,self.user,1,'different-generation',20)
             self.assertEqual(s['expires'],0)
+    def test_private_items_cannot_be_added_to_boss_loot(self):
+        import boss_roulette as boss
+        import server_economy as economy
+        for code in (gm.SHELTOM,gm.POTION):
+            self.assertFalse(economy.allowed(code))
+            with self.assertRaisesRegex(ValueError,'GM não podem'):
+                boss.save_config(self.admin,{'monster':'dn-monster-144','version':1,'value':{'rareChance':0,'common':[{'code':code,'weight':1}],'rare':[]}})
 
 for name in vars(ServerAudit):
     if name.startswith('test_') and name not in vars(GmTools):setattr(GmTools,name,None)
 del ServerAudit
+

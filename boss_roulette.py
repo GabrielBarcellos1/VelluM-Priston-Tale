@@ -48,6 +48,7 @@ def save_config(user,data):
         for row in rows:
             code=row.get('code')
             if code not in game.ITEMS or code in seen:raise ValueError('Código inexistente ou repetido na lista.')
+            if game.ITEMS[code].get('gmOnly'):raise ValueError('Itens exclusivos de GM não podem entrar nos drops.')
             if group=='common' and code in game.BOSS_CODES:raise ValueError('Item exclusivo deve ficar na lista de exclusivos.')
             game.number(row.get('weight'),.001,100000,'Peso');seen.add(code);clean[group].append({'code':code,'weight':row['weight']})
     if clean['rareChance']>0 and not clean['rare']:raise ValueError('Defina um exclusivo ou deixe sua chance em zero.')
@@ -143,3 +144,4 @@ def action(user,data):
         awards=[{'id':r['id'],'code':r['code'],'name':game.ITEMS[r['code']]['name'],'round':r['round']} for r in db.execute('SELECT a.* FROM boss_awards a JOIN boss_rounds r ON r.encounter=a.encounter AND r.round=a.round WHERE a.username=? AND a.job=? AND a.generation=? AND a.claimed=0',(user['username'],job,data['generation'])) if json.loads(db.execute('SELECT data FROM boss_rounds WHERE encounter=? AND round=?',(r['encounter'],r['round'])).fetchone()[0])['revealAt']<=now]
         participated=[r['encounter'] for r in db.execute('SELECT h.encounter FROM boss_hits h JOIN boss_encounters e ON e.id=h.encounter WHERE h.username=? AND h.job=? AND h.generation=? AND e.field=? AND e.dead>?',(user['username'],job,data['generation'],field,now-180))]
         return {'ok':True,'bosses':bosses,'rounds':rounds,'awards':awards,'participated':participated}
+
