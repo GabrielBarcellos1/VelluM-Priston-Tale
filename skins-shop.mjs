@@ -8,6 +8,8 @@ export function mountSkinShop({
   refreshWallet,
   notice,
   generation,
+  onApply,
+  preview,
 }) {
   let snapshot = null,
     dialog = null,
@@ -33,6 +35,7 @@ export function mountSkinShop({
   }
   function apply(next) {
     snapshot = next;
+    onApply?.(next);
     deliver({ t: "skinsUi", show: false });
     deliver({ t: "skins", equip: next.equip, worn: next.worn });
     if (dialog?.open) render();
@@ -106,6 +109,7 @@ export function mountSkinShop({
           skin.look + " · " + { arma: "Arma", escudo: "Escudo", traje: "Armadura/robe" }[skin.cat],
         ),
       );
+      if(skin.customModel&&preview){const view=element('button','Ver modelo 3D');view.type='button';view.onclick=()=>preview(skin);card.append(view);}
       const owned = snapshot.owned.includes(skin.id),
         equipped = snapshot.equip[skin.cat] === skin.id,
         action = owned ? (equipped ? "remove" : "equip") : "buy";

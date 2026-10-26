@@ -116,6 +116,7 @@ export function mountOnlineSession({
   return {
     ready,
     status,
+    peers:()=>[...peers.values()],
     dispose,
     canResurrect: () => [...peers.values()].some(p=>p.dead&&Math.hypot(p.x-game.pos.x,p.z+game.pos.z)<=500),
     support: (code,target) => post('skill',{code,target,generation}),

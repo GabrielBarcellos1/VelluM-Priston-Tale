@@ -38,7 +38,10 @@ CREATE TABLE IF NOT EXISTS skin_equipped(username TEXT,job INTEGER,cat TEXT,id T
     db.execute('INSERT OR IGNORE INTO game_rules VALUES(1,1,?)',(json.dumps({k:DEFAULTS[k] for k in ('aging','drops','monitor')}),))
     if not db.execute('SELECT 1 FROM skin_offers LIMIT 1').fetchone():
         for skin in skin_library():
-            db.execute('INSERT OR IGNORE INTO skin_offers(id,data) VALUES(?,?)',(skin['id'],json.dumps(skin,ensure_ascii=False)))
+            db.execute('INSERT OR IGNORE INTO skin_offers(id,data,enabled) VALUES(?,?,?)',(skin['id'],json.dumps(skin,ensure_ascii=False),int(bool(skin.get('customModel')))))
+    import custom_skins
+    for skin in custom_skins.catalog():
+        db.execute('INSERT OR IGNORE INTO skin_offers(id,data,enabled) VALUES(?,?,1)',(skin['id'],json.dumps(skin,ensure_ascii=False)))
     db.commit()
 
 
@@ -337,7 +340,8 @@ def skin_library():
         if i['slot'] not in ('WEAPON_ONE','WEAPON_TWO','ARMOR','SHIELDS') or not i.get('image') or i.get('price',0)<=0:continue
         cat='arma' if i['slot'].startswith('WEAPON') else 'escudo' if i['slot']=='SHIELDS' else 'traje'
         result.append({'id':'look-'+i['code'],'name':i['name'],'look':i['code'],'cat':cat,'hands':2 if i['slot']=='WEAPON_TWO' else 1 if i['slot']=='WEAPON_ONE' else None,'image':i['image'],'price':1000,'description':'Visual cosmético. Preserva os atributos do equipamento.'})
-    return result
+    import custom_skins
+    return result+custom_skins.catalog()
 
 
 def skin_admin(user):
@@ -458,3 +462,4 @@ def inspect_state(db,user,job,state,previous):
     if flags:
         last=db.execute("SELECT 1 FROM game_events WHERE username=? AND action='state.anomaly' AND created>?",(user['username'],time.time()-60)).fetchone()
         if not last:event(db,user,'state.anomaly',severity='info' if user['role'] in ('admin','gm') else 'warning',job=job,trust='heuristic',detail={'signals':flags,'staff':user['role'] in ('admin','gm'),'note':'Indício para revisão; pode ser teste de GM, recompensa ou erro do cliente.'})
+

@@ -44,7 +44,8 @@ def heartbeat(user,data):
         if db.execute("SELECT 1 FROM sqlite_master WHERE type='table' AND name='skin_equipped'").fetchone():
             for row in db.execute('SELECT o.data FROM skin_equipped e JOIN skin_offers o ON o.id=e.id JOIN skin_owned n ON n.username=e.username AND n.id=e.id WHERE e.username=? AND e.job=?',(user['username'],job)):
                 skin=json.loads(row['data']);base=equip.get({'arma':'weapon','escudo':'shield','traje':'armor'}.get(skin['cat'],''))
-                if base and base['code'][:3]==skin['look'][:3]:packet[{'arma':'skinWeapon','escudo':'skinShield','traje':'costume'}[skin['cat']]]=skin['look']
+                if base and base['code'][:3]==skin['look'][:3] and (skin['cat']!='arma' or base.get('slot')==('WEAPON_TWO' if skin.get('hands')==2 else 'WEAPON_ONE')):packet[{'arma':'skinWeapon','escudo':'skinShield','traje':'costume'}[skin['cat']]]=skin['look']
+                if base and skin.get('customModel') and skin['cat']=='arma' and base['code'][:3]==skin['look'][:3] and base.get('slot')==('WEAPON_TWO' if skin.get('hands')==2 else 'WEAPON_ONE'):packet['customWeaponSkin']=skin['id']
     with LOCK:
         # Deletion also holds LOCK. Validate at publication time so a heartbeat
         # already in flight cannot bring back a deleted/recreated character.

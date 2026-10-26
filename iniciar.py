@@ -33,6 +33,7 @@ import game_control
 import npc_services
 import boss_roulette
 import server_economy
+import custom_skins
 
 ROOT = Path(__file__).resolve().parent
 CACHE = Path(os.environ.get('PWEB_CACHE_DIR', str(ROOT / '.original-cache'))).resolve()
@@ -43,7 +44,7 @@ PINNED = {
     CSS_PATH: 'ac6a92d028c2bd04f63aff9ddeaa4a6645eb34dde463851f198635e6b4cf4b5b',
 }
 STARTUP = b'const $0t=$M?null:AYt();$M?T0x($M):$0t?L0x($0t):tE();'
-BRIDGE = b'globalThis.__localGameBridge={Session:$1,Game:eA,Runtime:Jw,ui:Uex,root:eE,loading:g1,classes:HAt,settings:y0,low:(preset="low")=>VS(y0.get(),preset,pB()),state:i7,servers:Rc,keyOf:Fl,item:up,extra:j7e,age:GSt,maxAging:NS,itemClass:GG,premiumCatalog:_st,premiumIcons:KCe,specialize:dot,specJobs:Qce,itemSlots:U9,skillMotion:Hq,skillVisual:Pw,Aura:hMe,agingChance:Fg,craftAccept:Id,mixRecipe:Vxt,applyMix:cMt,forceInfo:$w,forceIcon:lEt,forceRecipe:sE,mixById:zO,Crowns:$w0,RingGeometry:H7,MeshBasicMaterial:gi,Mesh:yt,Group:ea};import("/session.mjs");'
+BRIDGE = b'globalThis.__localGameBridge={Session:$1,Game:eA,Runtime:Jw,ui:Uex,root:eE,loading:g1,classes:HAt,settings:y0,low:(preset="low")=>VS(y0.get(),preset,pB()),state:i7,servers:Rc,keyOf:Fl,item:up,extra:j7e,age:GSt,maxAging:NS,itemClass:GG,premiumCatalog:_st,premiumIcons:KCe,specialize:dot,specJobs:Qce,itemSlots:U9,skillMotion:Hq,skillVisual:Pw,Aura:hMe,agingChance:Fg,craftAccept:Id,mixRecipe:Vxt,applyMix:cMt,forceInfo:$w,forceIcon:lEt,forceRecipe:sE,mixById:zO,Crowns:$w0,RingGeometry:H7,MeshBasicMaterial:gi,Mesh:yt,Group:ea,BufferGeometry:C0,Float32BufferAttribute:Q0,MeshStandardMaterial:lke,AmbientLight:O2t,DirectionalLight:R2t,PerspectiveCamera:Ra,Scene:dl,WebGLRenderer:Ake,Color:$e};import("/session.mjs");'
 DOWNLOADS = threading.Semaphore(6)
 LOCKS = {}
 LOCKS_GUARD = threading.Lock()
@@ -248,6 +249,11 @@ class Handler(SimpleHTTPRequestHandler):
                 for item in items:
                     if item['code'] in prices:item['price']=prices[item['code']]
                 self.json_reply(items)
+            elif path.startswith('/assets/image/freeston/sapphire/') and path.endswith('.svg'):
+                result=custom_skins.icon(path.rsplit('/',1)[-1][:-4])
+                if result is None:return self.send_error(404)
+                self.reply(result,'image/svg+xml; charset=utf-8')
+            elif path=='/api/local/custom-skins':self.json_reply({'skins':custom_skins.catalog()})
             elif path.startswith(('/assets/', '/_app/')):
                 content_type = mimetypes.guess_type(path)[0] or 'application/octet-stream'
                 self.reply(static_asset(path), content_type)
@@ -260,7 +266,7 @@ class Handler(SimpleHTTPRequestHandler):
                 self.json_reply({'ok': False, 'error': 'Servico privado ainda nao reconstruido na sessao local.'}, 501)
             elif path in ['/mobile.css','/freeston.css','/dashboard.css']:
                 self.reply((ROOT / path.lstrip('/')).read_bytes(),'text/css; charset=utf-8')
-            elif path in ['/gameplay-rules.mjs', '/item-save.mjs', '/character-facing.mjs', '/premium-effects.mjs', '/skill-damage.mjs', '/session.mjs', '/online-session.mjs', '/skill-effects.mjs', '/character-stats.mjs', '/npc-crafting.mjs', '/inventory-grid.mjs', '/classic-combat.mjs', '/skill-cooldowns.mjs', '/shop-inventory.mjs', '/native-rules.mjs', '/staff-presence.mjs', '/item-specialization.mjs', '/brand-ui.mjs', '/premium-shop.mjs', '/monster-ai.mjs', '/skill-book.mjs', '/equipment-rules.mjs', '/release-client.mjs', '/dashboard.mjs', '/dashboard-game.mjs', '/skins-shop.mjs', '/admin-names.mjs', '/drop-rules.mjs', '/command-help.mjs', '/boss-roulette.mjs', '/boss-admin.mjs', '/economy-admin.mjs', '/economy-effects.mjs', '/world-quests.mjs', '/npc-panels.mjs', '/game-features.mjs', '/quest-progress.mjs', '/balance-rules.mjs', '/skill-runtime.mjs', '/skill-system.mjs', '/login.mjs', '/README.md']:
+            elif path in ['/gameplay-rules.mjs', '/item-save.mjs', '/character-facing.mjs', '/premium-effects.mjs', '/skill-damage.mjs', '/session.mjs', '/online-session.mjs', '/skill-effects.mjs', '/character-stats.mjs', '/npc-crafting.mjs', '/inventory-grid.mjs', '/classic-combat.mjs', '/skill-cooldowns.mjs', '/shop-inventory.mjs', '/native-rules.mjs', '/staff-presence.mjs', '/item-specialization.mjs', '/brand-ui.mjs', '/premium-shop.mjs', '/monster-ai.mjs', '/skill-book.mjs', '/equipment-rules.mjs', '/release-client.mjs', '/dashboard.mjs', '/dashboard-game.mjs', '/skins-shop.mjs', '/admin-names.mjs', '/drop-rules.mjs', '/command-help.mjs', '/boss-roulette.mjs', '/boss-admin.mjs', '/economy-admin.mjs', '/economy-effects.mjs', '/sapphire-geometry.mjs', '/custom-skins.mjs', '/world-quests.mjs', '/npc-panels.mjs', '/game-features.mjs', '/quest-progress.mjs', '/balance-rules.mjs', '/skill-runtime.mjs', '/skill-system.mjs', '/login.mjs', '/README.md']:
                 data = (ROOT / path.lstrip('/')).read_bytes()
                 self.reply(data, 'text/javascript; charset=utf-8' if path.endswith('.mjs') else 'text/plain; charset=utf-8')
             else:

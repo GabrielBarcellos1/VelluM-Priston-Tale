@@ -34,6 +34,7 @@ import { objectiveValue, objectiveIncrement, questCollectionCode } from "/quest-
 import { experienceFloor, migrateExperience, killExperience, classDamageScale, balanceMonster, questExperienceReward, potionCanUse, registerPotion } from "/balance-rules.mjs";
 import { monsterControl } from "/skill-runtime.mjs";
 import { createSkillSystem } from "/skill-system.mjs";
+import { mountCustomSkins, openSapphirePreview } from "/custom-skins.mjs";
 import { mountSkinShop } from "/skins-shop.mjs";
 import { resolveName } from "/admin-names.mjs";
 // Browser-local service adapter for the pinned public client. No production login.
@@ -2553,7 +2554,12 @@ try {
   document.title = "FREEston Tale";
   brandInterface();
   mountLocalMenu();
+  let customSkinState=null;
+  const customCatalog=await get('/api/local/custom-skins');
+  globalThis.__localSession.customSkins=mountCustomSkins({B,game,own:()=>customSkinState,inventory:()=>inv.equip,catalog:customCatalog.skins,peers:()=>globalThis.__localSession.online?.peers()??[]});
   globalThis.__localSession.skinShop = mountSkinShop({
+    onApply:value=>{customSkinState=value;},
+    preview:skin=>openSapphirePreview(B,skin),
     generation: characterGeneration,
     game,
     hero,
