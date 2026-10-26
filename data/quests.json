@@ -447,7 +447,7 @@
       "type": "tutorial",
       "kind": "tutorial",
       "order": 7,
-      "minLevel": 3,
+      "minLevel": 11,
       "requires": [
         {
           "id": "tutorial.06-status",
@@ -461,7 +461,7 @@
       "giver": [],
       "turnIn": [],
       "auto": true,
-      "offer": "Agora que você está mais forte, vou te mostrar um bom lugar para treinar e subir de nível.",
+      "offer": "No nível 11, o mapa inicial deixa de dar experiência. Continue na Floresta do Bamboo ou no Vale Tranquilo.",
       "steps": [
         {
           "id": "0",
@@ -816,7 +816,7 @@
       "type": "tutorial",
       "kind": "tutorial",
       "order": 11,
-      "minLevel": 10,
+      "minLevel": 16,
       "requires": [
         {
           "id": "tutorial.09-habilidades",
