@@ -9,7 +9,7 @@ import time
 
 ROOT=Path(__file__).resolve().parent
 BRAND='FREEston Tale'
-VERSION=24
+VERSION=25
 _guard=threading.Lock()
 _cache=(None,None)
 

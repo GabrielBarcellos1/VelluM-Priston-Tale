@@ -26,6 +26,8 @@ import { brandInterface } from "/brand-ui.mjs";
 import { stepMonster, incomingHit, withAttackProfile } from "/monster-ai.mjs";
 import { watchRelease } from "/release-client.mjs";
 import { canonicalCommand, openCommandHelp } from "/command-help.mjs";
+import { objectiveValue, objectiveIncrement } from "/quest-progress.mjs";
+import { experienceFloor, migrateExperience, killExperience, classDamageScale, balanceMonster, questExperienceReward, potionCanUse, registerPotion } from "/balance-rules.mjs";
 import { monsterControl } from "/skill-runtime.mjs";
 import { createSkillSystem } from "/skill-system.mjs";
 import { mountSkinShop } from "/skins-shop.mjs";
@@ -53,6 +55,8 @@ const get = async (path) => {
 };
 const account = await get("/api/local/me");
 const loadedBuild = await get("/api/local/build");
+const balanceRules = await get("/api/local/balance");
+const potionReady = {};
 const isAdmin = ["admin", "gm"].includes(account.role);
 let wallet = await get("/api/local/wallet");
 const premiumCodes = new Set(wallet.catalog.map((p) => p.code));
@@ -250,7 +254,8 @@ const stats = {
   mpMax: 80,
   sp: number(stored?.stats?.sp, 180),
   spMax: 180,
-  exp: number(stored?.stats?.exp, 0),
+  exp: number(stored?.stats?.exp, 0, 0, Number.MAX_SAFE_INTEGER),
+  progressionVersion: stored?.stats?.progressionVersion,
   expLevel: 0,
   expNext: 100,
   gold: number(stored?.stats?.gold, 1000),
@@ -275,6 +280,9 @@ const stats = {
   resist: { bio: 0, poison: 0, fire: 0, lightning: 0, ice: 0 },
   shootingRange: definitions.get(starterWeapon)?.range ?? 0,
 };
+migrateExperience(stats, balanceRules);
+const fieldMinimum=balanceRules.maps?.find(m=>m.id===field.id)?.minimum??1;
+if(!isAdmin&&stats.level<fieldMinimum){location.replace(`?classe=${characterClass.job}&mapa=${characterClass.tribe==='morion'?21:3}`);throw Error(`Este mapa requer nível ${fieldMinimum}.`);}
 const inv = {
   costumeOn:
     typeof stored?.inv?.costumeOn === "boolean"
@@ -292,7 +300,7 @@ const inv = {
 };
 function restoreItem(item, options = {}) {
   if (!item || !definitions.has(item.code)) return null;
-  const result = instance(item.code, number(item.count, 1, 1, 999), item.premiumManaged === true);
+  const result = instance(item.code, number(item.count, 1, 1, 9999), item.premiumManaged === true);
   if (item.endgame === true && isAdmin) {
     const upgraded = endgameItem(item.code, number(item.uid, result.uid, 1));
     if (upgraded) {
@@ -473,7 +481,7 @@ function equipEndgame() {
   Object.assign(inv.equip, equipment);
   stats.level = 150;
   hero.level = 150;
-  stats.exp = 149 ** 2 * 100;
+  stats.exp = experienceFloor(150,balanceRules);
   for (const key of ["str", "spi", "tal", "dex", "health"]) stats[key] = 999;
   endgameEnabled = true;
   skills.maximize();
@@ -850,7 +858,7 @@ function adminCommand(input) {
       break;
     case "nivel":
       stats.level = integer(args[0], 1, 150);
-      stats.exp = (stats.level - 1) ** 2 * 100;
+      stats.exp = experienceFloor(stats.level,balanceRules);
       hero.level = stats.level;
       break;
     case "ouro":
@@ -1077,6 +1085,7 @@ const skills = createSkillSystem({
   isTrainer: (id) => npcs.some((n) => n.id === id && n.services?.includes("skill")),
   buffsChanged: publishBuffs,
   summon: summonCompanion,
+  progress: (type,value)=>updateQuests(type,value),
   canSupport: () => globalThis.__localSession.online?.canResurrect(),
   support: (skill, level, target) => {
     const online=globalThis.__localSession.online;
@@ -1092,6 +1101,7 @@ const skills = createSkillSystem({
     const chance=skillData.rules.skills[skill.code].tables.H_Incantation_Success?.[skill.level-1]??40+skill.level*4;
     if(Math.random()*100>=chance){notice('A conversão falhou.');return;}
     monster.owner=hero.name;monster.seq++;monster.motion='stand';
+    updateQuests("skillConverted",{code:skill.code});
     const until=performance.now()+skill.duration*1000;
     companions.set(monster.id,{code:skill.code,skill:skill.level,state:monster,until,next:0,converted:true,
       definition:{damage:Array.from({length:10},()=>monster.definition.attack),interval:Array(10).fill(1.8),range:600}});
@@ -1196,7 +1206,7 @@ function warehouseSpace(item, page) {
 function travelDestinations() {
   return fieldData.fields
     .filter((f) => f.start?.length && f.id !== field.id)
-    .map((f) => ({ field: f.id, name: f.name, fee: 100, level: 1 }));
+    .map((f) => ({ field: f.id, name: f.name, fee: 100, level: balanceRules.maps?.find(m=>m.id===f.id)?.minimum??1 }));
 }
 
 const clone = (value) => structuredClone(value);
@@ -1239,8 +1249,8 @@ function recalculate() {
   stats.hp = Math.min(stats.hp, stats.hpMax);
   stats.mp = Math.min(stats.mp, stats.mpMax);
   stats.sp = Math.min(stats.sp, stats.spMax);
-  stats.expLevel = (stats.level - 1) ** 2 * 100;
-  stats.expNext = stats.level ** 2 * 100;
+  stats.expLevel = experienceFloor(stats.level,balanceRules);
+  stats.expNext = experienceFloor(stats.level+1,balanceRules);
   Object.assign(stats, combatStats(stats, inv.equip, specBonus, effects));
   const force =
     activeForce && activeForce.expiresAt > serverNow() / 1000
@@ -1348,7 +1358,7 @@ function questViews() {
           );
           return {
             ...o,
-            done: number(objectiveProgress[`${q.id}:${o.id}`], 0, 0, o.need),
+            done: Math.min(o.need,objectiveValue(q,o,objectiveProgress[`${q.id}:${o.id}`],stats,skills.exportState(),skillData)),
             target: npc ? { ...o.target, x: npc.x, z: npc.z, npcId: npc.id } : o.target,
           };
         });
@@ -1375,12 +1385,10 @@ function updateQuests(type, value) {
   for (const q of questViews())
     for (const objective of q.objectives) {
       if (q.state === "available") continue;
-      if (!objectiveMatches(q, objective, type, value, game?.currentFieldId() ?? field.id))
-        continue;
-      objectiveProgress[`${q.id}:${objective.id}`] = Math.min(
-        objective.need,
-        (objectiveProgress[`${q.id}:${objective.id}`] ?? 0) + 1,
-      );
+      const increment=objectiveMatches(q,objective,type,value,game?.currentFieldId()??field.id)?1:
+        objectiveIncrement(q,objective,type,value,skillData,skills.exportState());
+      if(!increment)continue;
+      objectiveProgress[`${q.id}:${objective.id}`] = Math.min(objective.need,(objectiveProgress[`${q.id}:${objective.id}`]??0)+increment);
     }
   deliver({ t: "quests", list: questViews() });
 }
@@ -1411,7 +1419,7 @@ function completeQuest(id) {
   }
   completed.add(id);
   stats.gold += quest.rewards?.gold ?? 0;
-  gainExperience(questExperience(quest.rewards, stats.level));
+  gainExperience(questExperienceReward(quest.rewards, stats.level,balanceRules));
   deliver({ t: "questDone", id: quest.id, title: quest.title, rewards: quest.rewards ?? {} });
   deliver({ t: "quests", list: questViews() });
   recalculate();
@@ -1421,11 +1429,14 @@ function findSpace(item) {
   return firstSpace(inv.bag, item);
 }
 function addBag(item) {
+  if(!item||!Number.isInteger(item.count??1)||(item.count??1)<1||(item.count??1)>9999)return false;
+  item.count??=1;
   if (item.slot === "POTION" || item.premiumManaged) {
     const existing = inv.bag.find(
       (p) => p.item.code === item.code && !!p.item.premiumManaged === !!item.premiumManaged,
     );
     if (existing) {
+      if(existing.item.count+item.count>9999)return false;
       existing.item.count += item.count;
       return true;
     }
@@ -1454,6 +1465,8 @@ function consume(item) {
   inv.belt = inv.belt.map((i) => (i === item ? null : i));
 }
 function questAtNpc(id, state) {
+  const npc=npcs.find(n=>n.id===id);
+  if(!npc||!game||Math.hypot(game.pos.x-npc.x,-game.pos.z-npc.z)>500)return null;
   return questViews().find(
     (q) =>
       q.state === state &&
@@ -1590,7 +1603,7 @@ function damageMonster(id, power = 1, rangeOverride = null, options = {}) {
     options.fixedDamage !== undefined
       ? 1
       : power * (monster.definition.undead ? 1 + (stats.undeadDamage ?? 0) / 100 : 1);
-  const { amount, kind } = physicalHit(
+  const hit = physicalHit(
     attack,
     monster.definition,
     adjustedPower * (1 + (options.monsterBonus?.[monster.definition.type] ?? 0) / 100),
@@ -1603,6 +1616,8 @@ function damageMonster(id, power = 1, rangeOverride = null, options = {}) {
       element: options.element,
     },
   );
+  const kind=hit.kind;
+  const amount=hit.amount===0?0:Math.max(1,Math.floor(hit.amount*(options.fixedDamage!==undefined?1:classDamageScale(characterClass.job,stats.level,balanceRules))));
   if(!options.noLeech)skills.reveal?.();
   if (amount === 0) {
     monster.aggroUntil = performance.now() + 10000;
@@ -1619,6 +1634,8 @@ function damageMonster(id, power = 1, rangeOverride = null, options = {}) {
     return 0;
   }
   const dealt = Math.min(monster.hp, amount);
+  if(options.skillCode){monster.skillMarks??={};monster.skillMarks[options.skillCode]=performance.now();updateQuests('skillHit',{code:options.skillCode,undead:monster.definition.undead});}
+  else if(!options.noLeech)updateQuests('normalHit',{});
   monster.hp = Math.max(0, monster.hp - amount);
   monster.aggroUntil = performance.now() + 10000;
   const recovered = options.noLeech
@@ -1648,10 +1665,11 @@ function damageMonster(id, power = 1, rangeOverride = null, options = {}) {
   });
   if (monster.hp === 0) {
     kills++;
-    const gained = Math.max(1, Math.floor(monster.level * 8 * (1 + premiumValue("expUp") / 100)));
+    const gained = killExperience(monster.definition,stats.level,balanceRules,premiumValue("expUp"));
     gainExperience(gained);
     dropLoot(monster);
     updateQuests("kill", monster.name);
+    for(const [code,at]of Object.entries(monster.skillMarks??{}))if(performance.now()-at<=10000)updateQuests("skillKill",{code});
     recalculate();
     save();
     const deathSeq = monster.seq;
@@ -1668,12 +1686,13 @@ function damageMonster(id, power = 1, rangeOverride = null, options = {}) {
           return;
         }
         monster.hp = monster.hpMax;
+        monster.skillMarks={};
         if (monster.home) Object.assign(monster, monster.home);
         monster.motion = "stand";
         monster.aggroUntil = 0;
         monster.seq++;
         deliver({ t: "monsters", add: [publicMonster(monster)], ts: performance.now() / 1000 });
-      }, 35000);
+      }, monster.definition.boss?900000:35000);
   }
   return dealt;
 }
@@ -1741,6 +1760,7 @@ async function handle(message) {
     case "learnSkill":
       try {
         notice(skills.learn(message.id, message.npcId));
+        updateQuests("learn",{});
       } catch (error) {
         notice(error.message);
       }
@@ -1794,10 +1814,12 @@ async function handle(message) {
       deliver({ t: "ground", remove: [message.id] });
       recalculate();
       updateQuests("item", drop.item.code);
+      updateQuests("pickup",{});
       break;
     }
     case "warehouseMove": {
-      if (!npcs.find((n) => n.id === message.npcId)?.services?.includes("warehouse")) return;
+      const npc=npcs.find(n=>n.id===message.npcId&&n.services?.includes('warehouse'));
+      if(!npc||Math.hypot(game.pos.x-npc.x,-game.pos.z-npc.z)>500)return notice('Aproxime-se do armazém.');
       const bagIndex = inv.bag.findIndex((p) => p.item.uid === message.uid),
         chestIndex = warehouse.items.findIndex((p) => p.item.uid === message.uid);
       if (bagIndex >= 0) {
@@ -1809,16 +1831,19 @@ async function handle(message) {
         if (!space) return notice("Página do baú cheia.");
         inv.bag.splice(bagIndex, 1);
         warehouse.items.push({ item: p.item, page, ...space });
+        updateQuests('deposit',{});
       } else if (chestIndex >= 0) {
         if (!addBag(warehouse.items[chestIndex].item)) return notice("Bolsa cheia.");
         warehouse.items.splice(chestIndex, 1);
+        updateQuests('withdraw',{});
       }
       emitWarehouse();
       recalculate();
       break;
     }
     case "warehouseGold": {
-      if (!npcs.find((n) => n.id === message.npcId)?.services?.includes("warehouse")) return;
+      const npc=npcs.find(n=>n.id===message.npcId&&n.services?.includes('warehouse'));
+      if(!npc||Math.hypot(game.pos.x-npc.x,-game.pos.z-npc.z)>500)return notice('Aproxime-se do armazém.');
       const amount = Number(message.amount);
       if (
         !Number.isSafeInteger(amount) ||
@@ -1938,7 +1963,7 @@ async function handle(message) {
       const npc = npcs.find((n) => n.id === message.npcId && n.services?.includes("shop"));
       if (!npc || Math.hypot(game.pos.x - npc.x, -game.pos.z - npc.z) > 500)
         return notice("Aproxime-se do vendedor.");
-      const items = [...inv.bag.map((p) => p.item), ...Object.values(inv.equip)].filter(
+      const items = [...inv.bag.map((p) => p.item),...inv.bagB.map(p=>p.item), ...Object.values(inv.equip),...Object.values(inv.equipB)].filter(
         (i) => i?.durability && (message.t === "repairAll" || i.uid === message.uid),
       );
       const price = items.reduce((sum, i) => sum + repairPrice(i), 0);
@@ -1947,6 +1972,7 @@ async function handle(message) {
       for (const i of items) i.durability[0] = i.durability[1];
       recalculate();
       notice(`Equipamento reparado por ${price} de ouro.`);
+      updateQuests("repair",{});
       break;
     }
     case "npcTeleport": {
@@ -1958,6 +1984,7 @@ async function handle(message) {
         return;
       const dest = travelDestinations()[message.index ?? 0];
       if (!dest) return;
+      if(!isAdmin&&stats.level<dest.level)return notice(`Este destino requer nível ${dest.level}.`);
       if (stats.gold < dest.fee) return notice("Ouro insuficiente para teleportar.");
       stats.gold -= dest.fee;
       save();
@@ -2019,6 +2046,8 @@ async function handle(message) {
       deliver({ t: "inventory", inv, bagAck: message.seq });
       break;
     case "swapSet":
+      {const next={...inv.equip,weapon:inv.equipB?.weapon,shield:inv.equipB?.shield};
+      for(const slot of ['weapon','shield'])if(next[slot]){const error=equipmentError(next[slot],slot,stats,next,B.itemClass);if(error)return notice(error);}}
       swapWeaponSet(inv);
       recalculate();
       deliver({ t: "inventory", inv, swapAck: message.seq });
@@ -2052,6 +2081,7 @@ async function handle(message) {
         old = inv.belt[index];
       if (record.item.slot !== "POTION") break;
       if (old?.code === record.item.code && !!old.premiumManaged === !!record.item.premiumManaged) {
+        if(old.count+record.item.count>9999)return notice('Limite de 9999 poções por pilha.');
         old.count += record.item.count;
         bag.splice(at, 1);
         break;
@@ -2063,6 +2093,7 @@ async function handle(message) {
         break;
       }
       inv.belt[index] = record.item;
+      updateQuests("belt",{});
       break;
     }
     case "useItem": {
@@ -2096,6 +2127,8 @@ async function handle(message) {
         break;
       }
       if (!item?.restore) return;
+      const potionKind=item.restore.life?'life':item.restore.mana?'mana':'stamina';
+      if(!potionCanUse(potionReady,potionKind,performance.now()/1000,balanceRules))return notice('Aguarde 2 segundos para usar outra poção deste tipo.');
       if (item.premiumManaged) {
         if (pendingPremiums.has(item.code)) return;
         pendingPremiums.add(item.code);
@@ -2125,6 +2158,7 @@ async function handle(message) {
         stats.sp = Math.min(stats.spMax, stats.sp + item.restore.stamina[0]);
         which = "stamina";
       }
+      registerPotion(potionReady,potionKind,performance.now()/1000,balanceRules);
       const usedFromBelt = inv.belt.includes(item);
       if (!item.premiumManaged) consume(item);
       deliver({ t: "fx", kind: "potion", name: hero.name, which, x: game.pos.x, z: -game.pos.z });
@@ -2182,6 +2216,7 @@ async function handle(message) {
         delete inv.equip.weapon;
       }
       inv.equip[slot] = record.item;
+      updateQuests('equip',{});
       recalculate();
       break;
     }
@@ -2218,6 +2253,7 @@ async function handle(message) {
         }
       }
       stats.gold -= cost;
+      updateQuests('buy',{});
       recalculate();
       notice(`Comprou ${count} × ${def.name}.`);
       break;
@@ -2232,6 +2268,7 @@ async function handle(message) {
       if (error) return notice(error);
       const [p] = inv.bag.splice(index, 1);
       stats.gold += salePrice(p.item);
+      updateQuests('sell',{});
       recalculate();
       break;
     }
@@ -2287,7 +2324,9 @@ async function handle(message) {
     case "stat":
     case "statAdd":
     case "addStat": {
+      const previousPoints=stats.statPoints;
       if (!allocateStat(stats, message.stat ?? message.attr, message.n, statHistory)) return;
+      updateQuests("stat",{count:previousPoints-stats.statPoints});
       recalculate();
       break;
     }
@@ -2356,12 +2395,15 @@ async function handle(message) {
   save();
 }
 conn.sendGame = (message) => {
+  if(!message||typeof message.t!=='string')return notice('Ação inválida.');
   if (economyUncertain)
     return notice("Recarregue para recuperar a operação confirmada pelo servidor.");
   if (economyBusy && !["move", "shot"].includes(message.t))
     return notice("Aguarde a operação do inventário terminar.");
   if (message.t !== "chat" && conn.onGameSend?.(message) === false) return;
   queueMicrotask(async () => {
+    if(economyUncertain)return notice('Recarregue para recuperar a operação confirmada pelo servidor.');
+    if(economyBusy&&!['move','shot'].includes(message.t))return notice('Aguarde a operação do inventário terminar.');
     try {
       await handle(message);
     } catch (error) {
@@ -2519,7 +2561,7 @@ try {
             break;
           }
         }
-        const definition = candidates.find((m) => m.name === selected?.name) ?? candidates[0];
+        const definition = balanceMonster(candidates.find((m) => m.name === selected?.name) ?? candidates[0],balanceRules);
         const angle = random() * Math.PI * 2,
           r = Math.sqrt(random()) * zone.r * 0.7;
         const x = zone.x + Math.cos(angle) * r,
@@ -2600,7 +2642,7 @@ try {
         )
           return;
         const reduction=monsterControl(monster).attackReductionPercent;
-        const hit = incomingHit({...monster.definition,attack:monster.definition.attack.map(n=>Math.floor(n*(1-reduction/100)))}, stats, skillData.rules.accuracy);
+        const hit = incomingHit({...monster.definition,attack:monster.definition.attack.map(n=>Math.floor(n*(1-reduction/100)))}, stats, skillData.rules.accuracy, Math.random, {defenseCap:.35});
         let amount = hit.amount;
         if (amount > 0 && stats.manaShield && stats.mp > 0) {
           const absorbed = Math.min(stats.mp, Math.floor((amount * stats.manaShield) / 100));
@@ -2634,6 +2676,7 @@ try {
     if (document.hidden || !game || game.dead) return;
     skills.tickCooldowns();
     skills.expire();
+    updateQuests("skillSecond",{codes:skills.buffs().map(b=>b.code.replace(/^skill:/,""))});
     if (activeForce && activeForce.expiresAt <= serverNow() / 1000) {
       activeForce = null;
       recalculate();
@@ -2653,7 +2696,7 @@ try {
       const foe = monsters.get(target);
       if (foe?.hp > 0 && !foe.owner && Math.hypot(foe.x-game.pos.x,foe.z+game.pos.z)<=(pet.definition?.range??600) && performance.now() > pet.next) {
         pet.next = performance.now() + (pet.definition?.interval[pet.skill-1]??1.8)*1000;
-        damageMonster(foe.id, pet.definition?1:0.3 + pet.skill * 0.1, 800, { noLeech: true,magic:true,damageRange:pet.definition?.damage[pet.skill-1] });
+        damageMonster(foe.id, pet.definition?1:0.3 + pet.skill * 0.1, 800, { noLeech: true,magic:true,skillCode:pet.code,damageRange:pet.definition?.damage[pet.skill-1] });
       }
       if (pet.state.model && Math.hypot(pet.state.x - game.pos.x, pet.state.z + game.pos.z) > 140) {
         const p = game.ground.spawnPoint(game.pos.x + 55, game.pos.z + 50);

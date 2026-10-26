@@ -22,6 +22,7 @@ export function canPlace(bag, item, x, y, ignore = null) {
   );
 }
 export function firstSpace(bag, item) {
+  if(!item||![item.w,item.h].every(Number.isInteger)||item.w<1||item.h<1||item.w>BAG_COLUMNS||item.h>BAG_ROWS)return null;
   for (let y = 0; y <= BAG_ROWS - item.h; y++)
     for (let x = 0; x <= BAG_COLUMNS - item.w; x++) if (canPlace(bag, item, x, y)) return { x, y };
   return null;
@@ -44,6 +45,8 @@ export function organizeBag(bag) {
   return placed;
 }
 export function repairBags(inv) {
+  const target=inv;
+  inv={...inv,bag:[...(inv.bag??[])],bagB:[...(inv.bagB??[])]};
   const overflow = [];
   for (const key of ["bag", "bagB"]) {
     const placed = [],
@@ -68,6 +71,7 @@ export function repairBags(inv) {
       );
     inv[key].push({ ...position, item: p.item });
   }
+  target.bag=inv.bag;target.bagB=inv.bagB;
 }
 export function swapWeaponSet(inv) {
   const spare = {};

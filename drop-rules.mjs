@@ -8,7 +8,8 @@ export function rollDrops(monster, mapId, definitions, rules, random = Math.rand
       if (definitions.has(entry.code) && random() < entry.chance)
         out.push({ code: entry.code, count: entry.count ?? 1 });
   const level = monster.level;
-  const potion = level >= 80 ? "PL104" : level >= 40 ? "PL103" : level >= 20 ? "PL102" : "PL101";
+  const roll=random(),prefix=roll<.45?'PL':roll<.8?'PM':'PS';
+  const potion = prefix+(level>=80?'104':level>=40?'103':level>=20?'102':'101');
   if (definitions.has(potion) && random() < rules.common.potionChance)
     out.push({ code: potion, count: 1 });
   const bossCodes = new Set(

@@ -1,0 +1,6609 @@
+{
+  "note": "Frozen class-normalization input. Final XP rates are refined against the full current simulator, using actual potion restore minima. This snapshot is calibration evidence, not current full-game telemetry.",
+  "levels": [
+    {
+      "level": 1,
+      "classes": [
+        {
+          "job": 1,
+          "dps": 5.234375,
+          "ttk": 7.2594325226832765,
+          "monsters": [
+            {
+              "monster": "Cogumelo Fantasma",
+              "dps": 5.2421875
+            },
+            {
+              "monster": "Cuepi",
+              "dps": 5.2421875
+            },
+            {
+              "monster": "Hopi",
+              "dps": 5.2421875
+            },
+            {
+              "monster": "Tatu",
+              "dps": 5.2265625
+            },
+            {
+              "monster": "Coelha",
+              "dps": 4.40234375
+            },
+            {
+              "monster": "Coelho",
+              "dps": 4.40234375
+            }
+          ]
+        },
+        {
+          "job": 2,
+          "dps": 4.961425781250012,
+          "ttk": 7.658755656185493,
+          "monsters": [
+            {
+              "monster": "Cogumelo Fantasma",
+              "dps": 4.970214843750012
+            },
+            {
+              "monster": "Cuepi",
+              "dps": 4.970214843750012
+            },
+            {
+              "monster": "Hopi",
+              "dps": 4.970214843750012
+            },
+            {
+              "monster": "Tatu",
+              "dps": 4.952636718750012
+            },
+            {
+              "monster": "Coelha",
+              "dps": 4.02539062500001
+            },
+            {
+              "monster": "Coelho",
+              "dps": 4.02539062500001
+            }
+          ]
+        },
+        {
+          "job": 3,
+          "dps": 5.681640625,
+          "ttk": 6.688034608199784,
+          "monsters": [
+            {
+              "monster": "Cogumelo Fantasma",
+              "dps": 5.6875
+            },
+            {
+              "monster": "Cuepi",
+              "dps": 5.6875
+            },
+            {
+              "monster": "Hopi",
+              "dps": 5.6875
+            },
+            {
+              "monster": "Tatu",
+              "dps": 5.67578125
+            },
+            {
+              "monster": "Coelha",
+              "dps": 4.83203125
+            },
+            {
+              "monster": "Coelho",
+              "dps": 4.83203125
+            }
+          ]
+        },
+        {
+          "job": 4,
+          "dps": 4.0078125,
+          "ttk": 9.481481481481481,
+          "monsters": [
+            {
+              "monster": "Cogumelo Fantasma",
+              "dps": 4.0078125
+            },
+            {
+              "monster": "Cuepi",
+              "dps": 4.0078125
+            },
+            {
+              "monster": "Hopi",
+              "dps": 4.0078125
+            },
+            {
+              "monster": "Tatu",
+              "dps": 4.0078125
+            },
+            {
+              "monster": "Coelha",
+              "dps": 3.18359375
+            },
+            {
+              "monster": "Coelho",
+              "dps": 3.18359375
+            }
+          ]
+        },
+        {
+          "job": 5,
+          "dps": 6.072265625,
+          "ttk": 6.257621692576491,
+          "monsters": [
+            {
+              "monster": "Cogumelo Fantasma",
+              "dps": 6.0859375
+            },
+            {
+              "monster": "Cuepi",
+              "dps": 6.0859375
+            },
+            {
+              "monster": "Hopi",
+              "dps": 6.0859375
+            },
+            {
+              "monster": "Tatu",
+              "dps": 6.05859375
+            },
+            {
+              "monster": "Coelha",
+              "dps": 5.2421875
+            },
+            {
+              "monster": "Coelho",
+              "dps": 5.2421875
+            }
+          ]
+        },
+        {
+          "job": 6,
+          "dps": 5.853515625000014,
+          "ttk": 6.491825158491809,
+          "monsters": [
+            {
+              "monster": "Cogumelo Fantasma",
+              "dps": 5.853515625000014
+            },
+            {
+              "monster": "Cuepi",
+              "dps": 5.853515625000014
+            },
+            {
+              "monster": "Hopi",
+              "dps": 5.853515625000014
+            },
+            {
+              "monster": "Tatu",
+              "dps": 5.853515625000014
+            },
+            {
+              "monster": "Coelha",
+              "dps": 4.926269531250012
+            },
+            {
+              "monster": "Coelho",
+              "dps": 4.926269531250012
+            }
+          ]
+        },
+        {
+          "job": 7,
+          "dps": 6.01171875,
+          "ttk": 6.320987654320987,
+          "monsters": [
+            {
+              "monster": "Cogumelo Fantasma",
+              "dps": 6.01171875
+            },
+            {
+              "monster": "Cuepi",
+              "dps": 6.01171875
+            },
+            {
+              "monster": "Hopi",
+              "dps": 6.01171875
+            },
+            {
+              "monster": "Tatu",
+              "dps": 6.01171875
+            },
+            {
+              "monster": "Coelha",
+              "dps": 5.01171875
+            },
+            {
+              "monster": "Coelho",
+              "dps": 5.01171875
+            }
+          ]
+        },
+        {
+          "job": 8,
+          "dps": 6.01171875,
+          "ttk": 6.320987654320987,
+          "monsters": [
+            {
+              "monster": "Cogumelo Fantasma",
+              "dps": 6.01171875
+            },
+            {
+              "monster": "Cuepi",
+              "dps": 6.01171875
+            },
+            {
+              "monster": "Hopi",
+              "dps": 6.01171875
+            },
+            {
+              "monster": "Tatu",
+              "dps": 6.01171875
+            },
+            {
+              "monster": "Coelha",
+              "dps": 5.01171875
+            },
+            {
+              "monster": "Coelho",
+              "dps": 5.01171875
+            }
+          ]
+        },
+        {
+          "job": 9,
+          "dps": 5.365722656250013,
+          "ttk": 7.081991081991065,
+          "monsters": [
+            {
+              "monster": "Cogumelo Fantasma",
+              "dps": 5.365722656250013
+            },
+            {
+              "monster": "Cuepi",
+              "dps": 5.365722656250013
+            },
+            {
+              "monster": "Hopi",
+              "dps": 5.365722656250013
+            },
+            {
+              "monster": "Tatu",
+              "dps": 5.365722656250013
+            },
+            {
+              "monster": "Coelha",
+              "dps": 4.438476562500011
+            },
+            {
+              "monster": "Coelho",
+              "dps": 4.438476562500011
+            }
+          ]
+        },
+        {
+          "job": 10,
+          "dps": 6.01171875,
+          "ttk": 6.320987654320987,
+          "monsters": [
+            {
+              "monster": "Cogumelo Fantasma",
+              "dps": 6.01171875
+            },
+            {
+              "monster": "Cuepi",
+              "dps": 6.01171875
+            },
+            {
+              "monster": "Hopi",
+              "dps": 6.01171875
+            },
+            {
+              "monster": "Tatu",
+              "dps": 6.01171875
+            },
+            {
+              "monster": "Coelha",
+              "dps": 5.01171875
+            },
+            {
+              "monster": "Coelho",
+              "dps": 5.01171875
+            }
+          ]
+        },
+        {
+          "job": 11,
+          "dps": 6.763183593750017,
+          "ttk": 5.618388816832383,
+          "monsters": [
+            {
+              "monster": "Cogumelo Fantasma",
+              "dps": 6.776367187500017
+            },
+            {
+              "monster": "Cuepi",
+              "dps": 6.776367187500017
+            },
+            {
+              "monster": "Hopi",
+              "dps": 6.776367187500017
+            },
+            {
+              "monster": "Tatu",
+              "dps": 6.750000000000017
+            },
+            {
+              "monster": "Coelha",
+              "dps": 5.822753906250014
+            },
+            {
+              "monster": "Coelho",
+              "dps": 5.822753906250014
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "level": 5,
+      "classes": [
+        {
+          "job": 1,
+          "dps": 6.2734375,
+          "ttk": 13.86799501867995,
+          "monsters": [
+            {
+              "monster": "Cogumelo Fantasma",
+              "dps": 7.12890625
+            },
+            {
+              "monster": "Cuepi",
+              "dps": 7.12890625
+            },
+            {
+              "monster": "Hopi",
+              "dps": 7.12890625
+            },
+            {
+              "monster": "Tatu",
+              "dps": 7.12890625
+            },
+            {
+              "monster": "Coelha",
+              "dps": 6.2734375
+            },
+            {
+              "monster": "Coelho",
+              "dps": 6.2734375
+            },
+            {
+              "monster": "Cogumelo",
+              "dps": 6.2734375
+            },
+            {
+              "monster": "Zeldi",
+              "dps": 6.2734375
+            },
+            {
+              "monster": "Imp",
+              "dps": 6.09765625
+            },
+            {
+              "monster": "Minigue",
+              "dps": 6.08984375
+            },
+            {
+              "monster": "Doral",
+              "dps": 5.2421875
+            },
+            {
+              "monster": "Duende Macabro",
+              "dps": 4.94140625
+            },
+            {
+              "monster": "Sen",
+              "dps": 6.890625
+            },
+            {
+              "monster": "Duende MÃ¡gico",
+              "dps": 5.2421875
+            }
+          ]
+        },
+        {
+          "job": 2,
+          "dps": 6.095214843750015,
+          "ttk": 14.273491949050673,
+          "monsters": [
+            {
+              "monster": "Cogumelo Fantasma",
+              "dps": 7.057617187500018
+            },
+            {
+              "monster": "Cuepi",
+              "dps": 7.057617187500018
+            },
+            {
+              "monster": "Hopi",
+              "dps": 7.057617187500018
+            },
+            {
+              "monster": "Tatu",
+              "dps": 7.057617187500018
+            },
+            {
+              "monster": "Coelha",
+              "dps": 6.095214843750015
+            },
+            {
+              "monster": "Coelho",
+              "dps": 6.095214843750015
+            },
+            {
+              "monster": "Cogumelo",
+              "dps": 6.095214843750015
+            },
+            {
+              "monster": "Zeldi",
+              "dps": 6.095214843750015
+            },
+            {
+              "monster": "Imp",
+              "dps": 5.910644531250015
+            },
+            {
+              "monster": "Minigue",
+              "dps": 5.910644531250015
+            },
+            {
+              "monster": "Doral",
+              "dps": 4.961425781250012
+            },
+            {
+              "monster": "Duende Macabro",
+              "dps": 4.6889648437500115
+            },
+            {
+              "monster": "Sen",
+              "dps": 6.815917968750017
+            },
+            {
+              "monster": "Duende MÃ¡gico",
+              "dps": 4.961425781250012
+            }
+          ]
+        },
+        {
+          "job": 3,
+          "dps": 7.514648437500019,
+          "ttk": 11.577387914229991,
+          "monsters": [
+            {
+              "monster": "Cogumelo Fantasma",
+              "dps": 8.477050781250021
+            },
+            {
+              "monster": "Cuepi",
+              "dps": 8.477050781250021
+            },
+            {
+              "monster": "Hopi",
+              "dps": 8.477050781250021
+            },
+            {
+              "monster": "Tatu",
+              "dps": 8.477050781250021
+            },
+            {
+              "monster": "Coelha",
+              "dps": 7.514648437500019
+            },
+            {
+              "monster": "Coelho",
+              "dps": 7.514648437500019
+            },
+            {
+              "monster": "Cogumelo",
+              "dps": 7.514648437500019
+            },
+            {
+              "monster": "Zeldi",
+              "dps": 7.514648437500019
+            },
+            {
+              "monster": "Imp",
+              "dps": 7.299316406250019
+            },
+            {
+              "monster": "Minigue",
+              "dps": 7.453125000000019
+            },
+            {
+              "monster": "Doral",
+              "dps": 6.341308593750016
+            },
+            {
+              "monster": "Duende Macabro",
+              "dps": 6.007324218750015
+            },
+            {
+              "monster": "Sen",
+              "dps": 8.367187500000021
+            },
+            {
+              "monster": "Duende MÃ¡gico",
+              "dps": 6.477539062500016
+            }
+          ]
+        },
+        {
+          "job": 4,
+          "dps": 6.67578125,
+          "ttk": 13.032182562902282,
+          "monsters": [
+            {
+              "monster": "Cogumelo Fantasma",
+              "dps": 7.53515625
+            },
+            {
+              "monster": "Cuepi",
+              "dps": 7.53515625
+            },
+            {
+              "monster": "Hopi",
+              "dps": 7.53515625
+            },
+            {
+              "monster": "Tatu",
+              "dps": 7.53515625
+            },
+            {
+              "monster": "Coelha",
+              "dps": 6.67578125
+            },
+            {
+              "monster": "Coelho",
+              "dps": 6.67578125
+            },
+            {
+              "monster": "Cogumelo",
+              "dps": 6.67578125
+            },
+            {
+              "monster": "Zeldi",
+              "dps": 6.67578125
+            },
+            {
+              "monster": "Imp",
+              "dps": 6.48828125
+            },
+            {
+              "monster": "Minigue",
+              "dps": 6.48828125
+            },
+            {
+              "monster": "Doral",
+              "dps": 5.63671875
+            },
+            {
+              "monster": "Duende Macabro",
+              "dps": 5.33984375
+            },
+            {
+              "monster": "Sen",
+              "dps": 7.28515625
+            },
+            {
+              "monster": "Duende MÃ¡gico",
+              "dps": 5.63671875
+            }
+          ]
+        },
+        {
+          "job": 5,
+          "dps": 7.637695312500019,
+          "ttk": 11.390870732642856,
+          "monsters": [
+            {
+              "monster": "Cogumelo Fantasma",
+              "dps": 8.582519531250021
+            },
+            {
+              "monster": "Cuepi",
+              "dps": 8.582519531250021
+            },
+            {
+              "monster": "Hopi",
+              "dps": 8.582519531250021
+            },
+            {
+              "monster": "Tatu",
+              "dps": 8.582519531250021
+            },
+            {
+              "monster": "Coelha",
+              "dps": 7.637695312500019
+            },
+            {
+              "monster": "Coelho",
+              "dps": 7.637695312500019
+            },
+            {
+              "monster": "Cogumelo",
+              "dps": 7.637695312500019
+            },
+            {
+              "monster": "Zeldi",
+              "dps": 7.637695312500019
+            },
+            {
+              "monster": "Imp",
+              "dps": 7.439941406250019
+            },
+            {
+              "monster": "Minigue",
+              "dps": 7.439941406250019
+            },
+            {
+              "monster": "Doral",
+              "dps": 6.512695312500016
+            },
+            {
+              "monster": "Duende Macabro",
+              "dps": 6.143554687500015
+            },
+            {
+              "monster": "Sen",
+              "dps": 8.367187500000021
+            },
+            {
+              "monster": "Duende MÃ¡gico",
+              "dps": 6.490722656250016
+            }
+          ]
+        },
+        {
+          "job": 6,
+          "dps": 7.8750000000000195,
+          "ttk": 11.047619047619019,
+          "monsters": [
+            {
+              "monster": "Cogumelo Fantasma",
+              "dps": 8.850585937500021
+            },
+            {
+              "monster": "Cuepi",
+              "dps": 8.850585937500021
+            },
+            {
+              "monster": "Hopi",
+              "dps": 8.850585937500021
+            },
+            {
+              "monster": "Tatu",
+              "dps": 8.819824218750021
+            },
+            {
+              "monster": "Coelha",
+              "dps": 7.8750000000000195
+            },
+            {
+              "monster": "Coelho",
+              "dps": 7.8750000000000195
+            },
+            {
+              "monster": "Cogumelo",
+              "dps": 7.8750000000000195
+            },
+            {
+              "monster": "Zeldi",
+              "dps": 7.8750000000000195
+            },
+            {
+              "monster": "Imp",
+              "dps": 7.6904296875000195
+            },
+            {
+              "monster": "Minigue",
+              "dps": 7.6904296875000195
+            },
+            {
+              "monster": "Doral",
+              "dps": 6.745605468750017
+            },
+            {
+              "monster": "Duende Macabro",
+              "dps": 6.402832031250016
+            },
+            {
+              "monster": "Sen",
+              "dps": 8.600097656250021
+            },
+            {
+              "monster": "Duende MÃ¡gico",
+              "dps": 6.714843750000017
+            }
+          ]
+        },
+        {
+          "job": 7,
+          "dps": 5.01171875,
+          "ttk": 17.359314107560404,
+          "monsters": [
+            {
+              "monster": "Cogumelo Fantasma",
+              "dps": 6.01171875
+            },
+            {
+              "monster": "Cuepi",
+              "dps": 6.01171875
+            },
+            {
+              "monster": "Hopi",
+              "dps": 6.01171875
+            },
+            {
+              "monster": "Tatu",
+              "dps": 6.01171875
+            },
+            {
+              "monster": "Coelha",
+              "dps": 5.01171875
+            },
+            {
+              "monster": "Coelho",
+              "dps": 5.01171875
+            },
+            {
+              "monster": "Cogumelo",
+              "dps": 5.01171875
+            },
+            {
+              "monster": "Zeldi",
+              "dps": 5.01171875
+            },
+            {
+              "monster": "Imp",
+              "dps": 5.01171875
+            },
+            {
+              "monster": "Minigue",
+              "dps": 5.01171875
+            },
+            {
+              "monster": "Doral",
+              "dps": 4.01171875
+            },
+            {
+              "monster": "Duende Macabro",
+              "dps": 4.01171875
+            },
+            {
+              "monster": "Sen",
+              "dps": 6.01171875
+            },
+            {
+              "monster": "Duende MÃ¡gico",
+              "dps": 4.01171875
+            }
+          ]
+        },
+        {
+          "job": 8,
+          "dps": 5.01171875,
+          "ttk": 17.359314107560404,
+          "monsters": [
+            {
+              "monster": "Cogumelo Fantasma",
+              "dps": 6.01171875
+            },
+            {
+              "monster": "Cuepi",
+              "dps": 6.01171875
+            },
+            {
+              "monster": "Hopi",
+              "dps": 6.01171875
+            },
+            {
+              "monster": "Tatu",
+              "dps": 6.01171875
+            },
+            {
+              "monster": "Coelha",
+              "dps": 5.01171875
+            },
+            {
+              "monster": "Coelho",
+              "dps": 5.01171875
+            },
+            {
+              "monster": "Cogumelo",
+              "dps": 5.01171875
+            },
+            {
+              "monster": "Zeldi",
+              "dps": 5.01171875
+            },
+            {
+              "monster": "Imp",
+              "dps": 5.01171875
+            },
+            {
+              "monster": "Minigue",
+              "dps": 5.01171875
+            },
+            {
+              "monster": "Doral",
+              "dps": 4.01171875
+            },
+            {
+              "monster": "Duende Macabro",
+              "dps": 4.01171875
+            },
+            {
+              "monster": "Sen",
+              "dps": 6.01171875
+            },
+            {
+              "monster": "Duende MÃ¡gico",
+              "dps": 4.01171875
+            }
+          ]
+        },
+        {
+          "job": 9,
+          "dps": 7.422363281250019,
+          "ttk": 11.721334122755053,
+          "monsters": [
+            {
+              "monster": "Cogumelo Fantasma",
+              "dps": 8.397949218750021
+            },
+            {
+              "monster": "Cuepi",
+              "dps": 8.397949218750021
+            },
+            {
+              "monster": "Hopi",
+              "dps": 8.397949218750021
+            },
+            {
+              "monster": "Tatu",
+              "dps": 8.367187500000021
+            },
+            {
+              "monster": "Coelha",
+              "dps": 7.422363281250019
+            },
+            {
+              "monster": "Coelho",
+              "dps": 7.422363281250019
+            },
+            {
+              "monster": "Cogumelo",
+              "dps": 7.422363281250019
+            },
+            {
+              "monster": "Zeldi",
+              "dps": 7.422363281250019
+            },
+            {
+              "monster": "Imp",
+              "dps": 7.268554687500018
+            },
+            {
+              "monster": "Minigue",
+              "dps": 7.268554687500018
+            },
+            {
+              "monster": "Doral",
+              "dps": 6.323730468750016
+            },
+            {
+              "monster": "Duende Macabro",
+              "dps": 5.989746093750015
+            },
+            {
+              "monster": "Sen",
+              "dps": 8.17822265625002
+            },
+            {
+              "monster": "Duende MÃ¡gico",
+              "dps": 6.292968750000016
+            }
+          ]
+        },
+        {
+          "job": 10,
+          "dps": 5.01171875,
+          "ttk": 17.359314107560404,
+          "monsters": [
+            {
+              "monster": "Cogumelo Fantasma",
+              "dps": 6.01171875
+            },
+            {
+              "monster": "Cuepi",
+              "dps": 6.01171875
+            },
+            {
+              "monster": "Hopi",
+              "dps": 6.01171875
+            },
+            {
+              "monster": "Tatu",
+              "dps": 6.01171875
+            },
+            {
+              "monster": "Coelha",
+              "dps": 5.01171875
+            },
+            {
+              "monster": "Coelho",
+              "dps": 5.01171875
+            },
+            {
+              "monster": "Cogumelo",
+              "dps": 5.01171875
+            },
+            {
+              "monster": "Zeldi",
+              "dps": 5.01171875
+            },
+            {
+              "monster": "Imp",
+              "dps": 5.01171875
+            },
+            {
+              "monster": "Minigue",
+              "dps": 5.01171875
+            },
+            {
+              "monster": "Doral",
+              "dps": 4.01171875
+            },
+            {
+              "monster": "Duende Macabro",
+              "dps": 4.01171875
+            },
+            {
+              "monster": "Sen",
+              "dps": 6.01171875
+            },
+            {
+              "monster": "Duende MÃ¡gico",
+              "dps": 4.01171875
+            }
+          ]
+        },
+        {
+          "job": 11,
+          "dps": 6.543457031250016,
+          "ttk": 13.295724199686557,
+          "monsters": [
+            {
+              "monster": "Cogumelo Fantasma",
+              "dps": 7.505859375000019
+            },
+            {
+              "monster": "Cuepi",
+              "dps": 7.505859375000019
+            },
+            {
+              "monster": "Hopi",
+              "dps": 7.505859375000019
+            },
+            {
+              "monster": "Tatu",
+              "dps": 7.505859375000019
+            },
+            {
+              "monster": "Coelha",
+              "dps": 6.543457031250016
+            },
+            {
+              "monster": "Coelho",
+              "dps": 6.543457031250016
+            },
+            {
+              "monster": "Cogumelo",
+              "dps": 6.543457031250016
+            },
+            {
+              "monster": "Zeldi",
+              "dps": 6.543457031250016
+            },
+            {
+              "monster": "Imp",
+              "dps": 6.363281250000016
+            },
+            {
+              "monster": "Minigue",
+              "dps": 6.358886718750016
+            },
+            {
+              "monster": "Doral",
+              "dps": 5.405273437500013
+            },
+            {
+              "monster": "Duende Macabro",
+              "dps": 5.137207031250012
+            },
+            {
+              "monster": "Sen",
+              "dps": 7.259765625000018
+            },
+            {
+              "monster": "Duende MÃ¡gico",
+              "dps": 5.405273437500013
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "level": 10,
+      "classes": [
+        {
+          "job": 1,
+          "dps": 10.434814453125027,
+          "ttk": 26.412300582817103,
+          "monsters": [
+            {
+              "monster": "Doral",
+              "dps": 10.463378906250027
+            },
+            {
+              "monster": "Duende Macabro",
+              "dps": 10.050292968750025
+            },
+            {
+              "monster": "Sen",
+              "dps": 12.35302734375003
+            },
+            {
+              "monster": "Duende MÃ¡gico",
+              "dps": 10.463378906250027
+            },
+            {
+              "monster": "Planta Assassina",
+              "dps": 10.406250000000027
+            },
+            {
+              "monster": "Planta Mutante",
+              "dps": 6.477539062500016
+            }
+          ]
+        },
+        {
+          "job": 2,
+          "dps": 10.412841796875027,
+          "ttk": 26.460066139526216,
+          "monsters": [
+            {
+              "monster": "Doral",
+              "dps": 10.419433593750027
+            },
+            {
+              "monster": "Duende Macabro",
+              "dps": 9.944824218750025
+            },
+            {
+              "monster": "Sen",
+              "dps": 12.30908203125003
+            },
+            {
+              "monster": "Duende MÃ¡gico",
+              "dps": 10.419433593750027
+            },
+            {
+              "monster": "Planta Assassina",
+              "dps": 10.406250000000027
+            },
+            {
+              "monster": "Planta Mutante",
+              "dps": 6.437988281250016
+            }
+          ]
+        },
+        {
+          "job": 3,
+          "dps": 9.4296875,
+          "ttk": 29.216238608119305,
+          "monsters": [
+            {
+              "monster": "Doral",
+              "dps": 9.4296875
+            },
+            {
+              "monster": "Duende Macabro",
+              "dps": 9.23046875
+            },
+            {
+              "monster": "Sen",
+              "dps": 11.1484375
+            },
+            {
+              "monster": "Duende MÃ¡gico",
+              "dps": 9.4296875
+            },
+            {
+              "monster": "Planta Assassina",
+              "dps": 9.4296875
+            },
+            {
+              "monster": "Planta Mutante",
+              "dps": 5.8515625
+            }
+          ]
+        },
+        {
+          "job": 4,
+          "dps": 12.712890625,
+          "ttk": 21.677052129737472,
+          "monsters": [
+            {
+              "monster": "Doral",
+              "dps": 12.73828125
+            },
+            {
+              "monster": "Duende Macabro",
+              "dps": 12.20703125
+            },
+            {
+              "monster": "Sen",
+              "dps": 14.41796875
+            },
+            {
+              "monster": "Duende MÃ¡gico",
+              "dps": 12.73828125
+            },
+            {
+              "monster": "Planta Assassina",
+              "dps": 12.6875
+            },
+            {
+              "monster": "Planta Mutante",
+              "dps": 9.328125
+            }
+          ]
+        },
+        {
+          "job": 5,
+          "dps": 10.9921875,
+          "ttk": 25.063255152807393,
+          "monsters": [
+            {
+              "monster": "Doral",
+              "dps": 10.9921875
+            },
+            {
+              "monster": "Duende Macabro",
+              "dps": 10.9921875
+            },
+            {
+              "monster": "Sen",
+              "dps": 12.9921875
+            },
+            {
+              "monster": "Duende MÃ¡gico",
+              "dps": 10.9921875
+            },
+            {
+              "monster": "Planta Assassina",
+              "dps": 10.9921875
+            },
+            {
+              "monster": "Planta Mutante",
+              "dps": 7.15625
+            }
+          ]
+        },
+        {
+          "job": 6,
+          "dps": 15.013916015625037,
+          "ttk": 18.328618638395273,
+          "monsters": [
+            {
+              "monster": "Doral",
+              "dps": 15.060058593750037
+            },
+            {
+              "monster": "Duende Macabro",
+              "dps": 14.479980468750036
+            },
+            {
+              "monster": "Sen",
+              "dps": 16.949707031250043
+            },
+            {
+              "monster": "Duende MÃ¡gico",
+              "dps": 15.007324218750037
+            },
+            {
+              "monster": "Planta Assassina",
+              "dps": 15.020507812500037
+            },
+            {
+              "monster": "Planta Mutante",
+              "dps": 10.942382812500027
+            }
+          ]
+        },
+        {
+          "job": 7,
+          "dps": 8.98046875,
+          "ttk": 30.67768595041322,
+          "monsters": [
+            {
+              "monster": "Doral",
+              "dps": 8.98046875
+            },
+            {
+              "monster": "Duende Macabro",
+              "dps": 8.98046875
+            },
+            {
+              "monster": "Sen",
+              "dps": 10.98046875
+            },
+            {
+              "monster": "Duende MÃ¡gico",
+              "dps": 8.98046875
+            },
+            {
+              "monster": "Planta Assassina",
+              "dps": 8.98046875
+            },
+            {
+              "monster": "Planta Mutante",
+              "dps": 4.98046875
+            }
+          ]
+        },
+        {
+          "job": 8,
+          "dps": 8.98046875,
+          "ttk": 30.67768595041322,
+          "monsters": [
+            {
+              "monster": "Doral",
+              "dps": 8.98046875
+            },
+            {
+              "monster": "Duende Macabro",
+              "dps": 8.98046875
+            },
+            {
+              "monster": "Sen",
+              "dps": 10.98046875
+            },
+            {
+              "monster": "Duende MÃ¡gico",
+              "dps": 8.98046875
+            },
+            {
+              "monster": "Planta Assassina",
+              "dps": 8.98046875
+            },
+            {
+              "monster": "Planta Mutante",
+              "dps": 4.98046875
+            }
+          ]
+        },
+        {
+          "job": 9,
+          "dps": 15.729125976562539,
+          "ttk": 17.534365623160742,
+          "monsters": [
+            {
+              "monster": "Doral",
+              "dps": 15.787353515625039
+            },
+            {
+              "monster": "Duende Macabro",
+              "dps": 15.251220703125037
+            },
+            {
+              "monster": "Sen",
+              "dps": 17.677001953125043
+            },
+            {
+              "monster": "Duende MÃ¡gico",
+              "dps": 15.730224609375039
+            },
+            {
+              "monster": "Planta Assassina",
+              "dps": 15.728027343750039
+            },
+            {
+              "monster": "Planta Mutante",
+              "dps": 11.641113281250028
+            }
+          ]
+        },
+        {
+          "job": 10,
+          "dps": 45.9453125,
+          "ttk": 6.145942192296205,
+          "monsters": [
+            {
+              "monster": "Doral",
+              "dps": 45.9453125
+            },
+            {
+              "monster": "Duende Macabro",
+              "dps": 45.9453125
+            },
+            {
+              "monster": "Sen",
+              "dps": 47.9453125
+            },
+            {
+              "monster": "Duende MÃ¡gico",
+              "dps": 45.9453125
+            },
+            {
+              "monster": "Planta Assassina",
+              "dps": 45.9453125
+            },
+            {
+              "monster": "Planta Mutante",
+              "dps": 41.9453125
+            }
+          ]
+        },
+        {
+          "job": 11,
+          "dps": 15.637939453125039,
+          "ttk": 17.633314497584966,
+          "monsters": [
+            {
+              "monster": "Doral",
+              "dps": 15.730224609375039
+            },
+            {
+              "monster": "Duende Macabro",
+              "dps": 15.086425781250037
+            },
+            {
+              "monster": "Sen",
+              "dps": 17.619873046875043
+            },
+            {
+              "monster": "Duende MÃ¡gico",
+              "dps": 15.664306640625039
+            },
+            {
+              "monster": "Planta Assassina",
+              "dps": 15.611572265625039
+            },
+            {
+              "monster": "Planta Mutante",
+              "dps": 11.533447265625028
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "level": 20,
+      "classes": [
+        {
+          "job": 1,
+          "dps": 37.11666666666667,
+          "ttk": 14.89527811644666,
+          "monsters": [
+            {
+              "monster": "Planta MortÃ­fera",
+              "dps": 40.00514322916667
+            },
+            {
+              "monster": "Esqueleto",
+              "dps": 38.386653645833334
+            },
+            {
+              "monster": "Esqueleto do Mal",
+              "dps": 38.386653645833334
+            },
+            {
+              "monster": "Zumbi",
+              "dps": 37.11666666666667
+            },
+            {
+              "monster": "Barata Gigante",
+              "dps": 37.05872395833333
+            },
+            {
+              "monster": "Cao Abelha",
+              "dps": 37.05872395833333
+            },
+            {
+              "monster": "Mephit",
+              "dps": 35.402994791666664
+            }
+          ]
+        },
+        {
+          "job": 2,
+          "dps": 25.5546875,
+          "ttk": 21.756820561246485,
+          "monsters": [
+            {
+              "monster": "Planta MortÃ­fera",
+              "dps": 26.524479166666666
+            },
+            {
+              "monster": "Esqueleto",
+              "dps": 25.6375
+            },
+            {
+              "monster": "Esqueleto do Mal",
+              "dps": 25.6375
+            },
+            {
+              "monster": "Zumbi",
+              "dps": 25.5546875
+            },
+            {
+              "monster": "Barata Gigante",
+              "dps": 25.371354166666666
+            },
+            {
+              "monster": "Cao Abelha",
+              "dps": 25.371354166666666
+            },
+            {
+              "monster": "Mephit",
+              "dps": 24.434895833333332
+            }
+          ]
+        },
+        {
+          "job": 3,
+          "dps": 21.71484375,
+          "ttk": 25.57683257918552,
+          "monsters": [
+            {
+              "monster": "Planta MortÃ­fera",
+              "dps": 22.71875
+            },
+            {
+              "monster": "Esqueleto",
+              "dps": 21.7890625
+            },
+            {
+              "monster": "Esqueleto do Mal",
+              "dps": 21.7890625
+            },
+            {
+              "monster": "Zumbi",
+              "dps": 21.71484375
+            },
+            {
+              "monster": "Barata Gigante",
+              "dps": 21.58203125
+            },
+            {
+              "monster": "Cao Abelha",
+              "dps": 21.5
+            },
+            {
+              "monster": "Mephit",
+              "dps": 20.640625
+            }
+          ]
+        },
+        {
+          "job": 4,
+          "dps": 30.5625,
+          "ttk": 18.061349693251532,
+          "monsters": [
+            {
+              "monster": "Planta MortÃ­fera",
+              "dps": 31.6484375
+            },
+            {
+              "monster": "Esqueleto",
+              "dps": 30.66015625
+            },
+            {
+              "monster": "Esqueleto do Mal",
+              "dps": 30.66015625
+            },
+            {
+              "monster": "Zumbi",
+              "dps": 30.5625
+            },
+            {
+              "monster": "Barata Gigante",
+              "dps": 30.5625
+            },
+            {
+              "monster": "Cao Abelha",
+              "dps": 30.45703125
+            },
+            {
+              "monster": "Mephit",
+              "dps": 29.48828125
+            }
+          ]
+        },
+        {
+          "job": 5,
+          "dps": 14.4296875,
+          "ttk": 38.254466702761235,
+          "monsters": [
+            {
+              "monster": "Planta MortÃ­fera",
+              "dps": 15.4296875
+            },
+            {
+              "monster": "Esqueleto",
+              "dps": 14.4296875
+            },
+            {
+              "monster": "Esqueleto do Mal",
+              "dps": 14.4296875
+            },
+            {
+              "monster": "Zumbi",
+              "dps": 14.4296875
+            },
+            {
+              "monster": "Barata Gigante",
+              "dps": 14.4296875
+            },
+            {
+              "monster": "Cao Abelha",
+              "dps": 14.4296875
+            },
+            {
+              "monster": "Mephit",
+              "dps": 13.4296875
+            }
+          ]
+        },
+        {
+          "job": 6,
+          "dps": 18.706097771139753,
+          "ttk": 29.524343151708017,
+          "monsters": [
+            {
+              "monster": "Planta MortÃ­fera",
+              "dps": 20.359766343060713
+            },
+            {
+              "monster": "Esqueleto",
+              "dps": 19.327245375689387
+            },
+            {
+              "monster": "Esqueleto do Mal",
+              "dps": 19.327245375689387
+            },
+            {
+              "monster": "Zumbi",
+              "dps": 18.706097771139753
+            },
+            {
+              "monster": "Barata Gigante",
+              "dps": 18.69643626493571
+            },
+            {
+              "monster": "Cao Abelha",
+              "dps": 18.63801484949453
+            },
+            {
+              "monster": "Mephit",
+              "dps": 17.691704245174677
+            }
+          ]
+        },
+        {
+          "job": 7,
+          "dps": 64.46875,
+          "ttk": 8.838995568685377,
+          "monsters": [
+            {
+              "monster": "Planta MortÃ­fera",
+              "dps": 65.46875
+            },
+            {
+              "monster": "Esqueleto",
+              "dps": 50.765625
+            },
+            {
+              "monster": "Esqueleto do Mal",
+              "dps": 50.765625
+            },
+            {
+              "monster": "Zumbi",
+              "dps": 64.46875
+            },
+            {
+              "monster": "Barata Gigante",
+              "dps": 64.46875
+            },
+            {
+              "monster": "Cao Abelha",
+              "dps": 64.46875
+            },
+            {
+              "monster": "Mephit",
+              "dps": 63.46875
+            }
+          ]
+        },
+        {
+          "job": 8,
+          "dps": 79.96875,
+          "ttk": 6.902696365767878,
+          "monsters": [
+            {
+              "monster": "Planta MortÃ­fera",
+              "dps": 80.96875
+            },
+            {
+              "monster": "Esqueleto",
+              "dps": 79.96875
+            },
+            {
+              "monster": "Esqueleto do Mal",
+              "dps": 79.96875
+            },
+            {
+              "monster": "Zumbi",
+              "dps": 79.96875
+            },
+            {
+              "monster": "Barata Gigante",
+              "dps": 79.96875
+            },
+            {
+              "monster": "Cao Abelha",
+              "dps": 79.96875
+            },
+            {
+              "monster": "Mephit",
+              "dps": 78.96875
+            }
+          ]
+        },
+        {
+          "job": 9,
+          "dps": 30.453125,
+          "ttk": 18.1262185736275,
+          "monsters": [
+            {
+              "monster": "Planta MortÃ­fera",
+              "dps": 32.7265625
+            },
+            {
+              "monster": "Esqueleto",
+              "dps": 31.455729166666668
+            },
+            {
+              "monster": "Esqueleto do Mal",
+              "dps": 31.455729166666668
+            },
+            {
+              "monster": "Zumbi",
+              "dps": 30.427083333333332
+            },
+            {
+              "monster": "Barata Gigante",
+              "dps": 30.453125
+            },
+            {
+              "monster": "Cao Abelha",
+              "dps": 30.348958333333332
+            },
+            {
+              "monster": "Mephit",
+              "dps": 29.203125
+            }
+          ]
+        },
+        {
+          "job": 10,
+          "dps": 62.2451171875,
+          "ttk": 8.868165487378214,
+          "monsters": [
+            {
+              "monster": "Planta MortÃ­fera",
+              "dps": 63.2451171875
+            },
+            {
+              "monster": "Esqueleto",
+              "dps": 62.2451171875
+            },
+            {
+              "monster": "Esqueleto do Mal",
+              "dps": 62.2451171875
+            },
+            {
+              "monster": "Zumbi",
+              "dps": 62.2451171875
+            },
+            {
+              "monster": "Barata Gigante",
+              "dps": 62.2451171875
+            },
+            {
+              "monster": "Cao Abelha",
+              "dps": 62.2451171875
+            },
+            {
+              "monster": "Mephit",
+              "dps": 61.2451171875
+            }
+          ]
+        },
+        {
+          "job": 11,
+          "dps": 28.854166666666668,
+          "ttk": 19.1427797344893,
+          "monsters": [
+            {
+              "monster": "Planta MortÃ­fera",
+              "dps": 31.111979166666668
+            },
+            {
+              "monster": "Esqueleto",
+              "dps": 29.838541666666668
+            },
+            {
+              "monster": "Esqueleto do Mal",
+              "dps": 29.838541666666668
+            },
+            {
+              "monster": "Zumbi",
+              "dps": 28.854166666666668
+            },
+            {
+              "monster": "Barata Gigante",
+              "dps": 28.8359375
+            },
+            {
+              "monster": "Cao Abelha",
+              "dps": 28.734375
+            },
+            {
+              "monster": "Mephit",
+              "dps": 27.6328125
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "level": 30,
+      "classes": [
+        {
+          "job": 1,
+          "dps": 61.77465820312507,
+          "ttk": 15.473102921962642,
+          "monsters": [
+            {
+              "monster": "Arvore DemonÃ­aca",
+              "dps": 65.13281250000007
+            },
+            {
+              "monster": "Parasita",
+              "dps": 64.92773437500007
+            },
+            {
+              "monster": "Bargon",
+              "dps": 57.698730468750064
+            },
+            {
+              "monster": "Decoy",
+              "dps": 62.43603515625007
+            },
+            {
+              "monster": "Ghoul",
+              "dps": 61.113281250000064
+            },
+            {
+              "monster": "Ciclope",
+              "dps": 55.01220703125006
+            }
+          ]
+        },
+        {
+          "job": 2,
+          "dps": 57.9375,
+          "ttk": 16.67650695924435,
+          "monsters": [
+            {
+              "monster": "Arvore DemonÃ­aca",
+              "dps": 58.9375
+            },
+            {
+              "monster": "Parasita",
+              "dps": 46.125
+            },
+            {
+              "monster": "Bargon",
+              "dps": 46.125
+            },
+            {
+              "monster": "Decoy",
+              "dps": 57.9375
+            },
+            {
+              "monster": "Ghoul",
+              "dps": 57.9375
+            },
+            {
+              "monster": "Ciclope",
+              "dps": 57.9375
+            }
+          ]
+        },
+        {
+          "job": 3,
+          "dps": 62.97833092384102,
+          "ttk": 15.054096580037605,
+          "monsters": [
+            {
+              "monster": "Arvore DemonÃ­aca",
+              "dps": 66.77585497089474
+            },
+            {
+              "monster": "Parasita",
+              "dps": 65.6289469401043
+            },
+            {
+              "monster": "Bargon",
+              "dps": 61.39656096813738
+            },
+            {
+              "monster": "Decoy",
+              "dps": 63.00796169704874
+            },
+            {
+              "monster": "Ghoul",
+              "dps": 62.9487001506333
+            },
+            {
+              "monster": "Ciclope",
+              "dps": 56.56370474622152
+            }
+          ]
+        },
+        {
+          "job": 4,
+          "dps": 51.80859375,
+          "ttk": 18.651350912626768,
+          "monsters": [
+            {
+              "monster": "Arvore DemonÃ­aca",
+              "dps": 52.75390625
+            },
+            {
+              "monster": "Parasita",
+              "dps": 52.75390625
+            },
+            {
+              "monster": "Bargon",
+              "dps": 49.25390625
+            },
+            {
+              "monster": "Decoy",
+              "dps": 51.86328125
+            },
+            {
+              "monster": "Ghoul",
+              "dps": 51.75390625
+            },
+            {
+              "monster": "Ciclope",
+              "dps": 45.0234375
+            }
+          ]
+        },
+        {
+          "job": 5,
+          "dps": 23.453125,
+          "ttk": 40.72755756013562,
+          "monsters": [
+            {
+              "monster": "Arvore DemonÃ­aca",
+              "dps": 24.453125
+            },
+            {
+              "monster": "Parasita",
+              "dps": 21.23828125
+            },
+            {
+              "monster": "Bargon",
+              "dps": 24.453125
+            },
+            {
+              "monster": "Decoy",
+              "dps": 23.453125
+            },
+            {
+              "monster": "Ghoul",
+              "dps": 23.453125
+            },
+            {
+              "monster": "Ciclope",
+              "dps": 19.9375
+            }
+          ]
+        },
+        {
+          "job": 6,
+          "dps": 25.135760238562906,
+          "ttk": 38.37488091695318,
+          "monsters": [
+            {
+              "monster": "Arvore DemonÃ­aca",
+              "dps": 26.455403044131298
+            },
+            {
+              "monster": "Parasita",
+              "dps": 26.118364429297653
+            },
+            {
+              "monster": "Bargon",
+              "dps": 24.748082977125748
+            },
+            {
+              "monster": "Decoy",
+              "dps": 25.523437500000064
+            },
+            {
+              "monster": "Ghoul",
+              "dps": 24.49120191196863
+            },
+            {
+              "monster": "Ciclope",
+              "dps": 23.4921875
+            }
+          ]
+        },
+        {
+          "job": 7,
+          "dps": 134.4375,
+          "ttk": 7.246596467445632,
+          "monsters": [
+            {
+              "monster": "Arvore DemonÃ­aca",
+              "dps": 134.9375
+            },
+            {
+              "monster": "Parasita",
+              "dps": 134.9375
+            },
+            {
+              "monster": "Bargon",
+              "dps": 134.9375
+            },
+            {
+              "monster": "Decoy",
+              "dps": 133.9375
+            },
+            {
+              "monster": "Ghoul",
+              "dps": 133.9375
+            },
+            {
+              "monster": "Ciclope",
+              "dps": 133.9375
+            }
+          ]
+        },
+        {
+          "job": 8,
+          "dps": 138.921875,
+          "ttk": 7.012624711322518,
+          "monsters": [
+            {
+              "monster": "Arvore DemonÃ­aca",
+              "dps": 139.421875
+            },
+            {
+              "monster": "Parasita",
+              "dps": 139.421875
+            },
+            {
+              "monster": "Bargon",
+              "dps": 139.421875
+            },
+            {
+              "monster": "Decoy",
+              "dps": 138.421875
+            },
+            {
+              "monster": "Ghoul",
+              "dps": 138.421875
+            },
+            {
+              "monster": "Ciclope",
+              "dps": 138.421875
+            }
+          ]
+        },
+        {
+          "job": 9,
+          "dps": 47.493541044347545,
+          "ttk": 20.28620379883603,
+          "monsters": [
+            {
+              "monster": "Arvore DemonÃ­aca",
+              "dps": 49.6219805549174
+            },
+            {
+              "monster": "Parasita",
+              "dps": 49.6219805549174
+            },
+            {
+              "monster": "Bargon",
+              "dps": 44.34560259650746
+            },
+            {
+              "monster": "Decoy",
+              "dps": 48.328178854549755
+            },
+            {
+              "monster": "Ghoul",
+              "dps": 46.658903234145335
+            },
+            {
+              "monster": "Ciclope",
+              "dps": 43.29589125689349
+            }
+          ]
+        },
+        {
+          "job": 10,
+          "dps": 86.96875,
+          "ttk": 11.20336513388991,
+          "monsters": [
+            {
+              "monster": "Arvore DemonÃ­aca",
+              "dps": 87.46875
+            },
+            {
+              "monster": "Parasita",
+              "dps": 87.46875
+            },
+            {
+              "monster": "Bargon",
+              "dps": 87.46875
+            },
+            {
+              "monster": "Decoy",
+              "dps": 86.46875
+            },
+            {
+              "monster": "Ghoul",
+              "dps": 86.46875
+            },
+            {
+              "monster": "Ciclope",
+              "dps": 86.46875
+            }
+          ]
+        },
+        {
+          "job": 11,
+          "dps": 59.68340525907644,
+          "ttk": 16.144333286277835,
+          "monsters": [
+            {
+              "monster": "Arvore DemonÃ­aca",
+              "dps": 62.34550565831817
+            },
+            {
+              "monster": "Parasita",
+              "dps": 62.34550565831817
+            },
+            {
+              "monster": "Bargon",
+              "dps": 55.71305936925565
+            },
+            {
+              "monster": "Decoy",
+              "dps": 60.73180793313434
+            },
+            {
+              "monster": "Ghoul",
+              "dps": 58.635002585018526
+            },
+            {
+              "monster": "Ciclope",
+              "dps": 54.40148566750933
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "level": 40,
+      "classes": [
+        {
+          "job": 1,
+          "dps": 90.86357874586116,
+          "ttk": 11.973758606162672,
+          "monsters": [
+            {
+              "monster": "Arqueiro do Mal",
+              "dps": 99.70146937086118
+            },
+            {
+              "monster": "Wolverine de Bronze",
+              "dps": 92.81586299668898
+            },
+            {
+              "monster": "Cripto",
+              "dps": 101.0293356788082
+            },
+            {
+              "monster": "Wolverine de Prata",
+              "dps": 88.10782931498366
+            },
+            {
+              "monster": "Wolverine de Ouro",
+              "dps": 84.95314440190418
+            },
+            {
+              "monster": "Duende Lider",
+              "dps": 88.91129449503333
+            }
+          ]
+        },
+        {
+          "job": 2,
+          "dps": 76.00775106063745,
+          "ttk": 16.43946112733158,
+          "monsters": [
+            {
+              "monster": "Arqueiro do Mal",
+              "dps": 78.36729744412254
+            },
+            {
+              "monster": "Wolverine de Bronze",
+              "dps": 73.65945778145698
+            },
+            {
+              "monster": "Cripto",
+              "dps": 78.72629734064573
+            },
+            {
+              "monster": "Wolverine de Prata",
+              "dps": 49.5230365273179
+            },
+            {
+              "monster": "Wolverine de Ouro",
+              "dps": 49.26955065190399
+            },
+            {
+              "monster": "Duende Lider",
+              "dps": 78.35604433981791
+            }
+          ]
+        },
+        {
+          "job": 3,
+          "dps": 85.9833028651584,
+          "ttk": 12.88098368748,
+          "monsters": [
+            {
+              "monster": "Arqueiro do Mal",
+              "dps": 94.94908078090529
+            },
+            {
+              "monster": "Wolverine de Bronze",
+              "dps": 86.27234811902153
+            },
+            {
+              "monster": "Cripto",
+              "dps": 97.31792391004437
+            },
+            {
+              "monster": "Wolverine de Prata",
+              "dps": 79.08822548749097
+            },
+            {
+              "monster": "Wolverine de Ouro",
+              "dps": 78.55609593451085
+            },
+            {
+              "monster": "Duende Lider",
+              "dps": 85.69425761129526
+            }
+          ]
+        },
+        {
+          "job": 4,
+          "dps": 84.20419857202009,
+          "ttk": 13.010704870886482,
+          "monsters": [
+            {
+              "monster": "Arqueiro do Mal",
+              "dps": 88.67756622516579
+            },
+            {
+              "monster": "Wolverine de Bronze",
+              "dps": 86.19531896730155
+            },
+            {
+              "monster": "Cripto",
+              "dps": 91.7405448054638
+            },
+            {
+              "monster": "Wolverine de Prata",
+              "dps": 82.21307817673862
+            },
+            {
+              "monster": "Wolverine de Ouro",
+              "dps": 79.3955336817055
+            },
+            {
+              "monster": "Duende Lider",
+              "dps": 79.88155137624192
+            }
+          ]
+        },
+        {
+          "job": 5,
+          "dps": 74.19184602649025,
+          "ttk": 14.69437608440779,
+          "monsters": [
+            {
+              "monster": "Arqueiro do Mal",
+              "dps": 76.45999327400682
+            },
+            {
+              "monster": "Wolverine de Bronze",
+              "dps": 75.41607383071211
+            },
+            {
+              "monster": "Cripto",
+              "dps": 81.04359607822867
+            },
+            {
+              "monster": "Wolverine de Prata",
+              "dps": 72.9676182222684
+            },
+            {
+              "monster": "Wolverine de Ouro",
+              "dps": 70.51376241721871
+            },
+            {
+              "monster": "Duende Lider",
+              "dps": 67.36011227235116
+            }
+          ]
+        },
+        {
+          "job": 6,
+          "dps": 63.57520501345215,
+          "ttk": 17.047787051885592,
+          "monsters": [
+            {
+              "monster": "Arqueiro do Mal",
+              "dps": 64.94366980546374
+            },
+            {
+              "monster": "Wolverine de Bronze",
+              "dps": 64.7366514900664
+            },
+            {
+              "monster": "Cripto",
+              "dps": 70.37196683567899
+            },
+            {
+              "monster": "Wolverine de Prata",
+              "dps": 62.4137585368379
+            },
+            {
+              "monster": "Wolverine de Ouro",
+              "dps": 59.24814388452002
+            },
+            {
+              "monster": "Duende Lider",
+              "dps": 57.669281612169016
+            }
+          ]
+        },
+        {
+          "job": 7,
+          "dps": 176.9453125,
+          "ttk": 6.432209918581462,
+          "monsters": [
+            {
+              "monster": "Arqueiro do Mal",
+              "dps": 179.4453125
+            },
+            {
+              "monster": "Wolverine de Bronze",
+              "dps": 174.4453125
+            },
+            {
+              "monster": "Cripto",
+              "dps": 179.4453125
+            },
+            {
+              "monster": "Wolverine de Prata",
+              "dps": 172.4453125
+            },
+            {
+              "monster": "Wolverine de Ouro",
+              "dps": 172.4453125
+            },
+            {
+              "monster": "Duende Lider",
+              "dps": 180.4453125
+            }
+          ]
+        },
+        {
+          "job": 8,
+          "dps": 222.453125,
+          "ttk": 5.111274581149771,
+          "monsters": [
+            {
+              "monster": "Arqueiro do Mal",
+              "dps": 224.953125
+            },
+            {
+              "monster": "Wolverine de Bronze",
+              "dps": 219.953125
+            },
+            {
+              "monster": "Cripto",
+              "dps": 224.953125
+            },
+            {
+              "monster": "Wolverine de Prata",
+              "dps": 217.953125
+            },
+            {
+              "monster": "Wolverine de Ouro",
+              "dps": 217.953125
+            },
+            {
+              "monster": "Duende Lider",
+              "dps": 225.953125
+            }
+          ]
+        },
+        {
+          "job": 9,
+          "dps": 79.59677993067072,
+          "ttk": 14.03843742338184,
+          "monsters": [
+            {
+              "monster": "Arqueiro do Mal",
+              "dps": 85.50910596026512
+            },
+            {
+              "monster": "Wolverine de Bronze",
+              "dps": 79.93180230753332
+            },
+            {
+              "monster": "Cripto",
+              "dps": 87.77243506829493
+            },
+            {
+              "monster": "Wolverine de Prata",
+              "dps": 73.77994360513263
+            },
+            {
+              "monster": "Wolverine de Ouro",
+              "dps": 72.85337334437104
+            },
+            {
+              "monster": "Duende Lider",
+              "dps": 79.26175755380814
+            }
+          ]
+        },
+        {
+          "job": 10,
+          "dps": 121.9296875,
+          "ttk": 9.356096009813118,
+          "monsters": [
+            {
+              "monster": "Arqueiro do Mal",
+              "dps": 124.4296875
+            },
+            {
+              "monster": "Wolverine de Bronze",
+              "dps": 119.4296875
+            },
+            {
+              "monster": "Cripto",
+              "dps": 124.4296875
+            },
+            {
+              "monster": "Wolverine de Prata",
+              "dps": 117.4296875
+            },
+            {
+              "monster": "Wolverine de Ouro",
+              "dps": 117.4296875
+            },
+            {
+              "monster": "Duende Lider",
+              "dps": 125.4296875
+            }
+          ]
+        },
+        {
+          "job": 11,
+          "dps": 71.52707535699521,
+          "ttk": 15.597616568536914,
+          "monsters": [
+            {
+              "monster": "Arqueiro do Mal",
+              "dps": 77.75216007864258
+            },
+            {
+              "monster": "Wolverine de Bronze",
+              "dps": 71.8648463369207
+            },
+            {
+              "monster": "Cripto",
+              "dps": 79.64924591266576
+            },
+            {
+              "monster": "Wolverine de Prata",
+              "dps": 65.87699839610944
+            },
+            {
+              "monster": "Wolverine de Ouro",
+              "dps": 64.00681653559619
+            },
+            {
+              "monster": "Duende Lider",
+              "dps": 71.18930437706972
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "level": 50,
+      "classes": [
+        {
+          "job": 1,
+          "dps": 101.28984184451191,
+          "ttk": 39.399246170410805,
+          "monsters": [
+            {
+              "monster": "Cavaleiro Ciclope",
+              "dps": 78.95942835365832
+            },
+            {
+              "monster": "Guerreiro do Mal",
+              "dps": 99.57869855182899
+            },
+            {
+              "monster": "Morcego Vampiro",
+              "dps": 101.28984184451191
+            },
+            {
+              "monster": "Caramujo do Mal",
+              "dps": 103.54940358231678
+            },
+            {
+              "monster": "Decapitador",
+              "dps": 97.46769245426802
+            },
+            {
+              "monster": "Griven",
+              "dps": 116.11897294207286
+            },
+            {
+              "monster": "Moriph. O Procurado",
+              "dps": 57.11708460365838
+            },
+            {
+              "monster": "Abelha Selvagem",
+              "dps": 112.14016958841432
+            },
+            {
+              "monster": "Muffin",
+              "dps": 109.5976200457314
+            }
+          ]
+        },
+        {
+          "job": 2,
+          "dps": 85.24361979166666,
+          "ttk": 50.35795789360904,
+          "monsters": [
+            {
+              "monster": "Cavaleiro Ciclope",
+              "dps": 74.58541666666666
+            },
+            {
+              "monster": "Guerreiro do Mal",
+              "dps": 87.05052083333334
+            },
+            {
+              "monster": "Morcego Vampiro",
+              "dps": 87.11569010416666
+            },
+            {
+              "monster": "Caramujo do Mal",
+              "dps": 63.43359375
+            },
+            {
+              "monster": "Decapitador",
+              "dps": 89.69733072916667
+            },
+            {
+              "monster": "Griven",
+              "dps": 96.95162760416666
+            },
+            {
+              "monster": "Moriph. O Procurado",
+              "dps": 38.19140625
+            },
+            {
+              "monster": "Abelha Selvagem",
+              "dps": 72.91796875
+            },
+            {
+              "monster": "Muffin",
+              "dps": 85.24361979166666
+            }
+          ]
+        },
+        {
+          "job": 3,
+          "dps": 146.302734375,
+          "ttk": 26.756049796996898,
+          "monsters": [
+            {
+              "monster": "Cavaleiro Ciclope",
+              "dps": 129.80924479166666
+            },
+            {
+              "monster": "Guerreiro do Mal",
+              "dps": 138.48285590277777
+            },
+            {
+              "monster": "Morcego Vampiro",
+              "dps": 143.59548611111111
+            },
+            {
+              "monster": "Caramujo do Mal",
+              "dps": 148.05729166666669
+            },
+            {
+              "monster": "Decapitador",
+              "dps": 146.302734375
+            },
+            {
+              "monster": "Griven",
+              "dps": 170.98936631944446
+            },
+            {
+              "monster": "Moriph. O Procurado",
+              "dps": 74.99739583333333
+            },
+            {
+              "monster": "Abelha Selvagem",
+              "dps": 167.68467881944446
+            },
+            {
+              "monster": "Muffin",
+              "dps": 164.56727430555554
+            }
+          ]
+        },
+        {
+          "job": 4,
+          "dps": 78.34375,
+          "ttk": 50.28012106381608,
+          "monsters": [
+            {
+              "monster": "Cavaleiro Ciclope",
+              "dps": 62.43359375
+            },
+            {
+              "monster": "Guerreiro do Mal",
+              "dps": 75.89453125
+            },
+            {
+              "monster": "Morcego Vampiro",
+              "dps": 81.095703125
+            },
+            {
+              "monster": "Caramujo do Mal",
+              "dps": 78.34375
+            },
+            {
+              "monster": "Decapitador",
+              "dps": 75.166015625
+            },
+            {
+              "monster": "Griven",
+              "dps": 90.990234375
+            },
+            {
+              "monster": "Moriph. O Procurado",
+              "dps": 51.17578125
+            },
+            {
+              "monster": "Abelha Selvagem",
+              "dps": 87.30078125
+            },
+            {
+              "monster": "Muffin",
+              "dps": 85.587890625
+            }
+          ]
+        },
+        {
+          "job": 5,
+          "dps": 80.4296875,
+          "ttk": 47.391102029255265,
+          "monsters": [
+            {
+              "monster": "Cavaleiro Ciclope",
+              "dps": 69.126953125
+            },
+            {
+              "monster": "Guerreiro do Mal",
+              "dps": 76.732421875
+            },
+            {
+              "monster": "Morcego Vampiro",
+              "dps": 87.4853515625
+            },
+            {
+              "monster": "Caramujo do Mal",
+              "dps": 80.4296875
+            },
+            {
+              "monster": "Decapitador",
+              "dps": 77.26953125
+            },
+            {
+              "monster": "Griven",
+              "dps": 96.537109375
+            },
+            {
+              "monster": "Moriph. O Procurado",
+              "dps": 57.6640625
+            },
+            {
+              "monster": "Abelha Selvagem",
+              "dps": 95.4580078125
+            },
+            {
+              "monster": "Muffin",
+              "dps": 93.6279296875
+            }
+          ]
+        },
+        {
+          "job": 6,
+          "dps": 58.9880859375,
+          "ttk": 62.20880565502405,
+          "monsters": [
+            {
+              "monster": "Cavaleiro Ciclope",
+              "dps": 49.549739583333334
+            },
+            {
+              "monster": "Guerreiro do Mal",
+              "dps": 55.897395833333334
+            },
+            {
+              "monster": "Morcego Vampiro",
+              "dps": 64.42233072916666
+            },
+            {
+              "monster": "Caramujo do Mal",
+              "dps": 58.9880859375
+            },
+            {
+              "monster": "Decapitador",
+              "dps": 58.0826171875
+            },
+            {
+              "monster": "Griven",
+              "dps": 73.54264322916667
+            },
+            {
+              "monster": "Moriph. O Procurado",
+              "dps": 37.058528645833334
+            },
+            {
+              "monster": "Abelha Selvagem",
+              "dps": 71.90078125
+            },
+            {
+              "monster": "Muffin",
+              "dps": 70.047265625
+            }
+          ]
+        },
+        {
+          "job": 7,
+          "dps": 207.21796875,
+          "ttk": 21.218083198365164,
+          "monsters": [
+            {
+              "monster": "Cavaleiro Ciclope",
+              "dps": 207.21796875
+            },
+            {
+              "monster": "Guerreiro do Mal",
+              "dps": 203.61796875
+            },
+            {
+              "monster": "Morcego Vampiro",
+              "dps": 203.61796875
+            },
+            {
+              "monster": "Caramujo do Mal",
+              "dps": 207.21796875
+            },
+            {
+              "monster": "Decapitador",
+              "dps": 207.21796875
+            },
+            {
+              "monster": "Griven",
+              "dps": 215.61796875
+            },
+            {
+              "monster": "Moriph. O Procurado",
+              "dps": 173.621875
+            },
+            {
+              "monster": "Abelha Selvagem",
+              "dps": 215.61796875
+            },
+            {
+              "monster": "Muffin",
+              "dps": 213.21796875
+            }
+          ]
+        },
+        {
+          "job": 8,
+          "dps": 309.52734375,
+          "ttk": 14.453727585738791,
+          "monsters": [
+            {
+              "monster": "Cavaleiro Ciclope",
+              "dps": 309.52734375
+            },
+            {
+              "monster": "Guerreiro do Mal",
+              "dps": 306.52734375
+            },
+            {
+              "monster": "Morcego Vampiro",
+              "dps": 306.52734375
+            },
+            {
+              "monster": "Caramujo do Mal",
+              "dps": 309.52734375
+            },
+            {
+              "monster": "Decapitador",
+              "dps": 309.52734375
+            },
+            {
+              "monster": "Griven",
+              "dps": 316.52734375
+            },
+            {
+              "monster": "Moriph. O Procurado",
+              "dps": 278.52734375
+            },
+            {
+              "monster": "Abelha Selvagem",
+              "dps": 316.52734375
+            },
+            {
+              "monster": "Muffin",
+              "dps": 314.52734375
+            }
+          ]
+        },
+        {
+          "job": 9,
+          "dps": 149.68907195060507,
+          "ttk": 26.850118913009865,
+          "monsters": [
+            {
+              "monster": "Cavaleiro Ciclope",
+              "dps": 118.25116431451632
+            },
+            {
+              "monster": "Guerreiro do Mal",
+              "dps": 146.64884576612926
+            },
+            {
+              "monster": "Morcego Vampiro",
+              "dps": 149.68907195060507
+            },
+            {
+              "monster": "Caramujo do Mal",
+              "dps": 152.50184412802443
+            },
+            {
+              "monster": "Decapitador",
+              "dps": 143.4256829637099
+            },
+            {
+              "monster": "Griven",
+              "dps": 170.39030682963735
+            },
+            {
+              "monster": "Moriph. O Procurado",
+              "dps": 80.71969569052432
+            },
+            {
+              "monster": "Abelha Selvagem",
+              "dps": 169.94746912802447
+            },
+            {
+              "monster": "Muffin",
+              "dps": 165.807222152218
+            }
+          ]
+        },
+        {
+          "job": 10,
+          "dps": 141.43359375,
+          "ttk": 30.821863733256137,
+          "monsters": [
+            {
+              "monster": "Cavaleiro Ciclope",
+              "dps": 141.43359375
+            },
+            {
+              "monster": "Guerreiro do Mal",
+              "dps": 138.43359375
+            },
+            {
+              "monster": "Morcego Vampiro",
+              "dps": 138.43359375
+            },
+            {
+              "monster": "Caramujo do Mal",
+              "dps": 141.43359375
+            },
+            {
+              "monster": "Decapitador",
+              "dps": 141.43359375
+            },
+            {
+              "monster": "Griven",
+              "dps": 148.43359375
+            },
+            {
+              "monster": "Moriph. O Procurado",
+              "dps": 110.43359375
+            },
+            {
+              "monster": "Abelha Selvagem",
+              "dps": 148.43359375
+            },
+            {
+              "monster": "Muffin",
+              "dps": 146.43359375
+            }
+          ]
+        },
+        {
+          "job": 11,
+          "dps": 143.41796875,
+          "ttk": 27.986777649448403,
+          "monsters": [
+            {
+              "monster": "Cavaleiro Ciclope",
+              "dps": 113.27083333333333
+            },
+            {
+              "monster": "Guerreiro do Mal",
+              "dps": 137.22916666666666
+            },
+            {
+              "monster": "Morcego Vampiro",
+              "dps": 143.41796875
+            },
+            {
+              "monster": "Caramujo do Mal",
+              "dps": 146.06119791666666
+            },
+            {
+              "monster": "Decapitador",
+              "dps": 137.33203125
+            },
+            {
+              "monster": "Griven",
+              "dps": 163.47005208333334
+            },
+            {
+              "monster": "Moriph. O Procurado",
+              "dps": 76.80989583333333
+            },
+            {
+              "monster": "Abelha Selvagem",
+              "dps": 157.64713541666666
+            },
+            {
+              "monster": "Muffin",
+              "dps": 153.72786458333334
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "level": 60,
+      "classes": [
+        {
+          "job": 1,
+          "dps": 179.1369694718065,
+          "ttk": 25.16422076498285,
+          "monsters": [
+            {
+              "monster": "Figon",
+              "dps": 200.59757111922494
+            },
+            {
+              "monster": "Caramujo Rijo",
+              "dps": 176.28007515285273
+            },
+            {
+              "monster": "Grande Griven",
+              "dps": 216.577340140964
+            },
+            {
+              "monster": "Hunki",
+              "dps": 216.577340140964
+            },
+            {
+              "monster": "Planta das Trevas",
+              "dps": 179.1369694718065
+            },
+            {
+              "monster": "Abelha do Mal",
+              "dps": 172.69381283967337
+            },
+            {
+              "monster": "Caramujo Espinhoso",
+              "dps": 171.79170919667067
+            }
+          ]
+        },
+        {
+          "job": 2,
+          "dps": 99.36412760416667,
+          "ttk": 49.86882660300409,
+          "monsters": [
+            {
+              "monster": "Figon",
+              "dps": 103.01171875
+            },
+            {
+              "monster": "Caramujo Rijo",
+              "dps": 84.70221354166667
+            },
+            {
+              "monster": "Grande Griven",
+              "dps": 99.36412760416667
+            },
+            {
+              "monster": "Hunki",
+              "dps": 99.36412760416667
+            },
+            {
+              "monster": "Planta das Trevas",
+              "dps": 101.008203125
+            },
+            {
+              "monster": "Abelha do Mal",
+              "dps": 98.26666666666667
+            },
+            {
+              "monster": "Caramujo Espinhoso",
+              "dps": 96.3150390625
+            }
+          ]
+        },
+        {
+          "job": 3,
+          "dps": 200.95013308057625,
+          "ttk": 23.9992434804044,
+          "monsters": [
+            {
+              "monster": "Figon",
+              "dps": 216.33669226154035
+            },
+            {
+              "monster": "Caramujo Rijo",
+              "dps": 187.16595020169552
+            },
+            {
+              "monster": "Grande Griven",
+              "dps": 227.09049160028627
+            },
+            {
+              "monster": "Hunki",
+              "dps": 227.09049160028627
+            },
+            {
+              "monster": "Planta das Trevas",
+              "dps": 193.12105704912202
+            },
+            {
+              "monster": "Abelha do Mal",
+              "dps": 186.30092805351333
+            },
+            {
+              "monster": "Caramujo Espinhoso",
+              "dps": 200.95013308057625
+            }
+          ]
+        },
+        {
+          "job": 4,
+          "dps": 121.66518267463266,
+          "ttk": 40.808469102801446,
+          "monsters": [
+            {
+              "monster": "Figon",
+              "dps": 128.70056870404443
+            },
+            {
+              "monster": "Caramujo Rijo",
+              "dps": 110.30228199678336
+            },
+            {
+              "monster": "Grande Griven",
+              "dps": 133.55070944393415
+            },
+            {
+              "monster": "Hunki",
+              "dps": 133.55070944393415
+            },
+            {
+              "monster": "Planta das Trevas",
+              "dps": 121.66518267463266
+            },
+            {
+              "monster": "Abelha do Mal",
+              "dps": 113.69014246323557
+            },
+            {
+              "monster": "Caramujo Espinhoso",
+              "dps": 112.18275361902602
+            }
+          ]
+        },
+        {
+          "job": 5,
+          "dps": 107.376953125,
+          "ttk": 46.453171326190954,
+          "monsters": [
+            {
+              "monster": "Figon",
+              "dps": 114.880859375
+            },
+            {
+              "monster": "Caramujo Rijo",
+              "dps": 95.3046875
+            },
+            {
+              "monster": "Grande Griven",
+              "dps": 109.4501953125
+            },
+            {
+              "monster": "Hunki",
+              "dps": 109.4501953125
+            },
+            {
+              "monster": "Planta das Trevas",
+              "dps": 107.376953125
+            },
+            {
+              "monster": "Abelha do Mal",
+              "dps": 104.154296875
+            },
+            {
+              "monster": "Caramujo Espinhoso",
+              "dps": 99.2216796875
+            }
+          ]
+        },
+        {
+          "job": 6,
+          "dps": 88.09073773552412,
+          "ttk": 56.62343315792783,
+          "monsters": [
+            {
+              "monster": "Figon",
+              "dps": 95.88640998391568
+            },
+            {
+              "monster": "Caramujo Rijo",
+              "dps": 78.20449649586416
+            },
+            {
+              "monster": "Grande Griven",
+              "dps": 93.10673971737155
+            },
+            {
+              "monster": "Hunki",
+              "dps": 93.10673971737155
+            },
+            {
+              "monster": "Planta das Trevas",
+              "dps": 88.09073773552412
+            },
+            {
+              "monster": "Abelha do Mal",
+              "dps": 84.72394516888808
+            },
+            {
+              "monster": "Caramujo Espinhoso",
+              "dps": 83.25416834214175
+            }
+          ]
+        },
+        {
+          "job": 7,
+          "dps": 257.2749131944444,
+          "ttk": 20.208763568225173,
+          "monsters": [
+            {
+              "monster": "Figon",
+              "dps": 259.03046875
+            },
+            {
+              "monster": "Caramujo Rijo",
+              "dps": 246.82361111111112
+            },
+            {
+              "monster": "Grande Griven",
+              "dps": 262.54157986111113
+            },
+            {
+              "monster": "Hunki",
+              "dps": 262.54157986111113
+            },
+            {
+              "monster": "Planta das Trevas",
+              "dps": 246.82361111111112
+            },
+            {
+              "monster": "Abelha do Mal",
+              "dps": 245.15399305555556
+            },
+            {
+              "monster": "Caramujo Espinhoso",
+              "dps": 257.2749131944444
+            }
+          ]
+        },
+        {
+          "job": 8,
+          "dps": 331.2265625,
+          "ttk": 15.337000648586322,
+          "monsters": [
+            {
+              "monster": "Figon",
+              "dps": 332.2265625
+            },
+            {
+              "monster": "Caramujo Rijo",
+              "dps": 325.2265625
+            },
+            {
+              "monster": "Grande Griven",
+              "dps": 334.2265625
+            },
+            {
+              "monster": "Hunki",
+              "dps": 334.2265625
+            },
+            {
+              "monster": "Planta das Trevas",
+              "dps": 325.2265625
+            },
+            {
+              "monster": "Abelha do Mal",
+              "dps": 324.2265625
+            },
+            {
+              "monster": "Caramujo Espinhoso",
+              "dps": 331.2265625
+            }
+          ]
+        },
+        {
+          "job": 9,
+          "dps": 264.65323001534637,
+          "ttk": 17.870901820442604,
+          "monsters": [
+            {
+              "monster": "Figon",
+              "dps": 293.22695748465446
+            },
+            {
+              "monster": "Caramujo Rijo",
+              "dps": 254.15170249721018
+            },
+            {
+              "monster": "Grande Griven",
+              "dps": 304.96502385602724
+            },
+            {
+              "monster": "Hunki",
+              "dps": 304.96502385602724
+            },
+            {
+              "monster": "Planta das Trevas",
+              "dps": 264.65323001534637
+            },
+            {
+              "monster": "Abelha do Mal",
+              "dps": 253.52218181501152
+            },
+            {
+              "monster": "Caramujo Espinhoso",
+              "dps": 247.14356051199812
+            }
+          ]
+        },
+        {
+          "job": 10,
+          "dps": 185.46527777777777,
+          "ttk": 28.31967827149785,
+          "monsters": [
+            {
+              "monster": "Figon",
+              "dps": 187.02083333333334
+            },
+            {
+              "monster": "Caramujo Rijo",
+              "dps": 176.13194444444446
+            },
+            {
+              "monster": "Grande Griven",
+              "dps": 190.13194444444446
+            },
+            {
+              "monster": "Hunki",
+              "dps": 190.13194444444446
+            },
+            {
+              "monster": "Planta das Trevas",
+              "dps": 176.13194444444446
+            },
+            {
+              "monster": "Abelha do Mal",
+              "dps": 174.57638888888889
+            },
+            {
+              "monster": "Caramujo Espinhoso",
+              "dps": 185.46527777777777
+            }
+          ]
+        },
+        {
+          "job": 11,
+          "dps": 311.4712883444401,
+          "ttk": 14.677845354878759,
+          "monsters": [
+            {
+              "monster": "Figon",
+              "dps": 342.5513197954972
+            },
+            {
+              "monster": "Caramujo Rijo",
+              "dps": 307.71296243106696
+            },
+            {
+              "monster": "Grande Griven",
+              "dps": 371.3079044117656
+            },
+            {
+              "monster": "Hunki",
+              "dps": 371.3079044117656
+            },
+            {
+              "monster": "Planta das Trevas",
+              "dps": 311.4712883444401
+            },
+            {
+              "monster": "Abelha do Mal",
+              "dps": 301.55011704388863
+            },
+            {
+              "monster": "Caramujo Espinhoso",
+              "dps": 300.5745634191184
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "level": 70,
+      "classes": [
+        {
+          "job": 1,
+          "dps": 221.87832370923843,
+          "ttk": 60.8950721757313,
+          "monsters": [
+            {
+              "monster": "Carniceiro",
+              "dps": 215.67445694633085
+            },
+            {
+              "monster": "Cavaleiro Fantasma",
+              "dps": 220.4112075407602
+            },
+            {
+              "monster": "Lagarto do Lago",
+              "dps": 215.67445694633085
+            },
+            {
+              "monster": "Pesadelo",
+              "dps": 232.78392620584168
+            },
+            {
+              "monster": "Cavaleiro das Cinzas",
+              "dps": 250.16110648777098
+            },
+            {
+              "monster": "Golem de Areia",
+              "dps": 267.50307702105897
+            },
+            {
+              "monster": "Naz",
+              "dps": 224.6284519361406
+            },
+            {
+              "monster": "Raia Venenosa",
+              "dps": 224.6284519361406
+            },
+            {
+              "monster": "Rei Hopi",
+              "dps": 189.99407736073312
+            },
+            {
+              "monster": "Lorde Centauro",
+              "dps": 215.53277343749934
+            },
+            {
+              "monster": "Omu",
+              "dps": 215.53277343749934
+            },
+            {
+              "monster": "Bruxa",
+              "dps": 243.09739427649382
+            },
+            {
+              "monster": "Centauro-L",
+              "dps": 219.89585895040693
+            },
+            {
+              "monster": "Duende Guerreiro",
+              "dps": 224.20171238111345
+            },
+            {
+              "monster": "GuardiÃ£o Maldito",
+              "dps": 212.23410071331458
+            },
+            {
+              "monster": "Lamina",
+              "dps": 223.3454398777167
+            }
+          ]
+        },
+        {
+          "job": 2,
+          "dps": 185.0983058096836,
+          "ttk": 67.13431609606329,
+          "monsters": [
+            {
+              "monster": "Carniceiro",
+              "dps": 183.8297245109199
+            },
+            {
+              "monster": "Cavaleiro Fantasma",
+              "dps": 179.47618272569457
+            },
+            {
+              "monster": "Lagarto do Lago",
+              "dps": 183.8297245109199
+            },
+            {
+              "monster": "Pesadelo",
+              "dps": 202.02077907986128
+            },
+            {
+              "monster": "Cavaleiro das Cinzas",
+              "dps": 205.37082248263903
+            },
+            {
+              "monster": "Golem de Areia",
+              "dps": 204.8521619944248
+            },
+            {
+              "monster": "Naz",
+              "dps": 185.32068931033928
+            },
+            {
+              "monster": "Raia Venenosa",
+              "dps": 185.32068931033928
+            },
+            {
+              "monster": "Rei Hopi",
+              "dps": 198.6094100521247
+            },
+            {
+              "monster": "Lorde Centauro",
+              "dps": 184.8759223090279
+            },
+            {
+              "monster": "Omu",
+              "dps": 184.8759223090279
+            },
+            {
+              "monster": "Bruxa",
+              "dps": 211.06749131944463
+            },
+            {
+              "monster": "Centauro-L",
+              "dps": 178.08848741319457
+            },
+            {
+              "monster": "Duende Guerreiro",
+              "dps": 211.06749131944463
+            },
+            {
+              "monster": "GuardiÃ£o Maldito",
+              "dps": 181.11203342013903
+            },
+            {
+              "monster": "Lamina",
+              "dps": 181.65652126736126
+            }
+          ]
+        },
+        {
+          "job": 3,
+          "dps": 312.66691745424083,
+          "ttk": 42.15883170243828,
+          "monsters": [
+            {
+              "monster": "Carniceiro",
+              "dps": 306.711423984778
+            },
+            {
+              "monster": "Cavaleiro Fantasma",
+              "dps": 304.9661580493475
+            },
+            {
+              "monster": "Lagarto do Lago",
+              "dps": 306.711423984778
+            },
+            {
+              "monster": "Pesadelo",
+              "dps": 324.1310174645885
+            },
+            {
+              "monster": "Cavaleiro das Cinzas",
+              "dps": 368.9266076273921
+            },
+            {
+              "monster": "Golem de Areia",
+              "dps": 357.7285184993568
+            },
+            {
+              "monster": "Naz",
+              "dps": 312.66691745424083
+            },
+            {
+              "monster": "Raia Venenosa",
+              "dps": 312.66691745424083
+            },
+            {
+              "monster": "Rei Hopi",
+              "dps": 316.9111090990624
+            },
+            {
+              "monster": "Lorde Centauro",
+              "dps": 306.2162945812643
+            },
+            {
+              "monster": "Omu",
+              "dps": 306.2162945812643
+            },
+            {
+              "monster": "Bruxa",
+              "dps": 340.37837305693586
+            },
+            {
+              "monster": "Centauro-L",
+              "dps": 305.78297820663227
+            },
+            {
+              "monster": "Duende Guerreiro",
+              "dps": 326.6668858363232
+            },
+            {
+              "monster": "GuardiÃ£o Maldito",
+              "dps": 305.6043836805561
+            },
+            {
+              "monster": "Lamina",
+              "dps": 313.28308958793286
+            }
+          ]
+        },
+        {
+          "job": 4,
+          "dps": 152.2809771369489,
+          "ttk": 87.4359366287533,
+          "monsters": [
+            {
+              "monster": "Carniceiro",
+              "dps": 150.81052174287723
+            },
+            {
+              "monster": "Cavaleiro Fantasma",
+              "dps": 153.25888959099302
+            },
+            {
+              "monster": "Lagarto do Lago",
+              "dps": 150.81052174287723
+            },
+            {
+              "monster": "Pesadelo",
+              "dps": 164.984242158778
+            },
+            {
+              "monster": "Cavaleiro das Cinzas",
+              "dps": 169.5777551987596
+            },
+            {
+              "monster": "Golem de Areia",
+              "dps": 180.7639375574453
+            },
+            {
+              "monster": "Naz",
+              "dps": 152.2809771369489
+            },
+            {
+              "monster": "Raia Venenosa",
+              "dps": 152.2809771369489
+            },
+            {
+              "monster": "Rei Hopi",
+              "dps": 141.84412698184778
+            },
+            {
+              "monster": "Lorde Centauro",
+              "dps": 150.86548569623199
+            },
+            {
+              "monster": "Omu",
+              "dps": 150.86548569623199
+            },
+            {
+              "monster": "Bruxa",
+              "dps": 168.1371567670041
+            },
+            {
+              "monster": "Centauro-L",
+              "dps": 148.87776812385147
+            },
+            {
+              "monster": "Duende Guerreiro",
+              "dps": 157.2777530445776
+            },
+            {
+              "monster": "GuardiÃ£o Maldito",
+              "dps": 147.02508544921912
+            },
+            {
+              "monster": "Lamina",
+              "dps": 152.38576731962354
+            }
+          ]
+        },
+        {
+          "job": 5,
+          "dps": 211.01970358455935,
+          "ttk": 58.80466814060436,
+          "monsters": [
+            {
+              "monster": "Carniceiro",
+              "dps": 214.9340676700373
+            },
+            {
+              "monster": "Cavaleiro Fantasma",
+              "dps": 192.29408892463283
+            },
+            {
+              "monster": "Lagarto do Lago",
+              "dps": 214.9340676700373
+            },
+            {
+              "monster": "Pesadelo",
+              "dps": 262.6846564797801
+            },
+            {
+              "monster": "Cavaleiro das Cinzas",
+              "dps": 183.01219267003722
+            },
+            {
+              "monster": "Golem de Areia",
+              "dps": 245.27016314338297
+            },
+            {
+              "monster": "Naz",
+              "dps": 207.1053394990814
+            },
+            {
+              "monster": "Raia Venenosa",
+              "dps": 207.1053394990814
+            },
+            {
+              "monster": "Rei Hopi",
+              "dps": 197.79823931525786
+            },
+            {
+              "monster": "Lorde Centauro",
+              "dps": 239.6286190257359
+            },
+            {
+              "monster": "Omu",
+              "dps": 239.6286190257359
+            },
+            {
+              "monster": "Bruxa",
+              "dps": 279.3873650045963
+            },
+            {
+              "monster": "Centauro-L",
+              "dps": 204.3250229779417
+            },
+            {
+              "monster": "Duende Guerreiro",
+              "dps": 215.99638097426524
+            },
+            {
+              "monster": "GuardiÃ£o Maldito",
+              "dps": 195.50300149356667
+            },
+            {
+              "monster": "Lamina",
+              "dps": 181.78417968750045
+            }
+          ]
+        },
+        {
+          "job": 6,
+          "dps": 137.4999228084792,
+          "ttk": 91.91008866581976,
+          "monsters": [
+            {
+              "monster": "Carniceiro",
+              "dps": 137.99141558478894
+            },
+            {
+              "monster": "Cavaleiro Fantasma",
+              "dps": 135.52479104434775
+            },
+            {
+              "monster": "Lagarto do Lago",
+              "dps": 137.99141558478894
+            },
+            {
+              "monster": "Pesadelo",
+              "dps": 154.7155474494489
+            },
+            {
+              "monster": "Cavaleiro das Cinzas",
+              "dps": 153.15044806985333
+            },
+            {
+              "monster": "Golem de Areia",
+              "dps": 155.48465504365848
+            },
+            {
+              "monster": "Naz",
+              "dps": 136.24148739085513
+            },
+            {
+              "monster": "Raia Venenosa",
+              "dps": 136.24148739085513
+            },
+            {
+              "monster": "Rei Hopi",
+              "dps": 147.5104226505059
+            },
+            {
+              "monster": "Lorde Centauro",
+              "dps": 134.24572394875952
+            },
+            {
+              "monster": "Omu",
+              "dps": 134.24572394875952
+            },
+            {
+              "monster": "Bruxa",
+              "dps": 154.95934699563458
+            },
+            {
+              "monster": "Centauro-L",
+              "dps": 134.6686006433827
+            },
+            {
+              "monster": "Duende Guerreiro",
+              "dps": 151.38714240579083
+            },
+            {
+              "monster": "GuardiÃ£o Maldito",
+              "dps": 134.82580207375952
+            },
+            {
+              "monster": "Lamina",
+              "dps": 137.00843003216946
+            }
+          ]
+        },
+        {
+          "job": 7,
+          "dps": 268.0677083333333,
+          "ttk": 48.892139408806585,
+          "monsters": [
+            {
+              "monster": "Carniceiro",
+              "dps": 266.3121527777778
+            },
+            {
+              "monster": "Cavaleiro Fantasma",
+              "dps": 262.88307291666666
+            },
+            {
+              "monster": "Lagarto do Lago",
+              "dps": 266.3121527777778
+            },
+            {
+              "monster": "Pesadelo",
+              "dps": 268.0677083333333
+            },
+            {
+              "monster": "Cavaleiro das Cinzas",
+              "dps": 297.9121527777778
+            },
+            {
+              "monster": "Golem de Areia",
+              "dps": 283.8677083333333
+            },
+            {
+              "monster": "Naz",
+              "dps": 268.0677083333333
+            },
+            {
+              "monster": "Raia Venenosa",
+              "dps": 268.0677083333333
+            },
+            {
+              "monster": "Rei Hopi",
+              "dps": 273.334375
+            },
+            {
+              "monster": "Lorde Centauro",
+              "dps": 273.334375
+            },
+            {
+              "monster": "Omu",
+              "dps": 273.334375
+            },
+            {
+              "monster": "Bruxa",
+              "dps": 278.6010416666667
+            },
+            {
+              "monster": "Centauro-L",
+              "dps": 262.88307291666666
+            },
+            {
+              "monster": "Duende Guerreiro",
+              "dps": 278.6010416666667
+            },
+            {
+              "monster": "GuardiÃ£o Maldito",
+              "dps": 266.3121527777778
+            },
+            {
+              "monster": "Lamina",
+              "dps": 268.0677083333333
+            }
+          ]
+        },
+        {
+          "job": 8,
+          "dps": 354.77232142857144,
+          "ttk": 37.23695059330785,
+          "monsters": [
+            {
+              "monster": "Carniceiro",
+              "dps": 353.6294642857143
+            },
+            {
+              "monster": "Cavaleiro Fantasma",
+              "dps": 351.34375
+            },
+            {
+              "monster": "Lagarto do Lago",
+              "dps": 353.6294642857143
+            },
+            {
+              "monster": "Pesadelo",
+              "dps": 354.77232142857144
+            },
+            {
+              "monster": "Cavaleiro das Cinzas",
+              "dps": 374.20089285714283
+            },
+            {
+              "monster": "Golem de Areia",
+              "dps": 365.0580357142857
+            },
+            {
+              "monster": "Naz",
+              "dps": 354.77232142857144
+            },
+            {
+              "monster": "Raia Venenosa",
+              "dps": 354.77232142857144
+            },
+            {
+              "monster": "Rei Hopi",
+              "dps": 358.20089285714283
+            },
+            {
+              "monster": "Lorde Centauro",
+              "dps": 358.20089285714283
+            },
+            {
+              "monster": "Omu",
+              "dps": 358.20089285714283
+            },
+            {
+              "monster": "Bruxa",
+              "dps": 361.6294642857143
+            },
+            {
+              "monster": "Centauro-L",
+              "dps": 351.34375
+            },
+            {
+              "monster": "Duende Guerreiro",
+              "dps": 361.6294642857143
+            },
+            {
+              "monster": "GuardiÃ£o Maldito",
+              "dps": 353.6294642857143
+            },
+            {
+              "monster": "Lamina",
+              "dps": 354.77232142857144
+            }
+          ]
+        },
+        {
+          "job": 9,
+          "dps": 489.1970756312786,
+          "ttk": 28.370308472857474,
+          "monsters": [
+            {
+              "monster": "Carniceiro",
+              "dps": 482.77744220842703
+            },
+            {
+              "monster": "Cavaleiro Fantasma",
+              "dps": 495.6167090541302
+            },
+            {
+              "monster": "Lagarto do Lago",
+              "dps": 482.77744220842703
+            },
+            {
+              "monster": "Pesadelo",
+              "dps": 519.3368453194762
+            },
+            {
+              "monster": "Cavaleiro das Cinzas",
+              "dps": 535.4452162039628
+            },
+            {
+              "monster": "Golem de Areia",
+              "dps": 588.9443545270656
+            },
+            {
+              "monster": "Naz",
+              "dps": 502.6663966238847
+            },
+            {
+              "monster": "Raia Venenosa",
+              "dps": 502.6663966238847
+            },
+            {
+              "monster": "Rei Hopi",
+              "dps": 405.3189491141189
+            },
+            {
+              "monster": "Lorde Centauro",
+              "dps": 476.2801977539069
+            },
+            {
+              "monster": "Omu",
+              "dps": 476.2801977539069
+            },
+            {
+              "monster": "Bruxa",
+              "dps": 513.8910113002239
+            },
+            {
+              "monster": "Centauro-L",
+              "dps": 475.760085832869
+            },
+            {
+              "monster": "Duende Guerreiro",
+              "dps": 474.981227364677
+            },
+            {
+              "monster": "GuardiÃ£o Maldito",
+              "dps": 463.8293902064739
+            },
+            {
+              "monster": "Lamina",
+              "dps": 500.4524534388958
+            }
+          ]
+        },
+        {
+          "job": 10,
+          "dps": 209.28689236111111,
+          "ttk": 62.4958316273013,
+          "monsters": [
+            {
+              "monster": "Carniceiro",
+              "dps": 207.73133680555554
+            },
+            {
+              "monster": "Cavaleiro Fantasma",
+              "dps": 204.62022569444446
+            },
+            {
+              "monster": "Lagarto do Lago",
+              "dps": 207.73133680555554
+            },
+            {
+              "monster": "Pesadelo",
+              "dps": 209.28689236111111
+            },
+            {
+              "monster": "Cavaleiro das Cinzas",
+              "dps": 235.73133680555554
+            },
+            {
+              "monster": "Golem de Areia",
+              "dps": 223.28689236111111
+            },
+            {
+              "monster": "Naz",
+              "dps": 209.28689236111111
+            },
+            {
+              "monster": "Raia Venenosa",
+              "dps": 209.28689236111111
+            },
+            {
+              "monster": "Rei Hopi",
+              "dps": 213.95355902777777
+            },
+            {
+              "monster": "Lorde Centauro",
+              "dps": 213.95355902777777
+            },
+            {
+              "monster": "Omu",
+              "dps": 213.95355902777777
+            },
+            {
+              "monster": "Bruxa",
+              "dps": 218.62022569444446
+            },
+            {
+              "monster": "Centauro-L",
+              "dps": 204.62022569444446
+            },
+            {
+              "monster": "Duende Guerreiro",
+              "dps": 218.62022569444446
+            },
+            {
+              "monster": "GuardiÃ£o Maldito",
+              "dps": 207.73133680555554
+            },
+            {
+              "monster": "Lamina",
+              "dps": 209.28689236111111
+            }
+          ]
+        },
+        {
+          "job": 11,
+          "dps": 461.32428696576403,
+          "ttk": 29.486139474461975,
+          "monsters": [
+            {
+              "monster": "Carniceiro",
+              "dps": 451.1354046989901
+            },
+            {
+              "monster": "Cavaleiro Fantasma",
+              "dps": 463.67297004251037
+            },
+            {
+              "monster": "Lagarto do Lago",
+              "dps": 451.1354046989901
+            },
+            {
+              "monster": "Pesadelo",
+              "dps": 480.75900448069973
+            },
+            {
+              "monster": "Cavaleiro das Cinzas",
+              "dps": 515.9270809397991
+            },
+            {
+              "monster": "Golem de Areia",
+              "dps": 559.2838816923268
+            },
+            {
+              "monster": "Naz",
+              "dps": 469.7925809972438
+            },
+            {
+              "monster": "Raia Venenosa",
+              "dps": 469.7925809972438
+            },
+            {
+              "monster": "Rei Hopi",
+              "dps": 379.30898868336493
+            },
+            {
+              "monster": "Lorde Centauro",
+              "dps": 452.9572610294129
+            },
+            {
+              "monster": "Omu",
+              "dps": 452.9572610294129
+            },
+            {
+              "monster": "Bruxa",
+              "dps": 498.27140538832845
+            },
+            {
+              "monster": "Centauro-L",
+              "dps": 458.9756038890177
+            },
+            {
+              "monster": "Duende Guerreiro",
+              "dps": 454.12959917853976
+            },
+            {
+              "monster": "GuardiÃ£o Maldito",
+              "dps": 449.09802246093864
+            },
+            {
+              "monster": "Lamina",
+              "dps": 471.2867862477034
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "level": 80,
+      "classes": [
+        {
+          "job": 1,
+          "dps": 490.5972739045501,
+          "ttk": 58.500389432710364,
+          "monsters": [
+            {
+              "monster": "Dawlin",
+              "dps": 486.55065387228115
+            },
+            {
+              "monster": "Omicron",
+              "dps": 491.80463697350393
+            },
+            {
+              "monster": "Sereia Profana",
+              "dps": 522.4308818783951
+            },
+            {
+              "monster": "Sombra",
+              "dps": 489.3899108355963
+            },
+            {
+              "monster": "Stygian",
+              "dps": 522.4308818783951
+            },
+            {
+              "monster": "Tiphoon",
+              "dps": 484.7799673063844
+            },
+            {
+              "monster": "Centauro Arqueira",
+              "dps": 498.98963442594953
+            },
+            {
+              "monster": "Destruidor",
+              "dps": 442.68996093749865
+            },
+            {
+              "monster": "Golem de AÃ§o",
+              "dps": 498.98963442594953
+            },
+            {
+              "monster": "Hiper-Maquina",
+              "dps": 442.68996093749865
+            },
+            {
+              "monster": "Incubus",
+              "dps": 505.5856156589658
+            },
+            {
+              "monster": "Maquina Vampira",
+              "dps": 462.35785368546055
+            }
+          ]
+        },
+        {
+          "job": 2,
+          "dps": 315.9374405605347,
+          "ttk": 89.65799398619731,
+          "monsters": [
+            {
+              "monster": "Dawlin",
+              "dps": 317.86140471813786
+            },
+            {
+              "monster": "Omicron",
+              "dps": 314.0134764029316
+            },
+            {
+              "monster": "Sereia Profana",
+              "dps": 321.66481008093405
+            },
+            {
+              "monster": "Sombra",
+              "dps": 307.55332398258844
+            },
+            {
+              "monster": "Stygian",
+              "dps": 321.66481008093405
+            },
+            {
+              "monster": "Tiphoon",
+              "dps": 295.47405567044586
+            },
+            {
+              "monster": "Centauro Arqueira",
+              "dps": 319.0482002208442
+            },
+            {
+              "monster": "Destruidor",
+              "dps": 279.9969737732338
+            },
+            {
+              "monster": "Golem de AÃ§o",
+              "dps": 319.0482002208442
+            },
+            {
+              "monster": "Hiper-Maquina",
+              "dps": 279.9969737732338
+            },
+            {
+              "monster": "Incubus",
+              "dps": 339.25618489583405
+            },
+            {
+              "monster": "Maquina Vampira",
+              "dps": 302.3906545202722
+            }
+          ]
+        },
+        {
+          "job": 3,
+          "dps": 538.0042662631082,
+          "ttk": 52.30557030621438,
+          "monsters": [
+            {
+              "monster": "Dawlin",
+              "dps": 558.4826597279721
+            },
+            {
+              "monster": "Omicron",
+              "dps": 551.3621645626391
+            },
+            {
+              "monster": "Sereia Profana",
+              "dps": 569.7037293333806
+            },
+            {
+              "monster": "Sombra",
+              "dps": 542.4947578929831
+            },
+            {
+              "monster": "Stygian",
+              "dps": 569.7037293333806
+            },
+            {
+              "monster": "Tiphoon",
+              "dps": 519.850982598649
+            },
+            {
+              "monster": "Centauro Arqueira",
+              "dps": 533.5137746332333
+            },
+            {
+              "monster": "Destruidor",
+              "dps": 483.22500962909413
+            },
+            {
+              "monster": "Golem de AÃ§o",
+              "dps": 533.5137746332333
+            },
+            {
+              "monster": "Hiper-Maquina",
+              "dps": 483.22500962909413
+            },
+            {
+              "monster": "Incubus",
+              "dps": 563.898234139304
+            },
+            {
+              "monster": "Maquina Vampira",
+              "dps": 522.1626619699698
+            }
+          ]
+        },
+        {
+          "job": 4,
+          "dps": 303.85613116096124,
+          "ttk": 93.5115229112441,
+          "monsters": [
+            {
+              "monster": "Dawlin",
+              "dps": 297.7844884535853
+            },
+            {
+              "monster": "Omicron",
+              "dps": 305.0659359202673
+            },
+            {
+              "monster": "Sereia Profana",
+              "dps": 320.3470458984383
+            },
+            {
+              "monster": "Sombra",
+              "dps": 301.5564503389254
+            },
+            {
+              "monster": "Stygian",
+              "dps": 320.3470458984383
+            },
+            {
+              "monster": "Tiphoon",
+              "dps": 302.6463264016552
+            },
+            {
+              "monster": "Centauro Arqueira",
+              "dps": 316.74042825137946
+            },
+            {
+              "monster": "Destruidor",
+              "dps": 273.1360796760117
+            },
+            {
+              "monster": "Golem de AÃ§o",
+              "dps": 316.74042825137946
+            },
+            {
+              "monster": "Hiper-Maquina",
+              "dps": 273.1360796760117
+            },
+            {
+              "monster": "Incubus",
+              "dps": 319.4802569221056
+            },
+            {
+              "monster": "Maquina Vampira",
+              "dps": 286.4878611845136
+            }
+          ]
+        },
+        {
+          "job": 5,
+          "dps": 406.82866178601097,
+          "ttk": 72.08949531985782,
+          "monsters": [
+            {
+              "monster": "Dawlin",
+              "dps": 408.95281456953745
+            },
+            {
+              "monster": "Omicron",
+              "dps": 383.92406741515
+            },
+            {
+              "monster": "Sereia Profana",
+              "dps": 422.52166545943817
+            },
+            {
+              "monster": "Sombra",
+              "dps": 405.6378699296368
+            },
+            {
+              "monster": "Stygian",
+              "dps": 422.52166545943817
+            },
+            {
+              "monster": "Tiphoon",
+              "dps": 375.4115143832791
+            },
+            {
+              "monster": "Centauro Arqueira",
+              "dps": 408.01945364238514
+            },
+            {
+              "monster": "Destruidor",
+              "dps": 388.68781689776586
+            },
+            {
+              "monster": "Golem de AÃ§o",
+              "dps": 408.01945364238514
+            },
+            {
+              "monster": "Hiper-Maquina",
+              "dps": 388.68781689776586
+            },
+            {
+              "monster": "Incubus",
+              "dps": 439.019589455713
+            },
+            {
+              "monster": "Maquina Vampira",
+              "dps": 401.87034354304734
+            }
+          ]
+        },
+        {
+          "job": 6,
+          "dps": 253.3151119456578,
+          "ttk": 111.02424885379232,
+          "monsters": [
+            {
+              "monster": "Dawlin",
+              "dps": 252.68331729664584
+            },
+            {
+              "monster": "Omicron",
+              "dps": 253.94690659466974
+            },
+            {
+              "monster": "Sereia Profana",
+              "dps": 262.7357752182911
+            },
+            {
+              "monster": "Sombra",
+              "dps": 249.68282183478922
+            },
+            {
+              "monster": "Stygian",
+              "dps": 262.7357752182911
+            },
+            {
+              "monster": "Tiphoon",
+              "dps": 242.25154024012008
+            },
+            {
+              "monster": "Centauro Arqueira",
+              "dps": 261.5149033490356
+            },
+            {
+              "monster": "Destruidor",
+              "dps": 224.17256792853917
+            },
+            {
+              "monster": "Golem de AÃ§o",
+              "dps": 261.5149033490356
+            },
+            {
+              "monster": "Hiper-Maquina",
+              "dps": 224.17256792853917
+            },
+            {
+              "monster": "Incubus",
+              "dps": 272.9229449103867
+            },
+            {
+              "monster": "Maquina Vampira",
+              "dps": 237.95701688878736
+            }
+          ]
+        },
+        {
+          "job": 7,
+          "dps": 303.2804253472222,
+          "ttk": 95.1959689838418,
+          "monsters": [
+            {
+              "monster": "Dawlin",
+              "dps": 312.04609375
+            },
+            {
+              "monster": "Omicron",
+              "dps": 310.2905381944444
+            },
+            {
+              "monster": "Sereia Profana",
+              "dps": 305.02387152777777
+            },
+            {
+              "monster": "Sombra",
+              "dps": 305.02387152777777
+            },
+            {
+              "monster": "Stygian",
+              "dps": 305.02387152777777
+            },
+            {
+              "monster": "Tiphoon",
+              "dps": 293.3388888888889
+            },
+            {
+              "monster": "Centauro Arqueira",
+              "dps": 284.88009982638886
+            },
+            {
+              "monster": "Destruidor",
+              "dps": 284.88009982638886
+            },
+            {
+              "monster": "Golem de AÃ§o",
+              "dps": 284.88009982638886
+            },
+            {
+              "monster": "Hiper-Maquina",
+              "dps": 284.88009982638886
+            },
+            {
+              "monster": "Incubus",
+              "dps": 301.53697916666664
+            },
+            {
+              "monster": "Maquina Vampira",
+              "dps": 305.8984157986111
+            }
+          ]
+        },
+        {
+          "job": 8,
+          "dps": 434.21149553571433,
+          "ttk": 66.82678396976911,
+          "monsters": [
+            {
+              "monster": "Dawlin",
+              "dps": 439.92578125
+            },
+            {
+              "monster": "Omicron",
+              "dps": 438.78292410714283
+            },
+            {
+              "monster": "Sereia Profana",
+              "dps": 435.35435267857144
+            },
+            {
+              "monster": "Sombra",
+              "dps": 435.35435267857144
+            },
+            {
+              "monster": "Stygian",
+              "dps": 435.35435267857144
+            },
+            {
+              "monster": "Tiphoon",
+              "dps": 427.35435267857144
+            },
+            {
+              "monster": "Centauro Arqueira",
+              "dps": 420.49720982142856
+            },
+            {
+              "monster": "Destruidor",
+              "dps": 420.49720982142856
+            },
+            {
+              "monster": "Golem de AÃ§o",
+              "dps": 420.49720982142856
+            },
+            {
+              "monster": "Hiper-Maquina",
+              "dps": 420.49720982142856
+            },
+            {
+              "monster": "Incubus",
+              "dps": 433.06863839285717
+            },
+            {
+              "monster": "Maquina Vampira",
+              "dps": 435.35435267857144
+            }
+          ]
+        },
+        {
+          "job": 9,
+          "dps": 998.9908355189747,
+          "ttk": 28.459025952010315,
+          "monsters": [
+            {
+              "monster": "Dawlin",
+              "dps": 961.4171058524009
+            },
+            {
+              "monster": "Omicron",
+              "dps": 1005.5467934221555
+            },
+            {
+              "monster": "Sereia Profana",
+              "dps": 1080.1368952985506
+            },
+            {
+              "monster": "Sombra",
+              "dps": 981.6343835449233
+            },
+            {
+              "monster": "Stygian",
+              "dps": 1080.1368952985506
+            },
+            {
+              "monster": "Tiphoon",
+              "dps": 992.4348776157939
+            },
+            {
+              "monster": "Centauro Arqueira",
+              "dps": 1014.0032435825908
+            },
+            {
+              "monster": "Destruidor",
+              "dps": 890.9577020089299
+            },
+            {
+              "monster": "Golem de AÃ§o",
+              "dps": 1014.0032435825908
+            },
+            {
+              "monster": "Hiper-Maquina",
+              "dps": 890.9577020089299
+            },
+            {
+              "monster": "Incubus",
+              "dps": 1045.854739850727
+            },
+            {
+              "monster": "Maquina Vampira",
+              "dps": 925.4626840471553
+            }
+          ]
+        },
+        {
+          "job": 10,
+          "dps": 293.25868055555554,
+          "ttk": 98.52426071914198,
+          "monsters": [
+            {
+              "monster": "Dawlin",
+              "dps": 301.0364583333333
+            },
+            {
+              "monster": "Omicron",
+              "dps": 299.48090277777777
+            },
+            {
+              "monster": "Sereia Profana",
+              "dps": 294.8142361111111
+            },
+            {
+              "monster": "Sombra",
+              "dps": 294.8142361111111
+            },
+            {
+              "monster": "Stygian",
+              "dps": 294.8142361111111
+            },
+            {
+              "monster": "Tiphoon",
+              "dps": 283.92534722222223
+            },
+            {
+              "monster": "Centauro Arqueira",
+              "dps": 274.5920138888889
+            },
+            {
+              "monster": "Destruidor",
+              "dps": 274.5920138888889
+            },
+            {
+              "monster": "Golem de AÃ§o",
+              "dps": 274.5920138888889
+            },
+            {
+              "monster": "Hiper-Maquina",
+              "dps": 274.5920138888889
+            },
+            {
+              "monster": "Incubus",
+              "dps": 291.703125
+            },
+            {
+              "monster": "Maquina Vampira",
+              "dps": 294.8142361111111
+            }
+          ]
+        },
+        {
+          "job": 11,
+          "dps": 963.454155417052,
+          "ttk": 30.148842917308492,
+          "monsters": [
+            {
+              "monster": "Dawlin",
+              "dps": 931.3709752699931
+            },
+            {
+              "monster": "Omicron",
+              "dps": 961.493612850416
+            },
+            {
+              "monster": "Sereia Profana",
+              "dps": 1023.2220423081368
+            },
+            {
+              "monster": "Sombra",
+              "dps": 955.6443301930171
+            },
+            {
+              "monster": "Stygian",
+              "dps": 1023.2220423081368
+            },
+            {
+              "monster": "Tiphoon",
+              "dps": 965.414697983688
+            },
+            {
+              "monster": "Centauro Arqueira",
+              "dps": 977.9495813706367
+            },
+            {
+              "monster": "Destruidor",
+              "dps": 863.6366110409028
+            },
+            {
+              "monster": "Golem de AÃ§o",
+              "dps": 977.9495813706367
+            },
+            {
+              "monster": "Hiper-Maquina",
+              "dps": 863.6366110409028
+            },
+            {
+              "monster": "Incubus",
+              "dps": 972.5166159237157
+            },
+            {
+              "monster": "Maquina Vampira",
+              "dps": 896.6235136144323
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "level": 90,
+      "classes": [
+        {
+          "job": 1,
+          "dps": 458.7554156759497,
+          "ttk": 98.50757615213215,
+          "monsters": [
+            {
+              "monster": "Grotesco",
+              "dps": 429.92896059782476
+            },
+            {
+              "monster": "Guardiao de AÃ§o",
+              "dps": 487.5818707540746
+            }
+          ]
+        },
+        {
+          "job": 2,
+          "dps": 256.72827148437545,
+          "ttk": 175.04193873937635,
+          "monsters": [
+            {
+              "monster": "Grotesco",
+              "dps": 249.03743489583377
+            },
+            {
+              "monster": "Guardiao de AÃ§o",
+              "dps": 264.41910807291714
+            }
+          ]
+        },
+        {
+          "job": 3,
+          "dps": 511.37618962415024,
+          "ttk": 88.12984656277513,
+          "monsters": [
+            {
+              "monster": "Grotesco",
+              "dps": 486.6397914367192
+            },
+            {
+              "monster": "Guardiao de AÃ§o",
+              "dps": 536.1125878115813
+            }
+          ]
+        },
+        {
+          "job": 4,
+          "dps": 295.95949778837394,
+          "ttk": 152.3911236931531,
+          "monsters": [
+            {
+              "monster": "Grotesco",
+              "dps": 280.39093376608525
+            },
+            {
+              "monster": "Guardiao de AÃ§o",
+              "dps": 311.52806181066256
+            }
+          ]
+        },
+        {
+          "job": 5,
+          "dps": 335.7469086299677,
+          "ttk": 134.190436750899,
+          "monsters": [
+            {
+              "monster": "Grotesco",
+              "dps": 320.0875995964412
+            },
+            {
+              "monster": "Guardiao de AÃ§o",
+              "dps": 351.40621766349426
+            }
+          ]
+        },
+        {
+          "job": 6,
+          "dps": 241.8815917968756,
+          "ttk": 186.57734313225976,
+          "monsters": [
+            {
+              "monster": "Grotesco",
+              "dps": 228.35134708180203
+            },
+            {
+              "monster": "Guardiao de AÃ§o",
+              "dps": 255.41183651194916
+            }
+          ]
+        },
+        {
+          "job": 7,
+          "dps": 296.81477864583337,
+          "ttk": 150.83101447586176,
+          "monsters": [
+            {
+              "monster": "Grotesco",
+              "dps": 299.1481119791667
+            },
+            {
+              "monster": "Guardiao de AÃ§o",
+              "dps": 294.4814453125
+            }
+          ]
+        },
+        {
+          "job": 8,
+          "dps": 424.7661830357143,
+          "ttk": 105.42309699523187,
+          "monsters": [
+            {
+              "monster": "Grotesco",
+              "dps": 426.48046875
+            },
+            {
+              "monster": "Guardiao de AÃ§o",
+              "dps": 423.05189732142856
+            }
+          ]
+        },
+        {
+          "job": 9,
+          "dps": 987.7088329729366,
+          "ttk": 45.67929267340506,
+          "monsters": [
+            {
+              "monster": "Grotesco",
+              "dps": 933.8288331822
+            },
+            {
+              "monster": "Guardiao de AÃ§o",
+              "dps": 1041.5888327636733
+            }
+          ]
+        },
+        {
+          "job": 10,
+          "dps": 292.02473958333337,
+          "ttk": 153.30384818631754,
+          "monsters": [
+            {
+              "monster": "Grotesco",
+              "dps": 294.3580729166667
+            },
+            {
+              "monster": "Guardiao de AÃ§o",
+              "dps": 289.69140625
+            }
+          ]
+        },
+        {
+          "job": 11,
+          "dps": 892.6193362965325,
+          "ttk": 50.53703674760929,
+          "monsters": [
+            {
+              "monster": "Grotesco",
+              "dps": 844.724875057447
+            },
+            {
+              "monster": "Guardiao de AÃ§o",
+              "dps": 940.5137975356182
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "level": 100,
+      "classes": [
+        {
+          "job": 1,
+          "dps": 671.9769322138227,
+          "ttk": 35.35204253022629,
+          "monsters": [
+            {
+              "monster": "Conjuradora",
+              "dps": 728.334666058082
+            },
+            {
+              "monster": "Guerreiro Ciclope",
+              "dps": 515.7789028532593
+            },
+            {
+              "monster": "Gorgon",
+              "dps": 687.1794395380414
+            },
+            {
+              "monster": "Tartaruga Blindada",
+              "dps": 510.6685521399441
+            },
+            {
+              "monster": "Nevasca",
+              "dps": 697.5590070906908
+            },
+            {
+              "monster": "Caoscara",
+              "dps": 629.1588733440877
+            },
+            {
+              "monster": "Passaro Demoniaco",
+              "dps": 525.442094938857
+            },
+            {
+              "monster": "Verme de Fogo",
+              "dps": 706.7057462211255
+            },
+            {
+              "monster": "Cao Infernal",
+              "dps": 673.4428952955143
+            },
+            {
+              "monster": "Quimera",
+              "dps": 670.5109691321311
+            },
+            {
+              "monster": "GuardiÃ£o Negro",
+              "dps": 706.2583485478918
+            },
+            {
+              "monster": "Mago Negro",
+              "dps": 655.363923658286
+            }
+          ]
+        },
+        {
+          "job": 2,
+          "dps": 506.8958604600705,
+          "ttk": 48.652852966805426,
+          "monsters": [
+            {
+              "monster": "Conjuradora",
+              "dps": 557.0386827256956
+            },
+            {
+              "monster": "Guerreiro Ciclope",
+              "dps": 509.6596137152788
+            },
+            {
+              "monster": "Gorgon",
+              "dps": 512.1085611979177
+            },
+            {
+              "monster": "Tartaruga Blindada",
+              "dps": 504.1321072048621
+            },
+            {
+              "monster": "Nevasca",
+              "dps": 520.7146267361121
+            },
+            {
+              "monster": "Caoscara",
+              "dps": 441.92127821180645
+            },
+            {
+              "monster": "Passaro Demoniaco",
+              "dps": 501.5305447048621
+            },
+            {
+              "monster": "Verme de Fogo",
+              "dps": 549.863226996529
+            },
+            {
+              "monster": "Cao Infernal",
+              "dps": 475.9828016493065
+            },
+            {
+              "monster": "Quimera",
+              "dps": 475.9828016493065
+            },
+            {
+              "monster": "GuardiÃ£o Negro",
+              "dps": 534.9793836805567
+            },
+            {
+              "monster": "Mago Negro",
+              "dps": 475.4159071180565
+            }
+          ]
+        },
+        {
+          "job": 3,
+          "dps": 689.0876326515374,
+          "ttk": 34.080153004509846,
+          "monsters": [
+            {
+              "monster": "Conjuradora",
+              "dps": 766.3288328102021
+            },
+            {
+              "monster": "Guerreiro Ciclope",
+              "dps": 688.3406198261604
+            },
+            {
+              "monster": "Gorgon",
+              "dps": 734.4593407951634
+            },
+            {
+              "monster": "Tartaruga Blindada",
+              "dps": 604.6081605845303
+            },
+            {
+              "monster": "Nevasca",
+              "dps": 757.2922415378971
+            },
+            {
+              "monster": "Caoscara",
+              "dps": 627.1403102580036
+            },
+            {
+              "monster": "Passaro Demoniaco",
+              "dps": 689.8346454769146
+            },
+            {
+              "monster": "Verme de Fogo",
+              "dps": 749.0542074825256
+            },
+            {
+              "monster": "Cao Infernal",
+              "dps": 683.596229132176
+            },
+            {
+              "monster": "Quimera",
+              "dps": 683.596229132176
+            },
+            {
+              "monster": "GuardiÃ£o Negro",
+              "dps": 723.1651188258846
+            },
+            {
+              "monster": "Mago Negro",
+              "dps": 676.4899584368117
+            }
+          ]
+        },
+        {
+          "job": 4,
+          "dps": 442.90108714384303,
+          "ttk": 54.10854055129339,
+          "monsters": [
+            {
+              "monster": "Conjuradora",
+              "dps": 465.0311063878688
+            },
+            {
+              "monster": "Guerreiro Ciclope",
+              "dps": 299.65093635110367
+            },
+            {
+              "monster": "Gorgon",
+              "dps": 450.2597620346978
+            },
+            {
+              "monster": "Tartaruga Blindada",
+              "dps": 296.00131046070845
+            },
+            {
+              "monster": "Nevasca",
+              "dps": 458.30201272403605
+            },
+            {
+              "monster": "Caoscara",
+              "dps": 409.4466193704054
+            },
+            {
+              "monster": "Passaro Demoniaco",
+              "dps": 295.75663847081876
+            },
+            {
+              "monster": "Verme de Fogo",
+              "dps": 467.4338809742659
+            },
+            {
+              "monster": "Cao Infernal",
+              "dps": 443.03586353975294
+            },
+            {
+              "monster": "Quimera",
+              "dps": 442.76631074793306
+            },
+            {
+              "monster": "GuardiÃ£o Negro",
+              "dps": 467.52038215188537
+            },
+            {
+              "monster": "Mago Negro",
+              "dps": 428.3740916532639
+            }
+          ]
+        },
+        {
+          "job": 5,
+          "dps": 458.6027880536021,
+          "ttk": 52.60623869643689,
+          "monsters": [
+            {
+              "monster": "Conjuradora",
+              "dps": 517.1514124586106
+            },
+            {
+              "monster": "Guerreiro Ciclope",
+              "dps": 415.40989755794806
+            },
+            {
+              "monster": "Gorgon",
+              "dps": 492.28589998965356
+            },
+            {
+              "monster": "Tartaruga Blindada",
+              "dps": 409.7293757760772
+            },
+            {
+              "monster": "Nevasca",
+              "dps": 434.81881855339515
+            },
+            {
+              "monster": "Caoscara",
+              "dps": 389.4998835885771
+            },
+            {
+              "monster": "Passaro Demoniaco",
+              "dps": 417.55590981995135
+            },
+            {
+              "monster": "Verme de Fogo",
+              "dps": 528.25531612169
+            },
+            {
+              "monster": "Cao Infernal",
+              "dps": 462.44415485306405
+            },
+            {
+              "monster": "Quimera",
+              "dps": 462.44415485306405
+            },
+            {
+              "monster": "GuardiÃ£o Negro",
+              "dps": 518.3168848302993
+            },
+            {
+              "monster": "Mago Negro",
+              "dps": 454.7614212541402
+            }
+          ]
+        },
+        {
+          "job": 6,
+          "dps": 463.78338744308894,
+          "ttk": 50.98764232426116,
+          "monsters": [
+            {
+              "monster": "Conjuradora",
+              "dps": 528.4462955298027
+            },
+            {
+              "monster": "Guerreiro Ciclope",
+              "dps": 439.8565552566236
+            },
+            {
+              "monster": "Gorgon",
+              "dps": 479.5362621585277
+            },
+            {
+              "monster": "Tartaruga Blindada",
+              "dps": 435.13752716266663
+            },
+            {
+              "monster": "Nevasca",
+              "dps": 487.0813392487595
+            },
+            {
+              "monster": "Caoscara",
+              "dps": 432.38636951572954
+            },
+            {
+              "monster": "Passaro Demoniaco",
+              "dps": 434.81429144246795
+            },
+            {
+              "monster": "Verme de Fogo",
+              "dps": 521.536145747104
+            },
+            {
+              "monster": "Cao Infernal",
+              "dps": 462.6850294908952
+            },
+            {
+              "monster": "Quimera",
+              "dps": 464.8817453952826
+            },
+            {
+              "monster": "GuardiÃ£o Negro",
+              "dps": 514.7619386382463
+            },
+            {
+              "monster": "Mago Negro",
+              "dps": 455.9120188327826
+            }
+          ]
+        },
+        {
+          "job": 7,
+          "dps": 373.54548611111113,
+          "ttk": 64.51469911969443,
+          "monsters": [
+            {
+              "monster": "Conjuradora",
+              "dps": 375.87881944444445
+            },
+            {
+              "monster": "Guerreiro Ciclope",
+              "dps": 385.37621527777776
+            },
+            {
+              "monster": "Gorgon",
+              "dps": 387.04583333333335
+            },
+            {
+              "monster": "Tartaruga Blindada",
+              "dps": 380.54548611111113
+            },
+            {
+              "monster": "Nevasca",
+              "dps": 395.7415798611111
+            },
+            {
+              "monster": "Caoscara",
+              "dps": 332.3232638888889
+            },
+            {
+              "monster": "Passaro Demoniaco",
+              "dps": 380.54548611111113
+            },
+            {
+              "monster": "Verme de Fogo",
+              "dps": 371.21215277777776
+            },
+            {
+              "monster": "Cao Infernal",
+              "dps": 360.3232638888889
+            },
+            {
+              "monster": "Quimera",
+              "dps": 360.3232638888889
+            },
+            {
+              "monster": "GuardiÃ£o Negro",
+              "dps": 360.3232638888889
+            },
+            {
+              "monster": "Mago Negro",
+              "dps": 360.3232638888889
+            }
+          ]
+        },
+        {
+          "job": 8,
+          "dps": 492.3482142857143,
+          "ttk": 48.281628085311354,
+          "monsters": [
+            {
+              "monster": "Conjuradora",
+              "dps": 494.0625
+            },
+            {
+              "monster": "Guerreiro Ciclope",
+              "dps": 500.91964285714283
+            },
+            {
+              "monster": "Gorgon",
+              "dps": 502.0625
+            },
+            {
+              "monster": "Tartaruga Blindada",
+              "dps": 497.49107142857144
+            },
+            {
+              "monster": "Nevasca",
+              "dps": 507.7767857142857
+            },
+            {
+              "monster": "Caoscara",
+              "dps": 462.0625
+            },
+            {
+              "monster": "Passaro Demoniaco",
+              "dps": 497.49107142857144
+            },
+            {
+              "monster": "Verme de Fogo",
+              "dps": 490.63392857142856
+            },
+            {
+              "monster": "Cao Infernal",
+              "dps": 482.63392857142856
+            },
+            {
+              "monster": "Quimera",
+              "dps": 482.63392857142856
+            },
+            {
+              "monster": "GuardiÃ£o Negro",
+              "dps": 482.63392857142856
+            },
+            {
+              "monster": "Mago Negro",
+              "dps": 482.63392857142856
+            }
+          ]
+        },
+        {
+          "job": 9,
+          "dps": 1508.7027166573682,
+          "ttk": 15.946970541534913,
+          "monsters": [
+            {
+              "monster": "Conjuradora",
+              "dps": 1561.638774902346
+            },
+            {
+              "monster": "Guerreiro Ciclope",
+              "dps": 840.4698264508941
+            },
+            {
+              "monster": "Gorgon",
+              "dps": 1511.0720435616652
+            },
+            {
+              "monster": "Tartaruga Blindada",
+              "dps": 835.6922135532936
+            },
+            {
+              "monster": "Nevasca",
+              "dps": 1542.5920480957054
+            },
+            {
+              "monster": "Caoscara",
+              "dps": 1410.6026312779038
+            },
+            {
+              "monster": "Passaro Demoniaco",
+              "dps": 950.3909400460393
+            },
+            {
+              "monster": "Verme de Fogo",
+              "dps": 1578.9287862723238
+            },
+            {
+              "monster": "Cao Infernal",
+              "dps": 1508.7027166573682
+            },
+            {
+              "monster": "Quimera",
+              "dps": 1508.7027166573682
+            },
+            {
+              "monster": "GuardiÃ£o Negro",
+              "dps": 1561.4466306152367
+            },
+            {
+              "monster": "Mago Negro",
+              "dps": 1440.1597443498904
+            }
+          ]
+        },
+        {
+          "job": 10,
+          "dps": 395.90581597222223,
+          "ttk": 60.769536255381226,
+          "monsters": [
+            {
+              "monster": "Conjuradora",
+              "dps": 398.23914930555554
+            },
+            {
+              "monster": "Guerreiro Ciclope",
+              "dps": 407.5724826388889
+            },
+            {
+              "monster": "Gorgon",
+              "dps": 409.12803819444446
+            },
+            {
+              "monster": "Tartaruga Blindada",
+              "dps": 402.90581597222223
+            },
+            {
+              "monster": "Nevasca",
+              "dps": 416.90581597222223
+            },
+            {
+              "monster": "Caoscara",
+              "dps": 354.79210069444446
+            },
+            {
+              "monster": "Passaro Demoniaco",
+              "dps": 402.90581597222223
+            },
+            {
+              "monster": "Verme de Fogo",
+              "dps": 393.5724826388889
+            },
+            {
+              "monster": "Cao Infernal",
+              "dps": 382.68359375
+            },
+            {
+              "monster": "Quimera",
+              "dps": 382.68359375
+            },
+            {
+              "monster": "GuardiÃ£o Negro",
+              "dps": 382.68359375
+            },
+            {
+              "monster": "Mago Negro",
+              "dps": 382.68359375
+            }
+          ]
+        },
+        {
+          "job": 11,
+          "dps": 1302.1309204101594,
+          "ttk": 18.47471671499235,
+          "monsters": [
+            {
+              "monster": "Conjuradora",
+              "dps": 1297.8222440831835
+            },
+            {
+              "monster": "Guerreiro Ciclope",
+              "dps": 733.0669771082279
+            },
+            {
+              "monster": "Gorgon",
+              "dps": 1310.0878008674206
+            },
+            {
+              "monster": "Tartaruga Blindada",
+              "dps": 728.4281939338254
+            },
+            {
+              "monster": "Nevasca",
+              "dps": 1328.548160328588
+            },
+            {
+              "monster": "Caoscara",
+              "dps": 1210.1086605296446
+            },
+            {
+              "monster": "Passaro Demoniaco",
+              "dps": 728.4281939338254
+            },
+            {
+              "monster": "Verme de Fogo",
+              "dps": 1317.8837962431098
+            },
+            {
+              "monster": "Cao Infernal",
+              "dps": 1306.4395967371356
+            },
+            {
+              "monster": "Quimera",
+              "dps": 1310.4811760397552
+            },
+            {
+              "monster": "GuardiÃ£o Negro",
+              "dps": 1336.9315365062073
+            },
+            {
+              "monster": "Mago Negro",
+              "dps": 1256.973363539755
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "level": 110,
+      "classes": [
+        {
+          "job": 1,
+          "dps": 1074.6667569247184,
+          "ttk": 47.15257186083532,
+          "monsters": [
+            {
+              "monster": "Arqueira das Cinzas",
+              "dps": 1101.8040051745156
+            },
+            {
+              "monster": "Lutador das Cinzas",
+              "dps": 1093.699327186488
+            },
+            {
+              "monster": "Mecanico das Cinzas",
+              "dps": 978.9594821682248
+            },
+            {
+              "monster": "Pike das Cinzas",
+              "dps": 1093.699327186488
+            },
+            {
+              "monster": "Esqueleto de Rei Hopi",
+              "dps": 1096.4261661678192
+            },
+            {
+              "monster": "Golem Robo",
+              "dps": 629.9122235186703
+            },
+            {
+              "monster": "Guardiao do Templo",
+              "dps": 1237.3221070921295
+            },
+            {
+              "monster": "Atalanta das Cinzas",
+              "dps": 1055.6341866629489
+            },
+            {
+              "monster": "Mago das Cinzas",
+              "dps": 956.6430366020721
+            },
+            {
+              "monster": "Sacerdotisa das Cinzas",
+              "dps": 1055.6341866629489
+            }
+          ]
+        },
+        {
+          "job": 2,
+          "dps": 771.2748480902794,
+          "ttk": 64.37819920363442,
+          "monsters": [
+            {
+              "monster": "Arqueira das Cinzas",
+              "dps": 773.1891276041683
+            },
+            {
+              "monster": "Lutador das Cinzas",
+              "dps": 771.2748480902794
+            },
+            {
+              "monster": "Mecanico das Cinzas",
+              "dps": 713.8871527777794
+            },
+            {
+              "monster": "Pike das Cinzas",
+              "dps": 771.2748480902794
+            },
+            {
+              "monster": "Esqueleto de Rei Hopi",
+              "dps": 759.3779296875017
+            },
+            {
+              "monster": "Golem Robo",
+              "dps": 619.463541666668
+            },
+            {
+              "monster": "Guardiao do Templo",
+              "dps": 837.1402994791686
+            },
+            {
+              "monster": "Atalanta das Cinzas",
+              "dps": 781.4472656250017
+            },
+            {
+              "monster": "Mago das Cinzas",
+              "dps": 714.5820312500016
+            },
+            {
+              "monster": "Sacerdotisa das Cinzas",
+              "dps": 781.4472656250017
+            }
+          ]
+        },
+        {
+          "job": 3,
+          "dps": 1041.8073340634223,
+          "ttk": 47.898473817319314,
+          "monsters": [
+            {
+              "monster": "Arqueira das Cinzas",
+              "dps": 1059.7932152260419
+            },
+            {
+              "monster": "Lutador das Cinzas",
+              "dps": 1057.0016405387719
+            },
+            {
+              "monster": "Mecanico das Cinzas",
+              "dps": 955.2906189638543
+            },
+            {
+              "monster": "Pike das Cinzas",
+              "dps": 1057.0016405387719
+            },
+            {
+              "monster": "Esqueleto de Rei Hopi",
+              "dps": 1063.3819315098442
+            },
+            {
+              "monster": "Golem Robo",
+              "dps": 604.5201981006269
+            },
+            {
+              "monster": "Guardiao do Templo",
+              "dps": 1180.4339631047674
+            },
+            {
+              "monster": "Atalanta das Cinzas",
+              "dps": 1026.6130275880726
+            },
+            {
+              "monster": "Mago das Cinzas",
+              "dps": 965.4928263256553
+            },
+            {
+              "monster": "Sacerdotisa das Cinzas",
+              "dps": 1026.6130275880726
+            }
+          ]
+        },
+        {
+          "job": 4,
+          "dps": 594.2193320571207,
+          "ttk": 81.4144631533851,
+          "monsters": [
+            {
+              "monster": "Arqueira das Cinzas",
+              "dps": 643.5363527007466
+            },
+            {
+              "monster": "Lutador das Cinzas",
+              "dps": 636.1882696088592
+            },
+            {
+              "monster": "Mecanico das Cinzas",
+              "dps": 564.5205142798027
+            },
+            {
+              "monster": "Pike das Cinzas",
+              "dps": 636.1882696088592
+            },
+            {
+              "monster": "Esqueleto de Rei Hopi",
+              "dps": 591.5486599751671
+            },
+            {
+              "monster": "Golem Robo",
+              "dps": 335.74082936672266
+            },
+            {
+              "monster": "Guardiao do Templo",
+              "dps": 722.5539696295548
+            },
+            {
+              "monster": "Atalanta das Cinzas",
+              "dps": 594.2193320571207
+            },
+            {
+              "monster": "Mago das Cinzas",
+              "dps": 551.2802022971869
+            },
+            {
+              "monster": "Sacerdotisa das Cinzas",
+              "dps": 594.2193320571207
+            }
+          ]
+        },
+        {
+          "job": 5,
+          "dps": 700.6977571399024,
+          "ttk": 71.07264624362662,
+          "monsters": [
+            {
+              "monster": "Arqueira das Cinzas",
+              "dps": 704.3769725269058
+            },
+            {
+              "monster": "Lutador das Cinzas",
+              "dps": 702.2399498137435
+            },
+            {
+              "monster": "Mecanico das Cinzas",
+              "dps": 648.6417697123361
+            },
+            {
+              "monster": "Pike das Cinzas",
+              "dps": 702.2399498137435
+            },
+            {
+              "monster": "Esqueleto de Rei Hopi",
+              "dps": 699.5168602545547
+            },
+            {
+              "monster": "Golem Robo",
+              "dps": 516.3474298944549
+            },
+            {
+              "monster": "Guardiao do Templo",
+              "dps": 841.8797858029823
+            },
+            {
+              "monster": "Atalanta das Cinzas",
+              "dps": 700.6977571399024
+            },
+            {
+              "monster": "Mago das Cinzas",
+              "dps": 645.8145889383294
+            },
+            {
+              "monster": "Sacerdotisa das Cinzas",
+              "dps": 700.6977571399024
+            }
+          ]
+        },
+        {
+          "job": 6,
+          "dps": 768.9989102597287,
+          "ttk": 64.02727270757478,
+          "monsters": [
+            {
+              "monster": "Arqueira das Cinzas",
+              "dps": 812.7088291597703
+            },
+            {
+              "monster": "Lutador das Cinzas",
+              "dps": 809.6180411837769
+            },
+            {
+              "monster": "Mecanico das Cinzas",
+              "dps": 717.2313159664753
+            },
+            {
+              "monster": "Pike das Cinzas",
+              "dps": 809.6180411837769
+            },
+            {
+              "monster": "Esqueleto de Rei Hopi",
+              "dps": 782.3549060947868
+            },
+            {
+              "monster": "Golem Robo",
+              "dps": 531.9193656870874
+            },
+            {
+              "monster": "Guardiao do Templo",
+              "dps": 917.358592456542
+            },
+            {
+              "monster": "Atalanta das Cinzas",
+              "dps": 755.6429144246707
+            },
+            {
+              "monster": "Mago das Cinzas",
+              "dps": 689.0384739755812
+            },
+            {
+              "monster": "Sacerdotisa das Cinzas",
+              "dps": 755.6429144246707
+            }
+          ]
+        },
+        {
+          "job": 7,
+          "dps": 643.7052083333333,
+          "ttk": 73.69185728732444,
+          "monsters": [
+            {
+              "monster": "Arqueira das Cinzas",
+              "dps": 644.4829861111111
+            },
+            {
+              "monster": "Lutador das Cinzas",
+              "dps": 642.9274305555556
+            },
+            {
+              "monster": "Mecanico das Cinzas",
+              "dps": 642.9274305555556
+            },
+            {
+              "monster": "Pike das Cinzas",
+              "dps": 642.9274305555556
+            },
+            {
+              "monster": "Esqueleto de Rei Hopi",
+              "dps": 625.8163194444444
+            },
+            {
+              "monster": "Golem Robo",
+              "dps": 644.4829861111111
+            },
+            {
+              "monster": "Guardiao do Templo",
+              "dps": 616.4829861111111
+            },
+            {
+              "monster": "Atalanta das Cinzas",
+              "dps": 653.8163194444444
+            },
+            {
+              "monster": "Mago das Cinzas",
+              "dps": 653.8163194444444
+            },
+            {
+              "monster": "Sacerdotisa das Cinzas",
+              "dps": 653.8163194444444
+            }
+          ]
+        },
+        {
+          "job": 8,
+          "dps": 738.6328125,
+          "ttk": 64.22188876730308,
+          "monsters": [
+            {
+              "monster": "Arqueira das Cinzas",
+              "dps": 739.2161458333334
+            },
+            {
+              "monster": "Lutador das Cinzas",
+              "dps": 738.0494791666666
+            },
+            {
+              "monster": "Mecanico das Cinzas",
+              "dps": 738.0494791666666
+            },
+            {
+              "monster": "Pike das Cinzas",
+              "dps": 738.0494791666666
+            },
+            {
+              "monster": "Esqueleto de Rei Hopi",
+              "dps": 725.2161458333334
+            },
+            {
+              "monster": "Golem Robo",
+              "dps": 739.2161458333334
+            },
+            {
+              "monster": "Guardiao do Templo",
+              "dps": 718.2161458333334
+            },
+            {
+              "monster": "Atalanta das Cinzas",
+              "dps": 746.2161458333334
+            },
+            {
+              "monster": "Mago das Cinzas",
+              "dps": 746.2161458333334
+            },
+            {
+              "monster": "Sacerdotisa das Cinzas",
+              "dps": 746.2161458333334
+            }
+          ]
+        },
+        {
+          "job": 9,
+          "dps": 1677.8195285723223,
+          "ttk": 29.605432011896312,
+          "monsters": [
+            {
+              "monster": "Arqueira das Cinzas",
+              "dps": 1752.38591198336
+            },
+            {
+              "monster": "Lutador das Cinzas",
+              "dps": 1731.4849977948522
+            },
+            {
+              "monster": "Mecanico das Cinzas",
+              "dps": 1568.7224470766068
+            },
+            {
+              "monster": "Pike das Cinzas",
+              "dps": 1731.4849977948522
+            },
+            {
+              "monster": "Esqueleto de Rei Hopi",
+              "dps": 1679.3652586315459
+            },
+            {
+              "monster": "Golem Robo",
+              "dps": 835.9808234626984
+            },
+            {
+              "monster": "Guardiao do Templo",
+              "dps": 1940.5258729208595
+            },
+            {
+              "monster": "Atalanta das Cinzas",
+              "dps": 1676.2737985130984
+            },
+            {
+              "monster": "Mago das Cinzas",
+              "dps": 1488.689915574591
+            },
+            {
+              "monster": "Sacerdotisa das Cinzas",
+              "dps": 1676.2737985130984
+            }
+          ]
+        },
+        {
+          "job": 10,
+          "dps": 530.2955729166667,
+          "ttk": 89.45104598555547,
+          "monsters": [
+            {
+              "monster": "Arqueira das Cinzas",
+              "dps": 531.0733506944445
+            },
+            {
+              "monster": "Lutador das Cinzas",
+              "dps": 529.5177951388889
+            },
+            {
+              "monster": "Mecanico das Cinzas",
+              "dps": 529.5177951388889
+            },
+            {
+              "monster": "Pike das Cinzas",
+              "dps": 529.5177951388889
+            },
+            {
+              "monster": "Esqueleto de Rei Hopi",
+              "dps": 512.4066840277778
+            },
+            {
+              "monster": "Golem Robo",
+              "dps": 531.0733506944445
+            },
+            {
+              "monster": "Guardiao do Templo",
+              "dps": 503.07335069444446
+            },
+            {
+              "monster": "Atalanta das Cinzas",
+              "dps": 540.4066840277778
+            },
+            {
+              "monster": "Mago das Cinzas",
+              "dps": 540.4066840277778
+            },
+            {
+              "monster": "Sacerdotisa das Cinzas",
+              "dps": 540.4066840277778
+            }
+          ]
+        },
+        {
+          "job": 11,
+          "dps": 1328.746345974755,
+          "ttk": 35.87091062667177,
+          "monsters": [
+            {
+              "monster": "Arqueira das Cinzas",
+              "dps": 1493.9942699710302
+            },
+            {
+              "monster": "Lutador das Cinzas",
+              "dps": 1476.7944820985135
+            },
+            {
+              "monster": "Mecanico das Cinzas",
+              "dps": 1294.840775041394
+            },
+            {
+              "monster": "Pike das Cinzas",
+              "dps": 1476.7944820985135
+            },
+            {
+              "monster": "Esqueleto de Rei Hopi",
+              "dps": 1362.651916908116
+            },
+            {
+              "monster": "Golem Robo",
+              "dps": 727.4421176531475
+            },
+            {
+              "monster": "Guardiao do Templo",
+              "dps": 1665.5321295529843
+            },
+            {
+              "monster": "Atalanta das Cinzas",
+              "dps": 1270.1492006415594
+            },
+            {
+              "monster": "Mago das Cinzas",
+              "dps": 1184.3070933360957
+            },
+            {
+              "monster": "Sacerdotisa das Cinzas",
+              "dps": 1270.1492006415594
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "level": 120,
+      "classes": [
+        {
+          "job": 1,
+          "dps": 1009.7135856331192,
+          "ttk": 92.53911339759948,
+          "monsters": [
+            {
+              "monster": "Golem Minerador",
+              "dps": 1017.5223138189959
+            },
+            {
+              "monster": "Serpente de Gelo",
+              "dps": 1056.5311561485414
+            },
+            {
+              "monster": "Capataz das Cinzas",
+              "dps": 1055.6622260551974
+            },
+            {
+              "monster": "Mineiro das Cinzas",
+              "dps": 1048.7224279626648
+            },
+            {
+              "monster": "Verme do Gelo",
+              "dps": 1051.035693993509
+            },
+            {
+              "monster": "Morcego da Mina",
+              "dps": 1009.7135856331192
+            },
+            {
+              "monster": "Tarantulika",
+              "dps": 1007.4888037743531
+            },
+            {
+              "monster": "Engenheiro do LaboratÃ³rio",
+              "dps": 994.1379781351485
+            },
+            {
+              "monster": "Tecnico do Laboratorio",
+              "dps": 994.1379781351485
+            },
+            {
+              "monster": "Tecnico Invasor",
+              "dps": 994.1379781351485
+            },
+            {
+              "monster": "Soldado Invasor",
+              "dps": 994.1379781351485
+            }
+          ]
+        },
+        {
+          "job": 2,
+          "dps": 876.0193142361131,
+          "ttk": 106.22030431105661,
+          "monsters": [
+            {
+              "monster": "Golem Minerador",
+              "dps": 885.443576388891
+            },
+            {
+              "monster": "Serpente de Gelo",
+              "dps": 881.8005642361131
+            },
+            {
+              "monster": "Capataz das Cinzas",
+              "dps": 886.9483506944465
+            },
+            {
+              "monster": "Mineiro das Cinzas",
+              "dps": 876.0193142361131
+            },
+            {
+              "monster": "Verme do Gelo",
+              "dps": 879.662326388891
+            },
+            {
+              "monster": "Morcego da Mina",
+              "dps": 876.737521701391
+            },
+            {
+              "monster": "Tarantulika",
+              "dps": 873.0945095486131
+            },
+            {
+              "monster": "Engenheiro do LaboratÃ³rio",
+              "dps": 871.1671006944465
+            },
+            {
+              "monster": "Tecnico do Laboratorio",
+              "dps": 871.1671006944465
+            },
+            {
+              "monster": "Tecnico Invasor",
+              "dps": 871.1671006944465
+            },
+            {
+              "monster": "Soldado Invasor",
+              "dps": 868.3155381944465
+            }
+          ]
+        },
+        {
+          "job": 3,
+          "dps": 1095.3711081217834,
+          "ttk": 85.30259681599303,
+          "monsters": [
+            {
+              "monster": "Golem Minerador",
+              "dps": 1103.622155824598
+            },
+            {
+              "monster": "Serpente de Gelo",
+              "dps": 1208.891623120174
+            },
+            {
+              "monster": "Capataz das Cinzas",
+              "dps": 1224.875860151079
+            },
+            {
+              "monster": "Mineiro das Cinzas",
+              "dps": 1208.891623120174
+            },
+            {
+              "monster": "Verme do Gelo",
+              "dps": 1214.2197021304758
+            },
+            {
+              "monster": "Morcego da Mina",
+              "dps": 1095.3711081217834
+            },
+            {
+              "monster": "Tarantulika",
+              "dps": 1090.3468629277068
+            },
+            {
+              "monster": "Engenheiro do LaboratÃ³rio",
+              "dps": 1061.2516491618403
+            },
+            {
+              "monster": "Tecnico do Laboratorio",
+              "dps": 1061.2516491618403
+            },
+            {
+              "monster": "Tecnico Invasor",
+              "dps": 1061.2516491618403
+            },
+            {
+              "monster": "Soldado Invasor",
+              "dps": 1059.633918408529
+            }
+          ]
+        },
+        {
+          "job": 4,
+          "dps": 526.8819846854318,
+          "ttk": 176.46040367460978,
+          "monsters": [
+            {
+              "monster": "Golem Minerador",
+              "dps": 526.0150429428821
+            },
+            {
+              "monster": "Serpente de Gelo",
+              "dps": 528.5919391556305
+            },
+            {
+              "monster": "Capataz das Cinzas",
+              "dps": 532.8999379139086
+            },
+            {
+              "monster": "Mineiro das Cinzas",
+              "dps": 528.5919391556305
+            },
+            {
+              "monster": "Verme do Gelo",
+              "dps": 529.5125594991736
+            },
+            {
+              "monster": "Morcego da Mina",
+              "dps": 526.0150429428821
+            },
+            {
+              "monster": "Tarantulika",
+              "dps": 524.5824063534782
+            },
+            {
+              "monster": "Engenheiro do LaboratÃ³rio",
+              "dps": 526.8819846854318
+            },
+            {
+              "monster": "Tecnico do Laboratorio",
+              "dps": 526.8819846854318
+            },
+            {
+              "monster": "Tecnico Invasor",
+              "dps": 526.8819846854318
+            },
+            {
+              "monster": "Soldado Invasor",
+              "dps": 526.8819846854318
+            }
+          ]
+        },
+        {
+          "job": 5,
+          "dps": 764.3008200538098,
+          "ttk": 120.52238180685391,
+          "monsters": [
+            {
+              "monster": "Golem Minerador",
+              "dps": 752.6895889383297
+            },
+            {
+              "monster": "Serpente de Gelo",
+              "dps": 775.6048543563761
+            },
+            {
+              "monster": "Capataz das Cinzas",
+              "dps": 778.987446968131
+            },
+            {
+              "monster": "Mineiro das Cinzas",
+              "dps": 773.418906508694
+            },
+            {
+              "monster": "Verme do Gelo",
+              "dps": 775.2750866618397
+            },
+            {
+              "monster": "Morcego da Mina",
+              "dps": 750.3859362065416
+            },
+            {
+              "monster": "Tarantulika",
+              "dps": 748.553814414323
+            },
+            {
+              "monster": "Engenheiro do LaboratÃ³rio",
+              "dps": 764.3008200538098
+            },
+            {
+              "monster": "Tecnico do Laboratorio",
+              "dps": 764.3008200538098
+            },
+            {
+              "monster": "Tecnico Invasor",
+              "dps": 764.3008200538098
+            },
+            {
+              "monster": "Soldado Invasor",
+              "dps": 764.3008200538098
+            }
+          ]
+        },
+        {
+          "job": 6,
+          "dps": 848.1446605960286,
+          "ttk": 109.01479776992757,
+          "monsters": [
+            {
+              "monster": "Golem Minerador",
+              "dps": 851.4395566018234
+            },
+            {
+              "monster": "Serpente de Gelo",
+              "dps": 858.3461170322869
+            },
+            {
+              "monster": "Capataz das Cinzas",
+              "dps": 864.5314440190419
+            },
+            {
+              "monster": "Mineiro das Cinzas",
+              "dps": 858.3461170322869
+            },
+            {
+              "monster": "Verme do Gelo",
+              "dps": 857.1129966887438
+            },
+            {
+              "monster": "Morcego da Mina",
+              "dps": 848.1446605960286
+            },
+            {
+              "monster": "Tarantulika",
+              "dps": 846.082884933777
+            },
+            {
+              "monster": "Engenheiro do LaboratÃ³rio",
+              "dps": 844.1540446502504
+            },
+            {
+              "monster": "Tecnico do Laboratorio",
+              "dps": 844.1540446502504
+            },
+            {
+              "monster": "Tecnico Invasor",
+              "dps": 844.1540446502504
+            },
+            {
+              "monster": "Soldado Invasor",
+              "dps": 836.0844047495882
+            }
+          ]
+        },
+        {
+          "job": 7,
+          "dps": 780.7568576388888,
+          "ttk": 118.72996676924407,
+          "monsters": [
+            {
+              "monster": "Golem Minerador",
+              "dps": 780.7568576388888
+            },
+            {
+              "monster": "Serpente de Gelo",
+              "dps": 777.6457465277778
+            },
+            {
+              "monster": "Capataz das Cinzas",
+              "dps": 786.9790798611111
+            },
+            {
+              "monster": "Mineiro das Cinzas",
+              "dps": 777.6457465277778
+            },
+            {
+              "monster": "Verme do Gelo",
+              "dps": 780.7568576388888
+            },
+            {
+              "monster": "Morcego da Mina",
+              "dps": 780.7568576388888
+            },
+            {
+              "monster": "Tarantulika",
+              "dps": 777.6457465277778
+            },
+            {
+              "monster": "Engenheiro do LaboratÃ³rio",
+              "dps": 786.9790798611111
+            },
+            {
+              "monster": "Tecnico do Laboratorio",
+              "dps": 786.9790798611111
+            },
+            {
+              "monster": "Tecnico Invasor",
+              "dps": 786.9790798611111
+            },
+            {
+              "monster": "Soldado Invasor",
+              "dps": 786.9790798611111
+            }
+          ]
+        },
+        {
+          "job": 8,
+          "dps": 889.529296875,
+          "ttk": 104.45493549112553,
+          "monsters": [
+            {
+              "monster": "Golem Minerador",
+              "dps": 889.529296875
+            },
+            {
+              "monster": "Serpente de Gelo",
+              "dps": 887.029296875
+            },
+            {
+              "monster": "Capataz das Cinzas",
+              "dps": 894.529296875
+            },
+            {
+              "monster": "Mineiro das Cinzas",
+              "dps": 887.029296875
+            },
+            {
+              "monster": "Verme do Gelo",
+              "dps": 889.529296875
+            },
+            {
+              "monster": "Morcego da Mina",
+              "dps": 889.529296875
+            },
+            {
+              "monster": "Tarantulika",
+              "dps": 887.029296875
+            },
+            {
+              "monster": "Engenheiro do LaboratÃ³rio",
+              "dps": 894.529296875
+            },
+            {
+              "monster": "Tecnico do Laboratorio",
+              "dps": 894.529296875
+            },
+            {
+              "monster": "Tecnico Invasor",
+              "dps": 894.529296875
+            },
+            {
+              "monster": "Soldado Invasor",
+              "dps": 894.529296875
+            }
+          ]
+        },
+        {
+          "job": 9,
+          "dps": 1298.7914204259023,
+          "ttk": 70.0192417875505,
+          "monsters": [
+            {
+              "monster": "Golem Minerador",
+              "dps": 1298.7914204259023
+            },
+            {
+              "monster": "Serpente de Gelo",
+              "dps": 1543.5411469884014
+            },
+            {
+              "monster": "Capataz das Cinzas",
+              "dps": 1536.6395888986835
+            },
+            {
+              "monster": "Mineiro das Cinzas",
+              "dps": 1526.3315420236836
+            },
+            {
+              "monster": "Verme do Gelo",
+              "dps": 1529.7675576486836
+            },
+            {
+              "monster": "Morcego da Mina",
+              "dps": 1298.7914204259023
+            },
+            {
+              "monster": "Tarantulika",
+              "dps": 1295.9096008694507
+            },
+            {
+              "monster": "Engenheiro do LaboratÃ³rio",
+              "dps": 1293.3873273689467
+            },
+            {
+              "monster": "Tecnico do Laboratorio",
+              "dps": 1293.3873273689467
+            },
+            {
+              "monster": "Tecnico Invasor",
+              "dps": 1293.3873273689467
+            },
+            {
+              "monster": "Soldado Invasor",
+              "dps": 1293.3873273689467
+            }
+          ]
+        },
+        {
+          "job": 10,
+          "dps": 766.3302951388889,
+          "ttk": 120.94711738066171,
+          "monsters": [
+            {
+              "monster": "Golem Minerador",
+              "dps": 766.3302951388889
+            },
+            {
+              "monster": "Serpente de Gelo",
+              "dps": 763.2191840277778
+            },
+            {
+              "monster": "Capataz das Cinzas",
+              "dps": 772.5525173611111
+            },
+            {
+              "monster": "Mineiro das Cinzas",
+              "dps": 763.2191840277778
+            },
+            {
+              "monster": "Verme do Gelo",
+              "dps": 766.3302951388889
+            },
+            {
+              "monster": "Morcego da Mina",
+              "dps": 766.3302951388889
+            },
+            {
+              "monster": "Tarantulika",
+              "dps": 763.2191840277778
+            },
+            {
+              "monster": "Engenheiro do LaboratÃ³rio",
+              "dps": 772.5525173611111
+            },
+            {
+              "monster": "Tecnico do Laboratorio",
+              "dps": 772.5525173611111
+            },
+            {
+              "monster": "Tecnico Invasor",
+              "dps": 772.5525173611111
+            },
+            {
+              "monster": "Soldado Invasor",
+              "dps": 772.5525173611111
+            }
+          ]
+        },
+        {
+          "job": 11,
+          "dps": 1011.2655861961946,
+          "ttk": 91.87335209928602,
+          "monsters": [
+            {
+              "monster": "Golem Minerador",
+              "dps": 1018.2511770488436
+            },
+            {
+              "monster": "Serpente de Gelo",
+              "dps": 1015.4531638038105
+            },
+            {
+              "monster": "Capataz das Cinzas",
+              "dps": 1023.8472035389099
+            },
+            {
+              "monster": "Mineiro das Cinzas",
+              "dps": 1015.4531638038105
+            },
+            {
+              "monster": "Verme do Gelo",
+              "dps": 1018.2511770488436
+            },
+            {
+              "monster": "Morcego da Mina",
+              "dps": 1011.2655861961946
+            },
+            {
+              "monster": "Tarantulika",
+              "dps": 1008.4675729511614
+            },
+            {
+              "monster": "Engenheiro do LaboratÃ³rio",
+              "dps": 1001.3785052773204
+            },
+            {
+              "monster": "Tecnico do Laboratorio",
+              "dps": 1001.3785052773204
+            },
+            {
+              "monster": "Tecnico Invasor",
+              "dps": 1001.3785052773204
+            },
+            {
+              "monster": "Soldado Invasor",
+              "dps": 1001.3785052773204
+            }
+          ]
+        }
+      ]
+    }
+  ]
+}

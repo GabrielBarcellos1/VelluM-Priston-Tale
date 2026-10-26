@@ -1,0 +1,1160 @@
+{
+  "sourceCommit": "7319002121c53427f5c8f1262690f644efb921f0",
+  "assumptions": {
+    "gear": "Ordinary level-appropriate average rolls +0, no specialization, no premiums",
+    "stats": "Five stat points per earned level; equipment requirements paid first, 20% spare vitality",
+    "skills": "Legal point budgets and level/rank caps; chosen damage priority; buffs active",
+    "timing": "80/attackStep seconds physical, one second spell; monster swings 1.8 sec; MP/SP potion at most once per 8 sec",
+    "limitations": "Stationary mathematical rotation, not recorded human play; poison/control/kiting omitted from sustained DPS; summons included; no party"
+  },
+  "levels": [
+    {
+      "level": 1,
+      "classes": [
+        {
+          "job": 1,
+          "className": "Fighter",
+          "dps": 5.234375,
+          "ttk": 7.2594325226832765,
+          "secondsToDie": 290.85242134062923
+        },
+        {
+          "job": 2,
+          "className": "Mechanician",
+          "dps": 4.961425781250012,
+          "ttk": 7.658755656185493,
+          "secondsToDie": 290.85242134062923
+        },
+        {
+          "job": 3,
+          "className": "Archer",
+          "dps": 5.681640625,
+          "ttk": 6.688034608199784,
+          "secondsToDie": 290.85242134062923
+        },
+        {
+          "job": 4,
+          "className": "Pikeman",
+          "dps": 4.0078125,
+          "ttk": 9.481481481481481,
+          "secondsToDie": 245.14966887417216
+        },
+        {
+          "job": 5,
+          "className": "Atalanta",
+          "dps": 6.072265625,
+          "ttk": 6.257621692576491,
+          "secondsToDie": 290.85242134062923
+        },
+        {
+          "job": 6,
+          "className": "Knight",
+          "dps": 5.853515625000014,
+          "ttk": 6.491825158491809,
+          "secondsToDie": 290.85242134062923
+        },
+        {
+          "job": 7,
+          "className": "Magician",
+          "dps": 6.01171875,
+          "ttk": 6.320987654320987,
+          "secondsToDie": 293.0503884572697
+        },
+        {
+          "job": 8,
+          "className": "Priestess",
+          "dps": 6.01171875,
+          "ttk": 6.320987654320987,
+          "secondsToDie": 293.0503884572697
+        },
+        {
+          "job": 9,
+          "className": "Assassin",
+          "dps": 5.365722656250013,
+          "ttk": 7.081991081991065,
+          "secondsToDie": 245.14966887417216
+        },
+        {
+          "job": 10,
+          "className": "Shaman",
+          "dps": 6.01171875,
+          "ttk": 6.320987654320987,
+          "secondsToDie": 293.0503884572697
+        },
+        {
+          "job": 11,
+          "className": "Martial Artist",
+          "dps": 6.763183593750017,
+          "ttk": 5.618388816832383,
+          "secondsToDie": 245.14966887417216
+        }
+      ]
+    },
+    {
+      "level": 5,
+      "classes": [
+        {
+          "job": 1,
+          "className": "Fighter",
+          "dps": 6.2734375,
+          "ttk": 13.86799501867995,
+          "secondsToDie": 491.52
+        },
+        {
+          "job": 2,
+          "className": "Mechanician",
+          "dps": 6.095214843750015,
+          "ttk": 14.273491949050673,
+          "secondsToDie": 491.52
+        },
+        {
+          "job": 3,
+          "className": "Archer",
+          "dps": 7.514648437500019,
+          "ttk": 11.577387914229991,
+          "secondsToDie": 456.05047371160856
+        },
+        {
+          "job": 4,
+          "className": "Pikeman",
+          "dps": 6.67578125,
+          "ttk": 13.032182562902282,
+          "secondsToDie": 479.3461300309598
+        },
+        {
+          "job": 5,
+          "className": "Atalanta",
+          "dps": 7.637695312500019,
+          "ttk": 11.390870732642856,
+          "secondsToDie": 479.3461300309598
+        },
+        {
+          "job": 6,
+          "className": "Knight",
+          "dps": 7.8750000000000195,
+          "ttk": 11.047619047619019,
+          "secondsToDie": 491.52
+        },
+        {
+          "job": 7,
+          "className": "Magician",
+          "dps": 5.01171875,
+          "ttk": 17.359314107560404,
+          "secondsToDie": 491.52
+        },
+        {
+          "job": 8,
+          "className": "Priestess",
+          "dps": 5.01171875,
+          "ttk": 17.359314107560404,
+          "secondsToDie": 491.52
+        },
+        {
+          "job": 9,
+          "className": "Assassin",
+          "dps": 7.422363281250019,
+          "ttk": 11.721334122755053,
+          "secondsToDie": 427.7169230769231
+        },
+        {
+          "job": 10,
+          "className": "Shaman",
+          "dps": 5.01171875,
+          "ttk": 17.359314107560404,
+          "secondsToDie": 491.52
+        },
+        {
+          "job": 11,
+          "className": "Martial Artist",
+          "dps": 6.543457031250016,
+          "ttk": 13.295724199686557,
+          "secondsToDie": 427.7169230769231
+        }
+      ]
+    },
+    {
+      "level": 10,
+      "classes": [
+        {
+          "job": 1,
+          "className": "Fighter",
+          "dps": 10.434814453125027,
+          "ttk": 26.412300582817103,
+          "secondsToDie": 701.6029075341703
+        },
+        {
+          "job": 2,
+          "className": "Mechanician",
+          "dps": 10.412841796875027,
+          "ttk": 26.460066139526216,
+          "secondsToDie": 723.3404559890032
+        },
+        {
+          "job": 3,
+          "className": "Archer",
+          "dps": 9.4296875,
+          "ttk": 29.216238608119305,
+          "secondsToDie": 579.2534870317004
+        },
+        {
+          "job": 4,
+          "className": "Pikeman",
+          "dps": 12.712890625,
+          "ttk": 21.677052129737472,
+          "secondsToDie": 621.866965536565
+        },
+        {
+          "job": 5,
+          "className": "Atalanta",
+          "dps": 10.9921875,
+          "ttk": 25.063255152807393,
+          "secondsToDie": 701.6029075341703
+        },
+        {
+          "job": 6,
+          "className": "Knight",
+          "dps": 15.013916015625037,
+          "ttk": 18.328618638395273,
+          "secondsToDie": 623.7134366219514
+        },
+        {
+          "job": 7,
+          "className": "Magician",
+          "dps": 8.98046875,
+          "ttk": 30.67768595041322,
+          "secondsToDie": 587.4954382512126
+        },
+        {
+          "job": 8,
+          "className": "Priestess",
+          "dps": 8.98046875,
+          "ttk": 30.67768595041322,
+          "secondsToDie": 587.4954382512126
+        },
+        {
+          "job": 9,
+          "className": "Assassin",
+          "dps": 15.729125976562539,
+          "ttk": 17.534365623160742,
+          "secondsToDie": 623.7134366219514
+        },
+        {
+          "job": 10,
+          "className": "Shaman",
+          "dps": 45.9453125,
+          "ttk": 6.145942192296205,
+          "secondsToDie": 632.2759819004525
+        },
+        {
+          "job": 11,
+          "className": "Martial Artist",
+          "dps": 15.637939453125039,
+          "ttk": 17.633314497584966,
+          "secondsToDie": 623.7134366219514
+        }
+      ]
+    },
+    {
+      "level": 20,
+      "classes": [
+        {
+          "job": 1,
+          "className": "Fighter",
+          "dps": 37.11666666666667,
+          "ttk": 14.89527811644666,
+          "secondsToDie": 156.06656934306568
+        },
+        {
+          "job": 2,
+          "className": "Mechanician",
+          "dps": 25.5546875,
+          "ttk": 21.756820561246485,
+          "secondsToDie": 393.0352941176471
+        },
+        {
+          "job": 3,
+          "className": "Archer",
+          "dps": 21.71484375,
+          "ttk": 25.57683257918552,
+          "secondsToDie": 153.8210071942446
+        },
+        {
+          "job": 4,
+          "className": "Pikeman",
+          "dps": 30.5625,
+          "ttk": 18.061349693251532,
+          "secondsToDie": 155.61222707423582
+        },
+        {
+          "job": 5,
+          "className": "Atalanta",
+          "dps": 14.4296875,
+          "ttk": 38.254466702761235,
+          "secondsToDie": 253.93254156769598
+        },
+        {
+          "job": 6,
+          "className": "Knight",
+          "dps": 18.706097771139753,
+          "ttk": 29.524343151708017,
+          "secondsToDie": 433.4010810810811
+        },
+        {
+          "job": 7,
+          "className": "Magician",
+          "dps": 64.46875,
+          "ttk": 8.838995568685377,
+          "secondsToDie": 197.2428044280443
+        },
+        {
+          "job": 8,
+          "className": "Priestess",
+          "dps": 79.96875,
+          "ttk": 6.902696365767878,
+          "secondsToDie": 197.2428044280443
+        },
+        {
+          "job": 9,
+          "className": "Assassin",
+          "dps": 30.453125,
+          "ttk": 18.1262185736275,
+          "secondsToDie": 155.61222707423582
+        },
+        {
+          "job": 10,
+          "className": "Shaman",
+          "dps": 62.2451171875,
+          "ttk": 8.868165487378214,
+          "secondsToDie": 198.34063079777368
+        },
+        {
+          "job": 11,
+          "className": "Martial Artist",
+          "dps": 28.854166666666668,
+          "ttk": 19.1427797344893,
+          "secondsToDie": 153.23306258958434
+        }
+      ]
+    },
+    {
+      "level": 30,
+      "classes": [
+        {
+          "job": 1,
+          "className": "Fighter",
+          "dps": 61.77465820312507,
+          "ttk": 15.473102921962642,
+          "secondsToDie": 149.91616266944735
+        },
+        {
+          "job": 2,
+          "className": "Mechanician",
+          "dps": 57.9375,
+          "ttk": 16.67650695924435,
+          "secondsToDie": 256.7314285714286
+        },
+        {
+          "job": 3,
+          "className": "Archer",
+          "dps": 62.97833092384102,
+          "ttk": 15.054096580037605,
+          "secondsToDie": 149.91616266944735
+        },
+        {
+          "job": 4,
+          "className": "Pikeman",
+          "dps": 51.80859375,
+          "ttk": 18.651350912626768,
+          "secondsToDie": 103.72987012987014
+        },
+        {
+          "job": 5,
+          "className": "Atalanta",
+          "dps": 23.453125,
+          "ttk": 40.72755756013562,
+          "secondsToDie": 149.91616266944735
+        },
+        {
+          "job": 6,
+          "className": "Knight",
+          "dps": 25.135760238562906,
+          "ttk": 38.37488091695318,
+          "secondsToDie": 154.86850987432675
+        },
+        {
+          "job": 7,
+          "className": "Magician",
+          "dps": 134.4375,
+          "ttk": 7.246596467445632,
+          "secondsToDie": 73.87890158621866
+        },
+        {
+          "job": 8,
+          "className": "Priestess",
+          "dps": 138.921875,
+          "ttk": 7.012624711322518,
+          "secondsToDie": 73.87890158621866
+        },
+        {
+          "job": 9,
+          "className": "Assassin",
+          "dps": 47.493541044347545,
+          "ttk": 20.28620379883603,
+          "secondsToDie": 101.39325842696628
+        },
+        {
+          "job": 10,
+          "className": "Shaman",
+          "dps": 86.96875,
+          "ttk": 11.20336513388991,
+          "secondsToDie": 94.21500393576477
+        },
+        {
+          "job": 11,
+          "className": "Martial Artist",
+          "dps": 59.68340525907644,
+          "ttk": 16.144333286277835,
+          "secondsToDie": 99.84
+        }
+      ]
+    },
+    {
+      "level": 40,
+      "classes": [
+        {
+          "job": 1,
+          "className": "Fighter",
+          "dps": 90.86357874586116,
+          "ttk": 11.973758606162672,
+          "secondsToDie": 868.0453276373464
+        },
+        {
+          "job": 2,
+          "className": "Mechanician",
+          "dps": 76.00775106063745,
+          "ttk": 16.43946112733158,
+          "secondsToDie": 1288.3031155069473
+        },
+        {
+          "job": 3,
+          "className": "Archer",
+          "dps": 85.9833028651584,
+          "ttk": 12.88098368748,
+          "secondsToDie": 819.608403550163
+        },
+        {
+          "job": 4,
+          "className": "Pikeman",
+          "dps": 84.20419857202009,
+          "ttk": 13.010704870886482,
+          "secondsToDie": 913.4595075912699
+        },
+        {
+          "job": 5,
+          "className": "Atalanta",
+          "dps": 74.19184602649025,
+          "ttk": 14.69437608440779,
+          "secondsToDie": 1090.1958410676941
+        },
+        {
+          "job": 6,
+          "className": "Knight",
+          "dps": 63.57520501345215,
+          "ttk": 17.047787051885592,
+          "secondsToDie": 898.9932471012297
+        },
+        {
+          "job": 7,
+          "className": "Magician",
+          "dps": 176.9453125,
+          "ttk": 6.432209918581462,
+          "secondsToDie": 550.9770468151191
+        },
+        {
+          "job": 8,
+          "className": "Priestess",
+          "dps": 222.453125,
+          "ttk": 5.111274581149771,
+          "secondsToDie": 550.9770468151191
+        },
+        {
+          "job": 9,
+          "className": "Assassin",
+          "dps": 79.59677993067072,
+          "ttk": 14.03843742338184,
+          "secondsToDie": 889.1248447746585
+        },
+        {
+          "job": 10,
+          "className": "Shaman",
+          "dps": 121.9296875,
+          "ttk": 9.356096009813118,
+          "secondsToDie": 936.2982514343109
+        },
+        {
+          "job": 11,
+          "className": "Martial Artist",
+          "dps": 71.52707535699521,
+          "ttk": 15.597616568536914,
+          "secondsToDie": 859.4058319039451
+        }
+      ]
+    },
+    {
+      "level": 50,
+      "classes": [
+        {
+          "job": 1,
+          "className": "Fighter",
+          "dps": 101.28984184451191,
+          "ttk": 39.399246170410805,
+          "secondsToDie": 36.71919191919192
+        },
+        {
+          "job": 2,
+          "className": "Mechanician",
+          "dps": 85.24361979166666,
+          "ttk": 50.35795789360904,
+          "secondsToDie": 40.30651718615252
+        },
+        {
+          "job": 3,
+          "className": "Archer",
+          "dps": 146.302734375,
+          "ttk": 26.756049796996898,
+          "secondsToDie": 35.76282817210195
+        },
+        {
+          "job": 4,
+          "className": "Pikeman",
+          "dps": 78.34375,
+          "ttk": 50.28012106381608,
+          "secondsToDie": 41.55663077897403
+        },
+        {
+          "job": 5,
+          "className": "Atalanta",
+          "dps": 80.4296875,
+          "ttk": 47.391102029255265,
+          "secondsToDie": 49.57908575746128
+        },
+        {
+          "job": 6,
+          "className": "Knight",
+          "dps": 58.9880859375,
+          "ttk": 62.20880565502405,
+          "secondsToDie": 61.57741123846799
+        },
+        {
+          "job": 7,
+          "className": "Magician",
+          "dps": 207.21796875,
+          "ttk": 21.218083198365164,
+          "secondsToDie": 38.903696637252565
+        },
+        {
+          "job": 8,
+          "className": "Priestess",
+          "dps": 309.52734375,
+          "ttk": 14.453727585738791,
+          "secondsToDie": 43.51938945862151
+        },
+        {
+          "job": 9,
+          "className": "Assassin",
+          "dps": 149.68907195060507,
+          "ttk": 26.850118913009865,
+          "secondsToDie": 39.35107646176912
+        },
+        {
+          "job": 10,
+          "className": "Shaman",
+          "dps": 141.43359375,
+          "ttk": 30.821863733256137,
+          "secondsToDie": 40.43708477937531
+        },
+        {
+          "job": 11,
+          "className": "Martial Artist",
+          "dps": 143.41796875,
+          "ttk": 27.986777649448403,
+          "secondsToDie": 36.994744478478154
+        }
+      ]
+    },
+    {
+      "level": 60,
+      "classes": [
+        {
+          "job": 1,
+          "className": "Fighter",
+          "dps": 179.1369694718065,
+          "ttk": 25.16422076498285,
+          "secondsToDie": 31.279094933595673
+        },
+        {
+          "job": 2,
+          "className": "Mechanician",
+          "dps": 99.36412760416667,
+          "ttk": 49.86882660300409,
+          "secondsToDie": 44.438970545517925
+        },
+        {
+          "job": 3,
+          "className": "Archer",
+          "dps": 200.95013308057625,
+          "ttk": 23.9992434804044,
+          "secondsToDie": 30.54783026421137
+        },
+        {
+          "job": 4,
+          "className": "Pikeman",
+          "dps": 121.66518267463266,
+          "ttk": 40.808469102801446,
+          "secondsToDie": 34.342250225022504
+        },
+        {
+          "job": 5,
+          "className": "Atalanta",
+          "dps": 107.376953125,
+          "ttk": 46.453171326190954,
+          "secondsToDie": 45.63085570770795
+        },
+        {
+          "job": 6,
+          "className": "Knight",
+          "dps": 88.09073773552412,
+          "ttk": 56.62343315792783,
+          "secondsToDie": 51.63526340451169
+        },
+        {
+          "job": 7,
+          "className": "Magician",
+          "dps": 257.2749131944444,
+          "ttk": 20.208763568225173,
+          "secondsToDie": 35.7115687008611
+        },
+        {
+          "job": 8,
+          "className": "Priestess",
+          "dps": 331.2265625,
+          "ttk": 15.337000648586322,
+          "secondsToDie": 39.98143017596406
+        },
+        {
+          "job": 9,
+          "className": "Assassin",
+          "dps": 264.65323001534637,
+          "ttk": 17.870901820442604,
+          "secondsToDie": 33.65016536578913
+        },
+        {
+          "job": 10,
+          "className": "Shaman",
+          "dps": 185.46527777777777,
+          "ttk": 28.31967827149785,
+          "secondsToDie": 37.122241681260945
+        },
+        {
+          "job": 11,
+          "className": "Martial Artist",
+          "dps": 311.4712883444401,
+          "ttk": 14.677845354878759,
+          "secondsToDie": 32.211334110927886
+        }
+      ]
+    },
+    {
+      "level": 70,
+      "classes": [
+        {
+          "job": 1,
+          "className": "Fighter",
+          "dps": 221.87832370923843,
+          "ttk": 60.8950721757313,
+          "secondsToDie": 41.31922486216483
+        },
+        {
+          "job": 2,
+          "className": "Mechanician",
+          "dps": 185.0983058096836,
+          "ttk": 67.13431609606329,
+          "secondsToDie": 26.395686573988176
+        },
+        {
+          "job": 3,
+          "className": "Archer",
+          "dps": 312.66691745424083,
+          "ttk": 42.15883170243828,
+          "secondsToDie": 28.75144541676225
+        },
+        {
+          "job": 4,
+          "className": "Pikeman",
+          "dps": 152.2809771369489,
+          "ttk": 87.4359366287533,
+          "secondsToDie": 33.459563564993005
+        },
+        {
+          "job": 5,
+          "className": "Atalanta",
+          "dps": 211.01970358455935,
+          "ttk": 58.80466814060436,
+          "secondsToDie": 49.077173892300614
+        },
+        {
+          "job": 6,
+          "className": "Knight",
+          "dps": 137.4999228084792,
+          "ttk": 91.91008866581976,
+          "secondsToDie": 42.56361942974304
+        },
+        {
+          "job": 7,
+          "className": "Magician",
+          "dps": 268.0677083333333,
+          "ttk": 48.892139408806585,
+          "secondsToDie": 27.415996702160268
+        },
+        {
+          "job": 8,
+          "className": "Priestess",
+          "dps": 354.77232142857144,
+          "ttk": 37.23695059330785,
+          "secondsToDie": 33.69480143350415
+        },
+        {
+          "job": 9,
+          "className": "Assassin",
+          "dps": 489.1970756312786,
+          "ttk": 28.370308472857474,
+          "secondsToDie": 26.57983879943191
+        },
+        {
+          "job": 10,
+          "className": "Shaman",
+          "dps": 202.79470486111111,
+          "ttk": 64.46119352887885,
+          "secondsToDie": 28.412106467764406
+        },
+        {
+          "job": 11,
+          "className": "Martial Artist",
+          "dps": 461.32428696576403,
+          "ttk": 29.486139474461975,
+          "secondsToDie": 27.638793241458675
+        }
+      ]
+    },
+    {
+      "level": 80,
+      "classes": [
+        {
+          "job": 1,
+          "className": "Fighter",
+          "dps": 490.5972739045501,
+          "ttk": 58.500389432710364,
+          "secondsToDie": 20.516032629301716
+        },
+        {
+          "job": 2,
+          "className": "Mechanician",
+          "dps": 315.9374405605347,
+          "ttk": 89.65799398619731,
+          "secondsToDie": 19.053819597406857
+        },
+        {
+          "job": 3,
+          "className": "Archer",
+          "dps": 538.0042662631082,
+          "ttk": 52.30557030621438,
+          "secondsToDie": 20.776084018282134
+        },
+        {
+          "job": 4,
+          "className": "Pikeman",
+          "dps": 303.85613116096124,
+          "ttk": 93.5115229112441,
+          "secondsToDie": 26.46469679770537
+        },
+        {
+          "job": 5,
+          "className": "Atalanta",
+          "dps": 406.82866178601097,
+          "ttk": 72.08949531985782,
+          "secondsToDie": 30.35856123066955
+        },
+        {
+          "job": 6,
+          "className": "Knight",
+          "dps": 253.3151119456578,
+          "ttk": 111.02424885379232,
+          "secondsToDie": 25.127800033868027
+        },
+        {
+          "job": 7,
+          "className": "Magician",
+          "dps": 299.7648003472222,
+          "ttk": 96.30213402301399,
+          "secondsToDie": 21.68471097933073
+        },
+        {
+          "job": 8,
+          "className": "Priestess",
+          "dps": 434.21149553571433,
+          "ttk": 66.82678396976911,
+          "secondsToDie": 26.952615732760545
+        },
+        {
+          "job": 9,
+          "className": "Assassin",
+          "dps": 998.9908355189747,
+          "ttk": 28.459025952010315,
+          "secondsToDie": 22.392834203290597
+        },
+        {
+          "job": 10,
+          "className": "Shaman",
+          "dps": 216.71571180555554,
+          "ttk": 132.9316037240492,
+          "secondsToDie": 22.4094065639877
+        },
+        {
+          "job": 11,
+          "className": "Martial Artist",
+          "dps": 963.454155417052,
+          "ttk": 30.148842917308492,
+          "secondsToDie": 21.867766564868106
+        }
+      ]
+    },
+    {
+      "level": 90,
+      "classes": [
+        {
+          "job": 1,
+          "className": "Fighter",
+          "dps": 458.7554156759497,
+          "ttk": 98.50757615213215,
+          "secondsToDie": 17.22973578702224
+        },
+        {
+          "job": 2,
+          "className": "Mechanician",
+          "dps": 256.72827148437545,
+          "ttk": 175.04193873937635,
+          "secondsToDie": 17.97413490759373
+        },
+        {
+          "job": 3,
+          "className": "Archer",
+          "dps": 511.37618962415024,
+          "ttk": 88.12984656277513,
+          "secondsToDie": 18.362533770650806
+        },
+        {
+          "job": 4,
+          "className": "Pikeman",
+          "dps": 295.95949778837394,
+          "ttk": 152.3911236931531,
+          "secondsToDie": 23.322749064653877
+        },
+        {
+          "job": 5,
+          "className": "Atalanta",
+          "dps": 335.7469086299677,
+          "ttk": 134.190436750899,
+          "secondsToDie": 27.990718802479567
+        },
+        {
+          "job": 6,
+          "className": "Knight",
+          "dps": 241.8815917968756,
+          "ttk": 186.57734313225976,
+          "secondsToDie": 20.723526969288287
+        },
+        {
+          "job": 7,
+          "className": "Magician",
+          "dps": 293.301171875,
+          "ttk": 152.6370058695228,
+          "secondsToDie": 19.413214707366052
+        },
+        {
+          "job": 8,
+          "className": "Priestess",
+          "dps": 424.7661830357143,
+          "ttk": 105.42309699523187,
+          "secondsToDie": 24.410413054718028
+        },
+        {
+          "job": 9,
+          "className": "Assassin",
+          "dps": 987.7088329729366,
+          "ttk": 45.67929267340506,
+          "secondsToDie": 18.881281413539824
+        },
+        {
+          "job": 10,
+          "className": "Shaman",
+          "dps": 207.00520833333331,
+          "ttk": 216.22600963330024,
+          "secondsToDie": 20.055611745618666
+        },
+        {
+          "job": 11,
+          "className": "Martial Artist",
+          "dps": 892.6193362965325,
+          "ttk": 50.53703674760929,
+          "secondsToDie": 18.413179201422263
+        }
+      ]
+    },
+    {
+      "level": 100,
+      "classes": [
+        {
+          "job": 1,
+          "className": "Fighter",
+          "dps": 671.9769322138227,
+          "ttk": 35.35204253022629,
+          "secondsToDie": 20.748637477533805
+        },
+        {
+          "job": 2,
+          "className": "Mechanician",
+          "dps": 506.8958604600705,
+          "ttk": 48.652852966805426,
+          "secondsToDie": 20.800250002571836
+        },
+        {
+          "job": 3,
+          "className": "Archer",
+          "dps": 689.0876326515374,
+          "ttk": 34.080153004509846,
+          "secondsToDie": 21.973949896548707
+        },
+        {
+          "job": 4,
+          "className": "Pikeman",
+          "dps": 442.90108714384303,
+          "ttk": 54.10854055129339,
+          "secondsToDie": 33.42077593048606
+        },
+        {
+          "job": 5,
+          "className": "Atalanta",
+          "dps": 458.6027880536021,
+          "ttk": 52.60623869643689,
+          "secondsToDie": 26.68345330530842
+        },
+        {
+          "job": 6,
+          "className": "Knight",
+          "dps": 463.78338744308894,
+          "ttk": 50.98764232426116,
+          "secondsToDie": 20.592803542354755
+        },
+        {
+          "job": 7,
+          "className": "Magician",
+          "dps": 342.99861111111113,
+          "ttk": 70.4795681488047,
+          "secondsToDie": 23.782289211600997
+        },
+        {
+          "job": 8,
+          "className": "Priestess",
+          "dps": 492.3482142857143,
+          "ttk": 48.281628085311354,
+          "secondsToDie": 30.240636058683297
+        },
+        {
+          "job": 9,
+          "className": "Assassin",
+          "dps": 1508.7027166573682,
+          "ttk": 15.946970541534913,
+          "secondsToDie": 23.08608943722316
+        },
+        {
+          "job": 10,
+          "className": "Shaman",
+          "dps": 232.86675347222223,
+          "ttk": 105.97490027364037,
+          "secondsToDie": 24.58270281132225
+        },
+        {
+          "job": 11,
+          "className": "Martial Artist",
+          "dps": 1302.1309204101594,
+          "ttk": 18.47471671499235,
+          "secondsToDie": 22.16961864846743
+        }
+      ]
+    },
+    {
+      "level": 110,
+      "classes": [
+        {
+          "job": 1,
+          "className": "Fighter",
+          "dps": 1074.6667569247184,
+          "ttk": 47.15257186083532,
+          "secondsToDie": 13.228438962205479
+        },
+        {
+          "job": 2,
+          "className": "Mechanician",
+          "dps": 771.2748480902794,
+          "ttk": 64.37819920363442,
+          "secondsToDie": 13.688121775152664
+        },
+        {
+          "job": 3,
+          "className": "Archer",
+          "dps": 1041.8073340634223,
+          "ttk": 47.898473817319314,
+          "secondsToDie": 14.480455282346064
+        },
+        {
+          "job": 4,
+          "className": "Pikeman",
+          "dps": 594.2193320571207,
+          "ttk": 81.4144631533851,
+          "secondsToDie": 18.27561616277518
+        },
+        {
+          "job": 5,
+          "className": "Atalanta",
+          "dps": 700.6977571399024,
+          "ttk": 71.07264624362662,
+          "secondsToDie": 19.42747216907605
+        },
+        {
+          "job": 6,
+          "className": "Knight",
+          "dps": 768.9989102597287,
+          "ttk": 64.02727270757478,
+          "secondsToDie": 22.164150393667637
+        },
+        {
+          "job": 7,
+          "className": "Magician",
+          "dps": 398.5862847222222,
+          "ttk": 119.00779676749748,
+          "secondsToDie": 12.519402976572174
+        },
+        {
+          "job": 8,
+          "className": "Priestess",
+          "dps": 665.1875,
+          "ttk": 71.31263872310032,
+          "secondsToDie": 15.915282780903315
+        },
+        {
+          "job": 9,
+          "className": "Assassin",
+          "dps": 1677.8195285723223,
+          "ttk": 29.605432011896312,
+          "secondsToDie": 14.52001908935523
+        },
+        {
+          "job": 10,
+          "className": "Shaman",
+          "dps": 295.42379557291565,
+          "ttk": 159.93164014462468,
+          "secondsToDie": 15.219128483239256
+        },
+        {
+          "job": 11,
+          "className": "Martial Artist",
+          "dps": 1328.746345974755,
+          "ttk": 35.87091062667177,
+          "secondsToDie": 15.07694573577863
+        }
+      ]
+    },
+    {
+      "level": 120,
+      "classes": [
+        {
+          "job": 1,
+          "className": "Fighter",
+          "dps": 1009.7135856331192,
+          "ttk": 92.53911339759948,
+          "secondsToDie": 15.52749198203977
+        },
+        {
+          "job": 2,
+          "className": "Mechanician",
+          "dps": 876.0193142361131,
+          "ttk": 106.22030431105661,
+          "secondsToDie": 15.54714151827554
+        },
+        {
+          "job": 3,
+          "className": "Archer",
+          "dps": 1095.3711081217834,
+          "ttk": 85.30259681599303,
+          "secondsToDie": 17.247591219724228
+        },
+        {
+          "job": 4,
+          "className": "Pikeman",
+          "dps": 526.8819846854318,
+          "ttk": 176.46040367460978,
+          "secondsToDie": 25.005641416591587
+        },
+        {
+          "job": 5,
+          "className": "Atalanta",
+          "dps": 764.3008200538098,
+          "ttk": 120.52238180685391,
+          "secondsToDie": 31.034083097672397
+        },
+        {
+          "job": 6,
+          "className": "Knight",
+          "dps": 848.1446605960286,
+          "ttk": 109.01479776992757,
+          "secondsToDie": 15.800932799054065
+        },
+        {
+          "job": 7,
+          "className": "Magician",
+          "dps": 457.32619357639,
+          "ttk": 201.137269706042,
+          "secondsToDie": 14.223456897300112
+        },
+        {
+          "job": 8,
+          "className": "Priestess",
+          "dps": 738.865234375,
+          "ttk": 125.6114625097477,
+          "secondsToDie": 20.505428358579586
+        },
+        {
+          "job": 9,
+          "className": "Assassin",
+          "dps": 1298.7914204259023,
+          "ttk": 70.0192417875505,
+          "secondsToDie": 16.59795749378968
+        },
+        {
+          "job": 10,
+          "className": "Shaman",
+          "dps": 467.9225802951372,
+          "ttk": 196.58956821137832,
+          "secondsToDie": 22.550106081489165
+        },
+        {
+          "job": 11,
+          "className": "Martial Artist",
+          "dps": 1011.2655861961946,
+          "ttk": 91.87335209928602,
+          "secondsToDie": 19.405331832369647
+        }
+      ]
+    }
+  ]
+}

@@ -1,0 +1,2022 @@
+{
+  "version": 1,
+  "name": "VelluM 300 active hours to 120",
+  "authored": true,
+  "maxLevel": 150,
+  "analyzedThrough": 120,
+  "targetHoursTo80": 12,
+  "targetHoursTo100": 40,
+  "targetHoursTo120": 300,
+  "bands": [
+    {
+      "from": 1,
+      "to": 10,
+      "hours": 0.25
+    },
+    {
+      "from": 10,
+      "to": 20,
+      "hours": 0.5
+    },
+    {
+      "from": 20,
+      "to": 30,
+      "hours": 0.75
+    },
+    {
+      "from": 30,
+      "to": 40,
+      "hours": 1
+    },
+    {
+      "from": 40,
+      "to": 50,
+      "hours": 1.5
+    },
+    {
+      "from": 50,
+      "to": 60,
+      "hours": 2
+    },
+    {
+      "from": 60,
+      "to": 70,
+      "hours": 2.5
+    },
+    {
+      "from": 70,
+      "to": 80,
+      "hours": 3.5
+    },
+    {
+      "from": 80,
+      "to": 90,
+      "hours": 10
+    },
+    {
+      "from": 90,
+      "to": 100,
+      "hours": 18
+    },
+    {
+      "from": 100,
+      "to": 110,
+      "hours": 80
+    },
+    {
+      "from": 110,
+      "to": 120,
+      "hours": 180
+    }
+  ],
+  "experience": [
+    0,
+    133,
+    314,
+    510,
+    780,
+    1059,
+    1445,
+    1739,
+    2098,
+    2492,
+    2977,
+    3650,
+    4429,
+    5307,
+    6417,
+    7648,
+    9145,
+    10819,
+    12701,
+    14710,
+    16359,
+    18346,
+    20556,
+    22921,
+    25522,
+    28181,
+    31048,
+    34563,
+    38838,
+    43012,
+    46067,
+    49096,
+    52342,
+    55832,
+    59645,
+    63788,
+    68413,
+    73517,
+    78520,
+    83802,
+    90424,
+    97973,
+    107119,
+    117903,
+    128795,
+    141019,
+    153553,
+    167495,
+    181561,
+    195636,
+    205583,
+    215850,
+    226434,
+    238062,
+    251261,
+    266393,
+    282040,
+    296232,
+    310757,
+    327522,
+    339655,
+    353487,
+    368688,
+    385595,
+    404341,
+    426139,
+    449481,
+    473063,
+    496629,
+    521204,
+    539747,
+    559749,
+    575845,
+    592948,
+    613257,
+    637364,
+    664315,
+    693575,
+    725062,
+    757226,
+    835333,
+    914012,
+    999652,
+    1091168,
+    1187358,
+    1291572,
+    1407140,
+    1530495,
+    1666635,
+    1813950,
+    1939596,
+    2074451,
+    2221338,
+    2365641,
+    2480971,
+    2605479,
+    2729789,
+    2863888,
+    3030862,
+    3257164,
+    3831117,
+    4482495,
+    5311801,
+    5860156,
+    6472024,
+    7255027,
+    8140182,
+    9151129,
+    10414242,
+    11837566,
+    13529882,
+    15358125,
+    17835419,
+    20519298,
+    22378746,
+    24173987,
+    26255346,
+    28478820,
+    30890487,
+    33479964,
+    36457863,
+    39882447,
+    43820719,
+    48349732,
+    53558097,
+    59547717,
+    66435780,
+    74357052,
+    83466515,
+    93942397,
+    105989661,
+    119844015,
+    135776522,
+    154098905,
+    175169645,
+    199400996,
+    227267050,
+    259313012,
+    296165868,
+    338546652,
+    387284554,
+    443333141,
+    507789016,
+    581913272,
+    667156166,
+    765185494,
+    877919221,
+    1007563007,
+    1156653361,
+    1328107268,
+    1525279261
+  ],
+  "classes": {
+    "1": {
+      "name": "Fighter",
+      "roleWeight": 1.1,
+      "damageCurve": [
+        {
+          "level": 1,
+          "value": 1
+        },
+        {
+          "level": 5,
+          "value": 1
+        },
+        {
+          "level": 10,
+          "value": 1.1588
+        },
+        {
+          "level": 20,
+          "value": 0.9025
+        },
+        {
+          "level": 30,
+          "value": 1.0628
+        },
+        {
+          "level": 40,
+          "value": 1.0194
+        },
+        {
+          "level": 50,
+          "value": 1.536
+        },
+        {
+          "level": 60,
+          "value": 1.1389
+        },
+        {
+          "level": 70,
+          "value": 1.1
+        },
+        {
+          "level": 80,
+          "value": 0.9122
+        },
+        {
+          "level": 90,
+          "value": 0.8051
+        },
+        {
+          "level": 100,
+          "value": 0.806
+        },
+        {
+          "level": 110,
+          "value": 0.7871
+        },
+        {
+          "level": 120,
+          "value": 0.9544
+        },
+        {
+          "level": 150,
+          "value": 0.9544
+        }
+      ]
+    },
+    "2": {
+      "name": "Mechanician",
+      "roleWeight": 0.95,
+      "damageCurve": [
+        {
+          "level": 1,
+          "value": 1
+        },
+        {
+          "level": 5,
+          "value": 1
+        },
+        {
+          "level": 10,
+          "value": 1.0029
+        },
+        {
+          "level": 20,
+          "value": 1.1321
+        },
+        {
+          "level": 30,
+          "value": 0.9786
+        },
+        {
+          "level": 40,
+          "value": 1.0524
+        },
+        {
+          "level": 50,
+          "value": 1.5762
+        },
+        {
+          "level": 60,
+          "value": 1.7732
+        },
+        {
+          "level": 70,
+          "value": 1.1388
+        },
+        {
+          "level": 80,
+          "value": 1.2233
+        },
+        {
+          "level": 90,
+          "value": 1.2424
+        },
+        {
+          "level": 100,
+          "value": 0.9227
+        },
+        {
+          "level": 110,
+          "value": 0.9472
+        },
+        {
+          "level": 120,
+          "value": 0.95
+        },
+        {
+          "level": 150,
+          "value": 0.95
+        }
+      ]
+    },
+    "3": {
+      "name": "Archer",
+      "roleWeight": 1.05,
+      "damageCurve": [
+        {
+          "level": 1,
+          "value": 1
+        },
+        {
+          "level": 5,
+          "value": 1
+        },
+        {
+          "level": 10,
+          "value": 1.224
+        },
+        {
+          "level": 20,
+          "value": 1.4725
+        },
+        {
+          "level": 30,
+          "value": 0.9951
+        },
+        {
+          "level": 40,
+          "value": 1.0283
+        },
+        {
+          "level": 50,
+          "value": 1.0151
+        },
+        {
+          "level": 60,
+          "value": 0.9691
+        },
+        {
+          "level": 70,
+          "value": 0.7451
+        },
+        {
+          "level": 80,
+          "value": 0.794
+        },
+        {
+          "level": 90,
+          "value": 0.6894
+        },
+        {
+          "level": 100,
+          "value": 0.7502
+        },
+        {
+          "level": 110,
+          "value": 0.775
+        },
+        {
+          "level": 120,
+          "value": 0.8397
+        },
+        {
+          "level": 150,
+          "value": 0.8397
+        }
+      ]
+    },
+    "4": {
+      "name": "Pikeman",
+      "roleWeight": 1.1,
+      "damageCurve": [
+        {
+          "level": 1,
+          "value": 1
+        },
+        {
+          "level": 5,
+          "value": 1
+        },
+        {
+          "level": 10,
+          "value": 0.9511
+        },
+        {
+          "level": 20,
+          "value": 1.0961
+        },
+        {
+          "level": 30,
+          "value": 1.2672
+        },
+        {
+          "level": 40,
+          "value": 1.1
+        },
+        {
+          "level": 50,
+          "value": 1.9858
+        },
+        {
+          "level": 60,
+          "value": 1.6768
+        },
+        {
+          "level": 70,
+          "value": 1.6027
+        },
+        {
+          "level": 80,
+          "value": 1.4728
+        },
+        {
+          "level": 90,
+          "value": 1.2479
+        },
+        {
+          "level": 100,
+          "value": 1.2228
+        },
+        {
+          "level": 110,
+          "value": 1.4235
+        },
+        {
+          "level": 120,
+          "value": 1.8289
+        },
+        {
+          "level": 150,
+          "value": 1.8289
+        }
+      ]
+    },
+    "5": {
+      "name": "Atalanta",
+      "roleWeight": 1,
+      "damageCurve": [
+        {
+          "level": 1,
+          "value": 1
+        },
+        {
+          "level": 5,
+          "value": 1
+        },
+        {
+          "level": 10,
+          "value": 1
+        },
+        {
+          "level": 20,
+          "value": 2.1104
+        },
+        {
+          "level": 30,
+          "value": 2.5448
+        },
+        {
+          "level": 40,
+          "value": 1.135
+        },
+        {
+          "level": 50,
+          "value": 1.7585
+        },
+        {
+          "level": 60,
+          "value": 1.7272
+        },
+        {
+          "level": 70,
+          "value": 1.0515
+        },
+        {
+          "level": 80,
+          "value": 1
+        },
+        {
+          "level": 90,
+          "value": 1
+        },
+        {
+          "level": 100,
+          "value": 1.0736
+        },
+        {
+          "level": 110,
+          "value": 1.0975
+        },
+        {
+          "level": 120,
+          "value": 1.1462
+        },
+        {
+          "level": 150,
+          "value": 1.1462
+        }
+      ]
+    },
+    "6": {
+      "name": "Knight",
+      "roleWeight": 0.98,
+      "damageCurve": [
+        {
+          "level": 1,
+          "value": 1
+        },
+        {
+          "level": 5,
+          "value": 1
+        },
+        {
+          "level": 10,
+          "value": 0.7175
+        },
+        {
+          "level": 20,
+          "value": 1.5954
+        },
+        {
+          "level": 30,
+          "value": 2.327
+        },
+        {
+          "level": 40,
+          "value": 1.298
+        },
+        {
+          "level": 50,
+          "value": 2.3497
+        },
+        {
+          "level": 60,
+          "value": 2.0633
+        },
+        {
+          "level": 70,
+          "value": 1.5814
+        },
+        {
+          "level": 80,
+          "value": 1.5739
+        },
+        {
+          "level": 90,
+          "value": 1.3603
+        },
+        {
+          "level": 100,
+          "value": 1.0404
+        },
+        {
+          "level": 110,
+          "value": 0.98
+        },
+        {
+          "level": 120,
+          "value": 1.0122
+        },
+        {
+          "level": 150,
+          "value": 1.0122
+        }
+      ]
+    },
+    "7": {
+      "name": "Magician",
+      "roleWeight": 0.95,
+      "damageCurve": [
+        {
+          "level": 1,
+          "value": 1
+        },
+        {
+          "level": 5,
+          "value": 1
+        },
+        {
+          "level": 10,
+          "value": 1.1628
+        },
+        {
+          "level": 20,
+          "value": 0.4488
+        },
+        {
+          "level": 30,
+          "value": 0.4218
+        },
+        {
+          "level": 40,
+          "value": 0.4521
+        },
+        {
+          "level": 50,
+          "value": 0.6484
+        },
+        {
+          "level": 60,
+          "value": 0.6848
+        },
+        {
+          "level": 70,
+          "value": 0.7863
+        },
+        {
+          "level": 80,
+          "value": 1.2744
+        },
+        {
+          "level": 90,
+          "value": 1.0746
+        },
+        {
+          "level": 100,
+          "value": 1.2521
+        },
+        {
+          "level": 110,
+          "value": 1.1349
+        },
+        {
+          "level": 120,
+          "value": 1.0659
+        },
+        {
+          "level": 150,
+          "value": 1.0659
+        }
+      ]
+    },
+    "8": {
+      "name": "Priestess",
+      "roleWeight": 0.88,
+      "damageCurve": [
+        {
+          "level": 1,
+          "value": 1
+        },
+        {
+          "level": 5,
+          "value": 1
+        },
+        {
+          "level": 10,
+          "value": 1.0771
+        },
+        {
+          "level": 20,
+          "value": 0.35
+        },
+        {
+          "level": 30,
+          "value": 0.3781
+        },
+        {
+          "level": 40,
+          "value": 0.35
+        },
+        {
+          "level": 50,
+          "value": 0.4021
+        },
+        {
+          "level": 60,
+          "value": 0.4927
+        },
+        {
+          "level": 70,
+          "value": 0.5504
+        },
+        {
+          "level": 80,
+          "value": 0.8245
+        },
+        {
+          "level": 90,
+          "value": 0.6956
+        },
+        {
+          "level": 100,
+          "value": 0.88
+        },
+        {
+          "level": 110,
+          "value": 0.9162
+        },
+        {
+          "level": 120,
+          "value": 0.8666
+        },
+        {
+          "level": 150,
+          "value": 0.8666
+        }
+      ]
+    },
+    "9": {
+      "name": "Assassin",
+      "roleWeight": 1.1,
+      "damageCurve": [
+        {
+          "level": 1,
+          "value": 1
+        },
+        {
+          "level": 5,
+          "value": 1
+        },
+        {
+          "level": 10,
+          "value": 0.7687
+        },
+        {
+          "level": 20,
+          "value": 1.1
+        },
+        {
+          "level": 30,
+          "value": 1.3823
+        },
+        {
+          "level": 40,
+          "value": 1.1637
+        },
+        {
+          "level": 50,
+          "value": 1.0393
+        },
+        {
+          "level": 60,
+          "value": 0.7709
+        },
+        {
+          "level": 70,
+          "value": 0.4989
+        },
+        {
+          "level": 80,
+          "value": 0.448
+        },
+        {
+          "level": 90,
+          "value": 0.3739
+        },
+        {
+          "level": 100,
+          "value": 0.359
+        },
+        {
+          "level": 110,
+          "value": 0.5042
+        },
+        {
+          "level": 120,
+          "value": 0.7419
+        },
+        {
+          "level": 150,
+          "value": 0.7419
+        }
+      ]
+    },
+    "10": {
+      "name": "Shaman",
+      "roleWeight": 0.94,
+      "damageCurve": [
+        {
+          "level": 1,
+          "value": 1
+        },
+        {
+          "level": 5,
+          "value": 1
+        },
+        {
+          "level": 10,
+          "value": 0.35
+        },
+        {
+          "level": 20,
+          "value": 0.4599
+        },
+        {
+          "level": 30,
+          "value": 0.6451
+        },
+        {
+          "level": 40,
+          "value": 0.6492
+        },
+        {
+          "level": 50,
+          "value": 0.94
+        },
+        {
+          "level": 60,
+          "value": 0.94
+        },
+        {
+          "level": 70,
+          "value": 0.9966
+        },
+        {
+          "level": 80,
+          "value": 1.304
+        },
+        {
+          "level": 90,
+          "value": 1.0807
+        },
+        {
+          "level": 100,
+          "value": 1.169
+        },
+        {
+          "level": 110,
+          "value": 1.3631
+        },
+        {
+          "level": 120,
+          "value": 1.0745
+        },
+        {
+          "level": 150,
+          "value": 1.0745
+        }
+      ]
+    },
+    "11": {
+      "name": "Martial Artist",
+      "roleWeight": 1.06,
+      "damageCurve": [
+        {
+          "level": 1,
+          "value": 1
+        },
+        {
+          "level": 5,
+          "value": 1
+        },
+        {
+          "level": 10,
+          "value": 0.7451
+        },
+        {
+          "level": 20,
+          "value": 1.1187
+        },
+        {
+          "level": 30,
+          "value": 1.06
+        },
+        {
+          "level": 40,
+          "value": 1.2479
+        },
+        {
+          "level": 50,
+          "value": 1.0453
+        },
+        {
+          "level": 60,
+          "value": 0.6312
+        },
+        {
+          "level": 70,
+          "value": 0.5098
+        },
+        {
+          "level": 80,
+          "value": 0.4476
+        },
+        {
+          "level": 90,
+          "value": 0.3987
+        },
+        {
+          "level": 100,
+          "value": 0.4008
+        },
+        {
+          "level": 110,
+          "value": 0.6135
+        },
+        {
+          "level": 120,
+          "value": 0.9182
+        },
+        {
+          "level": 150,
+          "value": 0.9182
+        }
+      ]
+    }
+  },
+  "monsters": [
+    {
+      "level": 1,
+      "health": 35,
+      "sourceHealth": 38,
+      "attack": 1
+    },
+    {
+      "level": 5,
+      "health": 46,
+      "sourceHealth": 87,
+      "attack": 1
+    },
+    {
+      "level": 10,
+      "health": 88,
+      "sourceHealth": 274.5,
+      "attack": 1
+    },
+    {
+      "level": 20,
+      "health": 274,
+      "sourceHealth": 552,
+      "attack": 1
+    },
+    {
+      "level": 30,
+      "health": 603,
+      "sourceHealth": 974,
+      "attack": 1
+    },
+    {
+      "level": 40,
+      "health": 872,
+      "sourceHealth": 1135,
+      "attack": 0.9
+    },
+    {
+      "level": 50,
+      "health": 1633,
+      "sourceHealth": 4575,
+      "attack": 0.9
+    },
+    {
+      "level": 60,
+      "health": 2391,
+      "sourceHealth": 5014,
+      "attack": 0.9
+    },
+    {
+      "level": 70,
+      "health": 2944,
+      "sourceHealth": 13316.5,
+      "attack": 0.9
+    },
+    {
+      "level": 80,
+      "health": 5660,
+      "sourceHealth": 29142.5,
+      "attack": 0.85
+    },
+    {
+      "level": 90,
+      "health": 5830,
+      "sourceHealth": 44793.5,
+      "attack": 0.85
+    },
+    {
+      "level": 100,
+      "health": 7706,
+      "sourceHealth": 23431.5,
+      "attack": 0.85
+    },
+    {
+      "level": 110,
+      "health": 13296,
+      "sourceHealth": 47437.5,
+      "attack": 0.85
+    },
+    {
+      "level": 120,
+      "health": 17593,
+      "sourceHealth": 93438,
+      "attack": 0.85
+    },
+    {
+      "level": 150,
+      "health": 52779,
+      "sourceHealth": 280314,
+      "attack": 1
+    }
+  ],
+  "bossExperienceMultiplier": 12,
+  "potionCooldownSeconds": 2,
+  "pvp": {
+    "enabled": false,
+    "status": "simulation-only",
+    "damageScale": 0.18,
+    "defenseCap": 0.35,
+    "damageReductionCap": 50,
+    "maxHitFraction": 0.15
+  },
+  "calibration": {
+    "method": "Full 119-level, 11-class mean solo rates; target active hours 12/40/300; no quests or paid XP",
+    "baselineSource": "ops/simulate-balance.mjs",
+    "humanTelemetry": false,
+    "referenceCycles": [
+      {
+        "level": 1,
+        "value": 10.540140140140126
+      },
+      {
+        "level": 5,
+        "value": 13.694381016342042
+      },
+      {
+        "level": 10,
+        "value": 14.83297756550839
+      },
+      {
+        "level": 20,
+        "value": 16.030637309933983
+      },
+      {
+        "level": 30,
+        "value": 16.8331079201288
+      },
+      {
+        "level": 40,
+        "value": 15.85268536437094
+      },
+      {
+        "level": 50,
+        "value": 16.26801571475736
+      },
+      {
+        "level": 60,
+        "value": 20.168644395011363
+      },
+      {
+        "level": 70,
+        "value": 20.333381585968045
+      },
+      {
+        "level": 80,
+        "value": 20.876759754781354
+      },
+      {
+        "level": 90,
+        "value": 25.758395891584215
+      },
+      {
+        "level": 100,
+        "value": 21.96286543651005
+      },
+      {
+        "level": 110,
+        "value": 25.47817376508802
+      },
+      {
+        "level": 120,
+        "value": 29.177565867447818
+      }
+    ],
+    "referenceRates": [
+      {
+        "level": 1,
+        "secondsPerXP": 0.5432264686671319,
+        "targetSeconds": 72.07173825479526
+      },
+      {
+        "level": 2,
+        "secondsPerXP": 0.4290829273851187,
+        "targetSeconds": 77.8374773151789
+      },
+      {
+        "level": 3,
+        "secondsPerXP": 0.42917273464043687,
+        "targetSeconds": 84.0644755003932
+      },
+      {
+        "level": 4,
+        "secondsPerXP": 0.33673010080242133,
+        "targetSeconds": 90.78963354042466
+      },
+      {
+        "level": 5,
+        "secondsPerXP": 0.3515297984861131,
+        "targetSeconds": 98.05280422365865
+      },
+      {
+        "level": 6,
+        "secondsPerXP": 0.27407984508690303,
+        "targetSeconds": 105.89702856155135
+      },
+      {
+        "level": 7,
+        "secondsPerXP": 0.3892439346303064,
+        "targetSeconds": 114.36879084647546
+      },
+      {
+        "level": 8,
+        "secondsPerXP": 0.3437974214269705,
+        "targetSeconds": 123.51829411419352
+      },
+      {
+        "level": 9,
+        "secondsPerXP": 0.3386237034574316,
+        "targetSeconds": 133.399757643329
+      },
+      {
+        "level": 10,
+        "secondsPerXP": 0.2563939569566661,
+        "targetSeconds": 124.25307965473573
+      },
+      {
+        "level": 11,
+        "secondsPerXP": 0.1992750499673327,
+        "targetSeconds": 134.1933260271146
+      },
+      {
+        "level": 12,
+        "secondsPerXP": 0.18603941942648455,
+        "targetSeconds": 144.92879210928376
+      },
+      {
+        "level": 13,
+        "secondsPerXP": 0.17828878202915466,
+        "targetSeconds": 156.52309547802648
+      },
+      {
+        "level": 14,
+        "secondsPerXP": 0.15222555783101469,
+        "targetSeconds": 169.04494311626863
+      },
+      {
+        "level": 15,
+        "secondsPerXP": 0.14825662175500406,
+        "targetSeconds": 182.56853856557012
+      },
+      {
+        "level": 16,
+        "secondsPerXP": 0.13173340014752216,
+        "targetSeconds": 197.17402165081572
+      },
+      {
+        "level": 17,
+        "secondsPerXP": 0.12724072554670116,
+        "targetSeconds": 212.94794338288102
+      },
+      {
+        "level": 18,
+        "secondsPerXP": 0.12218879768974543,
+        "targetSeconds": 229.98377885351152
+      },
+      {
+        "level": 19,
+        "secondsPerXP": 0.12362651723827557,
+        "targetSeconds": 248.38248116179247
+      },
+      {
+        "level": 20,
+        "secondsPerXP": 0.11300814252519333,
+        "targetSeconds": 186.3796194821036
+      },
+      {
+        "level": 21,
+        "secondsPerXP": 0.10132648574579761,
+        "targetSeconds": 201.28998904067188
+      },
+      {
+        "level": 22,
+        "secondsPerXP": 0.09838720199623661,
+        "targetSeconds": 217.39318816392566
+      },
+      {
+        "level": 23,
+        "secondsPerXP": 0.09926080439275459,
+        "targetSeconds": 234.78464321703973
+      },
+      {
+        "level": 24,
+        "secondsPerXP": 0.09747657919908298,
+        "targetSeconds": 253.56741467440293
+      },
+      {
+        "level": 25,
+        "secondsPerXP": 0.10299918536026807,
+        "targetSeconds": 273.8528078483552
+      },
+      {
+        "level": 26,
+        "secondsPerXP": 0.1031578780962124,
+        "targetSeconds": 295.7610324762236
+      },
+      {
+        "level": 27,
+        "secondsPerXP": 0.09087803508801645,
+        "targetSeconds": 319.4219150743216
+      },
+      {
+        "level": 28,
+        "secondsPerXP": 0.08070489209961063,
+        "targetSeconds": 344.97566828026726
+      },
+      {
+        "level": 29,
+        "secondsPerXP": 0.08926992543980519,
+        "targetSeconds": 372.5737217426887
+      },
+      {
+        "level": 30,
+        "secondsPerXP": 0.08134381798327085,
+        "targetSeconds": 248.50615930947146
+      },
+      {
+        "level": 31,
+        "secondsPerXP": 0.0886184895149699,
+        "targetSeconds": 268.3866520542292
+      },
+      {
+        "level": 32,
+        "secondsPerXP": 0.0893002566941147,
+        "targetSeconds": 289.8575842185675
+      },
+      {
+        "level": 33,
+        "secondsPerXP": 0.08971006977936724,
+        "targetSeconds": 313.04619095605295
+      },
+      {
+        "level": 34,
+        "secondsPerXP": 0.08867876354808678,
+        "targetSeconds": 338.08988623253725
+      },
+      {
+        "level": 35,
+        "secondsPerXP": 0.08812892947018926,
+        "targetSeconds": 365.13707713114025
+      },
+      {
+        "level": 36,
+        "secondsPerXP": 0.08525585190500061,
+        "targetSeconds": 394.34804330163144
+      },
+      {
+        "level": 37,
+        "secondsPerXP": 0.08343990989344433,
+        "targetSeconds": 425.89588676576204
+      },
+      {
+        "level": 38,
+        "secondsPerXP": 0.0919394753568026,
+        "targetSeconds": 459.96755770702305
+      },
+      {
+        "level": 39,
+        "secondsPerXP": 0.09404313680394863,
+        "targetSeconds": 496.76496232358494
+      },
+      {
+        "level": 40,
+        "secondsPerXP": 0.05628701709192794,
+        "targetSeconds": 372.7592389642072
+      },
+      {
+        "level": 41,
+        "secondsPerXP": 0.05333200986437137,
+        "targetSeconds": 402.57997808134377
+      },
+      {
+        "level": 42,
+        "secondsPerXP": 0.04754096800653958,
+        "targetSeconds": 434.7863763278513
+      },
+      {
+        "level": 43,
+        "secondsPerXP": 0.043541457548174525,
+        "targetSeconds": 469.56928643407946
+      },
+      {
+        "level": 44,
+        "secondsPerXP": 0.046559790021572206,
+        "targetSeconds": 507.13482934880585
+      },
+      {
+        "level": 45,
+        "secondsPerXP": 0.04480600819601333,
+        "targetSeconds": 547.7056156967104
+      },
+      {
+        "level": 46,
+        "secondsPerXP": 0.047195186617514984,
+        "targetSeconds": 591.5220649524472
+      },
+      {
+        "level": 47,
+        "secondsPerXP": 0.04582166679898074,
+        "targetSeconds": 638.8438301486432
+      },
+      {
+        "level": 48,
+        "secondsPerXP": 0.04905268976331323,
+        "targetSeconds": 689.9513365605345
+      },
+      {
+        "level": 49,
+        "secondsPerXP": 0.0529424585829561,
+        "targetSeconds": 745.1474434853774
+      },
+      {
+        "level": 50,
+        "secondsPerXP": 0.049967451922057766,
+        "targetSeconds": 497.0123186189429
+      },
+      {
+        "level": 51,
+        "secondsPerXP": 0.05227895732361341,
+        "targetSeconds": 536.7733041084584
+      },
+      {
+        "level": 52,
+        "secondsPerXP": 0.05477304295844341,
+        "targetSeconds": 579.715168437135
+      },
+      {
+        "level": 53,
+        "secondsPerXP": 0.0538457312543847,
+        "targetSeconds": 626.0923819121059
+      },
+      {
+        "level": 54,
+        "secondsPerXP": 0.05122780890555292,
+        "targetSeconds": 676.1797724650745
+      },
+      {
+        "level": 55,
+        "secondsPerXP": 0.048259655159419886,
+        "targetSeconds": 730.2741542622805
+      },
+      {
+        "level": 56,
+        "secondsPerXP": 0.0504047784149807,
+        "targetSeconds": 788.6960866032629
+      },
+      {
+        "level": 57,
+        "secondsPerXP": 0.06002016928227571,
+        "targetSeconds": 851.7917735315241
+      },
+      {
+        "level": 58,
+        "secondsPerXP": 0.06333546225493823,
+        "targetSeconds": 919.9351154140461
+      },
+      {
+        "level": 59,
+        "secondsPerXP": 0.05926344342714409,
+        "targetSeconds": 993.5299246471699
+      },
+      {
+        "level": 60,
+        "secondsPerXP": 0.05120656698118191,
+        "targetSeconds": 621.2653982736787
+      },
+      {
+        "level": 61,
+        "secondsPerXP": 0.04850738888385228,
+        "targetSeconds": 670.9666301355729
+      },
+      {
+        "level": 62,
+        "secondsPerXP": 0.04767228256407621,
+        "targetSeconds": 724.6439605464188
+      },
+      {
+        "level": 63,
+        "secondsPerXP": 0.046290781664192066,
+        "targetSeconds": 782.6154773901324
+      },
+      {
+        "level": 64,
+        "secondsPerXP": 0.045088020019480486,
+        "targetSeconds": 845.2247155813432
+      },
+      {
+        "level": 65,
+        "secondsPerXP": 0.04187818236019422,
+        "targetSeconds": 912.8426928278507
+      },
+      {
+        "level": 66,
+        "secondsPerXP": 0.0422353628081349,
+        "targetSeconds": 985.8701082540787
+      },
+      {
+        "level": 67,
+        "secondsPerXP": 0.04514996847616719,
+        "targetSeconds": 1064.739716914405
+      },
+      {
+        "level": 68,
+        "secondsPerXP": 0.0487965296828792,
+        "targetSeconds": 1149.9188942675576
+      },
+      {
+        "level": 69,
+        "secondsPerXP": 0.050534899596767706,
+        "targetSeconds": 1241.9124058089621
+      },
+      {
+        "level": 70,
+        "secondsPerXP": 0.04690530317913952,
+        "targetSeconds": 869.7715575831502
+      },
+      {
+        "level": 71,
+        "secondsPerXP": 0.04696401453629928,
+        "targetSeconds": 939.3532821898021
+      },
+      {
+        "level": 72,
+        "secondsPerXP": 0.06302730540011668,
+        "targetSeconds": 1014.5015447649864
+      },
+      {
+        "level": 73,
+        "secondsPerXP": 0.06406433492676979,
+        "targetSeconds": 1095.6616683461853
+      },
+      {
+        "level": 74,
+        "secondsPerXP": 0.05826692775540612,
+        "targetSeconds": 1183.3146018138805
+      },
+      {
+        "level": 75,
+        "secondsPerXP": 0.05301210749061557,
+        "targetSeconds": 1277.979769958991
+      },
+      {
+        "level": 76,
+        "secondsPerXP": 0.05121222186072293,
+        "targetSeconds": 1380.2181515557102
+      },
+      {
+        "level": 77,
+        "secondsPerXP": 0.05094383940894616,
+        "targetSeconds": 1490.6356036801672
+      },
+      {
+        "level": 78,
+        "secondsPerXP": 0.05112805946854181,
+        "targetSeconds": 1609.8864519745805
+      },
+      {
+        "level": 79,
+        "secondsPerXP": 0.05405601969239766,
+        "targetSeconds": 1738.6773681325471
+      },
+      {
+        "level": 80,
+        "secondsPerXP": 0.031815956241302616,
+        "targetSeconds": 2485.0615930947147
+      },
+      {
+        "level": 81,
+        "secondsPerXP": 0.03411181180825226,
+        "targetSeconds": 2683.8665205422917
+      },
+      {
+        "level": 82,
+        "secondsPerXP": 0.03384624676078474,
+        "targetSeconds": 2898.5758421856754
+      },
+      {
+        "level": 83,
+        "secondsPerXP": 0.034206628758228115,
+        "targetSeconds": 3130.4619095605294
+      },
+      {
+        "level": 84,
+        "secondsPerXP": 0.03514829216032791,
+        "targetSeconds": 3380.8988623253726
+      },
+      {
+        "level": 85,
+        "secondsPerXP": 0.03503736035692435,
+        "targetSeconds": 3651.3707713114027
+      },
+      {
+        "level": 86,
+        "secondsPerXP": 0.03412263759466903,
+        "targetSeconds": 3943.4804330163147
+      },
+      {
+        "level": 87,
+        "secondsPerXP": 0.034525983822418,
+        "targetSeconds": 4258.95886765762
+      },
+      {
+        "level": 88,
+        "secondsPerXP": 0.03378631553170277,
+        "targetSeconds": 4599.67557707023
+      },
+      {
+        "level": 89,
+        "secondsPerXP": 0.03372120921842073,
+        "targetSeconds": 4967.649623235849
+      },
+      {
+        "level": 90,
+        "secondsPerXP": 0.03560100426848701,
+        "targetSeconds": 4473.110867570486
+      },
+      {
+        "level": 91,
+        "secondsPerXP": 0.03582346784939656,
+        "targetSeconds": 4830.959736976125
+      },
+      {
+        "level": 92,
+        "secondsPerXP": 0.0355201530904989,
+        "targetSeconds": 5217.436515934215
+      },
+      {
+        "level": 93,
+        "secondsPerXP": 0.03904850120564501,
+        "targetSeconds": 5634.8314372089535
+      },
+      {
+        "level": 94,
+        "secondsPerXP": 0.052767053624906766,
+        "targetSeconds": 6085.61795218567
+      },
+      {
+        "level": 95,
+        "secondsPerXP": 0.05278766951747042,
+        "targetSeconds": 6572.467388360525
+      },
+      {
+        "level": 96,
+        "secondsPerXP": 0.05710132330897893,
+        "targetSeconds": 7098.264779429367
+      },
+      {
+        "level": 97,
+        "secondsPerXP": 0.05716784521261227,
+        "targetSeconds": 7666.125961783717
+      },
+      {
+        "level": 98,
+        "secondsPerXP": 0.04958517579844792,
+        "targetSeconds": 8279.416038726415
+      },
+      {
+        "level": 99,
+        "secondsPerXP": 0.03951250978211987,
+        "targetSeconds": 8941.769321824528
+      },
+      {
+        "level": 100,
+        "secondsPerXP": 0.027241576409014454,
+        "targetSeconds": 15635.392078573363
+      },
+      {
+        "level": 101,
+        "secondsPerXP": 0.02712403572633826,
+        "targetSeconds": 17667.993048787896
+      },
+      {
+        "level": 102,
+        "secondsPerXP": 0.024074152003265313,
+        "targetSeconds": 19964.83214513032
+      },
+      {
+        "level": 103,
+        "secondsPerXP": 0.04114167373601429,
+        "targetSeconds": 22560.260323997263
+      },
+      {
+        "level": 104,
+        "secondsPerXP": 0.041664400193813934,
+        "targetSeconds": 25493.094166116905
+      },
+      {
+        "level": 105,
+        "secondsPerXP": 0.03679065945277436,
+        "targetSeconds": 28807.1964077121
+      },
+      {
+        "level": 106,
+        "secondsPerXP": 0.0367756495694286,
+        "targetSeconds": 32552.131940714673
+      },
+      {
+        "level": 107,
+        "secondsPerXP": 0.03638560710555542,
+        "targetSeconds": 36783.90909300757
+      },
+      {
+        "level": 108,
+        "secondsPerXP": 0.032907430691656046,
+        "targetSeconds": 41565.817275098554
+      },
+      {
+        "level": 109,
+        "secondsPerXP": 0.03299978178834234,
+        "targetSeconds": 46969.373520861365
+      },
+      {
+        "level": 110,
+        "secondsPerXP": 0.02905037997552581,
+        "targetSeconds": 49162.4369268087
+      },
+      {
+        "level": 111,
+        "secondsPerXP": 0.02850397601065684,
+        "targetSeconds": 52112.18314241723
+      },
+      {
+        "level": 112,
+        "secondsPerXP": 0.022298085270103143,
+        "targetSeconds": 55238.91413096226
+      },
+      {
+        "level": 113,
+        "secondsPerXP": 0.02181664739735806,
+        "targetSeconds": 58553.24897882
+      },
+      {
+        "level": 114,
+        "secondsPerXP": 0.03337895547985614,
+        "targetSeconds": 62066.44391754921
+      },
+      {
+        "level": 115,
+        "secondsPerXP": 0.03664713215055808,
+        "targetSeconds": 65790.43055260216
+      },
+      {
+        "level": 116,
+        "secondsPerXP": 0.03350591994373168,
+        "targetSeconds": 69737.85638575829
+      },
+      {
+        "level": 117,
+        "secondsPerXP": 0.0332462225988113,
+        "targetSeconds": 73922.1277689038
+      },
+      {
+        "level": 118,
+        "secondsPerXP": 0.0324909922010767,
+        "targetSeconds": 78357.45543503803
+      },
+      {
+        "level": 119,
+        "secondsPerXP": 0.032075546829325986,
+        "targetSeconds": 83058.9027611403
+      }
+    ]
+  },
+  "maps": [
+    {
+      "id": 0,
+      "name": "Mata das Acasias",
+      "recommended": 7,
+      "minimum": 1
+    },
+    {
+      "id": 1,
+      "name": "Floresta do Bamboo",
+      "recommended": 6,
+      "minimum": 1
+    },
+    {
+      "id": 2,
+      "name": "Jardim da Liberdade",
+      "recommended": 2,
+      "minimum": 1
+    },
+    {
+      "id": 3,
+      "name": "Ricarten",
+      "recommended": 1,
+      "minimum": 1
+    },
+    {
+      "id": 4,
+      "name": "Refugio dos Ancioes",
+      "recommended": 16,
+      "minimum": 1
+    },
+    {
+      "id": 5,
+      "name": "Castelo dos Perdidos",
+      "recommended": 18,
+      "minimum": 1
+    },
+    {
+      "id": 6,
+      "name": "Vila Ruinen",
+      "recommended": 23,
+      "minimum": 5
+    },
+    {
+      "id": 7,
+      "name": "Terra Maldita",
+      "recommended": 31,
+      "minimum": 15
+    },
+    {
+      "id": 8,
+      "name": "Terra Esquecida",
+      "recommended": 35,
+      "minimum": 20
+    },
+    {
+      "id": 9,
+      "name": "Navisko",
+      "recommended": 25,
+      "minimum": 10
+    },
+    {
+      "id": 10,
+      "name": "Oasis",
+      "recommended": 45,
+      "minimum": 30
+    },
+    {
+      "id": 11,
+      "name": "C.B.A",
+      "recommended": 47,
+      "minimum": 30
+    },
+    {
+      "id": 12,
+      "name": "Terra Proibida",
+      "recommended": 65,
+      "minimum": 50
+    },
+    {
+      "id": 13,
+      "name": "Calabouco Antigo 1",
+      "recommended": 49,
+      "minimum": 30
+    },
+    {
+      "id": 14,
+      "name": "Calabouco Antigo 2",
+      "recommended": 50,
+      "minimum": 35
+    },
+    {
+      "id": 15,
+      "name": "Calabouco Antigo 3",
+      "recommended": 64,
+      "minimum": 45
+    },
+    {
+      "id": 16,
+      "name": "Salinha",
+      "recommended": 1,
+      "minimum": 1
+    },
+    {
+      "id": 17,
+      "name": "Floresta dos Espiritos",
+      "recommended": 16,
+      "minimum": 1
+    },
+    {
+      "id": 18,
+      "name": "Floresta das Ilusoes",
+      "recommended": 8,
+      "minimum": 1
+    },
+    {
+      "id": 19,
+      "name": "Vale Tranquilo",
+      "recommended": 8,
+      "minimum": 1
+    },
+    {
+      "id": 20,
+      "name": "Estrada dos Ventos",
+      "recommended": 5,
+      "minimum": 1
+    },
+    {
+      "id": 21,
+      "name": "Pillai",
+      "recommended": 1,
+      "minimum": 1
+    },
+    {
+      "id": 22,
+      "name": "Templo Maldito 1",
+      "recommended": 75,
+      "minimum": 60
+    },
+    {
+      "id": 23,
+      "name": "Templo Maldito 2",
+      "recommended": 77,
+      "minimum": 60
+    },
+    {
+      "id": 24,
+      "name": "Caverna dos Cogumelos",
+      "recommended": 52,
+      "minimum": 35
+    },
+    {
+      "id": 25,
+      "name": "Caverna das Abelhas",
+      "recommended": 60,
+      "minimum": 45
+    },
+    {
+      "id": 26,
+      "name": "SantuÃƒÂ¡io Sombrio",
+      "recommended": 71,
+      "minimum": 55
+    },
+    {
+      "id": 27,
+      "name": "Estrada do Ferro do Caos",
+      "recommended": 82,
+      "minimum": 65
+    },
+    {
+      "id": 28,
+      "name": "CoraÃƒÂ§ÃƒÂ£o de Perum",
+      "recommended": 84,
+      "minimum": 65
+    },
+    {
+      "id": 29,
+      "name": "Eura",
+      "recommended": 1,
+      "minimum": 1
+    },
+    {
+      "id": 30,
+      "name": "Torre de Bellatra",
+      "recommended": 1,
+      "minimum": 1
+    },
+    {
+      "id": 31,
+      "name": "Vale da Gallubia",
+      "recommended": 86,
+      "minimum": 70
+    },
+    {
+      "id": 32,
+      "name": "Arena",
+      "recommended": 1,
+      "minimum": 1
+    },
+    {
+      "id": 33,
+      "name": "Castelo Sagrado",
+      "recommended": 1,
+      "minimum": 1
+    },
+    {
+      "id": 34,
+      "name": "Lago da Ganancia",
+      "recommended": 75,
+      "minimum": 60
+    },
+    {
+      "id": 35,
+      "name": "Santurio Congelado",
+      "recommended": 97,
+      "minimum": 80
+    },
+    {
+      "id": 36,
+      "name": "Caverna Kelvezu",
+      "recommended": 97,
+      "minimum": 80
+    },
+    {
+      "id": 37,
+      "name": "Ilha Perdida",
+      "recommended": 103,
+      "minimum": 85
+    },
+    {
+      "id": 38,
+      "name": "Templo Perdido",
+      "recommended": 105,
+      "minimum": 90
+    },
+    {
+      "id": 39,
+      "name": "[DG]Castelo Fantasma",
+      "recommended": 1,
+      "minimum": 1
+    },
+    {
+      "id": 40,
+      "name": "Torre Sem Fim 1",
+      "recommended": 107,
+      "minimum": 90
+    },
+    {
+      "id": 41,
+      "name": "Torre Sem Fim 2",
+      "recommended": 114,
+      "minimum": 95
+    },
+    {
+      "id": 42,
+      "name": "Torre Sem Fim 3Ã‚Âº Andar",
+      "recommended": 1,
+      "minimum": 1
+    },
+    {
+      "id": 43,
+      "name": "Mina Congelada",
+      "recommended": 118,
+      "minimum": 100
+    },
+    {
+      "id": 44,
+      "name": "LaboratÃƒÂ³rio Secreto",
+      "recommended": 121,
+      "minimum": 105
+    },
+    {
+      "id": 47,
+      "name": "Caverna do Eragon",
+      "recommended": 1,
+      "minimum": 1
+    },
+    {
+      "id": 81,
+      "name": "Arma Antiga",
+      "recommended": 129,
+      "minimum": 110
+    },
+    {
+      "id": 91,
+      "name": "Abismo do Mar",
+      "recommended": 136,
+      "minimum": 120
+    }
+  ],
+  "potionPrices": {
+    "PL101": 5,
+    "PL102": 15,
+    "PL103": 30,
+    "PL104": 100,
+    "PL105": 100,
+    "PM101": 10,
+    "PM102": 25,
+    "PM103": 50,
+    "PM104": 200,
+    "PM105": 600,
+    "PS101": 5,
+    "PS102": 15,
+    "PS103": 30,
+    "PS104": 100,
+    "PS105": 100
+  }
+}

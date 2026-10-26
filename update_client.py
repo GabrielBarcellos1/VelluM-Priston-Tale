@@ -7,7 +7,7 @@ import uuid
 import sys
 
 ROOT=Path(__file__).resolve().parent
-BACKEND=('game_control.py','data/loot-items.json','data/control-defaults.json','online_world.py','admin_service.py','iniciar.py','release_info.py','local_accounts.py','internet.py','premium_store.py','skill_icons.py')
+BACKEND=('game_control.py','data/loot-items.json','data/control-defaults.json','data/skills.json','data/balance.json','online_world.py','admin_service.py','iniciar.py','release_info.py','local_accounts.py','internet.py','premium_store.py','skill_icons.py')
 DATA={'skills.json','skill-art.json','drops.json','wiki.json','quests.json','map-fields.json','map-npcs.json','map-spawns.json','premium.json','costumes.json','shop-items.json'}
 
 

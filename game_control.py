@@ -189,7 +189,7 @@ def aging(user,data):
         item=next((p['item'] for p in bags if p['item'].get('uid')==data.get('item')),None)
         if not item:raise ValueError('Equipamento não encontrado na bolsa.')
         age=int_value(item.get('aging',0),0,19,'Aging atual');code=item['code'];definition=ITEMS.get(code)
-        if not definition or code[:3] not in ('WA1','WC1','WH1','WM1','WP1','WS1','WS2','WT1','DA1','DS1','OM1','DA2','WD1','WN1') or item.get('mixed') or item.get('premiumManaged'):raise ValueError('Equipamento não pode receber Aging.')
+        if not definition or code[:3] not in ('WA1','WC1','WH1','WM1','WP1','WS1','WS2','WT1','DA1','DS1','OM1','DA2','WD1','WN1','WV1') or item.get('mixed') or item.get('premiumManaged'):raise ValueError('Equipamento não pode receber Aging.')
         # Public native eligibility exclusions; recipe is the documented FREEston profile.
         excluded={'WA179','WC171','WH159','WM173','WP174','WS173','WS282','WT171'}
         excluded.update(f'{family}{n}' for family in ('DA1','DA2') for n in [*range(31,47),48,51,54,55])
@@ -219,6 +219,10 @@ def aging(user,data):
 def eligible(monster,low,high):
     return [i for i in ITEMS.values() if i['slot'] in ('WEAPON_ONE','WEAPON_TWO','ARMOR','BOOTS','GLOVES','ARMLET','SHIELDS','AMULET','RING','SHELTOM') and i['code'] not in BOSS_CODES and i.get('family')!='OR2' and low<=i.get('req',{}).get('level',0)<=high and i.get('price',0)>0 and not re.search(r'\(|costume|event|halloween|christmas',i['name'],re.I)]
 
+def common_potion(level,roll):
+    prefix='PL' if roll<.45 else 'PM' if roll<.8 else 'PS'
+    return prefix+('104' if level>=80 else '103' if level>=40 else '102' if level>=20 else '101')
+
 
 def kill(user,data):
     job,saved,name=context(user,data);monster=MONSTERS.get(data.get('monster'));map_id=int_value(data.get('map'),0,10000,'Mapa')
@@ -233,12 +237,12 @@ def kill(user,data):
         recent=db.execute("SELECT count(*) FROM game_events WHERE username=? AND kind='kill' AND created>?",(user['username'],time.time()-60)).fetchone()[0]
         if recent>=600:raise ValueError('Limite de relatos de abate excedido. Aguarde um minuto.')
         table=rules_in(db);r=table['drops'];valid_map=map_id in monster['maps'];gold=0;items=[]
-        if valid_map:
+        if valid_map and (monster.get('boss') or any(monster.get('attack',[]))):
             if RNG.random()*100<r['goldChance']:gold=math.floor(monster['level']*3*r['goldMultiplier'])
             if monster.get('boss'):
                 for entry in BOSS_RULES.get(monster['name'],[]):
                     if entry['code'] in ITEMS and RNG.random()*100<r['bossOverrides'].get(monster['name'],r['bossChance']):items.append((entry['code'],entry.get('count',1),'boss'))
-            level=monster['level'];potion='PL104' if level>=80 else 'PL103' if level>=40 else 'PL102' if level>=20 else 'PL101'
+            level=monster['level'];potion=common_potion(level,RNG.random())
             if potion in ITEMS and RNG.random()*100<r['potionChance']:items.append((potion,1,'potion'))
             low=max(0,level-20)
             for floor,ceiling,chance in [(low,min(level,79),r['equipmentChance']),(max(80,low),level,r['highLevelChance'])]:
@@ -423,9 +427,17 @@ def inspect_state(db,user,job,state,previous):
     for group in ('bag','bagB'):
         bag=inv.get(group,[])
         if not isinstance(bag,list) or len(bag)>200 or any(not isinstance(p,dict) or not isinstance(p.get('item'),dict) for p in bag):raise ValueError('Bolsa inválida.')
+    belt=inv.get('belt',[])
+    if not isinstance(belt,list) or len(belt)>3 or any(i is not None and not isinstance(i,dict) for i in belt):raise ValueError('Cinto inválido.')
+    warehouse=state.get('warehouse',{})
+    if not isinstance(warehouse,dict):raise ValueError('Armazém inválido.')
+    chest=warehouse.get('items',[])
+    if not isinstance(chest,list) or len(chest)>600 or any(not isinstance(p,dict) or not isinstance(p.get('item'),dict) for p in chest):raise ValueError('Armazém inválido.')
+    if 'gold' in warehouse:number(warehouse['gold'],0,10**12,'Ouro do armazém')
     if isinstance(inv,dict):
         for group in ('equip','equipB'):items+=list((inv.get(group) or {}).values())
         for group in ('bag','bagB'):items += [r.get('item') for r in inv.get(group,[]) if isinstance(r,dict)]
+    items += [i for i in belt if i is not None]+[p['item'] for p in chest]
     uids=[i.get('uid') for i in items if isinstance(i,dict) and i.get('uid') is not None]
     flags=[]
     if any(type(uid) is not int or not 1<=uid<=2**53-1 for uid in uids):raise ValueError('Identificador de item inválido.')
@@ -439,6 +451,8 @@ def inspect_state(db,user,job,state,previous):
         old_inv=previous.get('inv',{});old_items=[]
         for group in ('equip','equipB'):old_items+=list((old_inv.get(group) or {}).values())
         for group in ('bag','bagB'):old_items += [p.get('item') for p in old_inv.get(group,[]) if isinstance(p,dict)]
+        old_items += [i for i in old_inv.get('belt',[]) if isinstance(i,dict)]
+        old_items += [p.get('item') for p in previous.get('warehouse',{}).get('items',[]) if isinstance(p,dict)]
         old_ages={i.get('uid'):i.get('aging',0) for i in old_items if isinstance(i,dict)}
         for item in items:
             if isinstance(item,dict) and item.get('aging',0)>old_ages.get(item.get('uid'),0):

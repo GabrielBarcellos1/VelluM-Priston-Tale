@@ -53,6 +53,12 @@ export function skillAttackProfile(skill, rule, level, stats, equipment = {}, sp
     };
     else result = { power: 1 + (entry.percent ?? 0) / 100, hitCount: 1 };
     result = { magic: [7,8,10].includes(skill.job), ...result, ...entry, source: rule.runtime.source };
+    // Authored VelluM progression: advanced spells must scale with the caster's
+    // effective weapon power instead of losing to free basic attacks at high level.
+    if(result.magic && result.damageRange && [7,8,10].includes(skill.job)) {
+      const factor=(.55+.06*level+.08*skill.tier)/Math.max(1,result.power*(result.hitCount??1));
+      result.damageRange=result.damageRange.map((base,i)=>Math.max(base,Math.floor(((i?stats.damageMax:stats.damageMin)??0)*factor+base*.6)));
+    }
     if (result.magic && spiritPercent) {
       if (result.damageRange) result.damageRange = result.damageRange.map(n => Math.floor(n * (1 + spiritPercent / 100)));
       else result.power *= 1 + spiritPercent / 100;

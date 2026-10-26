@@ -127,6 +127,7 @@ export function createRuntimeSkillSystem(ctx) {
     m.skillControls??={};m.skillControls[s.code]={...c,until:now()*1000+(c.seconds??3)*1000,
       stunUntil:now()*1000+(c.stunSeconds??0)*1000*scale,slowPercent:Math.min(60,(c.slowPercent??0)*scale),attackReductionPercent:Math.min(60,(c.attackReductionPercent??0)*scale)};
     if(c.stunSeconds)m.seq=(m.seq??0)+1;
+    m.skillMarks??={};m.skillMarks[s.code]=now()*1000;
   }}
   function reveal(){let changed=false;for(const [id,b]of active)if(profile(b).special==='stealth'){active.delete(id);changed=true;}if(changed){ctx.recalculate?.();ctx.buffsChanged?.();}}
   function cast(id,target) {
@@ -186,13 +187,15 @@ export function createRuntimeSkillSystem(ctx) {
       const token=generation;
       for(const time of hits)ctx.schedule?.(()=>{if(token!==generation||ctx.game()?.dead)return;
         for(const m of targets)if(alive(m)){
-          const dealt=ctx.damage(m.id,attack.power,Math.max(v.range,at(p.shape.length,n)??0)+1000,{...attack,area:targets.length>1});
+          const dealt=ctx.damage(m.id,attack.power,Math.max(v.range,at(p.shape.length,n)??0)+1000,{...attack,skillCode:s.code,area:targets.length>1});
           if(dealt===0)continue;
           if(attack.control)control(s,n,[m],attack.control);
           if(attack.dot)dots.set(s.code+':'+m.id,{s,m,attack,until:now()+attack.dot.seconds,next:now()+1,token});
         }reveal();
       },time*1000);
     }
+    ctx.progress?.("skillCast",{code:s.code});
+    if(s.kind==='debuff')ctx.progress?.("skillAffect",{code:s.code,count:targets.length});
     ctx.recalculate?.();ctx.buffsChanged?.();publish();ctx.save?.();return v;
   }
   function expire(){let changed=false;for(const [key,b]of active)if(b.until<=now()){active.delete(key);changed=true;}

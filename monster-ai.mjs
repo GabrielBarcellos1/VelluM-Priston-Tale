@@ -1,6 +1,7 @@
 import { accuracyChance } from "./classic-combat.mjs";
 import { worldFacingAngle } from "./character-facing.mjs";
 import { monsterControl } from "./skill-runtime.mjs";
+import { defenseMitigation } from "./balance-rules.mjs";
 // Local simulation only. Distances, movement and balance are not private official rules.
 export function stepMonster(m, ctx) {
   const { now, dt, player, ground, safe, disabled } = ctx;
@@ -76,7 +77,7 @@ export function incomingDamage(definition, stats, random = Math.random) {
 }
 
 // Block, evasion and defense are independent hit avoidance, not flat damage.
-export function incomingHit(definition, stats, table, random = Math.random) {
+export function incomingHit(definition, stats, table, random = Math.random, options = {}) {
   if (random() * 100 < (stats.evade ?? 0)) return { amount: 0, kind: "evade" };
   if (random() * 100 < (stats.block ?? 0)) return { amount: 0, kind: "block" };
   // Attack rating is absent from the public wiki; level*8 is an explicit local fallback.
@@ -101,6 +102,7 @@ export function incomingHit(definition, stats, table, random = Math.random) {
     );
   const protection = Math.min(90, stats.damageReduction ?? 0);
   amount = Math.max(1, Math.floor(amount * (1 - protection / 100)));
+  if(options.defenseCap)amount=Math.max(1,Math.floor(amount*(1-defenseMitigation(stats.defense??0,definition.level,options.defenseCap))));
   return { amount, kind: "normal" };
 }
 

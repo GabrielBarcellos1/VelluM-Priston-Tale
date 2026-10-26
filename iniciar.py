@@ -214,6 +214,8 @@ class Handler(SimpleHTTPRequestHandler):
                 skill=next((s for s in json.loads((ROOT/'data/skills.json').read_text())['skills'] if s['code']==code),None)
                 if not skill:return self.send_error(404)
                 self.reply(skill_icons.render(skill['code'],skill['kind'],skill['job'],skill['tier'],skill['index']),'image/svg+xml')
+            elif path == '/api/local/balance':
+                self.json_reply(json.loads((ROOT/'data/balance.json').read_text(encoding='utf-8')))
             elif path == '/api/local/skills':
                 self.reply((ROOT / 'data' / 'skills.json').read_bytes(),'application/json; charset=utf-8')
             elif path == '/api/local/drops':
@@ -237,6 +239,12 @@ class Handler(SimpleHTTPRequestHandler):
                 if playing and not accounts.load_state(user['username'],int(query.get('classe',[user['preferredClass']])[0])):
                     self.send_response(302);self.send_header('Location','/personagens');self.end_headers();return
                 self.reply(HTML.encode() if playing else (ROOT / 'login.html').read_bytes(), 'text/html; charset=utf-8')
+            elif path == '/assets/items.json':
+                items=json.loads((ROOT/'data/loot-items.json').read_text(encoding='utf-8'))['items']
+                prices=json.loads((ROOT/'data/balance.json').read_text(encoding='utf-8')).get('potionPrices',{})
+                for item in items:
+                    if item['code'] in prices:item['price']=prices[item['code']]
+                self.json_reply(items)
             elif path.startswith(('/assets/', '/_app/')):
                 content_type = mimetypes.guess_type(path)[0] or 'application/octet-stream'
                 self.reply(static_asset(path), content_type)
@@ -249,7 +257,7 @@ class Handler(SimpleHTTPRequestHandler):
                 self.json_reply({'ok': False, 'error': 'Servico privado ainda nao reconstruido na sessao local.'}, 501)
             elif path in ['/mobile.css','/freeston.css','/dashboard.css']:
                 self.reply((ROOT / path.lstrip('/')).read_bytes(),'text/css; charset=utf-8')
-            elif path in ['/gameplay-rules.mjs', '/item-save.mjs', '/character-facing.mjs', '/premium-effects.mjs', '/skill-damage.mjs', '/session.mjs', '/online-session.mjs', '/skill-effects.mjs', '/character-stats.mjs', '/npc-crafting.mjs', '/inventory-grid.mjs', '/classic-combat.mjs', '/skill-cooldowns.mjs', '/shop-inventory.mjs', '/native-rules.mjs', '/staff-presence.mjs', '/item-specialization.mjs', '/brand-ui.mjs', '/premium-shop.mjs', '/monster-ai.mjs', '/skill-book.mjs', '/equipment-rules.mjs', '/release-client.mjs', '/dashboard.mjs', '/dashboard-game.mjs', '/skins-shop.mjs', '/admin-names.mjs', '/drop-rules.mjs', '/command-help.mjs', '/skill-runtime.mjs', '/skill-system.mjs', '/login.mjs', '/README.md']:
+            elif path in ['/gameplay-rules.mjs', '/item-save.mjs', '/character-facing.mjs', '/premium-effects.mjs', '/skill-damage.mjs', '/session.mjs', '/online-session.mjs', '/skill-effects.mjs', '/character-stats.mjs', '/npc-crafting.mjs', '/inventory-grid.mjs', '/classic-combat.mjs', '/skill-cooldowns.mjs', '/shop-inventory.mjs', '/native-rules.mjs', '/staff-presence.mjs', '/item-specialization.mjs', '/brand-ui.mjs', '/premium-shop.mjs', '/monster-ai.mjs', '/skill-book.mjs', '/equipment-rules.mjs', '/release-client.mjs', '/dashboard.mjs', '/dashboard-game.mjs', '/skins-shop.mjs', '/admin-names.mjs', '/drop-rules.mjs', '/command-help.mjs', '/quest-progress.mjs', '/balance-rules.mjs', '/skill-runtime.mjs', '/skill-system.mjs', '/login.mjs', '/README.md']:
                 data = (ROOT / path.lstrip('/')).read_bytes()
                 self.reply(data, 'text/javascript; charset=utf-8' if path.endswith('.mjs') else 'text/plain; charset=utf-8')
             else:
