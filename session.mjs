@@ -1714,9 +1714,9 @@ function damageMonster(id, power = 1, rangeOverride = null, options = {}) {
     setTimeout(() => {
       if (monsters.get(id) !== monster || monster.seq !== deathSeq || monster.hp > 0) return;
       deliver({ t: "monsters", remove: [id] });
-      if (monster.adminSpawn) monsters.delete(id);
+      if (monster.adminSpawn || monster.featureSpawn) monsters.delete(id);
     }, 3500);
-    if (!monster.adminSpawn)
+    if (!monster.adminSpawn && !monster.featureSpawn)
       setTimeout(() => {
         if (monsters.get(id) !== monster || monster.seq !== deathSeq || monster.hp > 0) return;
         if (monster.adminSpawn) {

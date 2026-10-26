@@ -42,7 +42,7 @@ export function createGameFeatures(c){
  function openNpc(npc){return openNpcServices(npc,{game:c.game,rank:c.world.rank,classQuests:()=>c.views().filter(q=>q.id.startsWith('rank.')),skills:c.openSkills,rankAction,recoverWeapon:()=>{if(!c.completed.has('rank.2'))throw Error('Conclua a coleta dos Vamps primeiro.');loanWeapon();c.save();c.notice('Arma emprestada disponível.');},action:npcAction,refresh:c.refresh,trial:()=>c.meta.trial,enterTrial:t=>{c.meta.trial=t;c.meta.trial.kills=0;c.navigate(30);}});}
  function spawn(def,extra={},offset=200){
   const g=c.game(),p=g.ground.spawnPoint(g.pos.x+offset,g.pos.z+80);if(!p)return null;
-  const m={id:++id,name:def.name,level:def.level,definition:def,model:def.model.replace(/\\/g,'/').replace(/\.[^/.]+$/,'').toLowerCase(),x:p.x,y:p.y,z:-p.z,hp:def.hp,hpMax:def.hp,motion:'stand',angle:0,seq:0,body:20,nextAttack:0,...extra};
+  const m={id:++id,name:def.name,level:def.level,definition:def,model:def.model.replace(/\\/g,'/').replace(/\.[^/.]+$/,'').toLowerCase(),x:p.x,y:p.y,z:-p.z,hp:def.hp,hpMax:def.hp,motion:'stand',angle:0,seq:0,body:20,nextAttack:0,featureSpawn:true,...extra};
   c.monsters.set(m.id,m);const{definition,...publicState}=m;c.deliver({t:'monsters',add:[publicState],ts:performance.now()/1000});return m;
  }
  function tick(){
@@ -96,6 +96,7 @@ export function createGameFeatures(c){
   }
  }
  function defeated(monster){
+  if(monster.questDuel||monster.featureQuest||monster.trialToken)setTimeout(()=>{if(c.monsters.get(monster.id)===monster&&monster.hp<=0){c.monsters.delete(monster.id);c.deliver({t:'monsters',remove:[monster.id]});}},3500);
   if(monster.questDuel){c.update('duelWin',{questId:'rank.3.duel',field:32});delete c.meta.duel;c.save();c.notice('Mestre derrotado! Entregue o desafio para receber o Tier 4.');setTimeout(()=>c.navigate(town()),2500);return true;}
   if(monster.featureQuest){const q=c.views().find(q=>q.id===monster.featureQuest),o=q?.objectives.find(o=>['arena','personalBoss'].includes(o.type));
    const challenge=c.meta.encounters?.[monster.featureQuest];if(challenge&&!challenge.killed.includes(monster.definition.id))challenge.killed.push(monster.definition.id);
