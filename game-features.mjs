@@ -46,7 +46,7 @@ export function createGameFeatures(c){
   c.monsters.set(m.id,m);const{definition,...publicState}=m;c.deliver({t:'monsters',add:[publicState],ts:performance.now()/1000});return m;
  }
  function tick(){
-  if(!c.game()||c.game().dead)return;c.world.expire();
+  if(!c.game()||c.game().dead||c.busy?.())return;c.world.expire();
   let expired=false;for(const key of ['bag','bagB']){const old=c.inv[key].length;c.inv[key]=c.inv[key].filter(p=>!p.item.expiresAt||p.item.expiresAt>now());expired||=old!==c.inv[key].length;}
   for(const group of ['equip','equipB'])for(const[slot,item]of Object.entries(c.inv[group]))if(item.expiresAt&&item.expiresAt<=now()){delete c.inv[group][slot];expired=true;}
   if(expired){c.recalculate();c.save();c.notice('Um equipamento temporário do desafio expirou.');}

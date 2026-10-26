@@ -32,3 +32,8 @@ test('loan weapon recovery is idempotent and full bags do not create a hidden we
  f.room(true);const first=f.feature.loanWeapon();assert.equal(first.questWeapon.challenge,'rank.2.2.melee');assert.equal(f.feature.loanWeapon(),first);assert.equal(f.inv.bag.length,1);
 });
 
+
+test('map transition pauses quest monster spawning until the destination context is ready',()=>{
+ const f=fixture();f.ctx.busy=()=>true;f.feature.tick();assert.equal(f.monsters.size,0);
+ f.ctx.busy=()=>false;f.feature.tick();assert.equal(f.monsters.size,2);
+});

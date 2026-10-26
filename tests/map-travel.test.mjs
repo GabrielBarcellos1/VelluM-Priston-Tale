@@ -29,33 +29,33 @@ function fixture(extra={}){
  const options={fields,current:2,portals,canEnter:()=>true,alive:()=>true,
  position:()=>({x:-300,z:-9548,y:100}),prepare:v=>calls.push(['prepare',v]),
  save:()=>{calls.push(['save']);return true;},flush:async()=>calls.push(['flush']),
- dispose:async()=>calls.push(['dispose']),navigate:id=>calls.push(['navigate',id]),
+ activate:async next=>calls.push(['activate',next]),
  rollback:()=>calls.push(['rollback']),notice:t=>calls.push(['notice',t]),now:()=>clock,...extra};
  return {calls,options,travel:createMapTravel(options),advance:()=>{clock=3000;}};
 }
-test('walking saves exact crossing position and waits for server before leaving; duplicate transitions ignored',async()=>{
+test('walking saves crossing position and activates in place; duplicate transitions ignored',async()=>{
  const f=fixture();const first=f.travel.walk(1);
  assert.equal(await f.travel.walk(3),false);assert.equal(await first,true);
- assert.deepEqual(f.calls.map(c=>c[0]),['prepare','save','flush','dispose','navigate']);
- assert.deepEqual(f.calls[0][1],{field:1,position:{x:-300,z:-9548,y:100}});
+ assert.deepEqual(f.calls.map(c=>c[0]),['prepare','save','flush','activate']);
+ assert.deepEqual(f.calls[0][1],{field:1,position:{x:-300,z:-9548,y:100},portal:false});
 });
 test('walking rejects unrelated maps, low levels and death',async()=>{
  for(const extra of [{canEnter:()=>false},{alive:()=>false}]){
-  const f=fixture(extra);assert.equal(await f.travel.walk(1),false);assert.ok(!f.calls.some(c=>c[0]==='navigate'));
+  const f=fixture(extra);assert.equal(await f.travel.walk(1),false);assert.ok(!f.calls.some(c=>c[0]==='activate'));
  }
  const f=fixture();assert.equal(await f.travel.walk(44),false);
 });
 test('save failures cancel travel and allow retry without losing character state',async()=>{
  const f=fixture({flush:async()=>{throw Error('offline');}});
  assert.equal(await f.travel.walk(1),false);assert.equal(f.travel.busy,false);
- assert.ok(f.calls.some(c=>c[0]==='rollback'));assert.ok(!f.calls.some(c=>c[0]==='navigate'));
+ assert.ok(f.calls.some(c=>c[0]==='rollback'));assert.ok(!f.calls.some(c=>c[0]==='activate'));
 });
 test('cave entrance and exit use their paired arrival coordinates after startup cooldown',async()=>{
  for(const [from,to]of [[0,24],[24,0],[13,14],[14,13],[40,41],[41,40]]){
   const p=portals.find(p=>p.fromField===from&&p.to===to);assert.ok(p);
   const f=fixture({current:from,position:()=>({x:p.x,z:p.z,y:p.y})});
   assert.equal(f.travel.tick(),undefined);f.advance();assert.equal(await f.travel.tick(),true);
-  assert.deepEqual(f.calls[0][1],{field:to,position:p.arrival});
+  assert.deepEqual(f.calls[0][1],{field:to,position:p.arrival,portal:true});
  }
 });
 
@@ -64,4 +64,23 @@ test('portal triggers use converted collision-floor elevations rather than legac
  assert.equal(portalAt([p],0,{x:10,z:20,y:629}),p);
  assert.equal(portalAt([p],0,{x:10,z:20,y:267}),null);
  assert.equal(portalAt([{...p,disabled:true}],0,{x:10,z:20,y:629}),null);
+});
+
+test('one controller crosses successive borders and returns without leaving the session',async()=>{
+ const f=fixture();
+ for(const id of [1,0,1,2,3,2,4]){
+  assert.equal(await f.travel.walk(id),true);
+  assert.equal(f.travel.current,id);
+  assert.equal(f.travel.busy,false);
+ }
+ assert.equal(f.calls.filter(c=>c[0]==='activate').length,7);
+ assert.equal(f.calls.filter(c=>c[0]==='rollback').length,0);
+});
+test('failed destination activation keeps the previous map and allows a later retry',async()=>{
+ let fail=true;
+ const f=fixture({activate:async()=>{if(fail)throw Error('terrain unavailable');}});
+ assert.equal(await f.travel.walk(1),false);
+ assert.equal(f.travel.current,2);assert.equal(f.travel.busy,false);
+ fail=false;
+ assert.equal(await f.travel.walk(1),true);assert.equal(f.travel.current,1);
 });

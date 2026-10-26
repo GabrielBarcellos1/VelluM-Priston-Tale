@@ -16,10 +16,10 @@ export function portalAt(portals, current, position) {
     (!(p.floorY ?? p.y) || (Number.isFinite(position.y) &&
       Math.abs(position.y - (p.floorY ?? p.y)) <= Math.max(96, p.height)))) ?? null;
 }
-export function createMapTravel({ fields, current, portals = [], canEnter, alive,
-  position, prepare, save, flush, dispose, navigate, rollback, notice,
+export function createMapTravel({ fields, current: initial, portals = [], canEnter, alive,
+  position, prepare, save, flush, activate, rollback, notice,
   ready = () => true, now = () => Date.now() }) {
-  let busy = false, readyAt = now() + 2000, blockedUntil = 0;
+  let current = initial, busy = false, readyAt = now() + 2000, blockedUntil = 0;
   const travel = async (id, portal = null) => {
     if (busy || id === current && !portal) return false;
     const target = fields.find(f => f.id === id);
@@ -30,10 +30,11 @@ export function createMapTravel({ fields, current, portals = [], canEnter, alive
     } else if (!adjacentFields(fields, current).some(f => f.id === id)) return false;
     if (!canEnter(target)) {
       if (now() >= blockedUntil) { notice('Este destino exige um nível maior.'); blockedUntil = now() + 3000; }
-      if (!portal) rollback();
+      if (!portal) await rollback();
       return false;
     }
     busy = true;
+    const previous = current;
     try {
       const until = now() + 10000;
       while (!ready()) {
@@ -42,21 +43,25 @@ export function createMapTravel({ fields, current, portals = [], canEnter, alive
       }
       const landing = portal ? { ...portal.arrival } : { ...position() };
       if (!Number.isFinite(landing.x) || !Number.isFinite(landing.z)) throw Error('Posição de passagem inválida.');
-      prepare({ field: id, position: landing });
+      const next = { field: id, position: landing, portal: !!portal };
+      await prepare(next);
       if (!save()) throw Error('Não foi possível salvar o personagem.');
       await flush();
-      await dispose();
-      navigate(id);
+      await activate(next);
+      current = id;
+      readyAt = now() + (portal ? 1500 : 0);
+      busy = false;
       return true;
     } catch (error) {
-      busy = false;
+      current = previous;
       readyAt = now() + 3000;
-      rollback();
+      try { await rollback(); } finally { busy = false; }
       notice('Passagem cancelada: ' + error.message);
       return false;
     }
   };
   return {
+    get current() { return current; },
     get busy() { return busy; },
     walk: id => travel(id),
     tick() {

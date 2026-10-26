@@ -215,8 +215,7 @@ let activeForce = stored?.force && Number.isFinite(stored.force.expiresAt) ? sto
 const requestedMap = Number(
   params.get("mapa") ?? stored?.field ?? (characterClass.tribe === "morion" ? 21 : 3),
 );
-const field =
-  fieldData.fields.find((f) => f.id === requestedMap) ?? fieldData.fields.find((f) => f.id === 3);
+const field = { ...(fieldData.fields.find((f) => f.id === requestedMap) ?? fieldData.fields.find((f) => f.id === 3)) };
 const spawn = field.start?.[0] ?? [0, 0];
 const number = (value, fallback, min = 0, max = 1e9) =>
   typeof value === "number" && Number.isFinite(value)
@@ -551,7 +550,8 @@ const enter = {
 const npcs = mergeNpcRecords(field,wiki.npcs,npcStageData.stages[field.stage])
   .map((n) => ({ ...n, y: null, angle: worldFacingAngle(n, enter) }));
 conn.world = Promise.resolve({ enter, npcs });
-let game = null, mapTravel = null, pendingMapTravel = null;
+let game = null, mapTravel = null, pendingMapTravel = null, mapBackup = null;
+let nextPopulationId = 10000000;
 let pendingState = null,
   stateWrite = null;
 let kills = number(stored?.kills, 0);
@@ -565,7 +565,7 @@ const objectiveProgress =
 const questMeta=stored?.questMeta&&typeof stored.questMeta==='object'?stored.questMeta:{};
 let worldQuests,gameFeatures,bossRoulette;
 let economyEffects={xp:1,discount:0,successBonus:0,events:[]};
-async function refreshEconomy(){const result=await postLocal("/api/local/game/economy",{field:field.id});const changed=JSON.stringify(economyEffects)!==JSON.stringify(result.effects);economyEffects=result.effects;globalThis.__localEconomy=()=>economyEffects;if(changed&&game){recalculate();deliver({t:'inventory',inv});if(economyEffects.events.length)notice('Eventos ativos: '+economyEffects.events.map(e=>e.name).join(', '));}return result;}
+async function refreshEconomy(){const mapId=field.id;const result=await postLocal("/api/local/game/economy",{field:mapId});if(field.id!==mapId)return result;const changed=JSON.stringify(economyEffects)!==JSON.stringify(result.effects);economyEffects=result.effects;globalThis.__localEconomy=()=>economyEffects;if(changed&&game){recalculate();deliver({t:'inventory',inv});if(economyEffects.events.length)notice('Eventos ativos: '+economyEffects.events.map(e=>e.name).join(', '));}return result;}
 // Administration belongs to this independent local session only.
 const adminState = {
   god: false,
@@ -1182,7 +1182,7 @@ worldQuests=createWorldQuests({name:hero.name,job:characterClass.job,tribe:chara
 gameFeatures=createGameFeatures({name:hero.name,job:characterClass.job,tribe:characterClass.tribe,stats,inv,warehouse,hero,npcs,wiki,field,monsters,balance:balanceRules,B,
  definitions,completed,accepted,meta:questMeta,world:worldQuests,game:()=>game,now:serverNow,instance,addBag,restoreItem,notice,deliver,recalculate,
  save,flush:()=>stateWrite,savedAt:()=>lastSavedAt,setSavedAt:n=>{lastSavedAt=Math.max(lastSavedAt,n??0)},post:postLocal,requestId,applyWallet,refresh:refreshWallet,
- busy:()=>economyBusy,setBusy:value=>{economyBusy=value},pendingLoot:()=>pendingLoot,lootFlush:()=>lootQueue,dropLoot,
+ busy:()=>economyBusy||!!mapTravel?.busy,setBusy:value=>{economyBusy=value},pendingLoot:()=>pendingLoot,lootFlush:()=>lootQueue,dropLoot,
  views:questViews,publish:()=>deliver({t:'quests',list:questViews()}),complete:completeQuest,update:updateQuests,openSkills:showSkillBook,
  navigate:async map=>{if(!save(true))throw Error('Não foi possível salvar.');await stateWrite;await globalThis.__localSession.online?.dispose();location.search=`?classe=${characterClass.job}&mapa=${map}`;},
  reload:()=>location.reload()});
@@ -1405,7 +1405,7 @@ function save(force = false) {
         name: stats.name,
         stats,
         inv,
-        field: pendingMapTravel?.field ?? game?.currentFieldId() ?? field.id,
+        field: pendingMapTravel?.field ?? field.id,
         position: pendingMapTravel?.position ?? game?.playerPosition() ?? enter,
         kills,
         completed: [...completed],
@@ -2547,6 +2547,125 @@ conn.send = (packet) => {
     queueMicrotask(() => npcTalk(view.getUint32(12, true), view.getInt32(8, true) === 1));
 };
 conn.close = () => save();
+
+function spawnMapPopulation() {
+  let seed = field.id + 1337;
+  const random = () => {
+    seed = (seed * 1664525 + 1013904223) >>> 0;
+    return seed / 4294967296;
+  };
+  const population = spawnData.stages[field.stage];
+  const candidates = wiki.monsters.filter((m) => m.maps.includes(field.id));
+
+  if (population && candidates.length) {
+    for (const zone of population.zones) {
+      for (let i = 0; i < Math.min(zone.n, 12); i++) {
+        const weights = population.monsters.filter((m) => m.pct > 0);
+        let pick = random() * weights.reduce((sum, m) => sum + m.pct, 0),
+          selected = weights[0];
+        for (const weight of weights) {
+          pick -= weight.pct;
+          if (pick <= 0) {
+            selected = weight;
+            break;
+          }
+        }
+        const definition = balanceMonster(candidates.find((m) => m.name === selected?.name) ?? candidates[0],balanceRules);
+        const angle = random() * Math.PI * 2,
+          r = Math.sqrt(random()) * zone.r * 0.7;
+        const x = zone.x + Math.cos(angle) * r,
+          z = zone.z + Math.sin(angle) * r;
+        const position = game.ground.spawnPoint(x, -z);
+        if (!position) continue;
+        const record = {
+          id: ++nextPopulationId,
+          name: definition.name,
+          level: definition.level,
+          model: definition.model
+            .replace(/\\/g, "/")
+            .replace(/\.[^/.]+$/, "")
+            .toLowerCase(),
+          x: position.x,
+          y: position.y,
+          z: -position.z,
+          angle: 0,
+          hp: definition.hp,
+          hpMax: definition.hp,
+          motion: "stand",
+          seq: 0,
+          body: 20,
+          definition,
+          nextAttack: 0,
+        };
+        monsters.set(record.id, record);
+      }
+    }
+    deliver({
+      t: "monsters",
+      add: [...monsters.values()].map(publicMonster),
+      ts: performance.now() / 1000,
+    });
+  }
+
+}
+function calibrateMapPortals() {
+  for (const portal of mapLinks.portals.filter(p => p.fromField === field.id)) {
+    const floor = game.ground.spawnPoint(portal.x, -portal.z);
+    portal.disabled = !floor;
+    if (floor) portal.floorY = floor.y;
+  }
+}
+function fieldPacket() {
+  return { t: "fields", current: field.id,
+    stages: walkingStages(fieldData.fields, field.id).map(f => ({ ...f, bgm: f.village ? "town2" : "forest" })), gates: [] };
+}
+async function activateMap(next) {
+  const target = fieldData.fields.find(f => f.id === next.field);
+  nextPopulationId = Math.max(nextPopulationId, ...monsters.keys());
+  deliver({ t: "monsters", remove: [...monsters.keys(), ...companions.keys()] });
+  deliver({ t: "ground", remove: [...groundDrops.keys()] });
+  monsters.clear();
+  groundDrops.clear();
+  for (const [id, pet] of companions) if (pet.converted) companions.delete(id);
+  Object.assign(field, target);
+  const at = next.portal ? next.position : game.playerPosition();
+  Object.assign(enter, { fieldId: field.id, stage: field.stage, name: field.name,
+    bgm: field.village ? "town2" : "forest", x: at.x, z: at.z, y: null });
+  hero.startField = field.id;
+  npcs.splice(0, npcs.length, ...mergeNpcRecords(field, wiki.npcs, npcStageData.stages[field.stage])
+    .map(n => ({ ...n, y: null, angle: worldFacingAngle(n, enter) })));
+  game.attackTarget = game.talkTo = null;
+  game.attackHeld = false;
+  deliver(fieldPacket());
+  deliver({ t: "npcs", npcs });
+  if (next.portal) {
+    deliver({ t: "teleport", fieldId: field.id, x: at.x, z: at.z, y: null, warp: true });
+    await game.stageLoad;
+    await game.npcsReady.catch(error => recordDiagnostic(error.message));
+  }
+  calibrateMapPortals();
+  spawnMapPopulation();
+  for (const pet of companions.values()) {
+    const p = game.ground.spawnPoint(game.pos.x + 55, game.pos.z + 50);
+    if (!p) continue;
+    Object.assign(pet.state, { x: p.x, y: p.y, z: -p.z });
+    if (pet.state.model) deliver({ t: "monsters", add: [pet.state], ts: performance.now() / 1000 });
+  }
+  deliver({ t: "pets", list: [...companions.values()].filter(p => p.state.model).map(p => ({ id: p.state.id })) });
+  pendingMapTravel = null;
+  updateQuests("reach", field.id);
+  publishBuffs();
+  globalThis.__localSession.online?.changeMap();
+  bossRoulette.resumeMap(spawnData.stages[field.stage]?.zones);
+  economyEffects = { xp: 1, discount: 0, successBonus: 0, events: [] };
+  refreshEconomy().catch(error => recordDiagnostic(error.message));
+  const url = new URL(location.href);
+  url.searchParams.set("mapa", String(field.id));
+  history.replaceState(history.state, "", url);
+  save(true);
+  mapBackup = null;
+}
+
 const canEnterWalking = target => isAdmin ||
   stats.level >= (balanceRules.maps?.find(m => m.id === target.id)?.minimum ?? 1);
 mapTravel = createMapTravel({
@@ -2554,30 +2673,54 @@ mapTravel = createMapTravel({
   canEnter: canEnterWalking, alive: () => stats.hp > 0 && !game?.dead,
   position: () => game?.playerPosition() ?? enter,
   ready: () => !economyBusy && !pendingLoot && !economyUncertain,
-  prepare: landing => {
+  prepare: async landing => {
+    mapBackup = { field: { ...field }, enter: { ...enter }, position: game.playerPosition(),
+      npcs: [...npcs], monsters: [...monsters], drops: [...groundDrops] };
+    await bossRoulette.pauseMap();
+    if (landing.portal) {
+      game.keys.clear();
+      game.target = null;
+      const target = fieldData.fields.find(f => f.id === landing.field);
+      if (!game.stageMeshes.has(target.stage))
+        await (game.stageLoading.get(target.stage)?.promise ?? game.loadNeighbor(target.stage));
+      if (!game.stageInfo.has(target.stage)) throw Error('Não foi possível carregar o terreno de destino.');
+    }
     pendingMapTravel = landing;
-    game.keys.clear();
-    game.target = game.attackTarget = game.talkTo = null;
-    game.attackHeld = false;
-    notice('Entrando em ' + fieldData.fields.find(f => f.id === landing.field).name + '…');
   },
   save: () => save(true), flush: () => stateWrite,
-  dispose: async () => { await globalThis.__localSession.online?.dispose(); },
-  navigate: id => { location.search = '?classe=' + characterClass.job + '&mapa=' + id; },
-  rollback: () => {
+  activate: activateMap,
+  rollback: async () => {
     pendingMapTravel = null;
+    const backup = mapBackup;
+    if (backup) {
+      Object.assign(field, backup.field);
+      Object.assign(enter, backup.enter);
+      npcs.splice(0, npcs.length, ...backup.npcs);
+      deliver({ t: "monsters", remove: [...monsters.keys()] });
+      deliver({ t: "ground", remove: [...groundDrops.keys()] });
+      monsters.clear(); groundDrops.clear();
+      for (const [id, m] of backup.monsters) monsters.set(id, m);
+      for (const [id, drop] of backup.drops) groundDrops.set(id, drop);
+    }
     if (game) {
       game.currentStage = field.stage;
       game.stagePicker.reset();
-      game.emitField();
-      teleportHere(enter.x, enter.z);
+      deliver(fieldPacket());
+      deliver({ t: "npcs", npcs });
+      const at = backup?.position ?? enter;
+      teleportHere(at.x, at.z);
+      deliver({ t: "monsters", add: [...monsters.values()].map(publicMonster), ts: performance.now() / 1000 });
+      deliver({ t: "ground", add: [...groundDrops.values()].map(d => d.state) });
     }
+    bossRoulette.resumeMap(spawnData.stages[field.stage]?.zones);
+    mapBackup = null;
+    save(true);
   }, notice,
 });
 syncPremiumInventory();
 recalculate();
 conn.gameBacklog.push(
-  { t: "fields", current: field.id, stages: walkingStages(fieldData.fields, field.id).map(f => ({ ...f, bgm: f.village ? "town2" : "forest" })), gates: [] },
+  fieldPacket(),
   skills.snapshot(),
   { t: "pets", list: [] },
   { t: "quests", list: questViews() },
@@ -2674,13 +2817,7 @@ try {
     onSupport: event => skills.receiveSupport?.(event),
   });
   await globalThis.__localSession.online.ready;
-  // The converted terrain uses different elevations than the classic source.
-  // Resolve trigger heights from this map's actual collision floor.
-  for (const portal of mapLinks.portals.filter(p => p.fromField === field.id)) {
-    const floor = game.ground.spawnPoint(portal.x, -portal.z);
-    portal.disabled = !floor;
-    if (floor) portal.floorY = floor.y;
-  }
+  calibrateMapPortals();
   globalThis.__localSession.mapTravel = mapTravel;
   setInterval(() => mapTravel.tick(), 150);
   skills.restoreCompanions?.();
@@ -2710,63 +2847,7 @@ try {
     },
   });
   updateQuests("reach", field.id);
-  let seed = field.id + 1337;
-  const random = () => {
-    seed = (seed * 1664525 + 1013904223) >>> 0;
-    return seed / 4294967296;
-  };
-  const population = spawnData.stages[field.stage];
-  const candidates = wiki.monsters.filter((m) => m.maps.includes(field.id));
-  let id = 10000;
-  if (population && candidates.length) {
-    for (const zone of population.zones) {
-      for (let i = 0; i < Math.min(zone.n, 12); i++) {
-        const weights = population.monsters.filter((m) => m.pct > 0);
-        let pick = random() * weights.reduce((sum, m) => sum + m.pct, 0),
-          selected = weights[0];
-        for (const weight of weights) {
-          pick -= weight.pct;
-          if (pick <= 0) {
-            selected = weight;
-            break;
-          }
-        }
-        const definition = balanceMonster(candidates.find((m) => m.name === selected?.name) ?? candidates[0],balanceRules);
-        const angle = random() * Math.PI * 2,
-          r = Math.sqrt(random()) * zone.r * 0.7;
-        const x = zone.x + Math.cos(angle) * r,
-          z = zone.z + Math.sin(angle) * r;
-        const position = game.ground.spawnPoint(x, -z);
-        if (!position) continue;
-        const record = {
-          id: ++id,
-          name: definition.name,
-          level: definition.level,
-          model: definition.model
-            .replace(/\\/g, "/")
-            .replace(/\.[^/.]+$/, "")
-            .toLowerCase(),
-          x: position.x,
-          y: position.y,
-          z: -position.z,
-          angle: 0,
-          hp: definition.hp,
-          hpMax: definition.hp,
-          motion: "stand",
-          seq: 0,
-          body: 20,
-          definition,
-          nextAttack: 0,
-        };
-        monsters.set(id, record);
-      }
-    }
-    deliver({
-      t: "monsters",
-      add: [...monsters.values()].map(publicMonster),
-      ts: performance.now() / 1000,
-    });
-  }
+  spawnMapPopulation();
   await refreshEconomy();
   setInterval(()=>refreshEconomy().catch(e=>recordDiagnostic(e.message)),5000);
   gameFeatures.start();
@@ -2803,6 +2884,7 @@ try {
       const attackSeq = monster.seq;
       setTimeout(() => {
         if (
+          mapTravel?.busy || monsters.get(monster.id) !== monster ||
           monster.hp <= 0 ||
           monster.owner || monsterControl(monster).stunned || stats.stealth ||
           game.dead ||

@@ -18,7 +18,7 @@ export function mountOnlineSession({
     ).join("");
     sessionStorage.setItem(key, clientId);
   }
-  let inFlight, leaving;
+  let inFlight, leaving, mapEpoch = 0;
   let stopped = false,
     cursor = 0,
     timer,
@@ -45,6 +45,7 @@ export function mountOnlineSession({
   async function poll() {
     if (stopped) return;
     try {
+      const epoch = mapEpoch;
       const x = game.pos.x,
         z = -game.pos.z,
         moving = last && Math.hypot(x - last.x, z - last.z) > 1;
@@ -65,7 +66,7 @@ export function mountOnlineSession({
         cursor,
       }));
       last = { x, z };
-      if (stopped) return;
+      if (stopped || epoch !== mapEpoch) return;
       const next = new Map(result.players.map((p) => [p.name, p])),
         add = [],
         update = [],
@@ -117,6 +118,12 @@ export function mountOnlineSession({
     ready,
     status,
     peers:()=>[...peers.values()],
+    changeMap() {
+      mapEpoch++;
+      last = null;
+      if (peers.size) deliver({ t: "players", remove: [...peers.keys()] });
+      peers.clear();
+    },
     dispose,
     canResurrect: () => [...peers.values()].some(p=>p.dead&&Math.hypot(p.x-game.pos.x,p.z+game.pos.z)<=500),
     support: (code,target) => post('skill',{code,target,generation}),
