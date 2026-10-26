@@ -3197,3 +3197,8 @@ function mountLocalMenu() {
   compact.append(menu);
   document.body.append(compact);
 }
+
+if (gameplayTestMode) setInterval(() => {
+  console.debug("[playtest:clock]", JSON.stringify({ real: performance.now()/1000,
+    simulation: game?.time, motion: game?.player?.motionState, bot: game?.botSelf?.() }));
+}, 10000);
