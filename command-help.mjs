@@ -1,4 +1,5 @@
 export const commands = [
+ {name:'valento',syntax:'/valento drop',example:'/valento drop',description:'Invoca Valento compartilhado. A opção drop garante o Anel do Valento em uma das 3–5 rodadas após derrotá-lo. Exclusivo do administrador.',category:'Mundo',admin:true},
   {
     name: "skins",
     syntax: "/skins",
@@ -168,7 +169,7 @@ export const commands = [
   },
   {
     name: "monstro",
-    syntax: "/monstro NOME",
+    syntax: "/monstro NOME [drop]",
     example: "/monstro Valento",
     description: "Invoca um monstro real perto de você. Use /monstros para pesquisar.",
     category: "Mundo",

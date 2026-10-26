@@ -1,0 +1,18 @@
+export function mountBossAdmin({api,toast,panel}){
+ const node=(tag,text)=>{const e=document.createElement(tag);if(text!==undefined)e.textContent=text;return e;};
+ const card=node('article');card.className='card';card.append(node('h2','Roleta compartilhada dos Bosses'),node('p','Cada morte gera 3–5 rodadas. Todos que acertaram o Boss recebem um número de 0 a 1000 em cada rodada. O maior vence; empates têm desempate aleatório. Cada rodada concede um item.'));
+ const select=node('select'),refresh=node('button','Recarregar configurações'),status=node('p'),form=node('form'),chance=node('input'),label=node('label','Chance de entrar um exclusivo em uma das rodadas, por morte (%)');
+ chance.type='number';chance.min=0;chance.max=100;chance.step='.001';chance.required=true;label.append(chance);form.append(label,node('p','A chance é por Boss derrotado, não por rodada. Sem exclusivo sorteado, todas as rodadas usam itens comuns. Peso é a proporção de escolha dentro de cada lista. As alterações valem nas próximas mortes.'));
+ const sections={};let data,current;
+ const list=node('datalist');list.id='boss-items-list';card.append(list);
+ for(const kind of ['common','rare']){
+  const section=node('section'),rows=node('div'),add=node('button','Adicionar item');add.type='button';section.append(node('h3',kind==='common'?'Itens comuns das rodadas':'Itens exclusivos raros'),rows,add);form.append(section);sections[kind]=rows;add.onclick=()=>row(kind,{code:'',weight:1});
+ }
+ function row(kind,value){const wrap=node('div'),code=node('input'),weight=node('input'),remove=node('button','Remover');wrap.style.cssText='display:flex;gap:8px;flex-wrap:wrap;margin:8px 0';code.value=value.code;code.placeholder='Código do item';code.setAttribute('list','boss-items-list');code.required=true;code.setAttribute('aria-label','Código do item');weight.type='number';weight.min='.001';weight.max=100000;weight.step='.001';weight.required=true;weight.value=value.weight;weight.setAttribute('aria-label','Peso de sorteio');remove.type='button';remove.onclick=()=>wrap.remove();wrap.append(code,weight,remove);sections[kind].append(wrap);}
+ const submit=node('button','Salvar roleta deste Boss');submit.type='submit';submit.className='primary';form.append(submit);card.append(select,refresh,status,form);panel.append(card);
+ function draw(){current=data.bosses.find(b=>b.id===select.value);if(!current)return;chance.value=current.rareChance;for(const kind of ['common','rare']){sections[kind].replaceChildren();for(const value of current[kind])row(kind,value);}status.textContent='Editando '+current.name+' · versão '+current.version;}
+ async function load(){refresh.disabled=true;submit.disabled=true;try{const chosen=select.value;data=await api('/api/local/admin/boss-config',{});select.replaceChildren(...data.bosses.map(b=>{const o=node('option',b.name);o.value=b.id;return o;}));if(data.bosses.some(b=>b.id===chosen))select.value=chosen;list.replaceChildren(...data.items.map(i=>{const o=node('option');o.value=i.code;o.label=i.name;return o;}));draw();}catch(e){status.textContent=e.message;}finally{refresh.disabled=false;submit.disabled=false;}}
+ select.onchange=draw;refresh.onclick=load;
+ form.onsubmit=async e=>{e.preventDefault();submit.disabled=true;try{const value={rareChance:Number(chance.value)};for(const kind of ['common','rare'])value[kind]=[...sections[kind].children].map(r=>({code:r.children[0].value.trim().toUpperCase(),weight:Number(r.children[1].value)}));await api('/api/local/admin/boss-save',{monster:current.id,version:current.version,value});toast('Roleta do Boss salva.');await load();}catch(e){status.textContent=e.message;}finally{submit.disabled=false;}};
+ load();return{refresh:load};
+}

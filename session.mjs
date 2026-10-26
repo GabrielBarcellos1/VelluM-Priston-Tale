@@ -27,6 +27,7 @@ import { stepMonster, incomingHit, withAttackProfile } from "/monster-ai.mjs";
 import { watchRelease } from "/release-client.mjs";
 import { canonicalCommand, openCommandHelp } from "/command-help.mjs";
 import { promotionRank, createWorldQuests, mergeNpcRecords } from "/world-quests.mjs";
+import { mountBossRoulette } from "/boss-roulette.mjs";
 import { createGameFeatures } from "/game-features.mjs";
 import { objectiveValue, objectiveIncrement, questCollectionCode } from "/quest-progress.mjs";
 import { experienceFloor, migrateExperience, killExperience, classDamageScale, balanceMonster, questExperienceReward, potionCanUse, registerPotion } from "/balance-rules.mjs";
@@ -561,7 +562,7 @@ const objectiveProgress =
     : {};
 
 const questMeta=stored?.questMeta&&typeof stored.questMeta==='object'?stored.questMeta:{};
-let worldQuests,gameFeatures;
+let worldQuests,gameFeatures,bossRoulette;
 // Administration belongs to this independent local session only.
 const adminState = {
   god: false,
@@ -764,8 +765,13 @@ function adminCommand(input) {
       result = `${item.name} criado para classe ${spec}${age ? `, aging +${age}` : ""}.`;
       break;
     }
+    case "valento":
     case "monstro": {
-      result = spawnAdminMonster(resolveName(wiki.monsters, args.join(" ")));
+      const forceDrop=args.at(-1)?.toLowerCase()==='drop';if(forceDrop)args.pop();
+      const def=resolveName(wiki.monsters,command==='valento'?'Valento':args.join(' '));
+      if(def.boss)return bossRoulette.spawn(def,forceDrop);
+      if(forceDrop)throw Error('A opção drop requer um Boss.');
+      result = spawnAdminMonster(def);
       break;
     }
     case "criar": {
@@ -1138,6 +1144,14 @@ gameFeatures=createGameFeatures({name:hero.name,job:characterClass.job,tribe:cha
  views:questViews,publish:()=>deliver({t:'quests',list:questViews()}),complete:completeQuest,update:updateQuests,openSkills:showSkillBook,
  navigate:async map=>{if(!save(true))throw Error('Não foi possível salvar.');await stateWrite;await globalThis.__localSession.online?.dispose();location.search=`?classe=${characterClass.job}&mapa=${map}`;},
  reload:()=>location.reload()});
+bossRoulette=mountBossRoulette({meta:questMeta,monsters,wiki,field,zones:spawnData.stages[field.stage]?.zones,game:()=>game,post:postLocal,requestId,deliver,publicMonster,save,
+ flush:()=>stateWrite,busy:()=>economyBusy,notice,diagnostic:recordDiagnostic,
+ defeated:def=>{kills++;gainExperience(killExperience(def,stats.level,balanceRules,premiumValue('expUp')));updateQuests('kill',{id:def.id,name:def.name,field:field.id});recalculate();},
+ claim:async award=>{if(economyBusy||pendingLoot)throw Error('Aguarde a operação atual.');economyBusy=true;
+  try{if(!save(true))throw Error('Falha ao salvar.');await stateWrite;const r=await postLocal('/api/local/game/boss',{action:'claim',award,savedAt:lastSavedAt,requestId:requestId()});
+   for(const key of ['bag','bagB'])inv[key]=(r.state.inv[key]??[]).map(p=>({...p,item:restoreItem(p.item)})).filter(p=>p.item);lastSavedAt=r.state.savedAt;recalculate();save(true);notice('Recompensa do Boss recebida.');
+  }finally{economyBusy=false;}}
+});
 function dropLoot(monster) {
   const source = { ...monster },
     key = requestId();
@@ -1673,6 +1687,8 @@ function damageMonster(id, power = 1, rangeOverride = null, options = {}) {
   const dealt = Math.min(monster.hp, amount);
   if(options.skillCode){monster.skillMarks??={};monster.skillMarks[options.skillCode]=performance.now();updateQuests('skillHit',{code:options.skillCode,undead:monster.definition.undead});}
   else if(!options.noLeech)updateQuests('normalHit',{});
+  if(monster.sharedBoss){bossRoulette.hit(monster,amount);monster.aggroUntil=performance.now()+10000;
+   const recovered=options.noLeech?{hp:0,mp:0}:premiumRecovery(stats,premiumValue,dealt,{area:options.area});stats.hp+=recovered.hp;stats.mp+=recovered.mp;return dealt;}
   monster.hp = Math.max(0, monster.hp - amount);
   monster.aggroUntil = performance.now() + 10000;
   const recovered = options.noLeech
@@ -2654,6 +2670,7 @@ try {
     });
   }
   gameFeatures.start();
+  bossRoulette.start();
   let monsterTickAt = performance.now();
   setInterval(() => {
     const now = performance.now();

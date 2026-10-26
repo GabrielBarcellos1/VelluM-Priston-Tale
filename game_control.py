@@ -227,6 +227,7 @@ def common_potion(level,roll):
 def kill(user,data):
     job,saved,name=context(user,data);monster=MONSTERS.get(data.get('monster'));map_id=int_value(data.get('map'),0,10000,'Mapa')
     if not monster:raise ValueError('Monstro desconhecido.')
+    if monster.get('boss'):raise ValueError('Bosses usam combate compartilhado e roleta no servidor.')
     if data.get('adminSpawn') and user['role'] not in ('admin','gm'):raise ValueError('Jogador não pode declarar invocação de GM.')
     if saved.get('field')!=map_id:raise ValueError('Mapa não corresponde ao personagem salvo.')
     with accounts.connection() as db:
