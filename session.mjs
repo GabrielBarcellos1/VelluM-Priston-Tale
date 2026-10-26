@@ -12,6 +12,7 @@ import {
 import { craftAtNpc, decorateCraftItem } from "/npc-crafting.mjs";
 import { mountOnlineSession } from "/online-session.mjs";
 import { worldFacingAngle, faceNearbyNpcs } from "/character-facing.mjs";
+import {GM_SHELTOM,GM_POTION,gmProtection,protectGm,gmTrainingActive} from "/gm-tools.mjs";
 import { premiumRecovery } from "/premium-effects.mjs";
 import { captureBaseRolls, restoreItemRolls } from "/item-save.mjs";
 import { combatStats } from "/character-stats.mjs";
@@ -82,7 +83,7 @@ B.agingChance = (age, stone, ...args) =>
 let walletClock = wallet.serverTime * 1000 - Date.now();
 const serverNow = () => Date.now() + walletClock;
 const premiumValue = (kind) =>
-  Math.max(
+  (["manaReduce","staminaReduce"].includes(kind) && gmSheltomActive()) ? 100 : Math.max(
     0,
     ...wallet.active
       .filter((p) => p.kind === kind && p.expiresAt * 1000 > serverNow())
@@ -688,6 +689,36 @@ function mountGmMovement() {
   });
 }
 
+let gmTraining=null;
+function gmSheltomActive(){return gmProtection(isAdmin,inv.equip);}
+function gmExpActive(){return gmTrainingActive(isAdmin,gmTraining,stats.level,serverNow()/1000);}
+async function gmOperation(action,extra={}){
+ if(!isAdmin)throw Error('Exclusivo de GM.');
+ if(action==='status'){const r=await postLocal('/api/local/game/gm',{action});gmTraining=r.training;return r;}
+ if(economyBusy||pendingLoot)throw Error('Aguarde os drops e a operação atual.');
+ economyBusy=true;
+ try{
+  if(!save(true))throw Error('Falha ao salvar o inventário.');await stateWrite;
+  const r=await postLocal('/api/local/game/gm',{action,...extra,savedAt:lastSavedAt,requestId:requestId()});
+  for(const key of ['bag','bagB'])inv[key]=(r.state.inv[key]??[]).map(p=>({...p,item:restoreItem(p.item)})).filter(p=>p.item);
+  inv.equip=Object.fromEntries(Object.entries(r.state.inv.equip??{}).map(([key,item])=>[key,restoreItem(item)]));
+  skills.publish();
+  lastSavedAt=r.state.savedAt;gmTraining=r.training;recalculate();save(true);notice(r.message);return r;
+ }finally{economyBusy=false;}
+}
+async function gmRoute(){
+ const r=await gmOperation('status'),t=r.training;
+ const lines=[`EXP GM: ${gmExpActive()?'ATIVO':'inativo'} · nível ${stats.level} · Sheltom ${gmSheltomActive()?'equipada':'não equipada'}.`,
+  `Rota atual: ${t.route.maps.map(m=>m.name+' (mapa '+m.id+')').join(' / ')} · XP ${t.route.multiplier.toFixed(1)}×.`,
+  `Monstros indicados: ${t.route.monsters.map(id=>wiki.monsters.find(m=>m.id===id)?.name??id).join(', ')}. O bônus só vale para esses alvos nos mapas da rota.`,
+  'Meta: 1–120 em cerca de 60 min de caça. Níveis 1–10: 4,5 min; cada faixa seguinte de 10 níveis: cerca de 5 min.',t.assumptions,
+  ...t.routes.map(row=>`Nível ${row.level}: ${row.maps.map(m=>m.name).join(' / ')}`)];
+ const old=document.getElementById('gm-route');if(old)old.remove();
+ const panel=document.createElement('dialog');panel.id='gm-route';panel.style.cssText='max-width:750px;max-height:80vh;overflow:auto;background:#141b24;color:#eee;border:1px solid #bd994b;padding:24px;';
+ const close=document.createElement('button');close.textContent='Fechar';close.onclick=()=>panel.remove();panel.append(close);
+ for(const line of lines){const p=document.createElement('p');p.textContent=line;panel.append(p);}
+ document.body.append(panel);panel.showModal();return 'Guia de evolução GM aberto.';
+}
 function adminCommand(input) {
   const [rawCommand, ...args] = input.trim().replace(/^\//, "").split(/\s+/);
   const command = canonicalCommand(rawCommand);
@@ -699,6 +730,16 @@ function adminCommand(input) {
   };
   let result = "OK";
   switch (command?.toLowerCase()) {
+    case "gmkit":return gmOperation('grant').then(()=>null);
+    case "gmrota":return gmRoute();
+    case "gmexp":
+      if(args[0]==='off')return gmOperation('stop').then(()=>null);
+      if(args[0]==='on'){
+        const item=[...inv.bag,...inv.bagB].find(p=>p.item.code===GM_POTION)?.item;
+        if(!item)throw Error('Use /gmkit para retirar sua Poção EXP GM.');
+        return gmOperation('activate',{uid:item.uid}).then(()=>null);
+      }
+      return gmRoute();
     case "skins":
       return globalThis.__localSession.skinShop?.open().then(() => "Loja de Skins aberta.");
     case "drops":
@@ -1081,6 +1122,7 @@ const skills = createSkillSystem({
   game: () => game,
   isVillage: () => !!field.village,
   freeCast: () => isAdmin && adminState.god,
+  resourceFree: () => gmSheltomActive(),
   timing: (skill) =>
     nativeSkillTiming(
       game.player,
@@ -1163,6 +1205,7 @@ function dropLoot(monster) {
         monster: source.definition.id,
         map: field.id,
         adminSpawn: !!source.adminSpawn,
+        gmTraining: !!source.gmTraining,
         ...(source.trialToken?{trialToken:source.trialToken}:{}),
         requestId: key,
       };
@@ -1178,6 +1221,11 @@ function dropLoot(monster) {
       }
       lastSavedAt = Math.max(lastSavedAt, result.savedAt ?? 0);
       stats.gold += result.gold;
+      if(source.gmTraining){
+        const normal=eventExperience(killExperience(source.definition,stats.level,balanceRules,premiumValue('expUp')),economyEffects);
+        gainExperience(result.gmExperience??normal);recalculate();
+        if(result.gmExperience===null)notice('EXP GM: este monstro/mapa está fora da rota ou a poção expirou. Consulte /gmrota.');
+      }
       const add = [];
       for (const [index, entry] of result.items.entries()) {
         const item = instance(entry.code, entry.count),
@@ -1286,6 +1334,7 @@ function recalculate() {
   stats.expLevel = experienceFloor(stats.level,balanceRules);
   stats.expNext = experienceFloor(stats.level+1,balanceRules);
   Object.assign(stats, combatStats(stats, inv.equip, specBonus, effects));
+  protectGm(stats,gmSheltomActive());
   const force =
     activeForce && activeForce.expiresAt > serverNow() / 1000
       ? B.forceInfo(activeForce.code)
@@ -1718,7 +1767,8 @@ function damageMonster(id, power = 1, rangeOverride = null, options = {}) {
     if(gameFeatures.defeated(monster))return dealt;
     kills++;
     const gained = eventExperience(killExperience(monster.definition,stats.level,balanceRules,premiumValue("expUp")),economyEffects);
-    gainExperience(gained);
+    monster.gmTraining=gmExpActive();
+    if(!monster.gmTraining)gainExperience(gained);
     dropLoot(monster);
     updateQuests('kill',{id:monster.definition.id,name:monster.name,field:field.id});
     for(const [code,at]of Object.entries(monster.skillMarks??{}))if(performance.now()-at<=10000)updateQuests("skillKill",{code});
@@ -2152,6 +2202,7 @@ async function handle(message) {
     }
     case "useItem": {
       const item = findItem(message.uid);
+      if(item?.code===GM_POTION){try{await gmOperation("activate",{uid:item.uid});}catch(e){notice(e.message);}break;}
       if (item?.slot === "FORCEORB") {
         const force = B.forceInfo(item.code);
         if (!force || stats.level < force.level[0] || stats.level > force.level[1])
@@ -2704,7 +2755,7 @@ try {
       });
       if (!step) continue;
       update.push(step.update);
-      if (!step.attack || adminState.god) continue;
+      if (!step.attack || adminState.god || gmSheltomActive()) continue;
       const attackSeq = monster.seq;
       setTimeout(() => {
         if (
@@ -2712,7 +2763,7 @@ try {
           monster.owner || monsterControl(monster).stunned || stats.stealth ||
           game.dead ||
           field.village ||
-          adminState.god ||
+          adminState.god || gmSheltomActive() ||
           adminState.hidden ||
           adminState.fly ||
           adminState.frozen ||
@@ -2786,11 +2837,13 @@ try {
       }
     }
     if (petChanged) deliver({ t: "pets", list: [...companions.values()].filter(p=>p.state.model).map(p=>({id:p.state.id})) });
+    protectGm(stats,gmSheltomActive());
     stats.hp = Math.min(stats.hpMax, stats.hp + (stats.hpRegen ?? 0));
     stats.mp = Math.min(stats.mpMax, stats.mp + 1 + (stats.mpRegen ?? 0));
     stats.sp = Math.min(stats.spMax, stats.sp + 2 + (stats.spRegen ?? 0));
     deliver({ t: "stats", stats });
   }, 1000);
+  if(isAdmin)gmOperation("status").catch(e=>recordDiagnostic(e.message));
   setInterval(save, 2000);
   setInterval(async () => {
     if (document.hidden) return;

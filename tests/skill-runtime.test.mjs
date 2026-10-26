@@ -9,6 +9,18 @@ import { physicalHit } from '../classic-combat.mjs';
 import vm from 'node:vm';
 import {classDamageScale} from '../balance-rules.mjs';
 const catalog=JSON.parse(await readFile(new URL('../data/skills.json',import.meta.url),'utf8'));
+test('GM resource protection removes MP/RES and self-HP costs, retaining skill cooldowns and tier requirements',()=>{
+ for(const skill of catalog.skills.filter(s=>['melee','shot','beam','sky','aoe','nova','buff','party','heal','summon'].includes(catalog.rules.skills[s.code].runtime.kind))){
+  const f=fixture(skill,1,{resourceFree:()=>true});f.stats.mp=0;f.stats.sp=0;
+  const view=f.system.snapshot().skills.find(s=>s.id===skill.id);assert.equal(view.mp,0);assert.equal(view.stamina,0);
+ }
+ const agony=catalog.skills.find(s=>catalog.rules.skills[s.code].runtime.special==='agony');
+ const a=fixture(agony,1,{resourceFree:()=>true});a.stats.hp=1;a.system.cast(agony.id);assert.equal(a.stats.hp,1);
+ const top=catalog.skills.find(s=>s.tier===4&&s.job===1),locked=fixture(top,1,{resourceFree:()=>true,rank:()=>0});
+ assert.throws(()=>locked.system.cast(top.id,1),/tier/);
+ const swift=catalog.skills.find(s=>s.code==='SKILL_SWIFT_AXE'),b=fixture(swift,1,{resourceFree:()=>true});
+ b.stats.mp=0;b.stats.sp=0;b.system.cast(swift.id);assert.equal(b.stats.mp,0);assert.equal(b.stats.sp,0);assert.throws(()=>b.system.cast(swift.id),/recarga|animação/);
+});
 function fixture(skill,level=1,extra={}) {
   let time=0,system;const pending=[],calls={damage:[],summon:[],support:[],convert:[]};
   const stats={job:skill.job,level:120,str:100,spi:100,tal:100,dex:100,health:100,

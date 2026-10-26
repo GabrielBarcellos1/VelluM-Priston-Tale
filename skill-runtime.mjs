@@ -78,9 +78,9 @@ export function createRuntimeSkillSystem(ctx) {
     const p=profile(s),n=learned(s),next=Math.min(10,n+1),passive=p.kind==='passive';
     const v={...s,level:n,passive,locked:s.tier>rank()+1,icon:s.classicIcon??s.icon,iconProvenance:s.iconProvenance,
       reqLevel:(rule(s).reqLevel??s.reqLevel)+n*2,maxLevel:10,price:100*s.tier*(n+1)**2,
-      mp:passive?0:Math.ceil(at(p.mp,n)*(1-(ctx.premiumValue?.('manaReduce')??0)/100)),
-      mpNext:passive?0:Math.ceil(at(p.mp,next)*(1-(ctx.premiumValue?.('manaReduce')??0)/100)),
-      stamina:passive?0:Math.ceil(at(p.stamina,n)*(1-(ctx.premiumValue?.('staminaReduce')??0)/100)),
+      mp:passive||ctx.resourceFree?.()?0:Math.ceil(at(p.mp,n)*(1-(ctx.premiumValue?.('manaReduce')??0)/100)),
+      mpNext:passive||ctx.resourceFree?.()?0:Math.ceil(at(p.mp,next)*(1-(ctx.premiumValue?.('manaReduce')??0)/100)),
+      stamina:passive||ctx.resourceFree?.()?0:Math.ceil(at(p.stamina,n)*(1-(ctx.premiumValue?.('staminaReduce')??0)/100)),
       recharge:at(p.cooldown,n),cooldown:at(p.cooldown,n),duration:at(p.duration,n),range:at(p.range,n),
       target:p.target,slot:passive?undefined:rule(s).slot??'both',mastery:n?10000:0,
       ruleSource:p.source,cooldownSource:p.source,desc:s.descriptionPt??s.name,rows:[],
@@ -141,26 +141,26 @@ export function createRuntimeSkillSystem(ctx) {
     if(s.code==='SKILL_SWIFT_AXE'&&!ctx.equipment?.()?.weapon?.code?.startsWith('WA1'))throw Error('Equipe um machado para usar Machado Veloz.');
     if((ready.get(id)??0)>now())throw Error('Aguarde a recarga da habilidade.');
     if(actionReady>now())throw Error('Aguarde a animação do golpe terminar.');
-    if(!ctx.freeCast?.()&&(ctx.stats.mp<v.mp||ctx.stats.sp<v.stamina))throw Error('MP ou resistência insuficiente. Use uma poção.');
+    if(!ctx.freeCast?.()&&!ctx.resourceFree?.()&&(ctx.stats.mp<v.mp||ctx.stats.sp<v.stamina))throw Error('MP ou resistência insuficiente. Use uma poção.');
     if(p.special==='resurrection'&&!ctx.canSupport?.('resurrection',target))throw Error('Aproxime-se de um aliado morto para ressuscitar.');
     const origin={x:game.pos.x,z:-game.pos.z},primary=ctx.monsters.get(target);
     if(v.target==='enemy'&&!alive(primary))throw Error('Selecione um monstro vivo.');
     if(alive(primary)&&Math.hypot(primary.x-origin.x,primary.z-origin.z)>v.range+100)throw Error('Aproxime-se do alvo.');
     if(p.special==='convert'&&(!primary?.definition?.undead||primary.definition.boss))throw Error('Selecione um monstro morto-vivo comum.');
     const agonyCost=p.special==='agony'?Math.floor(ctx.stats.hpMax*(at(rule(s).tables.Agony_ConvLife,n)??5+n)/100):0;
-    if(agonyCost&&ctx.stats.hp<=agonyCost)throw Error('HP insuficiente para converter em MP.');
+    if(agonyCost&&!ctx.resourceFree?.()&&ctx.stats.hp<=agonyCost)throw Error('HP insuficiente para converter em MP.');
     const targets=offensive?selectSkillTargets(p,n,origin,primary,ctx.monsters.values()):[];
     if(v.target==='enemy'&&!targets.length)throw Error('O alvo está fora da área da habilidade.');
     const timing=ctx.timing?.(v)??{duration:1,hits:[.5]},attack=offensive?attackFor(s,n):null;
     const hits=attack?skillHitTimes(attack,timing):timing.hits??[];
-    if(!ctx.freeCast?.()){ctx.stats.mp-=v.mp;ctx.stats.sp-=v.stamina;}
+    if(!ctx.freeCast?.()&&!ctx.resourceFree?.()){ctx.stats.mp-=v.mp;ctx.stats.sp-=v.stamina;}
     const cooldown=v.recharge===0?0:Math.max(v.recharge,timing.duration);
     actionReady=now()+timing.duration;if(cooldown){ready.set(id,now()+cooldown);totals.set(id,cooldown);}
     ctx.emit?.({t:'skillFx',from:ctx.name,skill:id,code:s.code,level:n,x:origin.x,z:origin.z,
       ...(target!==undefined?{target}:{}),targets:targets.map(m=>m.id),dur:timing.duration,hits:targets.length?hits:[]});
     if(p.special==='agony'){
       const cost=agonyCost;
-      ctx.stats.hp-=cost;ctx.stats.mp=Math.min(ctx.stats.mpMax,ctx.stats.mp+cost);
+      if(!ctx.resourceFree?.())ctx.stats.hp-=cost;ctx.stats.mp=Math.min(ctx.stats.mpMax,ctx.stats.mp+cost);
     }else if(p.special==='resurrection'){ctx.support?.(s,n,target);}
     else if(s.kind==='heal'){
       const range=skillHealingRange(s,rule(s),n,ctx.stats,ctx.equipment?.()??{})??[40+n*25,60+n*35];
@@ -184,7 +184,7 @@ export function createRuntimeSkillSystem(ctx) {
         ctx.damage(m.id,1,v.range+500,{fixedDamage:Math.floor(m.hp*percent/100),magic:true,noLeech:true});
     }else if(s.kind==='debuff'||p.special==='stun')control(s,n,targets);
     else {
-      if(attack.hpCostPercent&&!ctx.freeCast?.())ctx.stats.hp=Math.max(1,ctx.stats.hp-Math.floor(ctx.stats.hpMax*attack.hpCostPercent/100));
+      if(attack.hpCostPercent&&!ctx.freeCast?.()&&!ctx.resourceFree?.())ctx.stats.hp=Math.max(1,ctx.stats.hp-Math.floor(ctx.stats.hpMax*attack.hpCostPercent/100));
       const token=generation;
       for(const time of hits)ctx.schedule?.(()=>{if(token!==generation||ctx.game()?.dead)return;
         for(const m of targets)if(alive(m)){

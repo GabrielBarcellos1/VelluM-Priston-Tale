@@ -9,10 +9,12 @@ from pathlib import Path
 import local_accounts as accounts
 import premium_store as store
 import admin_service as admin
+import gm_tools
 
 ROOT=Path(__file__).resolve().parent
 DEFAULTS=json.loads((ROOT/'data/control-defaults.json').read_text())
 ITEMS={i['code']:i for i in json.loads((ROOT/'data/loot-items.json').read_text())['items']}
+ITEMS.update({i['code']:i for i in gm_tools.definitions(ITEMS)})
 MONSTERS={m['id']:m for m in json.loads((ROOT/'data/wiki.json').read_text())['wiki']['monsters']}
 NPCS={n['id']:n for n in json.loads((ROOT/'data/wiki.json').read_text())['wiki']['npcs']}
 BOSS_RULES=json.loads((ROOT/'data/drops.json').read_text())['bosses']
@@ -33,6 +35,7 @@ CREATE TABLE IF NOT EXISTS skin_offers(id TEXT PRIMARY KEY,data TEXT NOT NULL,en
 CREATE TABLE IF NOT EXISTS skin_owned(username TEXT,id TEXT,created REAL,PRIMARY KEY(username,id));
 CREATE TABLE IF NOT EXISTS skin_equipped(username TEXT,job INTEGER,cat TEXT,id TEXT,PRIMARY KEY(username,job,cat));
 ''')
+    gm_tools.setup(db)
     import server_economy
     server_economy.setup(db)
     db.execute('INSERT OR IGNORE INTO game_rules VALUES(1,1,?)',(json.dumps({k:DEFAULTS[k] for k in ('aging','drops','monitor')}),))
@@ -275,7 +278,7 @@ def kill(user,data):
         amount=db.execute('SELECT count(*) FROM game_events WHERE '+' AND '.join(conditions),args).fetchone()[0]
         last=db.execute("SELECT 1 FROM game_events WHERE username=? AND action='monitor.drop-volume' AND created>?",(user['username'],time.time()-monitor['windowMinutes']*60)).fetchone()
         if amount>=monitor['threshold'] and not last:event(db,user,'monitor.drop-volume',severity='warning',job=job,character=name,trust='heuristic',detail={'count':amount,'monitor':monitor,'note':'Volume para revisão; não comprova trapaça.'})
-        return remember(db,user,key,payload,{'ok':True,'gold':gold,'items':result,'rulesVersion':table['version'],'economyVersion':rolled['policyVersion'],'combatVerified':False,'savedAt':latest['savedAt'] if gold else saved.get('savedAt',0)})
+        return remember(db,user,key,payload,{'ok':True,'gold':gold,'items':result,'rulesVersion':table['version'],'economyVersion':rolled['policyVersion'],'gmExperience':gm_tools.experience(db,user,data,saved,monster),'combatVerified':False,'savedAt':latest['savedAt'] if gold else saved.get('savedAt',0)})
 
 
 def pickup(user,data):
@@ -443,6 +446,7 @@ def inspect_state(db,user,job,state,previous):
     if len(uids)!=len(set(uids)):raise ValueError('UID repetido entre bolsas/equipamentos.')
     for item in items:
         if isinstance(item,dict):
+            if item.get('code') in (gm_tools.SHELTOM,gm_tools.POTION) and user['role'] not in ('admin','gm'):raise ValueError('Item exclusivo de GM.')
             int_value(item.get('count',1),1,9999,'Quantidade do item')
             int_value(item.get('aging',0),0,20,'Aging do item')
     if 'level' in stats:int_value(stats['level'],1,150,'Nível')

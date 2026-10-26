@@ -69,7 +69,7 @@ class ServerAudit(unittest.TestCase):
         import iniciar
         folder=accounts.ROOT;original=Path(__file__).resolve().parents[1]
         for name in ('balance.json','loot-items.json'):shutil.copyfile(original/'data'/name,folder/'data'/name)
-        for name in ('balance-rules.mjs','quest-progress.mjs','skill-runtime.mjs'):shutil.copyfile(original/name,folder/name)
+        for name in ('gm-tools.mjs','balance-rules.mjs','quest-progress.mjs','skill-runtime.mjs'):shutil.copyfile(original/name,folder/name)
         self.stack.enter_context(patch.object(iniciar,'ROOT',folder));self.stack.enter_context(patch.object(iniciar,'CACHE',folder/'cache'))
         server=iniciar.LocalServer(('127.0.0.1',0),iniciar.Handler);thread=threading.Thread(target=server.serve_forever,daemon=True);thread.start()
         self.addCleanup(server.server_close);self.addCleanup(server.shutdown)
@@ -89,6 +89,11 @@ class ServerAudit(unittest.TestCase):
         status,headers,body=req('/balance-rules.mjs');self.assertEqual(status,200);self.assertEqual(headers['Cache-Control'],'no-store');self.assertIn(b'export function',body)
         self.assertEqual(json.loads(req('/api/local/balance')[2])['targetHoursTo120'],300)
         items=json.loads(req('/assets/items.json')[2]);self.assertEqual(next(i for i in items if i['code']=='PM104')['price'],200)
+        self.assertFalse(any(i.get('gmOnly') for i in items))
+        self.assertEqual(req('/gm-tools.mjs')[0],200)
+        self.assertEqual(req('/assets/image/freeston/gm/sheltom.svg')[0],200)
+        self.assertEqual(req('/assets/image/freeston/gm/potion.svg')[0],200)
+        self.assertEqual(req('/api/local/game/gm',{'action':'grant','generation':self.generation,'job':1})[0],403)
     def test_grant_and_purchase_replays_do_not_duplicate_coins_or_stock(self):
         grant={'username':'audituser','amount':10000,'requestId':'audit-grant-001'}
         store.transact(self.admin,'grant',grant);self.assertTrue(store.transact(self.admin,'grant',grant)['repeated'])

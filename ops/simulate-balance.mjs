@@ -58,7 +58,7 @@ export function buildCharacter(job,level){
  return {job,level,stats,gear,learned,effects,equipmentCost:costs.reduce((a,b)=>a+b,0),allocated:spent(stats),pointBudget:budget};
 }
 export function expectedDamage(attacker,defender,power=1,options={},samples=256){const random=randomSeed(7123);let n=0;for(let i=0;i<samples;i++)n+=physicalHit(attacker,defender,power,catalog.rules.accuracy,random,options).amount;return n/samples;}
-export function rotation(build,defender,scale=1,duration=120,pvp=false){
+export function rotation(build,defender,scale=1,duration=120,pvp=false,resourceFree=false){
  const {stats,gear,learned}=build,defs=catalog.skills.filter(s=>s.job===build.job&&learned[s.code]);
  const autoTime=Math.max(.4,80/stats.attackStep),auto=expectedDamage(stats,defender,1,{magic:stats.magicAttack})*scale;
  const attacks=defs.flatMap(s=>{
@@ -74,6 +74,7 @@ export function rotation(build,defender,scale=1,duration=120,pvp=false){
  const spRecovery=items.find(i=>i.code==='PS'+potionTier)?.restore?.stamina?.[0]??40;
  let t=0,total=0,mp=stats.mpMax,sp=stats.spMax,mpPot=0,spPot=0,nextMp=0,nextSp=0,mpUsed=0,spUsed=0,aoe=0;
  while(t<duration){
+  if(resourceFree){mp=stats.mpMax;sp=stats.spMax;}
   const skill=attacks.find(a=>(ready[a.code]??0)<=t&&mp>=a.mp&&sp>=a.sp&&a.amount/a.animation>auto/autoTime);
   const step=skill?.animation??autoTime;
   if(skill){total+=skill.amount;mp-=skill.mp;sp-=skill.sp;mpUsed+=skill.mp;spUsed+=skill.sp;ready[skill.code]=t+skill.interval;used[skill.code]=(used[skill.code]??0)+1;if(skill.radius)aoe+=skill.amount;}

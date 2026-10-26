@@ -15,7 +15,7 @@ function fixture(){
  let uid=1000,time=0;const notices=[],packets=[];
  const context={inv,stats,definitions,messages:[],warehouse:{items:[],gold:1000},npcs:[{id:1,x:0,z:0,services:['shop','warehouse'],shop:['WA101','PL101']}],
   game:{pos:{x:0,z:0}},B:{itemSlots:i=>i.slot==='WEAPON_ONE'?['weapon']:['shield'],itemClass:()=>null},
-  wallet:{stock:[]},potionReady:{},balanceRules:{potionCooldownSeconds:2},pendingPremiums:new Set(),performance:{now:()=>time*1000},
+  GM_POTION:'BI998',wallet:{stock:[]},potionReady:{},balanceRules:{potionCooldownSeconds:2},pendingPremiums:new Set(),performance:{now:()=>time*1000},
   clone:structuredClone,number:(v,f,min=0,max=1e9)=>typeof v==='number'&&Number.isFinite(v)?Math.max(min,Math.min(max,v)):f,
   instance:(code,count=1)=>({...structuredClone(definitions.get(code)),count,uid:uid++}),
   notice:m=>notices.push(m),deliver:p=>packets.push(p),recalculate(){},save(){},updateQuests(){},emitWarehouse(){},

@@ -34,6 +34,7 @@ import npc_services
 import boss_roulette
 import server_economy
 import custom_skins
+import gm_tools
 
 ROOT = Path(__file__).resolve().parent
 CACHE = Path(os.environ.get('PWEB_CACHE_DIR', str(ROOT / '.original-cache'))).resolve()
@@ -248,7 +249,13 @@ class Handler(SimpleHTTPRequestHandler):
                 prices=json.loads((ROOT/'data/balance.json').read_text(encoding='utf-8')).get('potionPrices',{})
                 for item in items:
                     if item['code'] in prices:item['price']=prices[item['code']]
+                user=self.user()
+                if user and user['role'] in ('admin','gm'):items+=gm_tools.definitions(game_control.ITEMS)
                 self.json_reply(items)
+            elif path.startswith('/assets/image/freeston/gm/') and path.endswith('.svg'):
+                result=gm_tools.icon(path.rsplit('/',1)[-1][:-4])
+                if result is None:return self.send_error(404)
+                self.reply(result,'image/svg+xml; charset=utf-8')
             elif path.startswith('/assets/image/freeston/sapphire/') and path.endswith('.svg'):
                 result=custom_skins.icon(path.rsplit('/',1)[-1][:-4])
                 if result is None:return self.send_error(404)
@@ -266,7 +273,7 @@ class Handler(SimpleHTTPRequestHandler):
                 self.json_reply({'ok': False, 'error': 'Servico privado ainda nao reconstruido na sessao local.'}, 501)
             elif path in ['/mobile.css','/freeston.css','/dashboard.css']:
                 self.reply((ROOT / path.lstrip('/')).read_bytes(),'text/css; charset=utf-8')
-            elif path in ['/gameplay-rules.mjs', '/item-save.mjs', '/character-facing.mjs', '/premium-effects.mjs', '/skill-damage.mjs', '/session.mjs', '/online-session.mjs', '/skill-effects.mjs', '/character-stats.mjs', '/npc-crafting.mjs', '/inventory-grid.mjs', '/classic-combat.mjs', '/skill-cooldowns.mjs', '/shop-inventory.mjs', '/native-rules.mjs', '/staff-presence.mjs', '/item-specialization.mjs', '/brand-ui.mjs', '/premium-shop.mjs', '/monster-ai.mjs', '/skill-book.mjs', '/equipment-rules.mjs', '/release-client.mjs', '/dashboard.mjs', '/dashboard-game.mjs', '/skins-shop.mjs', '/admin-names.mjs', '/drop-rules.mjs', '/command-help.mjs', '/boss-roulette.mjs', '/boss-admin.mjs', '/economy-admin.mjs', '/economy-effects.mjs', '/sapphire-geometry.mjs', '/custom-skins.mjs', '/world-quests.mjs', '/npc-panels.mjs', '/game-features.mjs', '/quest-progress.mjs', '/balance-rules.mjs', '/skill-runtime.mjs', '/skill-system.mjs', '/login.mjs', '/README.md']:
+            elif path in ['/gm-tools.mjs', '/gameplay-rules.mjs', '/item-save.mjs', '/character-facing.mjs', '/premium-effects.mjs', '/skill-damage.mjs', '/session.mjs', '/online-session.mjs', '/skill-effects.mjs', '/character-stats.mjs', '/npc-crafting.mjs', '/inventory-grid.mjs', '/classic-combat.mjs', '/skill-cooldowns.mjs', '/shop-inventory.mjs', '/native-rules.mjs', '/staff-presence.mjs', '/item-specialization.mjs', '/brand-ui.mjs', '/premium-shop.mjs', '/monster-ai.mjs', '/skill-book.mjs', '/equipment-rules.mjs', '/release-client.mjs', '/dashboard.mjs', '/dashboard-game.mjs', '/skins-shop.mjs', '/admin-names.mjs', '/drop-rules.mjs', '/command-help.mjs', '/boss-roulette.mjs', '/boss-admin.mjs', '/economy-admin.mjs', '/economy-effects.mjs', '/sapphire-geometry.mjs', '/custom-skins.mjs', '/world-quests.mjs', '/npc-panels.mjs', '/game-features.mjs', '/quest-progress.mjs', '/balance-rules.mjs', '/skill-runtime.mjs', '/skill-system.mjs', '/login.mjs', '/README.md']:
                 data = (ROOT / path.lstrip('/')).read_bytes()
                 self.reply(data, 'text/javascript; charset=utf-8' if path.endswith('.mjs') else 'text/plain; charset=utf-8')
             else:
@@ -321,7 +328,7 @@ class Handler(SimpleHTTPRequestHandler):
                 return self.json_reply({'error':'Entre na conta local.'},401)
             if path.startswith('/api/local/game/'):
                 action=path.rsplit('/',1)[-1]
-                handlers={'aging':game_control.aging,'kill':game_control.kill,'pickup':game_control.pickup,'report':game_control.report,'skin':game_control.skin_action,'npc':npc_services.action,'boss':boss_roulette.action,'economy':server_economy.runtime}
+                handlers={'gm':gm_tools.action,'aging':game_control.aging,'kill':game_control.kill,'pickup':game_control.pickup,'report':game_control.report,'skin':game_control.skin_action,'npc':npc_services.action,'boss':boss_roulette.action,'economy':server_economy.runtime}
                 if action not in handlers:return self.json_reply({'error':'Ação inválida.'},404)
                 try:
                     if action!='report' and not isinstance(data.get('generation'),str):raise ValueError('Atualize a página e selecione seu personagem novamente.')
