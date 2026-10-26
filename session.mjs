@@ -1905,6 +1905,7 @@ async function handle(message) {
           notice(`Machado Veloz ativo: +${percent}% de velocidade de ataque com machado por ${used.duration} segundos.`);
         }
       } catch (error) {
+        if (gameplayTestMode) console.debug("[playtest:skill-refused]", message.id, error.message);
         deliver({ t: "error", text: error.message });
       }
       break;
