@@ -2,13 +2,11 @@
 from pathlib import Path
 import ast
 import datetime
-import hashlib
 import json
 import logging
 from logging.handlers import RotatingFileHandler
 import os
 import re
-import shutil
 import sqlite3
 import subprocess
 import sys
@@ -97,7 +95,6 @@ class Host:
         self.next_game = 0
         self.update_status = {}
         self.failed_revision = None
-        self.lock = threading.Lock()
         try:
             old = json.loads((STATE / 'deployment.json').read_text(encoding='utf-8'))
             self.deployed = old.get('commit')
@@ -175,6 +172,7 @@ class Host:
         dirty = git('status', '--porcelain').decode().strip()
         if dirty:
             raise RuntimeError('Deployment repository has local edits; refusing to overwrite them')
+        git('merge-base', '--is-ancestor', 'HEAD', target)
         names = git('ls-tree', '-r', '--name-only', target).decode().splitlines()
         manifest = {name: git('show', target + ':' + name) for name in names if allowed(name)}
         if 'iniciar.py' not in manifest:
@@ -285,6 +283,26 @@ class Host:
 
 
 if __name__ == '__main__':
+    # The lock is released by Windows even after a crash or forced task termination.
+    import msvcrt
+    singleton = open(BASE / '.host.lock', 'a+b')
+    singleton.seek(0, 2)
+    if singleton.tell() == 0:
+        singleton.write(b'0')
+        singleton.flush()
+    singleton.seek(0)
+    try:
+        msvcrt.locking(singleton.fileno(), msvcrt.LK_NBLCK, 1)
+    except OSError:
+        raise SystemExit('VelluM supervisor already running')
+    # Reclaim only this application's orphaned children after a supervisor crash.
+    cleanup = r'''Get-CimInstance Win32_Process | Where-Object {
+        ($_.Name -eq 'python.exe' -and $_.CommandLine -like '*C:\VelluM\app\iniciar.py*') -or
+        ($_.Name -eq 'cloudflared.exe' -and $_.CommandLine -match '--url\s+http://127\.0\.0\.1:19065(?:\s|$)')
+    } | ForEach-Object { Stop-Process -Id $_.ProcessId -Force -ErrorAction SilentlyContinue }'''
+    subprocess.run([r'C:\Windows\System32\WindowsPowerShell\v1.0\powershell.exe',
+                    '-NoProfile', '-NonInteractive', '-Command', cleanup],
+                   capture_output=True, creationflags=FLAGS, timeout=30)
     host = Host()
     try:
         host.run()
@@ -292,3 +310,4 @@ if __name__ == '__main__':
         host.stop_game()
         if host.tunnel and host.tunnel.poll() is None:
             host.tunnel.terminate()
+
