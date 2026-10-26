@@ -20,9 +20,15 @@ function Invoke-Nginx([string[]]$NginxArgs) {
     if ($code -ne 0) { throw 'Nginx rejected the configuration or reload.' }
 }
 function Check-Game([string]$Url) {
-    $found = Invoke-RestMethod ($Url + '/api/local/build') -TimeoutSec 20
-    if ($found.installation -ne $localBuild.installation -or $found.version -lt 31) { throw 'The route did not reach the expected VelluM server.' }
-    return $found
+    # Nginx reload is graceful: allow the replacement workers to start serving.
+    for ($routeAttempt=0; $routeAttempt -lt 12; $routeAttempt++) {
+        try {
+            $found = Invoke-RestMethod ($Url + '/api/local/build') -TimeoutSec 10
+            if ($found.installation -eq $localBuild.installation -and $found.version -ge 31) { return $found }
+        } catch { }
+        Start-Sleep -Seconds 2
+    }
+    throw ('The route did not reach the expected VelluM server: ' + $Url)
 }
 $localBuild = Invoke-RestMethod 'http://127.0.0.1:19065/api/local/build' -TimeoutSec 15
 if ($localBuild.version -lt 31) { throw 'Deploy mount support before installing this route.' }
@@ -61,6 +67,13 @@ try {
         if (-not $original.Contains('    location / {')) { throw 'Unrecognized proxy configuration; left unchanged.' }
         $updated = $original.Replace('    location / {', ($block + "`n    location / {"))
         [System.IO.File]::WriteAllText($conf, $updated, $utf8)
+        $proxySawConfig=$false
+        for ($mountAttempt=0; $mountAttempt -lt 10; $mountAttempt++) {
+            $mountedConfig=& docker exec guacamole-proxy cat /etc/nginx/conf.d/default.conf
+            if (($mountedConfig -join "`n").Contains('location ^~ /priston/')) { $proxySawConfig=$true; break }
+            Start-Sleep -Seconds 1
+        }
+        if (-not $proxySawConfig) { throw 'Docker did not observe the proxy configuration change.' }
         Invoke-Nginx -NginxArgs @('-t')
         Invoke-Nginx -NginxArgs @('-s','reload')
     }
@@ -70,7 +83,7 @@ try {
     if ($publicPage.Content -notmatch '/priston/login.mjs') { throw 'The public login page has incorrect asset paths.' }
     $guacAfter = Invoke-WebRequest -UseBasicParsing 'https://acesso.gbtechnology.com.br/guacamole/' -TimeoutSec 20
     if ($guacAfter.Content -notmatch 'ng-app="index"') { throw 'Guacamole regression check failed.' }
-    & $python -X utf8 -c 'import ast,sys; ast.parse(open(sys.argv[1],encoding="utf-8-sig").read())' $repoHost
+    & $python -X utf8 -m py_compile $repoHost
     if ($LASTEXITCODE -ne 0) { throw 'Invalid supervisor source.' }
     $task = Get-ScheduledTask -TaskName 'VelluM-Hosting'
     if (-not ($task.Actions.Arguments -like '*C:\VelluM\ops\host.py*')) { throw 'Unexpected scheduled task; left unchanged.' }
