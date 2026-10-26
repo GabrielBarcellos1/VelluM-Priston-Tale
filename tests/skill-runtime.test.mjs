@@ -127,3 +127,9 @@ test('Sword Blast advertises an achievable range and hits a target near that ran
  const distant=fixture(skill);distant.monster.x=400;const before=distant.stats.mp;
  assert.throws(()=>distant.system.cast(skill.id,1),/Aproxime/);assert.equal(distant.stats.mp,before);
 });
+
+test('line skills include the validated primary target inside the native collision tolerance',()=>{
+ const skill=catalog.skills.find(s=>s.code==='SKILL_SWORD_BLAST'),f=fixture(skill);
+ f.monster.x=190;f.system.cast(skill.id,1);f.pending.forEach(fn=>fn());
+ assert.ok(f.calls.damage.some(call=>call[0]===1));
+});

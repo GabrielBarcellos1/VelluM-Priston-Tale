@@ -34,7 +34,7 @@ export function selectSkillTargets(profile, level, origin, primary, monsters) {
   if (profile.shape.type === 'line') {
     if (!primary) return [];
     const dx=primary.x-origin.x,dz=primary.z-origin.z,len=Math.hypot(dx,dz)||1;
-    const reach=at(profile.shape.length,level),width=profile.shape.width;
+    const reach=Math.max(at(profile.shape.length,level),len),width=profile.shape.width;
     return living.filter(m => {const x=m.x-origin.x,z=m.z-origin.z,t=(x*dx+z*dz)/len;
       return t>=0 && t<=reach && Math.abs(x*dz-z*dx)/len<=width;})
       .sort((a,b)=>Math.hypot(a.x-origin.x,a.z-origin.z)-Math.hypot(b.x-origin.x,b.z-origin.z)).slice(0,count);
