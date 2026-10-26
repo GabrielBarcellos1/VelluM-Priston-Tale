@@ -82,3 +82,30 @@ export function undoStat(stats, equipment, history) {
   history.pop();
   return true;
 }
+import { firstSpace } from "./inventory-grid.mjs";
+
+export const INITIAL_ATTRIBUTES = Object.freeze({ str: 25, spi: 15, tal: 20, dex: 19, health: 24 });
+
+// Prepare everything before changing live state, including room for removed gear.
+export function planAttributeReset(stats, inventory) {
+  const attributes = { ...INITIAL_ATTRIBUTES };
+  let points = Math.max(0, Math.trunc(stats.statPoints ?? 0));
+  for (const [key, initial] of Object.entries(attributes))
+    points += Math.max(0, Math.trunc(stats[key] ?? initial) - initial);
+  const bag = [...inventory.bag], bagB = [...inventory.bagB];
+  const equip = { ...inventory.equip }, equipB = { ...inventory.equipB };
+  for (const set of [equip, equipB]) {
+    for (const [slot, item] of Object.entries(set)) {
+      if (!item || !Object.entries(item.req ?? {}).some(([key, min]) =>
+        Number(attributes[key] ?? stats[key] ?? 0) < min)) continue;
+      let destination = bag, position = firstSpace(bag, item);
+      if (!position) { destination = bagB; position = firstSpace(bagB, item); }
+      if (!position) throw Error("Abra espaço nas bolsas para guardar os equipamentos antes de redistribuir.");
+      destination.push({ ...position, item });
+      delete set[slot];
+    }
+  }
+  return { attributes: { ...attributes, statPoints: points }, inventory: { bag, bagB, equip, equipB } };
+}
+
+

@@ -58,7 +58,7 @@ export function createSkillSystem(ctx) {
       cooldownTotals.set(s.id, saved.total);
     }
   }
-  let actionReadyAt = 0;
+  let actionReadyAt = 0, generation = 0;
   const rank = () =>
     ctx.stats.level >= 60 ? 3 : ctx.stats.level >= 40 ? 2 : ctx.stats.level >= 20 ? 1 : 0;
   const learned = (id) => levels.get(id) ?? 0;
@@ -285,9 +285,11 @@ export function createSkillSystem(ctx) {
     if (game?.dead || ctx.stats.hp <= 0) throw Error("O personagem está morto.");
     if (game?.worldLocked || game?.air?.motion)
       throw Error("Aguarde o personagem ficar disponível.");
-    if (ctx.isVillage?.())
+    if (ctx.isVillage?.() && !["buff", "party", "heal"].includes(s.kind))
       throw Error("Habilidades de combate só podem ser usadas fora da cidade.");
     const v = view(s);
+    if (s.code === "SKILL_SWIFT_AXE" && !ctx.equipment?.()?.weapon?.code?.startsWith("WA1"))
+      throw Error("Equipe um machado para usar Machado Veloz.");
     if ((ready.get(id) ?? 0) > now()) throw Error("Aguarde a recarga da habilidade.");
     if (actionReadyAt > now()) throw Error("Aguarde a animação do golpe terminar.");
     if (!ctx.freeCast?.() && (ctx.stats.mp < v.mp || ctx.stats.sp < v.stamina))
@@ -372,9 +374,10 @@ export function createSkillSystem(ctx) {
       for (const m of enemies)
         m.nextAttack = Math.max(m.nextAttack ?? 0, performance.now() + 2000 + v.level * 200);
     } else {
+      const castGeneration = generation;
       for (const hit of hitTimes)
         ctx.schedule?.(() => {
-          if (ctx.game()?.dead) return;
+          if (ctx.game()?.dead || castGeneration !== generation) return;
           for (const m of enemies)
             if (m.hp > 0)
               ctx.damage(
@@ -409,6 +412,21 @@ export function createSkillSystem(ctx) {
       active.set(s.id, { ...v, enchantElement: saved.enchantElement, until: now() + left });
   }
   return {
+    reset: () => {
+      generation++;
+      for (const s of list) {
+        levels.set(s.id, 0);
+        ctx.emit({ t: "skillCooldown", id: s.id, seconds: 0, total: 0 });
+      }
+      ready.clear();
+      cooldownTotals.clear();
+      active.clear();
+      actionReadyAt = 0;
+      ctx.recalculate();
+      ctx.buffsChanged();
+      publish();
+      return points();
+    },
     exportBuffs: () =>
       [...active.values()]
         .filter((b) => b.until > now())

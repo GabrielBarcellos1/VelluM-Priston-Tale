@@ -1,5 +1,5 @@
 // Public client model playback: playSkill defaults to Yn=35 frames/second.
-export function nativeSkillTiming(player, skill, motionName, visual = {}) {
+export function nativeSkillTiming(player, skill, motionName, visual = {}, attackStep = 80) {
   const skeleton = player?.skeleton;
   const clipName =
     (motionName &&
@@ -11,14 +11,18 @@ export function nativeSkillTiming(player, skill, motionName, visual = {}) {
   if (!clip) throw Error("Aguarde o modelo do personagem carregar.");
   const frames = Math.max(1, (clip.samples - 1) * clip.step);
   const loops = Math.max(1, visual.motionLoops ?? 1);
-  const seconds = frames / 35;
+  const physicalAttack = ![7, 8, 10].includes(skill.job) &&
+    ["melee", "shot", "beam", "sky", "aoe", "nova"].includes(skill.kind);
+  const step = Number.isFinite(attackStep) ? Math.max(40, Math.min(400, attackStep)) : 80;
+  const fps = physicalAttack ? step * 70 / 160 : 35;
+  const seconds = frames / fps;
   const events = skeleton.motions.find((m) => m.clip === clipName)?.events ?? [];
-  const baseHits = events.length ? events.map((f) => f / 35) : [seconds * 0.5];
+  const baseHits = events.length ? events.map((f) => f / fps) : [seconds * 0.5];
   const duration = seconds * loops;
   const hits = Array.from({ length: loops }, (_, i) =>
     baseHits.map((h) => Math.min(duration, i * seconds + h)),
   ).flat();
-  return { duration, hits, clip: clipName, fps: 35, code: skill.code };
+  return { duration, hits, clip: clipName, fps, code: skill.code };
 }
 
 export function nativeShopPacket(wallet, definitions) {
@@ -57,3 +61,4 @@ export function nativeShopPacket(wallet, definitions) {
     },
   };
 }
+

@@ -7,6 +7,7 @@ import {
   objectiveMatches,
   allocateStat,
   undoStat,
+  planAttributeReset,
 } from "/gameplay-rules.mjs";
 import { craftAtNpc, decorateCraftItem } from "/npc-crafting.mjs";
 import { mountOnlineSession } from "/online-session.mjs";
@@ -1061,6 +1062,7 @@ const skills = createSkillSystem({
       skill,
       B.skillMotion({ code: skill.code, level: skill.level ?? 1 }),
       B.skillVisual(skill.code),
+      stats.attackStep,
     ),
   premiumValue,
   monsters,
@@ -1437,12 +1439,57 @@ function questAtNpc(id, state) {
       ).some((n) => n.npcId === id),
   );
 }
+function showRedistribution(npc) {
+  game.keys.clear();
+  game.events.emit("npcOpen", { npcId: npc.id, name: npc.name, windowKind: "event", data: {} });
+}
+
+async function redistributeAtNpc(npcId, mode) {
+  const npc = npcs.find((n) => n.id === npcId && n.services?.includes("event") && /event girl/i.test(n.name));
+  if (!npc || !["stats", "skills", "both"].includes(mode)) throw Error("Redistribuição inválida.");
+  if (!game || game.dead || stats.hp <= 0) throw Error("O personagem precisa estar vivo.");
+  if (Math.hypot(game.pos.x - npc.x, -game.pos.z - npc.z) > 500)
+    throw Error("Aproxime-se da Event Girl para redistribuir.");
+  if (economyBusy || economyUncertain || pendingLoot)
+    throw Error("Aguarde o salvamento e as operações do inventário terminarem.");
+  economyBusy = true;
+  try {
+    if (stateWrite) await stateWrite;
+    const plan = mode !== "skills" ? planAttributeReset(stats, inv) : null;
+    if (plan) {
+      Object.assign(stats, plan.attributes);
+      Object.assign(inv, plan.inventory);
+      statHistory.length = 0;
+    }
+    if (mode !== "stats") {
+      skills.reset();
+      for (const side of ["left", "right"]) game.setSkillSlot(side, null);
+      const removed = [...companions.keys()];
+      companions.clear();
+      if (removed.length) deliver({ t: "monsters", remove: removed });
+      deliver({ t: "pets", list: [] });
+    }
+    recalculate();
+    skills.publish();
+    publishBuffs();
+    if (!save(true)) throw Error("Não foi possível preparar o salvamento da redistribuição.");
+    await stateWrite;
+    const points = skills.points();
+    return `Redistribuição gratuita salva. Atributos: ${stats.statPoints} pontos livres. Skills: ${points.skill} SP e ${points.elite} EP livres. Aprenda as habilidades novamente com o mestre.`;
+  } finally {
+    economyBusy = false;
+  }
+}
+
+
 function npcTalk(id, interactive) {
   const npc = npcs.find((n) => n.id === id);
   if (!npc || !game) return;
   if (!interactive) return;
   updateQuests("talk", id);
-  if (npc.services?.includes("shop")) {
+  if (npc.services?.includes("event") && /event girl/i.test(npc.name)) {
+    showRedistribution(npc);
+  } else if (npc.services?.includes("shop")) {
     const stock = (npc.shop ?? []).map((code) => definitions.get(code)).filter(Boolean);
     game.events.emit("npcOpen", {
       npcId: id,
@@ -1650,6 +1697,15 @@ async function handle(message) {
         publishBuffs();
       } else skills.cancel(message.code);
       break;
+    case "eventReset":
+      try {
+        const text = await redistributeAtNpc(message.npcId, message.what);
+        deliver({ t: "craftResult", kind: "eventReset", ok: true, text });
+        notice("Event Girl: redistribuição salva com sucesso.");
+      } catch (error) {
+        deliver({ t: "craftResult", kind: "eventReset", ok: false, text: error.message });
+      }
+      break;
     case "skillMaster":
       if (npcs.some((n) => n.id === message.npcId && n.services?.includes("skill")))
         skills.publish();
@@ -1663,7 +1719,11 @@ async function handle(message) {
       break;
     case "skill":
       try {
-        skills.cast(message.id, message.target);
+        const used = skills.cast(message.id, message.target);
+        if (used.code === "SKILL_SWIFT_AXE") {
+          const percent = skillData.rules.skills[used.code]?.tables?.Swift_Axe_Speed?.[used.level - 1] ?? 0;
+          notice(`Machado Veloz ativo: +${percent}% de velocidade de ataque com machado por ${used.duration} segundos.`);
+        }
       } catch (error) {
         deliver({ t: "error", text: error.message });
       }
@@ -2754,3 +2814,4 @@ function mountLocalMenu() {
   compact.append(menu);
   document.body.append(compact);
 }
+
