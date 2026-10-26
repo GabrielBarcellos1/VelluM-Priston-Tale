@@ -251,8 +251,9 @@ def kill(user,data):
         table=rules_in(db);r=table['drops'];valid_map=map_id in monster['maps'];gold=0;items=[]
         import server_economy
         premiums=[]
-        if user['role'] in ('admin','gm') and saved.get('endgame'):premiums.append(50)
-        if db.execute("SELECT 1 FROM sqlite_master WHERE name='premium_active'").fetchone():
+        gameplay_test=user['role'] in ('admin','gm') and saved.get('gmGameplayTest') is True
+        if not gameplay_test and user['role'] in ('admin','gm') and saved.get('endgame'):premiums.append(50)
+        if not gameplay_test and db.execute("SELECT 1 FROM sqlite_master WHERE name='premium_active'").fetchone():
             third=db.execute("SELECT value FROM premium_active WHERE username=? AND kind='thirdEyes' AND expires>?",(user['username'],time.time())).fetchone()
             if third:premiums=[max([third['value'],*premiums])]
             if db.execute("SELECT 1 FROM premium_active WHERE username=? AND kind='phoenix' AND expires>?",(user['username'],time.time())).fetchone():premiums.append(25)

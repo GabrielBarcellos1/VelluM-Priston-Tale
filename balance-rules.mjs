@@ -14,7 +14,8 @@ export function migrateExperience(stats,rules){
  stats.exp=experienceFloor(level,rules)+Math.floor(experienceSpan(level,rules)*fraction);
  stats.progressionVersion=rules.version;return true;
 }
-export function killExperience(monster,playerLevel,rules,bonus=0){
+export function killExperience(monster,playerLevel,rules,bonus=0,mapId=null){
+ if(mapId!==null&&!mapExperienceAllowed(playerLevel,mapId,rules))return 0;
  if(monster.attack?.every(n=>n===0)&&!monster.boss)return 0;
  const excess=Math.max(0,playerLevel-monster.level-5),penalty=Math.max(.03,.86**excess);
  return Math.max(1,Math.floor(monster.level*8*penalty*(monster.boss?rules.bossExperienceMultiplier:1)*(1+Math.max(0,bonus)/100)));
@@ -39,4 +40,18 @@ export function duelDamage(amount,attacker,defender,rules){
  const mitigation=defenseMitigation(defender.defense??0,attacker.level,rules.pvp.defenseCap);
  const protection=Math.max(0,Math.min(rules.pvp.damageReductionCap,defender.damageReduction??0))/100;
  return Math.max(1,Math.floor(Math.min(defender.hpMax*rules.pvp.maxHitFraction,amount*rules.pvp.damageScale*(1-mitigation)*(1-protection))));
+}
+
+export function mapExperienceRange(mapId,rules){
+ const map=rules.maps?.find(m=>m.id===mapId);
+ return {min:map?.experienceMin??1,max:map?.experienceMax??rules.maxLevel??150};
+}
+export function mapExperienceAllowed(level,mapId,rules){
+ const band=mapExperienceRange(mapId,rules);return level>=band.min&&level<=band.max;
+}
+export function capKillExperience(amount,stats,mapId,rules){
+ if(!mapExperienceAllowed(stats.level,mapId,rules))return 0;
+ const {max}=mapExperienceRange(mapId,rules);
+ const limit=max<rules.maxLevel?experienceFloor(max+1,rules):Number.MAX_SAFE_INTEGER;
+ return Math.max(0,Math.min(Math.floor(amount),limit-(stats.exp??0)));
 }

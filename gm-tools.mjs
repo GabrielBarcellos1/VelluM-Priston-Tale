@@ -4,3 +4,6 @@ export function protectGm(stats,enabled){if(!enabled)return stats;stats.hp=stats
 export function gmTrainingActive(staff,training,level,now=Date.now()/1000){return !!staff&&level<120&&Number(training?.expires)>now;}
 
 export function applyGmAttack(stats,enabled){if(enabled){stats.damageMin+=50;stats.damageMax+=50;}return stats;}
+
+export function gmProtectionEnabled(staff,equip,gameplayTest=false){return gmProtection(staff,equip)&&!gameplayTest;}
+export function gmCombatEquipment(staff,equip,gameplayTest=false){return gameplayTest&&gmProtection(staff,equip)?{...equip,sheltom:null}:equip;}

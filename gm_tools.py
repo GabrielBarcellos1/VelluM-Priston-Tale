@@ -3,6 +3,7 @@ import copy,json,math,time
 from functools import lru_cache
 from pathlib import Path
 import local_accounts as accounts
+import progression
 
 SHELTOM='OS199'
 POTION='BI998'
@@ -43,13 +44,13 @@ def snapshot(db,user,job,generation,level):
 def experience(db,user,data,saved,monster):
     if not data.get('gmTraining') or user.get('role') not in ('admin','gm'):return None
     level=saved.get('stats',{}).get('level',1)
-    if level>=120:return 0
+    if level>=120 or not progression.experience_allowed(level,data['map']):return 0
     row=db.execute('SELECT expires FROM gm_training WHERE username=? AND job=? AND generation=?',(user['username'],data['job'],data.get('generation'))).fetchone()
     if not row or row['expires']<=time.time():return None
     route=profile()['classes'][str(data['job'])]['levels'][level-1]
-    if monster.get('boss') or data.get('adminSpawn') or data['map'] not in [m['id'] for m in route['maps']] or monster['id'] not in route['monsters'] or data['map'] not in monster['maps']:return None
+    if monster.get('boss') or data.get('adminSpawn') or data['map'] not in [m['id'] for m in route['maps']] or monster['id'] not in route.get('allowedMonsters',route['monsters']) or data['map'] not in monster['maps']:return None
     base=max(1,math.floor(monster['level']*8*max(.03,.86**max(0,level-monster['level']-5))))
-    return max(0,min(math.floor(base*route['multiplier']),balance()['experience'][119]-saved['stats'].get('exp',0)))
+    return progression.cap_experience(max(0,min(math.floor(base*route['multiplier']),balance()['experience'][119]-saved['stats'].get('exp',0))),saved['stats'],data['map'])
 
 def action(user,data):
     import game_control as game

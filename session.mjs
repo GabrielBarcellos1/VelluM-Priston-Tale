@@ -13,7 +13,7 @@ import {
 import { craftAtNpc, decorateCraftItem } from "/npc-crafting.mjs";
 import { mountOnlineSession } from "/online-session.mjs";
 import { worldFacingAngle, faceNearbyNpcs } from "/character-facing.mjs";
-import {GM_SHELTOM,GM_POTION,gmProtection,protectGm,applyGmAttack,gmTrainingActive} from "/gm-tools.mjs";
+import {GM_SHELTOM,GM_POTION,gmProtection,gmProtectionEnabled,gmCombatEquipment,protectGm,applyGmAttack,gmTrainingActive} from "/gm-tools.mjs";
 import { premiumRecovery } from "/premium-effects.mjs";
 import { captureBaseRolls, restoreItemRolls } from "/item-save.mjs";
 import { combatStats } from "/character-stats.mjs";
@@ -33,7 +33,7 @@ import { agingEventChances, eventExperience } from "/economy-effects.mjs";
 import { mountBossRoulette } from "/boss-roulette.mjs";
 import { createGameFeatures } from "/game-features.mjs";
 import { objectiveValue, objectiveIncrement, questCollectionCode } from "/quest-progress.mjs";
-import { experienceFloor, migrateExperience, killExperience, classDamageScale, balanceMonster, questExperienceReward, potionCanUse, registerPotion } from "/balance-rules.mjs";
+import { experienceFloor, migrateExperience, killExperience, mapExperienceRange, mapExperienceAllowed, capKillExperience, classDamageScale, balanceMonster, questExperienceReward, potionCanUse, registerPotion } from "/balance-rules.mjs";
 import { monsterControl } from "/skill-runtime.mjs";
 import { createSkillSystem } from "/skill-system.mjs";
 import { mountCustomSkins, openSapphirePreview } from "/custom-skins.mjs";
@@ -83,7 +83,7 @@ B.agingChance = (age, stone, ...args) =>
     : agingEventChances(controlRules.aging[age],globalThis.__localEconomy?.().successBonus??0);
 let walletClock = wallet.serverTime * 1000 - Date.now();
 const serverNow = () => Date.now() + walletClock;
-const premiumValue = (kind) =>
+const premiumValue = (kind) => gameplayTestMode ? 0 :
   (["manaReduce","staminaReduce"].includes(kind) && gmSheltomActive()) ? 100 : Math.max(
     0,
     ...wallet.active
@@ -210,6 +210,7 @@ try {
 } catch {
   /* The server save remains available when browser storage is unavailable. */
 }
+const gameplayTestMode = isAdmin && stored?.gmGameplayTest === true;
 let lastSavedAt = Math.max(0, Number(stored?.savedAt) || 0);
 let activeForce = stored?.force && Number.isFinite(stored.force.expiresAt) ? stored.force : null;
 const requestedMap = Number(
@@ -692,7 +693,7 @@ function mountGmMovement() {
 }
 
 let gmTraining=null;
-function gmSheltomActive(){return gmProtection(isAdmin,inv.equip);}
+function gmSheltomActive(){return gmProtectionEnabled(isAdmin,inv.equip,gameplayTestMode);}
 function gmExpActive(){return gmTrainingActive(isAdmin,gmTraining,stats.level,serverNow()/1000);}
 async function gmOperation(action,extra={}){
  if(!isAdmin)throw Error('Exclusivo de GM.');
@@ -1096,7 +1097,7 @@ function publishBuffs() {
       ...wallet.active
         .filter(
           (p) =>
-            p.expiresAt * 1000 > serverNow() &&
+            !gameplayTestMode && p.expiresAt * 1000 > serverNow() &&
             !simulated.has(p.kind) &&
             !(p.kind === "vampiric" && simulated.has("vampiricEx")),
         )
@@ -1188,7 +1189,7 @@ gameFeatures=createGameFeatures({name:hero.name,job:characterClass.job,tribe:cha
  reload:()=>location.reload()});
 bossRoulette=mountBossRoulette({meta:questMeta,monsters,wiki,field,zones:spawnData.stages[field.stage]?.zones,game:()=>game,post:postLocal,requestId,deliver,publicMonster,save,
  flush:()=>stateWrite,busy:()=>economyBusy,notice,diagnostic:recordDiagnostic,
- defeated:def=>{kills++;gainExperience(eventExperience(killExperience(def,stats.level,balanceRules,premiumValue('expUp')),economyEffects));updateQuests('kill',{id:def.id,name:def.name,field:field.id});recalculate();},
+ defeated:def=>{kills++;gainExperience(mapKillExperience(def));updateQuests('kill',{id:def.id,name:def.name,field:field.id});recalculate();},
  claim:async award=>{if(economyBusy||pendingLoot)throw Error('Aguarde a operação atual.');economyBusy=true;
   try{if(!save(true))throw Error('Falha ao salvar.');await stateWrite;const r=await postLocal('/api/local/game/boss',{action:'claim',award,savedAt:lastSavedAt,requestId:requestId()});
    for(const key of ['bag','bagB'])inv[key]=(r.state.inv[key]??[]).map(p=>({...p,item:restoreItem(p.item)})).filter(p=>p.item);lastSavedAt=r.state.savedAt;recalculate();save(true);notice('Recompensa do Boss recebida.');
@@ -1224,7 +1225,7 @@ function dropLoot(monster) {
       lastSavedAt = Math.max(lastSavedAt, result.savedAt ?? 0);
       stats.gold += result.gold;
       if(source.gmTraining){
-        const normal=eventExperience(killExperience(source.definition,stats.level,balanceRules,premiumValue('expUp')),economyEffects);
+        const normal=mapKillExperience(source.definition);
         gainExperience(result.gmExperience??normal);recalculate();
         if(result.gmExperience===null)notice('EXP GM: este monstro/mapa está fora da rota ou a poção expirou. Consulte /gmrota.');
       }
@@ -1312,7 +1313,8 @@ function recalculate() {
   ])
     if (item) decorateCraftItem(item, B);
   const effects = skills.bonuses();
-  const gear = Object.values(inv.equip).filter(Boolean);
+  const combatEquipment = gmCombatEquipment(isAdmin,inv.equip,gameplayTestMode);
+  const gear = Object.values(combatEquipment).filter(Boolean);
   const specBonus = effectiveSpecialization(gear, characterClass.job, stats.level);
   const bonus = (key) => gear.reduce((sum, item) => sum + (item[key] ?? 0), 0);
   stats.hpMax =
@@ -1335,8 +1337,8 @@ function recalculate() {
   stats.sp = Math.min(stats.sp, stats.spMax);
   stats.expLevel = experienceFloor(stats.level,balanceRules);
   stats.expNext = experienceFloor(stats.level+1,balanceRules);
-  Object.assign(stats, combatStats(stats, inv.equip, specBonus, effects));
-  applyGmAttack(stats,gmSheltomActive());
+  Object.assign(stats, combatStats(stats, combatEquipment, specBonus, effects));
+  applyGmAttack(stats,gmProtection(isAdmin,inv.equip));
   protectGm(stats,gmSheltomActive());
   const force =
     activeForce && activeForce.expiresAt > serverNow() / 1000
@@ -1402,6 +1404,7 @@ function save(force = false) {
       JSON.stringify({
         savedAt: (lastSavedAt = Math.max(lastSavedAt + 1, Math.floor(serverNow()))),
         endgame: endgameEnabled,
+        gmGameplayTest: gameplayTestMode,
         name: stats.name,
         stats,
         inv,
@@ -1483,7 +1486,23 @@ function updateQuests(type,value){
  }
  const views=questViews();worldQuests.notify(views);deliver({t:'quests',list:views});
 }
+function mapKillExperience(monster) {
+  const base=killExperience(monster,stats.level,balanceRules,premiumValue('expUp'),field.id);
+  return base?capKillExperience(eventExperience(base,economyEffects),stats,field.id,balanceRules):0;
+}
+let lastMapProgressionNotice = '';
+function noticeMapProgression() {
+  if(mapExperienceAllowed(stats.level,field.id,balanceRules))return;
+  const band=mapExperienceRange(field.id,balanceRules),key=field.id+':'+stats.level;
+  if(lastMapProgressionNotice===key)return;
+  lastMapProgressionNotice=key;
+  const next=balanceRules.maps.filter(m=>m.experienceMin!==undefined&&mapExperienceAllowed(stats.level,m.id,balanceRules))
+    .sort((a,b)=>Number(!field.neighbors?.includes(a.id))-Number(!field.neighbors?.includes(b.id)));
+  notice(field.name+' não rende EXP no nível '+stats.level+'. Faixa: '+band.min+'–'+band.max+'.'+
+    (next.length?' Continue em '+next.slice(0,3).map(m=>m.name).join(' / ')+'.':''));
+}
 function gainExperience(gained) {
+  const previousLevel=stats.level;
   stats.exp += gained;
   deliver({ t: "exp", gained, exp: stats.exp });
   while (stats.exp >= stats.expNext && stats.level < 150) {
@@ -1496,6 +1515,7 @@ function gainExperience(gained) {
     deliver({ t: "levelUp", level: stats.level });
   }
   skills.publish();
+  if(stats.level!==previousLevel)noticeMapProgression();
 }
 function completeQuest(id,npcId=null) {
   const quest = questViews().find((q) => q.id === id);
@@ -1547,6 +1567,7 @@ function addBag(item) {
   return true;
 }
 function syncPremiumInventory() {
+  if(gameplayTestMode)return;
   syncShopInventory(inv, wallet, instance, addBag);
 }
 
@@ -1770,7 +1791,7 @@ function damageMonster(id, power = 1, rangeOverride = null, options = {}) {
   if (monster.hp === 0) {
     if(gameFeatures.defeated(monster))return dealt;
     kills++;
-    const gained = eventExperience(killExperience(monster.definition,stats.level,balanceRules,premiumValue("expUp")),economyEffects);
+    const gained = mapKillExperience(monster.definition);
     monster.gmTraining=gmExpActive();
     if(!monster.gmTraining)gainExperience(gained);
     dropLoot(monster);
@@ -2654,6 +2675,7 @@ async function activateMap(next) {
   deliver({ t: "pets", list: [...companions.values()].filter(p => p.state.model).map(p => ({ id: p.state.id })) });
   pendingMapTravel = null;
   updateQuests("reach", field.id);
+  noticeMapProgression();
   publishBuffs();
   globalThis.__localSession.online?.changeMap();
   bossRoulette.resumeMap(spawnData.stages[field.stage]?.zones);
@@ -3003,6 +3025,7 @@ try {
   notice(
     "Cliente original em sessão local. V: inventário · C: status · Q: missões. Use /ajuda para comandos e /habilidades para o livro de habilidades.",
   );
+  if(gameplayTestMode)notice("Teste de jogabilidade: apenas ataque +50 e EXP GM. Defesa, poções e custos de MP/RES seguem as regras normais.");
   document.body.dataset.localReady = "true";
 } catch (error) {
   console.error("[local boot]", error);

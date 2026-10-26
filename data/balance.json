@@ -1717,19 +1717,25 @@
       "id": 0,
       "name": "Mata das Acasias",
       "recommended": 7,
-      "minimum": 1
+      "minimum": 1,
+      "experienceMin": 16,
+      "experienceMax": 20
     },
     {
       "id": 1,
       "name": "Floresta do Bamboo",
       "recommended": 6,
-      "minimum": 1
+      "minimum": 1,
+      "experienceMin": 11,
+      "experienceMax": 15
     },
     {
       "id": 2,
       "name": "Jardim da Liberdade",
       "recommended": 2,
-      "minimum": 1
+      "minimum": 1,
+      "experienceMin": 1,
+      "experienceMax": 10
     },
     {
       "id": 3,
@@ -1741,73 +1747,97 @@
       "id": 4,
       "name": "Refugio dos Ancioes",
       "recommended": 16,
-      "minimum": 1
+      "minimum": 1,
+      "experienceMin": 21,
+      "experienceMax": 25
     },
     {
       "id": 5,
       "name": "Castelo dos Perdidos",
       "recommended": 18,
-      "minimum": 1
+      "minimum": 1,
+      "experienceMin": 26,
+      "experienceMax": 30
     },
     {
       "id": 6,
       "name": "Vila Ruinen",
       "recommended": 23,
-      "minimum": 5
+      "minimum": 5,
+      "experienceMin": 31,
+      "experienceMax": 35
     },
     {
       "id": 7,
       "name": "Terra Maldita",
       "recommended": 31,
-      "minimum": 15
+      "minimum": 15,
+      "experienceMin": 36,
+      "experienceMax": 40
     },
     {
       "id": 8,
       "name": "Terra Esquecida",
       "recommended": 35,
-      "minimum": 20
+      "minimum": 20,
+      "experienceMin": 41,
+      "experienceMax": 45
     },
     {
       "id": 9,
       "name": "Navisko",
       "recommended": 25,
-      "minimum": 10
+      "minimum": 10,
+      "experienceMin": 31,
+      "experienceMax": 40
     },
     {
       "id": 10,
       "name": "Oasis",
       "recommended": 45,
-      "minimum": 30
+      "minimum": 30,
+      "experienceMin": 46,
+      "experienceMax": 50
     },
     {
       "id": 11,
       "name": "C.B.A",
       "recommended": 47,
-      "minimum": 30
+      "minimum": 30,
+      "experienceMin": 51,
+      "experienceMax": 60
     },
     {
       "id": 12,
       "name": "Terra Proibida",
       "recommended": 65,
-      "minimum": 50
+      "minimum": 50,
+      "experienceMin": 61,
+      "experienceMax": 70
     },
     {
       "id": 13,
       "name": "Calabouco Antigo 1",
       "recommended": 49,
-      "minimum": 30
+      "minimum": 30,
+      "experienceMin": 46,
+      "experienceMax": 55
     },
     {
       "id": 14,
       "name": "Calabouco Antigo 2",
       "recommended": 50,
-      "minimum": 35
+      "minimum": 35,
+      "experienceMin": 56,
+      "experienceMax": 60
     },
     {
       "id": 15,
       "name": "Calabouco Antigo 3",
       "recommended": 64,
-      "minimum": 45
+      "minimum": 45,
+      "experienceMin": 61,
+      "experienceMax": 70
     },
     {
       "id": 16,
@@ -1819,25 +1849,33 @@
       "id": 17,
       "name": "Floresta dos Espiritos",
       "recommended": 16,
-      "minimum": 1
+      "minimum": 1,
+      "experienceMin": 21,
+      "experienceMax": 30
     },
     {
       "id": 18,
       "name": "Floresta das Ilusoes",
       "recommended": 8,
-      "minimum": 1
+      "minimum": 1,
+      "experienceMin": 16,
+      "experienceMax": 20
     },
     {
       "id": 19,
       "name": "Vale Tranquilo",
       "recommended": 8,
-      "minimum": 1
+      "minimum": 1,
+      "experienceMin": 11,
+      "experienceMax": 15
     },
     {
       "id": 20,
       "name": "Estrada dos Ventos",
       "recommended": 5,
-      "minimum": 1
+      "minimum": 1,
+      "experienceMin": 1,
+      "experienceMax": 10
     },
     {
       "id": 21,
@@ -1849,43 +1887,57 @@
       "id": 22,
       "name": "Templo Maldito 1",
       "recommended": 75,
-      "minimum": 60
+      "minimum": 60,
+      "experienceMin": 71,
+      "experienceMax": 80
     },
     {
       "id": 23,
       "name": "Templo Maldito 2",
       "recommended": 77,
-      "minimum": 60
+      "minimum": 60,
+      "experienceMin": 71,
+      "experienceMax": 80
     },
     {
       "id": 24,
       "name": "Caverna dos Cogumelos",
       "recommended": 52,
-      "minimum": 35
+      "minimum": 35,
+      "experienceMin": 51,
+      "experienceMax": 60
     },
     {
       "id": 25,
       "name": "Caverna das Abelhas",
       "recommended": 60,
-      "minimum": 45
+      "minimum": 45,
+      "experienceMin": 61,
+      "experienceMax": 70
     },
     {
       "id": 26,
       "name": "SantuÃƒÂ¡io Sombrio",
       "recommended": 71,
-      "minimum": 55
+      "minimum": 55,
+      "experienceMin": 71,
+      "experienceMax": 80
     },
     {
       "id": 27,
       "name": "Estrada do Ferro do Caos",
       "recommended": 82,
-      "minimum": 65
+      "minimum": 65,
+      "experienceMin": 81,
+      "experienceMax": 90
     },
     {
       "id": 28,
       "name": "CoraÃƒÂ§ÃƒÂ£o de Perum",
       "recommended": 84,
-      "minimum": 65
+      "minimum": 65,
+      "experienceMin": 81,
+      "experienceMax": 90
     },
     {
       "id": 29,
@@ -1903,7 +1955,9 @@
       "id": 31,
       "name": "Vale da Gallubia",
       "recommended": 86,
-      "minimum": 70
+      "minimum": 70,
+      "experienceMin": 91,
+      "experienceMax": 100
     },
     {
       "id": 32,
@@ -1921,31 +1975,41 @@
       "id": 34,
       "name": "Lago da Ganancia",
       "recommended": 75,
-      "minimum": 60
+      "minimum": 60,
+      "experienceMin": 71,
+      "experienceMax": 80
     },
     {
       "id": 35,
       "name": "Santurio Congelado",
       "recommended": 97,
-      "minimum": 80
+      "minimum": 80,
+      "experienceMin": 91,
+      "experienceMax": 100
     },
     {
       "id": 36,
       "name": "Caverna Kelvezu",
       "recommended": 97,
-      "minimum": 80
+      "minimum": 80,
+      "experienceMin": 91,
+      "experienceMax": 105
     },
     {
       "id": 37,
       "name": "Ilha Perdida",
       "recommended": 103,
-      "minimum": 85
+      "minimum": 85,
+      "experienceMin": 101,
+      "experienceMax": 105
     },
     {
       "id": 38,
       "name": "Templo Perdido",
       "recommended": 105,
-      "minimum": 90
+      "minimum": 90,
+      "experienceMin": 106,
+      "experienceMax": 110
     },
     {
       "id": 39,
@@ -1957,13 +2021,17 @@
       "id": 40,
       "name": "Torre Sem Fim 1",
       "recommended": 107,
-      "minimum": 90
+      "minimum": 90,
+      "experienceMin": 106,
+      "experienceMax": 110
     },
     {
       "id": 41,
       "name": "Torre Sem Fim 2",
       "recommended": 114,
-      "minimum": 95
+      "minimum": 95,
+      "experienceMin": 111,
+      "experienceMax": 115
     },
     {
       "id": 42,
@@ -1975,13 +2043,17 @@
       "id": 43,
       "name": "Mina Congelada",
       "recommended": 118,
-      "minimum": 100
+      "minimum": 100,
+      "experienceMin": 116,
+      "experienceMax": 120
     },
     {
       "id": 44,
       "name": "LaboratÃƒÂ³rio Secreto",
       "recommended": 121,
-      "minimum": 105
+      "minimum": 105,
+      "experienceMin": 116,
+      "experienceMax": 130
     },
     {
       "id": 47,
@@ -1993,13 +2065,17 @@
       "id": 81,
       "name": "Arma Antiga",
       "recommended": 129,
-      "minimum": 110
+      "minimum": 110,
+      "experienceMin": 121,
+      "experienceMax": 140
     },
     {
       "id": 91,
       "name": "Abismo do Mar",
       "recommended": 136,
-      "minimum": 120
+      "minimum": 120,
+      "experienceMin": 131,
+      "experienceMax": 150
     }
   ],
   "potionPrices": {
@@ -2018,5 +2094,7 @@
     "PS103": 30,
     "PS104": 100,
     "PS105": 100
-  }
+  },
+  "mapProgressionVersion": 1,
+  "mapProgressionDescription": "VelluM: XP de monstros somente na faixa do mapa. Cidades e instancias de quest mantem suas regras. A ultima recompensa para no inicio do nivel seguinte ao limite."
 }
