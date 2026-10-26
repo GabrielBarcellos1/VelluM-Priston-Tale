@@ -47,7 +47,8 @@ def status_file(name, data):
 
 
 def build(url='http://127.0.0.1:19065'):
-    with urllib.request.urlopen(url + '/api/local/build', timeout=8) as response:
+    request=urllib.request.Request(url + '/api/local/build',headers={'User-Agent':'VelluM-Health/1.0'})
+    with urllib.request.urlopen(request, timeout=8) as response:
         return json.load(response)
 
 
