@@ -5,6 +5,7 @@ import { defenseMitigation } from "./balance-rules.mjs";
 // Local simulation only. Distances, movement and balance are not private official rules.
 export function stepMonster(m, ctx) {
   const { now, dt, player, ground, safe, disabled } = ctx;
+  const attackNow = ctx.attackNow ?? now;
   if (m.hp <= 0 || m.owner) return null;
   const control=monsterControl(m,now);
   if(control.stunned) {
@@ -19,7 +20,7 @@ export function stepMonster(m, ctx) {
     !safe && !disabled && homeDistance < 1100 && (distance < 400 || (m.aggroUntil ?? 0) > now);
   if (chasing) m.aggroUntil = now + 8000;
   // Keep the native strike alive during its windup, even if the player steps away.
-  if (chasing && m.motion === "attack" && now < (m.nextAttack ?? 0)) {
+  if (chasing && m.motion === "attack" && attackNow < (m.nextAttack ?? 0)) {
     const angle = worldFacingAngle(m, player, m.angle ?? 0);
     if (angle === m.angle) return null;
     m.angle = angle;
@@ -30,13 +31,13 @@ export function stepMonster(m, ctx) {
   const range = 105;
   if (chasing && gap <= range) {
     const angle = worldFacingAngle(m, player, m.angle ?? 0);
-    if (now < (m.nextAttack ?? 0)) {
+    if (attackNow < (m.nextAttack ?? 0)) {
       if (angle === m.angle) return null;
       m.angle = angle;
       // Turning must not restart the attack animation or invalidate its pending hit.
       return { update: { id: m.id, angle, seq: m.seq } };
     }
-    m.nextAttack = now + (ctx.attackDuration ?? 1800);
+    m.nextAttack = attackNow + (ctx.attackDuration ?? 1800);
     m.motion = "attack";
     m.angle = angle;
     m.seq++;
@@ -116,4 +117,28 @@ export function withAttackProfile(definition) {
       ? "fire"
       : null;
   return element ? { ...definition, element, attackSource: "freeston-local-element" } : definition;
+}
+
+// Strike deadlines follow the same clock as the native player animations.
+// Wall time still governs aggro and skill-control expiration.
+export function createMonsterTimeline() {
+  let previous = null;
+  let pending = [];
+  return {
+    sample(seconds, paused = false) {
+      const now = Number.isFinite(seconds) ? seconds * 1000 : previous ?? 0;
+      const dt = previous === null || paused ? 0 : Math.max(0, Math.min(.4, (now - previous) / 1000));
+      if (paused || (previous !== null && now < previous)) pending = [];
+      previous = now;
+      return { now, dt };
+    },
+    schedule(now, delay, hit) {
+      pending.push({ at: now + Math.max(0, delay), hit });
+    },
+    drain(now) {
+      const due = pending.filter(entry => entry.at <= now);
+      pending = pending.filter(entry => entry.at > now);
+      for (const entry of due) entry.hit();
+    },
+  };
 }

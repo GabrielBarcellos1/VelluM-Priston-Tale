@@ -27,7 +27,7 @@ import { nativeSkillTiming, nativeShopPacket } from "/native-rules.mjs";
 import { specializationRule, effectiveSpecialization } from "/item-specialization.mjs";
 import { equipmentError } from "/equipment-rules.mjs";
 import { brandInterface } from "/brand-ui.mjs";
-import { stepMonster, incomingHit, withAttackProfile } from "/monster-ai.mjs";
+import { stepMonster, incomingHit, withAttackProfile, createMonsterTimeline } from "/monster-ai.mjs";
 import { watchRelease } from "/release-client.mjs";
 import { canonicalCommand, openCommandHelp } from "/command-help.mjs";
 import { promotionRank, createWorldQuests, mergeNpcRecords } from "/world-quests.mjs";
@@ -2900,12 +2900,14 @@ try {
   setInterval(()=>refreshEconomy().catch(e=>recordDiagnostic(e.message)),5000);
   gameFeatures.start();
   bossRoulette.start();
-  let monsterTickAt = performance.now();
+  const monsterTimeline = createMonsterTimeline();
   setInterval(() => {
+    const paused = document.hidden || !game || game.dead || mapTravel?.busy;
+    const combat = monsterTimeline.sample(game?.time ?? 0, paused);
+    if (paused) return;
     const now = performance.now();
-    const dt = (now - monsterTickAt) / 1000;
-    monsterTickAt = now;
-    if (document.hidden || !game || game.dead || mapTravel?.busy) return;
+    const dt = combat.dt;
+    monsterTimeline.drain(combat.now);
     faceNearbyNpcs(
       game.npcs.filter((view) => npcs.some((entry) => entry.id === view.id)),
       game.pos,
@@ -2916,6 +2918,7 @@ try {
       const timing = nativeMonsterTiming(game.monsters.views.get(monster.id)?.model);
       const step = stepMonster(monster, {
         attackDuration: timing.duration,
+        attackNow: combat.now,
         now,
         dt,
         player: { x: game.pos.x, z: -game.pos.z },
@@ -2930,7 +2933,7 @@ try {
       update.push(step.update);
       if (!step.attack || adminState.god || gmSheltomActive()) continue;
       const attackSeq = monster.seq;
-      setTimeout(() => {
+      monsterTimeline.schedule(combat.now, timing.hit, () => {
         if (
           mapTravel?.busy || monsters.get(monster.id) !== monster ||
           monster.hp <= 0 ||
@@ -2972,7 +2975,7 @@ try {
           deliver({ t: "dead", field: characterClass.tribe === "morion" ? 21 : 3 });
           save();
         }
-      }, timing.hit);
+      });
     }
     if (update.length) deliver({ t: "monsters", update, ts: now / 1000 });
   }, 200);
