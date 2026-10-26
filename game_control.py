@@ -33,6 +33,8 @@ CREATE TABLE IF NOT EXISTS skin_offers(id TEXT PRIMARY KEY,data TEXT NOT NULL,en
 CREATE TABLE IF NOT EXISTS skin_owned(username TEXT,id TEXT,created REAL,PRIMARY KEY(username,id));
 CREATE TABLE IF NOT EXISTS skin_equipped(username TEXT,job INTEGER,cat TEXT,id TEXT,PRIMARY KEY(username,job,cat));
 ''')
+    import server_economy
+    server_economy.setup(db)
     db.execute('INSERT OR IGNORE INTO game_rules VALUES(1,1,?)',(json.dumps({k:DEFAULTS[k] for k in ('aging','drops','monitor')}),))
     if not db.execute('SELECT 1 FROM skin_offers LIMIT 1').fetchone():
         for skin in skin_library():
@@ -202,8 +204,11 @@ def aging(user,data):
         if any(not i or i.get('premiumManaged') or i.get('count',1)<1 for i in materials) or sorted(i['code'] for i in materials)!=needed:raise ValueError('Sheltoms incompletas ou inválidas.')
         fee=math.floor((age+1)*max(0,definition.get('price',0))/2)
         gold=number(saved['stats'].get('gold',0),0,10**12,'Ouro')
+        table=rules_in(db)
+        import server_economy
+        chances,fee=server_economy.aging_terms(db,saved.get('field'),table['aging'][age],fee)
         if gold<fee:raise ValueError('Ouro insuficiente para Aging.')
-        table=rules_in(db);chances=table['aging'][age];roll=RNG.random()*100;outcome='kept'
+        roll=RNG.random()*100;outcome='kept'
         for k in OUTCOMES:
             roll-=chances[k]
             if roll<0:outcome=k;break
@@ -238,33 +243,14 @@ def kill(user,data):
         recent=db.execute("SELECT count(*) FROM game_events WHERE username=? AND kind='kill' AND created>?",(user['username'],time.time()-60)).fetchone()[0]
         if recent>=600:raise ValueError('Limite de relatos de abate excedido. Aguarde um minuto.')
         table=rules_in(db);r=table['drops'];valid_map=map_id in monster['maps'];gold=0;items=[]
-        if valid_map and (monster.get('boss') or any(monster.get('attack',[]))):
-            if RNG.random()*100<r['goldChance']:gold=math.floor(monster['level']*3*r['goldMultiplier'])
-            if monster.get('boss'):
-                for entry in BOSS_RULES.get(monster['name'],[]):
-                    if entry['code'] in ITEMS and RNG.random()*100<r['bossOverrides'].get(monster['name'],r['bossChance']):items.append((entry['code'],entry.get('count',1),'boss'))
-            level=monster['level'];potion=common_potion(level,RNG.random())
-            if potion in ITEMS and RNG.random()*100<r['potionChance']:items.append((potion,1,'potion'))
-            low=max(0,level-20)
-            for floor,ceiling,chance in [(low,min(level,79),r['equipmentChance']),(max(80,low),level,r['highLevelChance'])]:
-                pool=eligible(monster,floor,ceiling)
-                if pool and RNG.random()*100<chance:items.append((RNG.choice(pool)['code'],1,'equipment'))
-            # Third Eyes applies one extra common roll, never extra exclusive boss loot.
-            premium=db.execute("SELECT name FROM sqlite_master WHERE type='table' AND name='premium_active'").fetchone()
-            third_chance=50 if user['role'] in ('admin','gm') and saved.get('endgame') else 0
-            if premium:
-                third=db.execute("SELECT value FROM premium_active WHERE username=? AND kind='thirdEyes' AND expires>?",(user['username'],time.time())).fetchone()
-                if third:third_chance=max(third_chance,third['value'])
-            if third_chance and RNG.random()*100<third_chance:
-                pool=eligible(monster,low,level)
-                if pool:
-                    selected=RNG.choice(pool);chance=r['highLevelChance'] if selected.get('req',{}).get('level',0)>=80 else r['equipmentChance']
-                    if RNG.random()*100<chance:items.append((selected['code'],1,'equipment'))
-            if premium and db.execute("SELECT 1 FROM premium_active WHERE username=? AND kind='phoenix' AND expires>?",(user['username'],time.time())).fetchone() and RNG.random()<.25:
-                pool=eligible(monster,low,level)
-                if pool:
-                    selected=RNG.choice(pool);chance=r['highLevelChance'] if selected.get('req',{}).get('level',0)>=80 else r['equipmentChance']
-                    if RNG.random()*100<chance:items.append((selected['code'],1,'equipment'))
+        import server_economy
+        premiums=[]
+        if user['role'] in ('admin','gm') and saved.get('endgame'):premiums.append(50)
+        if db.execute("SELECT 1 FROM sqlite_master WHERE name='premium_active'").fetchone():
+            third=db.execute("SELECT value FROM premium_active WHERE username=? AND kind='thirdEyes' AND expires>?",(user['username'],time.time())).fetchone()
+            if third:premiums=[max([third['value'],*premiums])]
+            if db.execute("SELECT 1 FROM premium_active WHERE username=? AND kind='phoenix' AND expires>?",(user['username'],time.time())).fetchone():premiums.append(25)
+        rolled=server_economy.roll(db,monster,map_id,premiums,RNG);gold=rolled['gold'];items=rolled['items']
         origin='staff-test' if user['role'] in ('admin','gm') else 'client-kill/server-roll'
         event(db,user,'monster.kill','kill',job=job,character=name,map_id=map_id,monster=monster['name'],trust=origin,detail={'monsterId':monster['id'],'rulesVersion':table['version'],'combatVerified':False})
         if data.get('trialToken'):
@@ -286,7 +272,7 @@ def kill(user,data):
         amount=db.execute('SELECT count(*) FROM game_events WHERE '+' AND '.join(conditions),args).fetchone()[0]
         last=db.execute("SELECT 1 FROM game_events WHERE username=? AND action='monitor.drop-volume' AND created>?",(user['username'],time.time()-monitor['windowMinutes']*60)).fetchone()
         if amount>=monitor['threshold'] and not last:event(db,user,'monitor.drop-volume',severity='warning',job=job,character=name,trust='heuristic',detail={'count':amount,'monitor':monitor,'note':'Volume para revisão; não comprova trapaça.'})
-        return remember(db,user,key,payload,{'ok':True,'gold':gold,'items':result,'rulesVersion':table['version'],'combatVerified':False,'savedAt':latest['savedAt'] if gold else saved.get('savedAt',0)})
+        return remember(db,user,key,payload,{'ok':True,'gold':gold,'items':result,'rulesVersion':table['version'],'economyVersion':rolled['policyVersion'],'combatVerified':False,'savedAt':latest['savedAt'] if gold else saved.get('savedAt',0)})
 
 
 def pickup(user,data):

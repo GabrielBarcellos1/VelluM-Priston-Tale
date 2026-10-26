@@ -13,6 +13,7 @@ const titles = {
   products: ["Loja do jogo", "Escolha o que os jogadores encontram no Item Shop."],
   users: ["Usuários", "Contas, personagens e permissões em um só lugar."],
   aging: ["Aging", "Chances por etapa, com sorteio no servidor."],
+  events: ["Eventos", "Agende XP, drops, Sheltoms e benefícios de Aging."],
   drops: ["Drops", "Ouro, equipamentos e itens exclusivos de boss."],
   "drop-history": ["Histórico de drops", "Filtre por conta, item, nível e período."],
   security: ["Logs e alertas", "Revise sinais de abuso, falhas e operações importantes."],

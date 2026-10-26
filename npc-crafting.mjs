@@ -17,7 +17,7 @@ export function decorateCraftItem(item, bridge) {
     { length: 3 * count },
     (_, n) => "OS1" + String(tier + Math.floor(n / count)).padStart(2, "0"),
   );
-  item.agingPrice = Math.floor(((age + 1) * (item.price ?? 0)) / 2);
+  item.agingPrice = Math.floor(Math.floor(((age + 1) * (item.price ?? 0)) / 2)*(1-(globalThis.__localEconomy?.().discount??0)/100));
   item.agingRecipeSource = "freeston-local";
   return item;
 }
@@ -55,6 +55,7 @@ export function craftAtNpc(message, ctx) {
     if (JSON.stringify(needed) !== JSON.stringify(codes))
       throw Error("Coloque todas as sheltoms pedidas pelo aging.");
     fee = Math.floor((((item.aging ?? 0) + 1) * item.price) / 2);
+    fee = Math.floor(fee*(1-(globalThis.__localEconomy?.().discount??0)/100));
   } else if (kind === "mix") {
     if (item.mixed || (item.aging ?? 0) > 0)
       throw Error("Limpe o mix/aging antes de aplicar outra mistura.");

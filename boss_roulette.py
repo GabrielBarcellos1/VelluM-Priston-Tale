@@ -68,7 +68,9 @@ def finish(db,encounter):
         if current and not current['deleted'] and current['generation']==p['generation']:participants.append(dict(p))
     if not participants:return
     cfg=configuration(db,game.MONSTERS[encounter['monster']]);count=RNG.randint(3,5)
-    rare=encounter['forced'] or (choose(cfg['rare']) if cfg['rare'] and RNG.random()*100<cfg['rareChance'] else None)
+    import server_economy
+    multiplier=server_economy.effects(db,encounter['field'])['boss']
+    rare=encounter['forced'] or (choose(cfg['rare']) if cfg['rare'] and RNG.random()*100<min(100,cfg['rareChance']*multiplier) else None)
     rare_round=RNG.randrange(count) if rare else -1
     for index in range(count):
         code=rare if index==rare_round else choose(cfg['common']);rolls=[{'name':p['name'],'job':p['job'],'number':RNG.randint(0,1000),'ticket':secrets.token_hex(6)} for p in participants]

@@ -32,6 +32,7 @@ import online_world
 import game_control
 import npc_services
 import boss_roulette
+import server_economy
 
 ROOT = Path(__file__).resolve().parent
 CACHE = Path(os.environ.get('PWEB_CACHE_DIR', str(ROOT / '.original-cache'))).resolve()
@@ -259,7 +260,7 @@ class Handler(SimpleHTTPRequestHandler):
                 self.json_reply({'ok': False, 'error': 'Servico privado ainda nao reconstruido na sessao local.'}, 501)
             elif path in ['/mobile.css','/freeston.css','/dashboard.css']:
                 self.reply((ROOT / path.lstrip('/')).read_bytes(),'text/css; charset=utf-8')
-            elif path in ['/gameplay-rules.mjs', '/item-save.mjs', '/character-facing.mjs', '/premium-effects.mjs', '/skill-damage.mjs', '/session.mjs', '/online-session.mjs', '/skill-effects.mjs', '/character-stats.mjs', '/npc-crafting.mjs', '/inventory-grid.mjs', '/classic-combat.mjs', '/skill-cooldowns.mjs', '/shop-inventory.mjs', '/native-rules.mjs', '/staff-presence.mjs', '/item-specialization.mjs', '/brand-ui.mjs', '/premium-shop.mjs', '/monster-ai.mjs', '/skill-book.mjs', '/equipment-rules.mjs', '/release-client.mjs', '/dashboard.mjs', '/dashboard-game.mjs', '/skins-shop.mjs', '/admin-names.mjs', '/drop-rules.mjs', '/command-help.mjs', '/boss-roulette.mjs', '/boss-admin.mjs', '/world-quests.mjs', '/npc-panels.mjs', '/game-features.mjs', '/quest-progress.mjs', '/balance-rules.mjs', '/skill-runtime.mjs', '/skill-system.mjs', '/login.mjs', '/README.md']:
+            elif path in ['/gameplay-rules.mjs', '/item-save.mjs', '/character-facing.mjs', '/premium-effects.mjs', '/skill-damage.mjs', '/session.mjs', '/online-session.mjs', '/skill-effects.mjs', '/character-stats.mjs', '/npc-crafting.mjs', '/inventory-grid.mjs', '/classic-combat.mjs', '/skill-cooldowns.mjs', '/shop-inventory.mjs', '/native-rules.mjs', '/staff-presence.mjs', '/item-specialization.mjs', '/brand-ui.mjs', '/premium-shop.mjs', '/monster-ai.mjs', '/skill-book.mjs', '/equipment-rules.mjs', '/release-client.mjs', '/dashboard.mjs', '/dashboard-game.mjs', '/skins-shop.mjs', '/admin-names.mjs', '/drop-rules.mjs', '/command-help.mjs', '/boss-roulette.mjs', '/boss-admin.mjs', '/economy-admin.mjs', '/economy-effects.mjs', '/world-quests.mjs', '/npc-panels.mjs', '/game-features.mjs', '/quest-progress.mjs', '/balance-rules.mjs', '/skill-runtime.mjs', '/skill-system.mjs', '/login.mjs', '/README.md']:
                 data = (ROOT / path.lstrip('/')).read_bytes()
                 self.reply(data, 'text/javascript; charset=utf-8' if path.endswith('.mjs') else 'text/plain; charset=utf-8')
             else:
@@ -314,7 +315,7 @@ class Handler(SimpleHTTPRequestHandler):
                 return self.json_reply({'error':'Entre na conta local.'},401)
             if path.startswith('/api/local/game/'):
                 action=path.rsplit('/',1)[-1]
-                handlers={'aging':game_control.aging,'kill':game_control.kill,'pickup':game_control.pickup,'report':game_control.report,'skin':game_control.skin_action,'npc':npc_services.action,'boss':boss_roulette.action}
+                handlers={'aging':game_control.aging,'kill':game_control.kill,'pickup':game_control.pickup,'report':game_control.report,'skin':game_control.skin_action,'npc':npc_services.action,'boss':boss_roulette.action,'economy':server_economy.runtime}
                 if action not in handlers:return self.json_reply({'error':'Ação inválida.'},404)
                 try:
                     if action!='report' and not isinstance(data.get('generation'),str):raise ValueError('Atualize a página e selecione seu personagem novamente.')
@@ -336,7 +337,7 @@ class Handler(SimpleHTTPRequestHandler):
                     game_control.log(user,'admin.denied','warning',{'path':path})
                     return self.json_reply({'error':'Painel exclusivo do administrador.'},403)
                 action=path.rsplit('/',1)[-1]
-                handlers={'rules-save':game_control.save_rules,'skin-save':game_control.save_skin,'product-save':admin_service.save_product,'product-remove':admin_service.remove_product,'user-save':admin_service.mutate_user,'boss-config':boss_roulette.configs,'boss-save':boss_roulette.save_config}
+                handlers={'rules-save':game_control.save_rules,'skin-save':game_control.save_skin,'product-save':admin_service.save_product,'product-remove':admin_service.remove_product,'user-save':admin_service.mutate_user,'boss-config':boss_roulette.configs,'boss-save':boss_roulette.save_config,'economy-config':server_economy.admin_data,'map-save':server_economy.save_map,'event-save':server_economy.save_event,'economy-preview':server_economy.preview}
                 if action=='coins':
                     result=premium_store.transact(user,'grant',data)
                     if not result.get('repeated'):

@@ -1,3 +1,4 @@
+import {mountEconomyAdmin} from "/economy-admin.mjs";
 import {mountBossAdmin} from "/boss-admin.mjs";
 export function mountGameControls({ api, toast }) {
   const $ = (s) => document.querySelector(s),
@@ -29,6 +30,7 @@ export function mountGameControls({ api, toast }) {
   panel("skins").innerHTML =
     `<article class="card"><h2>Modelos cosméticos do cliente</h2><p>O motor possui skins de armas, escudos e armaduras/robes. Publique modelos, altere preços e pause a venda. Aparência não concede atributos. Nenhum modelo é publicado automaticamente nesta atualização.</p><div class="toolbar"><label class="search">Buscar modelo<input id="skin-search" type="search" placeholder="Nome ou código"></label><label>Categoria<select id="skin-cat"><option value="">Todas</option><option value="arma">Armas</option><option value="escudo">Escudos</option><option value="traje">Armaduras / robes</option></select></label><label>Situação<select id="skin-state"><option value="">Todas</option><option value="on">Publicadas</option><option value="off">Fora da loja</option></select></label></div><p id="skins-count"></p><div class="table-wrap"><table><thead><tr><th>Modelo</th><th>Categoria</th><th>Preço</th><th>Venda</th><th>Ações</th></tr></thead><tbody id="skin-rows"></tbody></table></div></article><dialog id="skin-editor"><form id="skin-form"><div class="dialog-heading"><h2>Editar skin</h2><button type="button" id="skin-close" aria-label="Fechar edição da skin">×</button></div><input name="id" type="hidden"><input name="version" type="hidden"><p id="skin-model"></p><label>Nome<input name="name" maxlength="100" required></label>${numeric("price", "Preço em coins", 0, 1000000000)}<label>Descrição<textarea name="description" maxlength="1000"></textarea></label><label class="check"><input name="enabled" type="checkbox"> Publicar na loja de Skins</label><p class="muted">Pausar não remove skins já adquiridas. No jogo, abra o botão Skins.</p><p class="form-error" role="alert"></p><div class="dialog-footer"><button class="primary" type="submit">Salvar skin</button></div></form></dialog>`;
   mountBossAdmin({api,toast,panel:panel("drops")});
+  mountEconomyAdmin({api,toast,drops:panel("drops"),events:panel("events")});
   $("#drops-form input[name=bossChance]").closest("label").hidden=true;
   $("#boss-overrides").closest("details").hidden=true;
   for (const input of $("#monitor-form").querySelectorAll("input[type=number]")) input.step = "1";

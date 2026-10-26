@@ -27,6 +27,7 @@ import { stepMonster, incomingHit, withAttackProfile } from "/monster-ai.mjs";
 import { watchRelease } from "/release-client.mjs";
 import { canonicalCommand, openCommandHelp } from "/command-help.mjs";
 import { promotionRank, createWorldQuests, mergeNpcRecords } from "/world-quests.mjs";
+import { agingEventChances, eventExperience } from "/economy-effects.mjs";
 import { mountBossRoulette } from "/boss-roulette.mjs";
 import { createGameFeatures } from "/game-features.mjs";
 import { objectiveValue, objectiveIncrement, questCollectionCode } from "/quest-progress.mjs";
@@ -76,11 +77,7 @@ const nativeAgingChance = B.agingChance;
 B.agingChance = (age, stone, ...args) =>
   stone || !controlRules.aging[age]
     ? nativeAgingChance(age, stone, ...args)
-    : {
-        ...controlRules.aging[age],
-        success: controlRules.aging[age].plus1 + controlRules.aging[age].plus2,
-        fail: 100 - controlRules.aging[age].plus1 - controlRules.aging[age].plus2,
-      };
+    : agingEventChances(controlRules.aging[age],globalThis.__localEconomy?.().successBonus??0);
 let walletClock = wallet.serverTime * 1000 - Date.now();
 const serverNow = () => Date.now() + walletClock;
 const premiumValue = (kind) =>
@@ -563,6 +560,8 @@ const objectiveProgress =
 
 const questMeta=stored?.questMeta&&typeof stored.questMeta==='object'?stored.questMeta:{};
 let worldQuests,gameFeatures,bossRoulette;
+let economyEffects={xp:1,discount:0,successBonus:0,events:[]};
+async function refreshEconomy(){const result=await postLocal("/api/local/game/economy",{field:field.id});const changed=JSON.stringify(economyEffects)!==JSON.stringify(result.effects);economyEffects=result.effects;globalThis.__localEconomy=()=>economyEffects;if(changed&&game){recalculate();deliver({t:'inventory',inv});if(economyEffects.events.length)notice('Eventos ativos: '+economyEffects.events.map(e=>e.name).join(', '));}return result;}
 // Administration belongs to this independent local session only.
 const adminState = {
   god: false,
@@ -702,10 +701,8 @@ function adminCommand(input) {
     case "skins":
       return globalThis.__localSession.skinShop?.open().then(() => "Loja de Skins aberta.");
     case "drops":
-      return get("/api/local/game/rules").then((next) => {
-        controlRules = next;
-        const r = next.drops;
-        return `Regras ativas do FREEston: Ouro ${r.goldChance}% (×${r.goldMultiplier}); equipamentos abaixo de 80 ${r.equipmentChance}%; nível 80+ ${r.highLevelChance}%; poções ${r.potionChance}%; exclusivos de boss ${r.bossChance}% (salvo exceções por boss). Sorteio no servidor; mapa e nível elegíveis são exigidos.`;
+      return postLocal('/api/local/game/economy',{field:field.id}).then(r=>{
+       const p=r.policy,d=r.globalDrops;return `Drops de ${field.name}: ${p.paused?'SUSPENSOS':p.custom?`ouro ${p.gold.chance}% entre ${p.gold.min} e ${p.gold.max}; equipamentos: ${p.equipment.map(g=>g.label+' '+Math.min(100,g.chance*r.effects.drops)+'%').join(', ')||'nenhum grupo'}`:`padrão global — ouro ${d.goldChance}%; equipamentos ${d.equipmentChance}% / ${d.highLevelChance}%`}. Evento XP ×${r.effects.xp}, ouro ×${r.effects.gold}. Bosses usam roleta e tabela própria.`;
       });
     case "ajuda":
       game?.keys.clear();
@@ -1146,7 +1143,7 @@ gameFeatures=createGameFeatures({name:hero.name,job:characterClass.job,tribe:cha
  reload:()=>location.reload()});
 bossRoulette=mountBossRoulette({meta:questMeta,monsters,wiki,field,zones:spawnData.stages[field.stage]?.zones,game:()=>game,post:postLocal,requestId,deliver,publicMonster,save,
  flush:()=>stateWrite,busy:()=>economyBusy,notice,diagnostic:recordDiagnostic,
- defeated:def=>{kills++;gainExperience(killExperience(def,stats.level,balanceRules,premiumValue('expUp')));updateQuests('kill',{id:def.id,name:def.name,field:field.id});recalculate();},
+ defeated:def=>{kills++;gainExperience(eventExperience(killExperience(def,stats.level,balanceRules,premiumValue('expUp')),economyEffects));updateQuests('kill',{id:def.id,name:def.name,field:field.id});recalculate();},
  claim:async award=>{if(economyBusy||pendingLoot)throw Error('Aguarde a operação atual.');economyBusy=true;
   try{if(!save(true))throw Error('Falha ao salvar.');await stateWrite;const r=await postLocal('/api/local/game/boss',{action:'claim',award,savedAt:lastSavedAt,requestId:requestId()});
    for(const key of ['bag','bagB'])inv[key]=(r.state.inv[key]??[]).map(p=>({...p,item:restoreItem(p.item)})).filter(p=>p.item);lastSavedAt=r.state.savedAt;recalculate();save(true);notice('Recompensa do Boss recebida.');
@@ -1719,7 +1716,7 @@ function damageMonster(id, power = 1, rangeOverride = null, options = {}) {
   if (monster.hp === 0) {
     if(gameFeatures.defeated(monster))return dealt;
     kills++;
-    const gained = killExperience(monster.definition,stats.level,balanceRules,premiumValue("expUp"));
+    const gained = eventExperience(killExperience(monster.definition,stats.level,balanceRules,premiumValue("expUp")),economyEffects);
     gainExperience(gained);
     dropLoot(monster);
     updateQuests('kill',{id:monster.definition.id,name:monster.name,field:field.id});
@@ -2669,6 +2666,8 @@ try {
       ts: performance.now() / 1000,
     });
   }
+  await refreshEconomy();
+  setInterval(()=>refreshEconomy().catch(e=>recordDiagnostic(e.message)),5000);
   gameFeatures.start();
   bossRoulette.start();
   let monsterTickAt = performance.now();
