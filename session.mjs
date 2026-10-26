@@ -26,6 +26,7 @@ import { brandInterface } from "/brand-ui.mjs";
 import { stepMonster, incomingHit, withAttackProfile } from "/monster-ai.mjs";
 import { watchRelease } from "/release-client.mjs";
 import { canonicalCommand, openCommandHelp } from "/command-help.mjs";
+import { monsterControl } from "/skill-runtime.mjs";
 import { createSkillSystem } from "/skill-system.mjs";
 import { mountSkinShop } from "/skins-shop.mjs";
 import { resolveName } from "/admin-names.mjs";
@@ -953,10 +954,11 @@ function summonCompanion(skill, duration) {
     SKILL_FIRE_ELEMENTAL: "char/monster/firegolem/firegolem",
     SKILL_RECALL_BLOODY_KNIGHT: "char/monster/bloodyknight/bknight",
   };
-  const model = models[skill.code];
-  if (!model) return;
+  const model = skill.runtime?.summon?.model ?? models[skill.code];
+  const definition = skill.runtime?.summon;
+  const index = Math.max(0, (skill.level ?? 1)-1);
   for (const [id, p] of companions)
-    if (p.code === skill.code) {
+    if (p.code === skill.code || ['SKILL_FALCON','SKILL_GOLDEN_FALCON'].includes(skill.code) && ['SKILL_FALCON','SKILL_GOLDEN_FALCON'].includes(p.code)) {
       companions.delete(id);
       deliver({ t: "monsters", remove: [id] });
     }
@@ -973,21 +975,22 @@ function summonCompanion(skill, duration) {
       y: p.y,
       z: -p.z,
       angle: 0,
-      hp: stats.level * 50 + 100,
-      hpMax: stats.level * 50 + 100,
+      hp: definition?.hp[index] ?? stats.level * 50 + 100,
+      hpMax: definition?.hp[index] ?? stats.level * 50 + 100,
       motion: "stand",
       seq: 0,
       body: 20,
     };
   companions.set(id, {
     code: skill.code,
+    definition,
     skill: skill.level,
     state,
     until: performance.now() + duration * 1000,
     next: 0,
   });
-  deliver({ t: "monsters", add: [state], ts: performance.now() / 1000 });
-  deliver({ t: "pets", list: [...companions.values()].map((p) => ({ id: p.state.id })) });
+  if(model) deliver({ t: "monsters", add: [state], ts: performance.now() / 1000 });
+  deliver({ t: "pets", list: [...companions.values()].filter(p=>p.state.model).map((p) => ({ id: p.state.id })) });
 }
 function showSkillBook(trainerId) {
   game?.keys.clear();
@@ -1074,6 +1077,26 @@ const skills = createSkillSystem({
   isTrainer: (id) => npcs.some((n) => n.id === id && n.services?.includes("skill")),
   buffsChanged: publishBuffs,
   summon: summonCompanion,
+  canSupport: () => globalThis.__localSession.online?.canResurrect(),
+  support: (skill, level, target) => {
+    const online=globalThis.__localSession.online;
+    if(!online)return;
+    (async()=>{save(true);await stateWrite;await online.support(skill.code,target);})().catch(e=>notice(e.message));
+  },
+  resurrect: (percent) => {
+    if(!game.dead&&stats.hp>0)return;
+    stats.hp=Math.max(1,Math.floor(stats.hpMax*percent/100));
+    (async()=>{save(true);await stateWrite;location.reload();})().catch(e=>notice(e.message));
+  },
+  convert: (monster, skill) => {
+    const chance=skillData.rules.skills[skill.code].tables.H_Incantation_Success?.[skill.level-1]??40+skill.level*4;
+    if(Math.random()*100>=chance){notice('A conversão falhou.');return;}
+    monster.owner=hero.name;monster.seq++;monster.motion='stand';
+    const until=performance.now()+skill.duration*1000;
+    companions.set(monster.id,{code:skill.code,skill:skill.level,state:monster,until,next:0,converted:true,
+      definition:{damage:Array.from({length:10},()=>monster.definition.attack),interval:Array(10).fill(1.8),range:600}});
+    deliver({t:'monsters',remove:[monster.id]});deliver({t:'monsters',add:[publicMonster(monster)]});
+  },
 });
 const groundDrops = new Map();
 let nextDropId = 1000000;
@@ -1464,7 +1487,8 @@ async function redistributeAtNpc(npcId, mode) {
     if (mode !== "stats") {
       skills.reset();
       for (const side of ["left", "right"]) game.setSkillSlot(side, null);
-      const removed = [...companions.keys()];
+      const removed = [...companions.keys()].filter(id=>!companions.get(id).converted);
+      for(const pet of companions.values())if(pet.converted)delete pet.state.owner;
       companions.clear();
       if (removed.length) deliver({ t: "monsters", remove: removed });
       deliver({ t: "pets", list: [] });
@@ -1549,7 +1573,8 @@ function npcTalk(id, interactive) {
 }
 function damageMonster(id, power = 1, rangeOverride = null, options = {}) {
   const monster = monsters.get(id);
-  if (!monster || monster.hp <= 0 || !game || game.dead || stats.hp <= 0) return;
+  if (!monster || monster.owner || monster.hp <= 0 || !game || game.dead || stats.hp <= 0) return;
+  const control=monsterControl(monster);
   const distance = Math.hypot(game.pos.x - monster.x, game.pos.z + monster.z);
   if (distance > (rangeOverride ?? (stats.shootingRange || 100) + 80)) return;
   const attack =
@@ -1568,15 +1593,17 @@ function damageMonster(id, power = 1, rangeOverride = null, options = {}) {
   const { amount, kind } = physicalHit(
     attack,
     monster.definition,
-    adjustedPower,
+    adjustedPower * (1 + (options.monsterBonus?.[monster.definition.type] ?? 0) / 100),
     skillData.rules.accuracy,
     Math.random,
     {
       ...options,
+      criticalBonus: (options.criticalBonus ?? 0) + control.criticalBonus,
       magic: options.fixedDamage !== undefined || (options.magic ?? stats.magicAttack),
       element: options.element,
     },
   );
+  if(!options.noLeech)skills.reveal?.();
   if (amount === 0) {
     monster.aggroUntil = performance.now() + 10000;
     deliver({
@@ -1589,7 +1616,7 @@ function damageMonster(id, power = 1, rangeOverride = null, options = {}) {
       kind,
       atk: true,
     });
-    return;
+    return 0;
   }
   const dealt = Math.min(monster.hp, amount);
   monster.hp = Math.max(0, monster.hp - amount);
@@ -1648,6 +1675,7 @@ function damageMonster(id, power = 1, rangeOverride = null, options = {}) {
         deliver({ t: "monsters", add: [publicMonster(monster)], ts: performance.now() / 1000 });
       }, 35000);
   }
+  return dealt;
 }
 function publicMonster(m) {
   const { definition, nextAttack, home, aggroUntil, ...state } = m;
@@ -2440,8 +2468,10 @@ try {
     adminState,
     deliver,
     notice,
+    onSupport: event => skills.receiveSupport?.(event),
   });
   await globalThis.__localSession.online.ready;
+  skills.restoreCompanions?.();
   addEventListener(
     "keydown",
     (event) => {
@@ -2545,7 +2575,7 @@ try {
         dt,
         player: { x: game.pos.x, z: -game.pos.z },
         safe: !!field.village,
-        disabled: adminState.frozen || adminState.hidden || adminState.fly,
+        disabled: adminState.frozen || adminState.hidden || adminState.fly || stats.stealth,
         ground: (x, z) => {
           const p = game.ground.spawnPoint(x, -z);
           return p && { x: p.x, y: p.y, z: -p.z };
@@ -2558,6 +2588,7 @@ try {
       setTimeout(() => {
         if (
           monster.hp <= 0 ||
+          monster.owner || monsterControl(monster).stunned || stats.stealth ||
           game.dead ||
           field.village ||
           adminState.god ||
@@ -2568,7 +2599,8 @@ try {
           Math.hypot(game.pos.x - monster.x, -game.pos.z - monster.z) > 140
         )
           return;
-        const hit = incomingHit(monster.definition, stats, skillData.rules.accuracy);
+        const reduction=monsterControl(monster).attackReductionPercent;
+        const hit = incomingHit({...monster.definition,attack:monster.definition.attack.map(n=>Math.floor(n*(1-reduction/100)))}, stats, skillData.rules.accuracy);
         let amount = hit.amount;
         if (amount > 0 && stats.manaShield && stats.mp > 0) {
           const absorbed = Math.min(stats.mp, Math.floor((amount * stats.manaShield) / 100));
@@ -2610,19 +2642,20 @@ try {
     }
     let petChanged = false;
     for (const [id, pet] of companions) {
-      if (performance.now() > pet.until) {
+      if (performance.now() > pet.until || (!pet.converted && !skills.buffs().some(b=>b.code==='skill:'+pet.code))) {
         companions.delete(id);
-        deliver({ t: "monsters", remove: [id] });
+        if(pet.converted){delete pet.state.owner;pet.state.seq++;deliver({t:'monsters',remove:[id]});deliver({t:'monsters',add:[publicMonster(pet.state)]});}
+        else deliver({ t: "monsters", remove: [id] });
         petChanged = true;
         continue;
       }
       const target = game.attackTarget?.state?.id;
       const foe = monsters.get(target);
-      if (foe?.hp > 0 && performance.now() > pet.next) {
-        pet.next = performance.now() + 1800;
-        damageMonster(foe.id, 0.3 + pet.skill * 0.1, 800, { noLeech: true });
+      if (foe?.hp > 0 && !foe.owner && Math.hypot(foe.x-game.pos.x,foe.z+game.pos.z)<=(pet.definition?.range??600) && performance.now() > pet.next) {
+        pet.next = performance.now() + (pet.definition?.interval[pet.skill-1]??1.8)*1000;
+        damageMonster(foe.id, pet.definition?1:0.3 + pet.skill * 0.1, 800, { noLeech: true,magic:true,damageRange:pet.definition?.damage[pet.skill-1] });
       }
-      if (Math.hypot(pet.state.x - game.pos.x, pet.state.z + game.pos.z) > 140) {
+      if (pet.state.model && Math.hypot(pet.state.x - game.pos.x, pet.state.z + game.pos.z) > 140) {
         const p = game.ground.spawnPoint(game.pos.x + 55, game.pos.z + 50);
         if (p) {
           Object.assign(pet.state, { x: p.x, y: p.y, z: -p.z });
@@ -2630,7 +2663,7 @@ try {
         }
       }
     }
-    if (petChanged) deliver({ t: "pets", list: [...companions.keys()].map((id) => ({ id })) });
+    if (petChanged) deliver({ t: "pets", list: [...companions.values()].filter(p=>p.state.model).map(p=>({id:p.state.id})) });
     stats.hp = Math.min(stats.hpMax, stats.hp + (stats.hpRegen ?? 0));
     stats.mp = Math.min(stats.mpMax, stats.mp + 1 + (stats.mpRegen ?? 0));
     stats.sp = Math.min(stats.spMax, stats.sp + 2 + (stats.spRegen ?? 0));
@@ -2814,4 +2847,3 @@ function mountLocalMenu() {
   compact.append(menu);
   document.body.append(compact);
 }
-

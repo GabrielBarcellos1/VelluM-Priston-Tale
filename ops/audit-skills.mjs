@@ -11,8 +11,9 @@ const attackKinds = new Set(['melee', 'shot', 'sky', 'beam', 'aoe', 'nova']);
 for (const cls of catalog.classes) {
   const classSkills = catalog.skills.filter(skill => skill.job === cls.job);
   const records = classSkills.map(skill => ({ code: skill.code, name: skill.name, job: skill.job,
-    className: cls.name, kind: skill.kind, verifiedCompleteForPweb: false,
-    tableSource: catalog.rules.skills[skill.code] ? 'classic-public-source' : 'local-fallback', levels: [] }));
+    className: cls.name, kind: catalog.rules.skills[skill.code].runtime?.kind??skill.kind, verifiedCompleteForPweb: false,
+    tableSource: catalog.rules.classicSkillCodes.includes(skill.code) ? 'classic-public-source' : 'vellum-authored',
+    runtime:catalog.rules.skills[skill.code].runtime, levels: [] }));
   for (let level = 1; level <= 10; level++) {
     const saved = Object.fromEntries(classSkills.map(s => [s.code, level]));
     const system = createSkillSystem({ catalog, job: cls.job, saved, stats,
@@ -34,10 +35,10 @@ const result = { schema: 'vellum-skill-progressions-audit/v1',
   referenceStats: stats, referenceEquipment: equipment,
   summary: { classes: catalog.classes.length, skills: skills.length, levelStates: skills.length * 10,
     classicTables: skills.filter(s => s.tableSource === 'classic-public-source').length,
-    missingSpecificTables: skills.filter(s => s.tableSource === 'local-fallback').length,
+    missingSpecificTables: skills.filter(s => s.tableSource === 'vellum-authored').length,
+    explicitRuntimeProfiles: skills.filter(s=>s.runtime).length,
     attackSkillsUsingGenericPower: skills.filter(s => s.levels.some(l => l.attack?.source === 'freeston-fallback')).length },
   skills };
 const target = process.argv[2];
 if (target) await writeFile(target, JSON.stringify(result, null, 2), 'utf8');
 console.log(JSON.stringify(result.summary));
-

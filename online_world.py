@@ -7,6 +7,8 @@ import local_accounts as accounts
 LOCK=threading.RLock(); PLAYERS={}; EVENTS=deque(maxlen=300); SEQ=0; NEXT_ID=1000000
 FIELDS={f['id'] for f in json.loads((Path(__file__).parent/'data/map-fields.json').read_text())['fields']}
 MODELS={1:('b001','tmh-b01'),2:('a001','tmh-a01'),3:('d001','tfh-d01'),4:('c001','tmh-c01'),5:('mb001','mfh-b01'),6:('ma001','mmh-a01'),7:('md001','mmh-d01'),8:('mc001','mfh-c01'),9:('e001','tfh-e01'),10:('me001','mmh-e01'),11:('f001','tfh-f01')}
+SUPPORT=deque(maxlen=1000)
+CATALOG=json.loads((Path(__file__).parent/'data/skills.json').read_text(encoding='utf-8'))
 def finite(value,low,high):
     if isinstance(value,bool) or not isinstance(value,(int,float)) or not math.isfinite(value) or not low<=value<=high:raise ValueError('Coordenada inválida.')
     return value
@@ -55,11 +57,56 @@ def heartbeat(user,data):
         packet['id']=old['packet']['id'] if old else NEXT_ID
         packet['ts']=time.time()
         if any(p['packet']['name'].casefold()==name.casefold() and k!=user['username'] for k,p in PLAYERS.items()):packet['name']=user['username']
-        PLAYERS[user['username']]={'client':client,'field':field,'job':job,'generation':data.get('generation'),'packet':packet,'at':now,'hidden':staff and data.get('hidden') is True}
+        PLAYERS[user['username']]={**(old or {}),'client':client,'field':field,'job':job,'generation':data.get('generation'),'packet':packet,'at':now,'hidden':staff and data.get('hidden') is True}
         peers=[p['packet'] for k,p in PLAYERS.items() if k!=user['username'] and p['field']==field and not p['hidden']]
         cursor=data.get('cursor',0);cursor=cursor if isinstance(cursor,int) and cursor>=0 else 0
         chats=[e['packet'] for e in EVENTS if e['seq']>cursor and (e['field']==field or e['field'] is None) and time.time()-e['at']<120]
-        return {'players':peers,'chats':chats,'cursor':SEQ,'online':len(PLAYERS),'selfName':packet['name'],'world':'shared-presence','sharedCombat':False}
+        support=[e['packet'] for e in SUPPORT if e['seq']>cursor and e['recipient']==user['username'] and e['client']==client and e['generation']==data.get('generation') and time.time()-e['at']<15]
+        return {'players':peers,'chats':chats,'support':support,'cursor':SEQ,'online':len(PLAYERS),'selfName':packet['name'],'world':'shared-presence','sharedCombat':False}
+
+def skill(user,data):
+    """Allies nearby are supported; this development world has no party membership yet."""
+    global SEQ
+    code=data.get('code')
+    if not isinstance(code,str):raise ValueError('Habilidade inválida.')
+    with LOCK:
+        now=time.monotonic();prune(now);caster=PLAYERS.get(user['username'])
+        if not caster or caster['client']!=data.get('clientId') or caster['generation']!=data.get('generation'):raise ValueError('Entre novamente no mapa.')
+        record=accounts.character_record(user['username'],caster['job'])
+        if record['generation']!=caster['generation']:raise ValueError('O personagem mudou. Atualize a página.')
+        saved=record['state'] or {};level=saved.get('skills',{}).get(code,0)
+        definition=next((s for s in CATALOG['skills'] if s['code']==code and s['job']==caster['job']),None)
+        if not definition or type(level) is not int or not 1<=level<=10:raise ValueError('Habilidade não aprendida.')
+        rule=CATALOG['rules']['skills'][code];profile=rule['runtime'];i=level-1
+        if profile['kind'] not in ('party','heal') and profile['special'] not in ('resurrection','regeneration'):raise ValueError('Habilidade sem efeito em aliados.')
+        if caster['packet']['dead']:raise ValueError('Personagem morto.')
+        ready=caster.setdefault('supportReady',{})
+        if ready.get(code,0)>now:raise ValueError('Habilidade em recarga.')
+        nearby=[(name,p) for name,p in PLAYERS.items() if name!=user['username'] and p['field']==caster['field'] and not p['hidden'] and math.hypot(p['packet']['x']-caster['packet']['x'],p['packet']['z']-caster['packet']['z'])<=500]
+        special=profile['special'];target=data.get('target')
+        if special=='resurrection':
+            nearby=[(name,p) for name,p in nearby if p['packet']['dead']]
+            nearby.sort(key=lambda pair:math.hypot(pair[1]['packet']['x']-caster['packet']['x'],pair[1]['packet']['z']-caster['packet']['z']))
+            nearby=nearby[:1]
+            if not nearby:raise ValueError('Nenhum aliado morto próximo.')
+            packet={'kind':'resurrection','hpPercent':30+level*5}
+        elif profile['kind']=='heal':
+            nearby=[(name,p) for name,p in nearby if not p['packet']['dead'] and (code!='SKILL_HEALING' or target in (p['packet']['id'],p['packet']['name']))]
+            tables=rule.get('tables',{});key='Grand_Healing' if code=='SKILL_GRAND_HEALING' else 'Healing_Heal'
+            pair=tables.get(key,[[]]*10)[i]
+            weapon=saved.get('inv',{}).get('equip',{}).get('weapon',{}) or {}
+            spi=saved.get('stats',{}).get('spi',0)
+            values=[base+int((weapon.get('damage') or [0,0])[j]/3)+int(spi/(6 if j else 8)) for j,base in enumerate(pair)] if isinstance(pair,list) and len(pair)==2 else [40+level*25]*2
+            amount=int(sum(values)/2)
+            packet={'kind':'heal','amount':amount}
+        else:
+            radius=profile['radius'][i] or 500
+            nearby=[(name,p) for name,p in nearby if not p['packet']['dead'] and math.hypot(p['packet']['x']-caster['packet']['x'],p['packet']['z']-caster['packet']['z'])<=radius]
+            packet={'kind':'buff','seconds':profile['duration'][i]}
+        ready[code]=now+max(.5,profile['cooldown'][i])
+        for name,p in nearby:
+            SEQ+=1;SUPPORT.append({'seq':SEQ,'at':time.time(),'recipient':name,'client':p['client'],'generation':p['generation'],'packet':{**packet,'code':code,'level':level}})
+        return {'ok':True,'recipients':len(nearby)}
 
 def chat(user,data):
     global SEQ

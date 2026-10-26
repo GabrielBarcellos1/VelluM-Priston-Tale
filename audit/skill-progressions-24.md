@@ -1,3 +1,5 @@
+> Registro da investigação anterior à implementação. Consulte skill-runtime-24.md para o estado atual.
+
 # Investigação das progressões de skills — 25/10/2026
 
 ## Resultado e limites
@@ -44,4 +46,3 @@ node ops/audit-skills.mjs matriz.json
 ## O que falta para equivalência completa
 
 Uma fonte completa dos valores do servidor de referência por skill e nível: exportação/configurações do próprio servidor, documentação de seu balanceamento ou observações suficientes de níveis e classes acessíveis pela interface. O cliente público e a conta observada, com apenas um Lutador nível 27, não forneceram as 1.760 combinações. Uma fonte de outro servidor pode fundamentar um perfil Priston próprio, mas exige decisão explícita sobre qual balanceamento adotar e não demonstra equivalência com pweb.
-

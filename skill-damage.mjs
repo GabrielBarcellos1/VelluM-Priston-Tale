@@ -40,6 +40,25 @@ const repeats = {
   SKILL_DIVINE_PIERCING: "Divine_Piercing_AttackNum",
 };
 export function skillAttackProfile(skill, rule, level, stats, equipment = {}, spiritPercent = 0) {
+  if (rule?.runtime) {
+    const entry = at(rule.runtime.attacks, level);
+    let result;
+    if (entry.model === 'classic') result = skillAttackProfile(skill, { ...rule, runtime: undefined }, level, stats, equipment, 0);
+    else if (entry.model === 'range') result = {
+      power: 1, hitCount: 1,
+      damageRange: entry.range.map((base, i) => Math.floor(base +
+        (entry.weaponFactor ?? 0) * (equipment.weapon?.damage?.[i] ?? 0) +
+        (entry.spiritDivisors ? (stats.spi ?? 0) / entry.spiritDivisors[i] : 0) +
+        (entry.levelDivisor ? (stats.level ?? 1) / entry.levelDivisor : 0))),
+    };
+    else result = { power: 1 + (entry.percent ?? 0) / 100, hitCount: 1 };
+    result = { magic: [7,8,10].includes(skill.job), ...result, ...entry, source: rule.runtime.source };
+    if (result.magic && spiritPercent) {
+      if (result.damageRange) result.damageRange = result.damageRange.map(n => Math.floor(n * (1 + spiritPercent / 100)));
+      else result.power *= 1 + spiritPercent / 100;
+    }
+    return result;
+  }
   const tables = rule?.tables ?? {};
   const value = (key) => at(tables[key], level);
   const profile = {
@@ -239,4 +258,3 @@ export function skillHealingRange(skill, rule, level, stats, equipment = {}) {
       Math.trunc((stats.spi ?? 0) / (i ? 6 : 8)),
   );
 }
-

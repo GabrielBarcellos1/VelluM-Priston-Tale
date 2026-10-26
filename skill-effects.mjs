@@ -25,6 +25,9 @@ export function emptyEffects() {
     attackSpeed: 0,
     attackSpeedPercent: 0,
     regen: 0,
+    hpRegen: 0,
+    magicPowerPercent: 0,
+    stealth: 0,
     reflection: 0,
     retaliationFlat: 0,
     manaShield: 0,
@@ -137,6 +140,7 @@ export function effectFor(skill, level, rules, equipment = null) {
     if (skill.code === "SKILL_METAL_ARMOR" && equipment.armor?.spec !== skill.job) return out;
     if (skill.code === "SKILL_MECHANIC_WEAPON" && equipment.weapon?.spec !== skill.job) return out;
   }
+  if (rule?.runtime) return sumEffects([rule.runtime.effects[n]]);
   for (const [field, key, scale = 1] of mappings[skill.code] ?? []) {
     let value = rule?.tables?.[key]?.[n];
     if (Array.isArray(value)) value = (value[0] + value[1]) / 2;
@@ -197,6 +201,9 @@ export function effectRows(effect) {
     attackSpeed: "Velocidade da arma",
     attackSpeedPercent: "Velocidade de ataque",
     regen: "Regeneração de MP",
+    hpRegen: "Regeneração de HP",
+    magicPowerPercent: "Poder mágico",
+    stealth: "Ocultação",
     reflection: "Reflexão em mortos-vivos",
     retaliationFlat: "Retaliação elétrica",
     manaShield: "Escudo de mana",
@@ -221,6 +228,7 @@ export function effectRows(effect) {
     "manaShield",
     "undeadDamage",
     "undeadAbsorb",
+    "magicPowerPercent",
   ]);
   const rows = [];
   for (const [k, v] of Object.entries(effect)) {

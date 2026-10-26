@@ -15,11 +15,11 @@ export function accuracyChance(attacker, defender, table) {
   );
 }
 export function physicalHit(attacker, defender, power, table, random = Math.random, options = {}) {
-  const hitAttacker = options.attackRatingPercent
+  const hitAttacker = options.attackRatingPercent || options.attackRatingFlat
     ? {
         ...attacker,
         attackRating: Math.floor(
-          (attacker.attackRating ?? 0) * (1 + options.attackRatingPercent / 100),
+          (attacker.attackRating ?? 0) * (1 + (options.attackRatingPercent ?? 0) / 100) + (options.attackRatingFlat ?? 0),
         ),
       }
     : attacker;

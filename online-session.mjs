@@ -8,6 +8,7 @@ export function mountOnlineSession({
   deliver,
   notice,
   generation,
+  onSupport,
 }) {
   const key = "freeston-online-client";
   let clientId = sessionStorage.getItem(key);
@@ -83,6 +84,7 @@ export function mountOnlineSession({
       peers = next;
       cursor = result.cursor;
       for (const chat of result.chats) deliver(chat);
+      for (const event of result.support ?? []) onSupport?.(event);
       status.connected = true;
       status.count = result.online;
       status.error = null;
@@ -115,6 +117,8 @@ export function mountOnlineSession({
     ready,
     status,
     dispose,
+    canResurrect: () => [...peers.values()].some(p=>p.dead&&Math.hypot(p.x-game.pos.x,p.z+game.pos.z)<=500),
+    support: (code,target) => post('skill',{code,target,generation}),
     chat: async (text, channel = "normal") => post("chat", { text, channel }),
   };
 }

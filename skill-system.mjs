@@ -1,5 +1,6 @@
 import { effectFor, sumEffects, effectRows } from "./skill-effects.mjs";
 import { configuredSkillCooldown } from "./skill-cooldowns.mjs";
+import { createRuntimeSkillSystem } from "./skill-runtime.mjs";
 import {
   skillAttackProfile,
   skillHitTimes,
@@ -29,6 +30,7 @@ export function validateSkillCatalog(catalog) {
 export function createSkillSystem(ctx) {
   validateSkillCatalog(ctx.catalog);
   if (!ctx.catalog.classes.some((c) => c.job === ctx.job)) throw Error("Classe desconhecida.");
+  if (ctx.catalog.rules.runtimeVersion === 1) return createRuntimeSkillSystem(ctx);
   const list = ctx.catalog.skills.filter((s) => s.job === ctx.job),
     levels = new Map(),
     ready = new Map(),
@@ -466,4 +468,3 @@ export function createSkillSystem(ctx) {
     points,
   };
 }
-

@@ -249,7 +249,7 @@ class Handler(SimpleHTTPRequestHandler):
                 self.json_reply({'ok': False, 'error': 'Servico privado ainda nao reconstruido na sessao local.'}, 501)
             elif path in ['/mobile.css','/freeston.css','/dashboard.css']:
                 self.reply((ROOT / path.lstrip('/')).read_bytes(),'text/css; charset=utf-8')
-            elif path in ['/gameplay-rules.mjs', '/item-save.mjs', '/character-facing.mjs', '/premium-effects.mjs', '/skill-damage.mjs', '/session.mjs', '/online-session.mjs', '/skill-effects.mjs', '/character-stats.mjs', '/npc-crafting.mjs', '/inventory-grid.mjs', '/classic-combat.mjs', '/skill-cooldowns.mjs', '/shop-inventory.mjs', '/native-rules.mjs', '/staff-presence.mjs', '/item-specialization.mjs', '/brand-ui.mjs', '/premium-shop.mjs', '/monster-ai.mjs', '/skill-book.mjs', '/equipment-rules.mjs', '/release-client.mjs', '/dashboard.mjs', '/dashboard-game.mjs', '/skins-shop.mjs', '/admin-names.mjs', '/drop-rules.mjs', '/command-help.mjs', '/skill-system.mjs', '/login.mjs', '/README.md']:
+            elif path in ['/gameplay-rules.mjs', '/item-save.mjs', '/character-facing.mjs', '/premium-effects.mjs', '/skill-damage.mjs', '/session.mjs', '/online-session.mjs', '/skill-effects.mjs', '/character-stats.mjs', '/npc-crafting.mjs', '/inventory-grid.mjs', '/classic-combat.mjs', '/skill-cooldowns.mjs', '/shop-inventory.mjs', '/native-rules.mjs', '/staff-presence.mjs', '/item-specialization.mjs', '/brand-ui.mjs', '/premium-shop.mjs', '/monster-ai.mjs', '/skill-book.mjs', '/equipment-rules.mjs', '/release-client.mjs', '/dashboard.mjs', '/dashboard-game.mjs', '/skins-shop.mjs', '/admin-names.mjs', '/drop-rules.mjs', '/command-help.mjs', '/skill-runtime.mjs', '/skill-system.mjs', '/login.mjs', '/README.md']:
                 data = (ROOT / path.lstrip('/')).read_bytes()
                 self.reply(data, 'text/javascript; charset=utf-8' if path.endswith('.mjs') else 'text/plain; charset=utf-8')
             else:
@@ -314,7 +314,7 @@ class Handler(SimpleHTTPRequestHandler):
                     return self.json_reply({'error':str(error)},400)
             if path.startswith('/api/local/online/'):
                 action=path.rsplit('/',1)[-1]
-                handlers={'heartbeat':online_world.heartbeat,'chat':online_world.chat,'leave':online_world.leave}
+                handlers={'heartbeat':online_world.heartbeat,'chat':online_world.chat,'leave':online_world.leave,'skill':online_world.skill}
                 if action not in handlers:return self.json_reply({'error':'Ação inválida.'},404)
                 try:
                     if action=='heartbeat' and not isinstance(data.get('generation'),str):raise ValueError('Atualize a página e selecione seu personagem novamente.')
