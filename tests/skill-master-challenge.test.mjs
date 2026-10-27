@@ -13,7 +13,8 @@ function actionAt(level,rank=0){
  return {action:fn(c,()=>true,()=>{},()=>{}),completed,logs};
 }
 test('skill master opens skills directly without the old choice dialog',()=>{
- assert.match(npcSource,/if\(services\.includes\('skill'\)\)\s*\{\s*ctx\.skills\(npc\.id\);\s*mountSkillChallenge\(npc,ctx\)/);
+ assert.match(npcSource,/if\(services\.includes\('skill'\)\)\s*\{[\s\S]*?ctx\.skills\(npc\.id\);[\s\S]*?ctx\.canPromote\(\)/);
+ assert.match(npcSource,/Aceitar nova classe/);
 });
 test('at level 20 accepting Tier 2 immediately completes the correct class challenge',async()=>{
  const f=actionAt(20);
