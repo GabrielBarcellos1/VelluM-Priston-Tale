@@ -19,6 +19,9 @@ class LevelRewards(ServerAudit):
             for level in rewards.rules()['kitLevels']:
                 codes=rewards.kit_codes(level,job)
                 self.assertEqual(len(codes),8)
+                base={'str':25,'spi':15,'tal':20,'dex':19,'health':24}
+                needed={k:max([v]+[game.ITEMS[c].get('req',{}).get(k,0) for c in codes]) for k,v in base.items()}
+                self.assertLessEqual(sum(needed[k]-base[k] for k in base),5*(level-1))
                 for code in codes:
                     item=game.ITEMS[code]
                     self.assertTrue(economy.allowed(code));self.assertTrue(rewards.preferred(item,job))
@@ -78,3 +81,15 @@ class LevelRewards(ServerAudit):
         with accounts.connection() as db:
             game.setup(db)
             self.assertEqual(economy.roll(db,monster,19,rng=random.Random(1),job=6,player_level=12)['items'],[])
+
+    def test_server_kill_returns_own_spec_and_replay_does_not_reroll(self):
+        self.put(10)
+        monster=next(m for m in game.MONSTERS.values() if 2 in m['maps'] and not m.get('boss'))
+        data={'job':1,'generation':self.generation,'map':2,'monster':monster['id'],'requestId':uuid.uuid4().hex}
+        config={**rewards.rules(),'preferredClassChance':1,'ownSpecChance':1,'minimumEquipmentChance':100}
+        with patch.object(rewards,'rules',return_value=config):
+            result=game.kill(self.user,data)
+            gear=[e for e in result['items'] if game.ITEMS[e['code']]['slot'] in ('WEAPON_ONE','WEAPON_TWO','ARMOR','BOOTS','GLOVES','ARMLET','SHIELDS','AMULET','RING')]
+            self.assertEqual(len(gear),1);self.assertEqual(gear[0]['spec'],1)
+            replay=game.kill(self.user,data)
+            self.assertTrue(replay['repeated']);self.assertEqual(replay['items'],result['items'])
