@@ -3153,6 +3153,7 @@ try {
     generation: characterGeneration,
     game,
     hero,
+    equipment:()=>inv.equip,
     deliver,
     save,
     flush: () => stateWrite,

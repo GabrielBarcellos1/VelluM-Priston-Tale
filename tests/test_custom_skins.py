@@ -27,6 +27,29 @@ class CustomSkins(ServerAudit):
         self.buy(skin)
         with self.assertRaises(ValueError):game.skin_action(self.user,{**payload,'requestId':uuid.uuid4().hex})
         with self.assertRaises(ValueError):game.skin_action(self.user,{**payload,'action':'buy','price':0,'requestId':uuid.uuid4().hex})
+    def test_cross_family_skin_auto_equips_same_hand_count_and_preserves_coins(self):
+        self.fund()
+        skin=next(s for s in custom.catalog() if s['id']=='sapphire-wp1-2')
+        state=self.state()
+        weapon=npc.item_instance('WA120',[])
+        self.assertEqual(weapon['slot'],'WEAPON_TWO')
+        state['inv']['equip']['weapon']=weapon
+        self.save(state)
+        with accounts.connection() as db:
+            initial=db.execute('SELECT coins FROM wallets WHERE username=?',('audituser',)).fetchone()[0]
+        bought=self.buy(skin)
+        self.assertEqual(bought['skins']['equip']['arma'],skin['id'])
+        with accounts.connection() as db:
+            self.assertEqual(db.execute('SELECT coins FROM wallets WHERE username=?',('audituser',)).fetchone()[0],initial-skin['price'])
+        self.assertEqual(accounts.load_state('audituser',1)['inv']['equip']['weapon'],weapon)
+        world.heartbeat(self.user,{'job':1,'field':2,'clientId':'b'*32,'generation':self.generation,'x':0,'y':0,'z':0})
+        self.assertEqual(world.PLAYERS['audituser']['packet']['customWeaponSkin'],skin['id'])
+        state=accounts.load_state('audituser',1)
+        state['savedAt']+=1
+        state['inv']['equip']['weapon']=npc.item_instance('WA118',[])
+        self.save(state)
+        world.heartbeat(self.user,{'job':1,'field':2,'clientId':'b'*32,'generation':self.generation,'x':0,'y':0,'z':0})
+        self.assertNotIn('customWeaponSkin',world.PLAYERS['audituser']['packet'])
     def test_online_packet_only_publishes_owned_compatible_custom_visual(self):
         self.fund();skin=next(s for s in custom.catalog() if s['id']=='sapphire-wp1-2');s=self.state();s['inv']['equip']['weapon']=npc.item_instance(skin['look'],[]);self.save(s);self.buy(skin)
         game.skin_action(self.user,{'job':1,'generation':self.generation,'action':'equip','id':skin['id'],'requestId':uuid.uuid4().hex})

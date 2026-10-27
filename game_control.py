@@ -425,13 +425,17 @@ def skin_action(user,data):
             db.execute('INSERT OR IGNORE INTO wallets VALUES(?,0)',(user['username'],))
             if not db.execute('UPDATE wallets SET coins=coins-? WHERE username=? AND coins>=?',(skin['price'],user['username'],skin['price'])).rowcount:raise ValueError('Coins insuficientes.')
             db.execute('INSERT INTO skin_owned VALUES(?,?,?)',(user['username'],skin['id'],time.time()))
+            # An already compatible weapon immediately receives a purchased 3D cosmetic.
+            base=saved.get('inv',{}).get('equip',{}).get('weapon')
+            if skin.get('customModel') and skin['cat']=='arma' and base and base.get('slot')==ITEMS[skin['look']]['slot']:
+                db.execute('INSERT INTO skin_equipped VALUES(?,?,?,?) ON CONFLICT(username,job,cat) DO UPDATE SET id=excluded.id',(user['username'],job,skin['cat'],skin['id']))
             db.execute('INSERT INTO coin_ledger(actor,target,delta,reason,created) VALUES(?,?,?,?,?)',(user['username'],user['username'],-skin['price'],'Skin '+skin['id'],time.time()))
         elif action in ('equip','remove'):
             if not db.execute('SELECT 1 FROM skin_owned WHERE username=? AND id=?',(user['username'],skin['id'])).fetchone():raise ValueError('Skin não pertence à conta.')
             if action=='remove':db.execute('DELETE FROM skin_equipped WHERE username=? AND job=? AND cat=? AND id=?',(user['username'],job,skin['cat'],skin['id']))
             else:
                 equipment=saved.get('inv',{}).get('equip',{});base=equipment.get({'arma':'weapon','escudo':'shield','traje':'armor'}[skin['cat']])
-                if not base or (skin['cat']=='arma' and (base['code'][:3]!=skin['look'][:3] or base['slot']!=ITEMS[skin['look']]['slot'])) or (skin['cat']=='traje' and base['code'][:3]!=skin['look'][:3]):raise ValueError('Equipe arma/armadura do mesmo tipo para usar esta skin.')
+                if not base or (skin['cat']=='arma' and (base['slot']!=ITEMS[skin['look']]['slot'] or (not skin.get('customModel') and base['code'][:3]!=skin['look'][:3]))) or (skin['cat']=='traje' and base['code'][:3]!=skin['look'][:3]):raise ValueError('Equipe uma arma com a mesma quantidade de mãos ou uma armadura do mesmo tipo para usar esta skin.')
                 db.execute('INSERT INTO skin_equipped VALUES(?,?,?,?) ON CONFLICT(username,job,cat) DO UPDATE SET id=excluded.id',(user['username'],job,skin['cat'],skin['id']))
         else:raise ValueError('Ação de skin inválida.')
         event(db,user,'skin.'+action,'shop',job=job,character=name,code=skin['look'],item_name=skin['name'],detail={'price':skin['price'] if action=='buy' else 0})

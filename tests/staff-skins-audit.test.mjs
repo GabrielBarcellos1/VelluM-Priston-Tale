@@ -5,8 +5,9 @@ const root=new URL('../',import.meta.url);
 const load=x=>readFile(new URL(x,root),'utf8');
 const [skin,shop,session,online,staff]=await Promise.all(['custom-skins.mjs','skins-shop.mjs','session.mjs','online-session.mjs','staff-presence.mjs'].map(load));
 test('Reaper sapphire scythe uses twice original equipped scale',()=>{
- assert.match(skin,/skin\.id\?\.startsWith\('sapphire-wp1-'\)\?2:1/);
+ assert.match(skin,/model\.scale\.setScalar\(\(skin\.customScale\?\?\.8\)\*2\)/);
  assert.match(skin,/model\.scale\.setScalar/);
+ assert.doesNotMatch(skin,/skin\.family===base\.code/);
 });
 test('purchased cosmetics visible in My Skins without another purchase',()=>{
  assert.match(shop,/\["owned", "Minhas skins"\]/);

@@ -2,6 +2,7 @@
 export function mountSkinShop({
   game,
   hero,
+  equipment,
   deliver,
   save,
   flush,
@@ -49,12 +50,14 @@ export function mountSkinShop({
     return n;
   }
   function compatible(skin) {
-    const eq = game.lastInventory?.equip ?? {};
+    const eq = equipment?.() ?? game.lastInventory?.equip ?? {};
     const base = eq[{ arma: "weapon", escudo: "shield", traje: "armor" }[skin.cat]];
     return (
       base &&
-      base.code.slice(0, 3) === skin.look.slice(0, 3) &&
-      (skin.cat !== "arma" || base.slot === (skin.hands === 2 ? "WEAPON_TWO" : "WEAPON_ONE"))
+      (skin.customModel && skin.cat === "arma"
+        ? base.slot === (skin.hands === 2 ? "WEAPON_TWO" : "WEAPON_ONE")
+        : base.code.slice(0, 3) === skin.look.slice(0, 3) &&
+          (skin.cat !== "arma" || base.slot === (skin.hands === 2 ? "WEAPON_TWO" : "WEAPON_ONE")))
     );
   }
   async function mutate(action, skin) {
@@ -72,7 +75,7 @@ export function mountSkinShop({
       await refreshWallet();
       const message =
         action === "buy"
-          ? "Skin comprada. Agora você pode equipá-la."
+          ? (result.skins.equip[skin.cat] === skin.id ? "Skin comprada e equipada automaticamente!" : "Skin comprada! Equipe uma arma de uma ou duas mãos compatível e use Equipar visual.")
           : action === "equip"
             ? "Skin equipada."
             : "Skin removida.";
@@ -125,8 +128,10 @@ export function mountSkinShop({
         const ownedTag=element("strong",equipped?"✓ Adquirida e equipada":"✓ Adquirida — sua conta já possui esta skin");
         ownedTag.className="skin-owned-status";card.prepend(ownedTag);
       }
-      if (owned && !compatible(skin))
-        card.append(element("small", "Requer equipamento do mesmo tipo."));
+      if (owned && !equipped && !compatible(skin))
+        card.append(element("small", skin.customModel && skin.cat === 'arma'
+          ? `Equipe primeiro uma arma de ${skin.hands === 2 ? 'duas mãos' : 'uma mão'} para usar este visual. A família da arma não importa.`
+          : "Requer equipamento do mesmo tipo."));
       list.append(card);
     }
     if (!list.children.length)

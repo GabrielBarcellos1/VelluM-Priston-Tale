@@ -10,19 +10,19 @@ export function disposeSapphire(group){group.traverse(n=>{if(n.isMesh){n.geometr
 export function ensureSkinLights(B,scene){if(scene.userData.sapphireLights)return;scene.userData.sapphireLights=true;const ambient=new B.AmbientLight(0xc3dbff,1.4),sun=new B.DirectionalLight(0xffe3b1,3.1),rim=new B.DirectionalLight(0x32b8ff,2);sun.position.set(-60,80,100);rim.position.set(60,30,-60);scene.add(ambient,sun,rim);}
 export function mountCustomSkins({B,game,own,peers,catalog,inventory}){
  const byId=new Map(catalog.map(s=>[s.id,s])),records=new Map();let frame,stopped=false;
- function valid(skin,base){return skin&&base&&skin.family===base.code?.slice(0,3)&&base.slot===(skin.hands===2?'WEAPON_TWO':'WEAPON_ONE');}
+ function valid(skin,base){return !!(skin?.customModel&&base&&base.slot===(skin.hands===2?'WEAPON_TWO':'WEAPON_ONE'));}
  function remove(root,record){for(const[n,material]of record.materials){const masks=Array.isArray(n.material)?n.material:[n.material];for(const mask of masks)if(mask!==material)mask?.dispose();n.material=material;}disposeSapphire(record.mesh);records.delete(root);}
  function apply(actor,skin,live){if(!actor?.tools)return;for(const tool of actor.tools){if(tool.slot!=='weapon')continue;const root=tool.model?.object;if(!root)continue;live.add(root);let record=records.get(root);
   if(record&&record.id!==skin?.id){remove(root,record);record=null;}
   if(!skin||record)continue;
   const materials=[];root.traverse(n=>{if(!n.isMesh)return;materials.push([n,n.material]);const hidden=m=>{const mask=m.clone();mask.visible=false;return mask;};n.material=Array.isArray(n.material)?n.material.map(hidden):hidden(n.material);});
-  const model=createSapphireMesh(B,skin.customModel,skin.hands);model.rotation.x=Math.PI/2;model.scale.setScalar((skin.customScale??.8)*(skin.id?.startsWith('sapphire-wp1-')?2:1));
+  const model=createSapphireMesh(B,skin.customModel,skin.hands);model.rotation.x=Math.PI/2;model.scale.setScalar((skin.customScale??.8)*2);
   const mesh=new B.Group();mesh.matrixAutoUpdate=false;const bind=tool.model.boneMatrix?.(0,root.matrix.clone().identity());if(bind)mesh.matrix.copy(bind);mesh.add(model);root.add(mesh);records.set(root,{id:skin.id,mesh,materials});
  }}
  function tick(){if(stopped)return;const live=new Set(),skin=own()?.worn?.find(s=>s.customModel&&s.cat==='arma'),base=inventory()?.weapon;apply(game.player,valid(skin,base)?skin:null,live);
   const remote=new Map((peers?.()??[]).map(p=>[p.name,p]));for(const view of game.others?.views?.values?.()??[]){const p=remote.get(view.other?.name),s=byId.get(p?.customWeaponSkin);apply(view.char,s,live);}
   for(const[root,record]of records)if(!live.has(root))remove(root,record);
-  const diagnostics={sapphireModels:String(records.size),sapphireNativeWeapons:String(game.player?.tools?.length??0),sapphireEquipped:skin?.id??''};for(const[key,value]of Object.entries(diagnostics))if(document.body.dataset[key]!==value)document.body.dataset[key]=value;
+  const diagnostics={sapphireModels:String(records.size),sapphireNativeWeapons:String(game.player?.tools?.length??0),sapphireEquipped:skin?.id??'',sapphireCompatible:String(!!valid(skin,base))};for(const[key,value]of Object.entries(diagnostics))if(document.body.dataset[key]!==value)document.body.dataset[key]=value;
   frame=requestAnimationFrame(tick);
  }
  const dispose=()=>{stopped=true;cancelAnimationFrame(frame);for(const[root,r]of records)remove(root,r);};ensureSkinLights(B,game.scene);tick();if(typeof addEventListener==='function')addEventListener('pagehide',dispose,{once:true});return{dispose,active:()=>records.size};
