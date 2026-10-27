@@ -738,7 +738,7 @@ async function leaveFromChat(logout=false){
   await stateWrite;
   await globalThis.__localSession.online?.dispose();
   if(logout){const r=await fetch('/api/local/logout',{method:'POST',headers:{'Content-Type':'application/json'},body:'{}'});if(!r.ok)throw Error('Não foi possível encerrar a conta.');}
-  location.replace(logout?'/':'/personagens');
+  location.replace('/personagens');
 }
 function adminCommand(input) {
   const [rawCommand, ...args] = input.trim().replace(/^\//, "").split(/\s+/);
@@ -3429,9 +3429,9 @@ function mountLocalMenu() {
     if (economyUncertain) throw Error("Há uma operação sem confirmação. Recarregue antes de sair.");
     if (economyBusy || pendingLoot)
       throw Error("Aguarde a confirmação das operações antes de sair.");
-    if (!save()) throw Error("Não foi possível salvar. Tente novamente antes de sair.");
-    const state = localStorage.getItem(saveKey);
-    if (state) await sendState(JSON.parse(state));
+    if (!save(true)) throw Error("Unable to save character before leaving.");
+    // Await completion of the queued authoritative server write.
+    await stateWrite;
     await globalThis.__localSession.online?.dispose();
     if (logoutAccount) {
       const response = await fetch("/api/local/logout", {
@@ -3441,7 +3441,7 @@ function mountLocalMenu() {
       });
       if (!response.ok) throw Error("Não foi possível encerrar a sessão.");
     }
-    location.replace(logoutAccount ? "/" : "/personagens");
+    location.replace("/personagens");
   }
   charactersButton.onclick = () => leaveCharacter().catch((error) => notice(error.message));
   menu.append(charactersButton);
@@ -3500,8 +3500,12 @@ function mountLocalMenu() {
   }
   const logout = document.createElement("button");
   logout.textContent = "Sair";
-  logout.onclick = () => leaveCharacter(true).catch((error) => notice(error.message));
+  logout.onclick = () => leaveCharacter(false).catch((error) => notice(error.message));
   menu.append(logout);
+  const switchUser = document.createElement("button");
+  switchUser.textContent = "Trocar usuario";
+  switchUser.onclick = () => leaveCharacter(true).catch((error) => notice(error.message));
+  menu.append(switchUser);
   const compact = document.createElement("details");
   compact.className = "local-mobile-menu";
   const summary = document.createElement("summary");
