@@ -271,13 +271,14 @@
 }
 
 /* Class challenge control, shown alongside the native skill trainer window. */
-.vellum-skill-challenge{position:fixed;right:18px;bottom:78px;z-index:1250;max-width:min(310px,calc(100vw - 28px));font:13px/1.45 system-ui,sans-serif;color:#ebdfc3;}
+.vellum-skill-challenge{position:fixed;inset:auto auto 22px min(calc(50% + 90px),calc(100vw - 250px));margin:0;padding:0;border:0;background:transparent;color:#ebdfc3;width:min(260px,calc(100vw - 20px));max-width:none;max-height:55vh;overflow:visible;pointer-events:auto;font:13px/1.45 system-ui,sans-serif;z-index:2147483647;}
 .vellum-challenge-toggle,.vellum-challenge-details button{background:#29251d;color:#f2d49a;border:1px solid #b19a6b;border-radius:5px;padding:8px 12px;cursor:pointer;}
-.vellum-challenge-toggle{box-shadow:0 4px 16px #0009;float:right;font-weight:700;}
-.vellum-challenge-details{clear:both;background:rgba(24,21,17,.97);border:1px solid #b19a6b;border-radius:7px;padding:13px;margin-top:40px;box-shadow:0 8px 25px #0009;}
+.vellum-challenge-toggle{box-shadow:0 4px 16px #0009;font-weight:700;}
+.vellum-challenge-close{margin-left:5px;background:#29251d;border:1px solid #b19a6b;border-radius:5px;color:#f2d49a;padding:8px 10px;cursor:pointer;}
+.vellum-challenge-details{clear:both;background:rgba(24,21,17,.97);border:1px solid #b19a6b;border-radius:7px;padding:13px;margin-top:8px;box-shadow:0 8px 25px #0009;}
 .vellum-challenge-details[hidden]{display:none;}
 .vellum-challenge-details strong{color:#f6cf7f;}
 .vellum-challenge-details p{margin:9px 0;}
 .vellum-challenge-details button{display:block;width:100%;margin-top:7px;}
 .vellum-challenge-details button:disabled{opacity:.55;cursor:default;}
-@media(max-width:600px){.vellum-skill-challenge{right:8px;bottom:64px;max-width:240px;}}
+@media(max-width:600px){.vellum-skill-challenge{left:auto;right:8px;bottom:12px;width:min(230px,calc(100vw - 16px));}}
