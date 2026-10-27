@@ -89,8 +89,10 @@ def save_state(user, job, state, generation=None, require_generation=False):
         for item in (state.get('inv',{}).get('equip',{}) or {}).values():
             if isinstance(item,dict):
                 item.pop('endgame',None)
-    # Staff role display badges are account-level, not character nicknames.
-    # The persisted nickname is authoritative and is fixed to the original on writes.
+    fixed_name=identity(user['username'],user['role'])['displayName']
+    if fixed_name:
+        state['name']=fixed_name
+        if isinstance(state.get('stats'),dict):state['stats']['name']=fixed_name
     for key in ('clan','staff','crown','topClass'):state.pop(key,None)
     encoded = json.dumps(state,ensure_ascii=False,allow_nan=False)
     if len(encoded)>1000000:
@@ -105,7 +107,7 @@ def save_state(user, job, state, generation=None, require_generation=False):
             raise ValueError('Este personagem mudou ou foi excluído. Volte à seleção de personagens.')
         if previous and require_generation:
             original=json.loads(previous['state'])
-            state['name']=original.get('name') or user['username']
+            state['name']=fixed_name or original.get('name') or user['username']
             if isinstance(state.get('stats'),dict):state['stats']['name']=state['name']
             encoded=json.dumps(state,ensure_ascii=False,allow_nan=False)
         game_control.inspect_state(db,user,job,state,json.loads(previous['state']) if previous else None)
@@ -196,7 +198,7 @@ def roster(user):
         characters=[]
         for row in db.execute('SELECT c.job,c.state,v.generation FROM characters c JOIN character_versions v USING(username,job) WHERE c.username=? AND v.deleted=0 ORDER BY c.job',(user['username'],)):
             state=json.loads(row['state'])
-            characters.append({'job':row['job'],'name':state.get('name') or user['username'],
+            characters.append({'job':row['job'],'name':user.get('displayName') or state.get('name') or user['username'],
                                'level':state.get('stats',{}).get('level',1),'field':state.get('field'),
                                'generation':row['generation'],'online':active_job==row['job']})
     return {'characters':characters,'classes':[{'job':i+1,'name':name,'tribe':'Morion' if i+1 in (5,6,7,8,10) else 'Tempskron'} for i,name in enumerate(CLASS_NAMES)],'limit':11}
@@ -213,7 +215,7 @@ def manage_character(user,data):
         version=db.execute('SELECT generation FROM character_versions WHERE username=? AND job=?',(user['username'],job)).fetchone()
         if action=='create':
             if previous:raise ValueError('Você já tem um personagem desta classe.')
-            name=data.get('name','')
+            name=user.get('displayName') or data.get('name','')
             if not isinstance(name,str) or not re.fullmatch(r'[\w -]{3,18}',name) or name!=name.strip():raise ValueError('Nome: 3 a 18 letras, números, espaços ou sublinhado.')
             if name.casefold() in ('admin','administrator','administrador','gm','staff','vellum') and not (name=='VelluM' and user['username']=='admin'):raise ValueError('Este nome é reservado à Staff.')
             for other in db.execute('SELECT username,state FROM characters'):
@@ -229,7 +231,7 @@ def manage_character(user,data):
             online_world.prune(time.monotonic())
             active=online_world.PLAYERS.get(user['username'])
             if active and active['job']==job:raise ValueError('Saia deste personagem antes de excluí-lo. Se fechou a aba, aguarde 12 segundos.')
-            name=json.loads(previous['state']).get('name') or user['username']
+            name=user.get('displayName') or json.loads(previous['state']).get('name') or user['username']
             if data.get('confirmation')!=name:raise ValueError('Digite o nome exato do personagem para confirmar.')
             password=data.get('password')
             row=db.execute('SELECT salt,digest FROM users WHERE username=?',(user['username'],)).fetchone()

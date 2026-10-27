@@ -76,13 +76,8 @@ function detail() {
     return;
   }
   const type = roster.classes.find((c) => c.job === selected.job);
-  const heroPreview = node("div", undefined, "character-hero-preview");
-  const portrait = icon(selected.job);
-  portrait.classList.add("character-hero-portrait");
-  portrait.alt = "Emblema de " + type.name;
-  heroPreview.append(portrait, node("span", type.name.toUpperCase(), "character-hero-caption"));
   panel.append(
-    heroPreview,
+    icon(selected.job),
     node("span", type.tribe, "eyebrow"),
     node("h2", selected.name),
     node("p", descriptions[selected.job - 1], "muted"),
@@ -153,12 +148,7 @@ function render() {
     card.dataset.job = character.job;
     card.setAttribute("aria-pressed", String(selected?.job === character.job));
     card.append(
-      (() => {
-        const image=icon(character.job);
-        image.classList.add("character-card-portrait");
-        image.alt="Classe "+type.name;
-        return image;
-      })(),
+      icon(character.job),
       node("small", type.tribe.toUpperCase()),
       node("strong", character.name),
       node("span", `${type.name} · Nível ${character.level}`),
@@ -259,8 +249,8 @@ $("#new-character").onclick = () => {
     select.append(option);
   }
   const name = form.elements.name;
-  name.readOnly = false;
-  name.value = "";
+  name.readOnly = !!account.displayName;
+  name.value = account.displayName ?? "";
   select.onchange = () => {
     $("#class-description").textContent = descriptions[Number(select.value) - 1];
   };
@@ -319,16 +309,7 @@ for (const dialog of document.querySelectorAll("dialog"))
 $("#logout").onclick = async () => {
   try {
     await api("/api/local/logout", {});
-    account = null;
-    roster = null;
-    selected = null;
-    document.body.dataset.rosterReady = "false";
-    $("#login").reset();
-    $("#entry").hidden = false;
-    $("#roster").hidden = true;
-    $("#account-nav").hidden = true;
-    $("#message").textContent = "Sessao encerrada. Entre com outra conta.";
-    history.replaceState(null, "", "/personagens");
+    location.replace("/");
   } catch (error) {
     $("#roster-message").textContent = error.message;
   }
