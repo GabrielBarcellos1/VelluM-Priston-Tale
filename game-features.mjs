@@ -45,7 +45,19 @@ export function createGameFeatures(c){
   if(q.id.startsWith('rank.2.2.'))loanWeapon();
   c.notice(q.offer??'Consulte os objetivos no Guia de Missões (Q).');
  }
- function openNpc(npc){return openNpcServices(npc,{game:c.game,rank:c.world.rank,level:()=>c.stats.level,classQuests:()=>c.views().filter(q=>q.id.startsWith('rank.')),skills:c.openSkills,rankAction,recoverWeapon:()=>{if(!c.completed.has('rank.2'))throw Error('Conclua a coleta dos Vamps primeiro.');loanWeapon();c.save();c.notice('Arma emprestada disponível.');},action:npcAction,refresh:c.refresh,trial:()=>c.meta.trial,enterTrial:t=>{c.meta.trial=t;c.meta.trial.kills=0;c.navigate(30);}});}
+ function openNpc(npc){return openNpcServices(npc,{game:c.game,rank:c.world.rank,level:()=>c.stats.level,canPromote:()=>c.world.allSkillsThrough(c.world.rank()+1),promote:async()=>{
+  if(!npcTeacher(npc.id))throw Error('Aproxime-se do Mestre de Habilidades.');
+  const current=c.world.rank(),minimum=[20,40,60][current];
+  if(current>=3||c.stats.level<minimum)throw Error('A próxima promoção ainda não está disponível.');
+  if(!c.world.allSkillsThrough(current+1))throw Error('Aprenda todas as habilidades da Tier atual antes de promover.');
+  c.completed.add('rank.auto.'+(current+1));
+  c.stats.classRank=c.world.rank();
+  c.recalculate();c.publish();
+  if(!c.save(true))throw Error('Não foi possível salvar a promoção.');
+  await c.flush();
+  c.notice('Promoção concluída! Tier '+(current+2)+' liberada.');
+  c.promoted();
+ },skills:c.openSkills,action:npcAction,refresh:c.refresh,trial:()=>c.meta.trial,enterTrial:t=>{c.meta.trial=t;c.meta.trial.kills=0;c.navigate(30);}});}
  function spawn(def,extra={},offset=200){
   const g=c.game(),p=g.ground.spawnPoint(g.pos.x+offset,g.pos.z+80);if(!p)return null;
   const m={id:++id,name:def.name,level:def.level,definition:def,model:def.model.replace(/\\/g,'/').replace(/\.[^/.]+$/,'').toLowerCase(),x:p.x,y:p.y,z:-p.z,hp:def.hp,hpMax:def.hp,motion:'stand',angle:0,seq:0,body:20,nextAttack:0,featureSpawn:true,...extra};
