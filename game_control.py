@@ -307,16 +307,12 @@ def pickup(user,data):
 
 
 def pending_gold(user,data):
-    # Recover unclaimed gold when returning to the same map after reconnecting.
+    # Re-entering or changing maps forfeits uncollected gold; never restore it.
     with accounts.connection() as db:
         setup(db)
         job,saved,_=context(user,data,db)
-        rows=db.execute("SELECT id,quantity,detail FROM game_events WHERE username=? AND job=? AND map=? AND kind='drop' AND code='GOLD' AND status='generated' ORDER BY id DESC LIMIT 200",(user['username'],job,saved.get('field'))).fetchall()
-        result=[]
-        for row in rows:
-            point=json.loads(row['detail'] or '{}')
-            result.append({'eventId':row['id'],'gold':row['quantity'],'x':point.get('x',0),'z':point.get('z',0)})
-        return {'ok':True,'goldDrops':result}
+        db.execute("UPDATE game_events SET status='expired' WHERE username=? AND job=? AND kind='drop' AND code='GOLD' AND status='generated'",(user['username'],job))
+        return {'ok':True,'goldDrops':[]}
 
 
 def history(user,query,kind='drop'):

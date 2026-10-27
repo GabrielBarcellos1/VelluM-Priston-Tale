@@ -12,9 +12,19 @@ export function questReadyToast(quest,claim){
 }
 export function mountClassCrest(game,B,rank){
  const spec=classCrest(rank);if(!spec||!game.player?.object)return{dispose(){}};
- const geometry=new B.RingGeometry(4,7,spec.points),material=new B.MeshBasicMaterial({color:spec.color,side:2,transparent:true,opacity:.95}),mesh=new B.Mesh(geometry,material);
- mesh.position.set(0,44,0);mesh.name=spec.name;game.player.object.add(mesh);
- return {dispose(){mesh.parent?.remove(mesh);geometry.dispose();material.dispose();}};
+ const group=new B.Group();group.name=spec.name;
+ const gold=new B.MeshBasicMaterial({color:0xf0c568,side:2});
+ const jewel=new B.MeshBasicMaterial({color:spec.color,side:2});
+ const metal=new B.RingGeometry(5,7,8);
+ const base=new B.Mesh(metal,gold);base.rotation.x=-Math.PI/2;group.add(base);
+ for(let i=0;i<5;i++){
+  const angle=(i/5)*Math.PI*2;
+  const spike=new B.Mesh(new B.ConeGeometry(2.8,9+(i===0?4:0),4),gold);
+  spike.position.set(Math.cos(angle)*6.5,5,Math.sin(angle)*6.5);group.add(spike);
+ }
+ const core=new B.Mesh(new B.OctahedronGeometry(5,0),jewel);core.position.set(0,6,0);group.add(core);
+ group.position.set(0,49,0);game.player.object.add(group);
+ return {dispose(){group.parent?.remove(group);group.traverse(obj=>{obj.geometry?.dispose();});gold.dispose();jewel.dispose();}};
 }
 export async function openNpcServices(npc,ctx){
  const services=npc.services??[];ctx.game()?.keys.clear();

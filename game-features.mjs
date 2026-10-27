@@ -125,6 +125,6 @@ export function createGameFeatures(c){
   return false;
  }
  return {openNpc,loanWeapon,npcTeacher,defeated,tick,travel:map=>c.navigate(map),ready(q){c.notice('Objetivos concluídos: '+q.title+'. Abra Q para concluir.');questReadyToast(q,id=>id.startsWith('rank.')?(c.notice('Entregue este desafio ao Mestre de Habilidades.'),false):c.complete(id));},
-  promoted(){c.stats.classRank=c.world.rank();if(c.stats.classRank>0)c.notice('Promoção concluída! Nova insígnia e habilidades liberadas.');c.save();setTimeout(()=>c.reload(),1500);},
+  promoted(){c.stats.classRank=c.world.rank();if(c.stats.classRank>0)c.notice('Promoção concluída! Nova insígnia e habilidades liberadas.');crest?.dispose();crest=mountClassCrest(c.game(),c.B,c.stats.classRank);c.recalculate();c.openSkills();c.save(true);},
   start(){crest=mountClassCrest(c.game(),c.B,c.world.rank());tick();timer=setInterval(tick,5000);},dispose(){clearInterval(timer);crest?.dispose();}};
 }

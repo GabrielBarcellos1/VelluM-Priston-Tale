@@ -1230,14 +1230,17 @@ function renderGroundLoot() {
     const distance = game?.pos ? Math.hypot(game.pos.x-drop.state.x, game.pos.z+drop.state.z) : Infinity;
     const label = document.createElement('span');
     label.textContent = drop.gold ? `${drop.gold} ouro` : `${drop.item.name} ×${drop.item.count ?? 1}`;
-    const take = document.createElement('button');
-    take.type = 'button'; take.textContent = distance <= 100 ? 'Pegar' : 'Aproxime-se';
-    take.disabled = distance > 100 || economyBusy;
-    take.onclick = async event => {
-      event.stopPropagation();take.disabled = true;
-      try { await handle({t:'pickup',id}); } finally { renderGroundLoot(); }
+    const hint = document.createElement('small');
+    hint.textContent = 'Clique para ir até o item';
+    row.tabIndex=0;row.setAttribute('role','button');
+    const walk=()=>{
+      const view=game?.items?.views?.get(id);
+      if(view?.pos && view?.g && typeof game.goPickup==='function')game.goPickup(view);
+      else notice('Aguarde o item aparecer no chão e clique nele para recolher.');
     };
-    row.append(label,take);panel.append(row);
+    row.onclick=walk;
+    row.onkeydown=event=>{if(event.key==='Enter'||event.key===' '){event.preventDefault();walk();}};
+    row.append(label,hint);panel.append(row);
   }
   if (groundDrops.size > entries.length) {
     const rest = document.createElement('small');
@@ -1791,7 +1794,10 @@ function npcTalk(id, interactive) {
   if (npc.services?.includes("event") && /event girl/i.test(npc.name)) {
     showRedistribution(npc);
   } else if (npc.services?.includes("shop")) {
-    const stock = (npc.shop ?? []).map((code) => definitions.get(code)).filter(Boolean);
+    game.keys.clear();
+    const panel=serviceDialog(npc.name,'Escolha como comprar nesta loja da cidade. Itens da loja de coins são adquiridos pelo catálogo premium; skins são apenas cosméticas.');
+    panel.button('Itens comuns por ouro',async()=>{
+      panel.close();    const stock = (npc.shop ?? []).map((code) => definitions.get(code)).filter(Boolean);
     // The native shop hides misc whenever an equipment tab is populated.
     const supplies = stock.some(i => i.slot === "POTION");
     game.events.emit("npcOpen", {
@@ -1807,7 +1813,10 @@ function npcTalk(id, interactive) {
         vipPct: 0,
         taxPct: 0,
       },
+      });
     });
+    panel.button('Item Shop - itens por coins',async()=>{panel.close();await showShop();});
+    panel.button('Skins por coins',async()=>{panel.close();await globalThis.__localSession.skinShop?.open();});
   } else if (npc.services?.includes("skill")) {
     skills.publish();
     gameFeatures.openNpc(npc).catch(e=>notice(e.message));

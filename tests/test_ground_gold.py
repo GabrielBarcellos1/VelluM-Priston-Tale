@@ -21,10 +21,7 @@ class GroundGold(ServerAudit):
         drop=r['goldDrop']
         self.assertEqual(drop['gold'],43)
         self.assertEqual(accounts.load_state('audituser',1)['stats']['gold'],before)
-        pending=game.pending_gold(self.user,{'job':1,'generation':self.generation})['goldDrops']
-        self.assertEqual(len(pending),1)
-        self.assertEqual(pending[0]['eventId'],drop['eventId'])
-        self.assertEqual(pending[0]['x'],100)
+        # Collection happens while playing, before reconnect or a map change.
         req={'job':1,'generation':self.generation,'eventId':drop['eventId'],'requestId':uuid.uuid4().hex}
         c=game.pickup(self.user,req)
         self.assertEqual(c['goldBalance'],before+43)
@@ -33,6 +30,12 @@ class GroundGold(ServerAudit):
         self.assertEqual(game.pending_gold(self.user,{'job':1,'generation':self.generation})['goldDrops'],[])
         with self.assertRaises(ValueError):
             game.pickup(self.user,{**req,'requestId':uuid.uuid4().hex})
+    def test_unclaimed_gold_expires_on_reconnect(self):
+        r=self.gold_kill()
+        self.assertEqual(game.pending_gold(self.user,{'job':1,'generation':self.generation})['goldDrops'],[])
+        with self.assertRaisesRegex(ValueError,'Drop inexistente'):
+            game.pickup(self.user,{'job':1,'generation':self.generation,'eventId':r['goldDrop']['eventId'],'requestId':uuid.uuid4().hex})
+        self.assertEqual(accounts.load_state('audituser',1)['stats']['gold'],1000000)
     def test_gold_not_collected_from_another_map(self):
         r=self.gold_kill()
         state=accounts.load_state('audituser',1)
