@@ -1190,6 +1190,42 @@ const skills = createSkillSystem({
   },
 });
 const groundDrops = new Map();
+function renderGroundLoot() {
+  let panel = document.getElementById('vellum-ground-loot');
+  if (!groundDrops.size) { panel?.remove(); return; }
+  if (!panel) {
+    panel = document.createElement('aside');
+    panel.id = 'vellum-ground-loot';
+    panel.setAttribute('aria-label', 'Itens no chão');
+    document.body.append(panel);
+  }
+  panel.replaceChildren();
+  const heading = document.createElement('strong');
+  heading.textContent = `Itens no chão (${groundDrops.size})`;
+  panel.append(heading);
+  const entries = [...groundDrops.entries()].slice(-8);
+  for (const [id, drop] of entries) {
+    const row = document.createElement('div');
+    row.className = 'vellum-loot-row';
+    const distance = game?.pos ? Math.hypot(game.pos.x-drop.state.x, game.pos.z+drop.state.z) : Infinity;
+    const label = document.createElement('span');
+    label.textContent = `${drop.item.name} ×${drop.item.count ?? 1}`;
+    const take = document.createElement('button');
+    take.type = 'button'; take.textContent = distance <= 100 ? 'Pegar' : 'Aproxime-se';
+    take.disabled = distance > 100 || economyBusy;
+    take.onclick = async event => {
+      event.stopPropagation();take.disabled = true;
+      try { await handle({t:'pickup',id}); } finally { renderGroundLoot(); }
+    };
+    row.append(label,take);panel.append(row);
+  }
+  if (groundDrops.size > entries.length) {
+    const rest = document.createElement('small');
+    rest.textContent = `Mais ${groundDrops.size-entries.length} itens no chão.`;
+    panel.append(rest);
+  }
+}
+
 let nextDropId = 1000000;
 const warehouse = { items: [], gold: 0, pages: 3, weightMax: 10000, locked: [] };
 if (stored?.warehouse) {
@@ -1276,6 +1312,7 @@ function dropLoot(monster) {
       }
       if (add.length) {
         deliver({ t: "ground", add });
+        renderGroundLoot();
         notice(
           `Drop de ${source.name}: ${add.map((d) => d.name).join(", ")}. Clique para recolher.`,
         );
@@ -1983,6 +2020,7 @@ async function handle(message) {
       }
       groundDrops.delete(message.id);
       deliver({ t: "ground", remove: [message.id] });
+      renderGroundLoot();
       recalculate();
       updateQuests("item", drop.item.code);
       updateQuests("pickup",{});
@@ -2723,6 +2761,7 @@ async function activateMap(next) {
   deliver({ t: "ground", remove: [...groundDrops.keys()] });
   monsters.clear();
   groundDrops.clear();
+  renderGroundLoot();
   for (const [id, pet] of companions) if (pet.converted) companions.delete(id);
   const seamArrival = !next.portal && forestSeamArrival(field.id, target, game.playerPosition());
   Object.assign(field, target);
@@ -2871,6 +2910,7 @@ try {
   }
   globalThis.__localSession.ui = B.ui(game, conn, hero);
   disableLegacyMissions();
+  setInterval(() => { if (groundDrops.size) renderGroundLoot(); }, 1500);
   B.Runtime.set(game);
   mountLocalSkillCasting(game,()=>!!field.village);
   mountGmMovement();
