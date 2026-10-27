@@ -3101,7 +3101,7 @@ try {
 function mountLocalMenu() {
   const style = document.createElement("style");
   style.textContent =
-    ".local-controls{position:fixed;top:10px;left:10px;z-index:50;display:flex;flex-wrap:wrap;gap:6px;align-items:center;max-width:calc(100vw - 230px);padding:7px 10px;color:#eedaae;background:#171813dc;border:1px solid #ac9158;border-radius:3px;font:11px Georgia,serif}.local-controls label{display:flex;gap:5px;align-items:center}.local-controls select,.local-controls button{font:11px Georgia,serif;color:#eedaae;background:#27271e;border:1px solid #7d714e;padding:4px;border-radius:2px}.local-controls>span{color:#c5bc97;margin-right:4px}@media(max-width:700px){.local-controls{max-width:calc(100vw - 20px);top:4px;left:4px;font-size:9px}.local-controls select{max-width:130px}}";
+    ".sup-launch{top:var(--local-toolbar-bottom,10px)!important}.local-controls{position:fixed;top:10px;left:10px;z-index:50;display:flex;flex-wrap:wrap;gap:6px;align-items:center;max-width:calc(100vw - 230px);padding:7px 10px;color:#eedaae;background:#171813dc;border:1px solid #ac9158;border-radius:3px;font:11px Georgia,serif}.local-controls label{display:flex;gap:5px;align-items:center}.local-controls select,.local-controls button{font:11px Georgia,serif;color:#eedaae;background:#27271e;border:1px solid #7d714e;padding:4px;border-radius:2px}.local-controls>span{color:#c5bc97;margin-right:4px}@media(max-width:700px){.local-controls{max-width:calc(100vw - 20px);top:4px;left:4px;font-size:9px}.local-controls select{max-width:130px}}";
   document.head.append(style);
   const menu = document.createElement("div");
   menu.className = "local-controls";
@@ -3112,9 +3112,12 @@ function mountLocalMenu() {
     "touchstart",
     "touchend",
     "wheel",
-    "keydown",
   ])
     menu.addEventListener(type, (event) => event.stopPropagation());
+  menu.addEventListener("keydown", event => {
+    if (event.target.closest("input,select,textarea,[contenteditable=true]") ||
+        ["Enter"," ","Spacebar"].includes(event.key)) event.stopPropagation();
+  });
   const caption = document.createElement("span");
   caption.textContent = `FREEston Tale ${loadedBuild.version} · ${stats.name} (${account.username}) · ${account.role === "admin" ? "Administrador" : account.role === "gm" ? "GM" : "Jogador"}`;
   caption.textContent += ` · ${characterClass.name}`;
@@ -3235,6 +3238,16 @@ function mountLocalMenu() {
   }
   compact.append(menu);
   document.body.append(compact);
+  const placeNativeShortcuts = () => {
+    const box=menu.getBoundingClientRect(), small=summary.getBoundingClientRect();
+    const bottom=Math.max(box.width ? box.bottom : 0, small.width ? small.bottom : 0);
+    document.documentElement.style.setProperty("--local-toolbar-bottom", Math.ceil(bottom+8)+"px");
+  };
+  const toolbarSize = new ResizeObserver(placeNativeShortcuts);
+  toolbarSize.observe(menu); toolbarSize.observe(summary);
+  compact.addEventListener("toggle", placeNativeShortcuts);
+  addEventListener("resize", placeNativeShortcuts);
+  placeNativeShortcuts();
 }
 
 if (gameplayTestMode) setInterval(() => {
