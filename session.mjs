@@ -621,7 +621,7 @@ function syncGm() {
   });
   if (game?.player) game.player.object.visible = !adminState.hidden;
 }
-function spawnAdminMonster(def, count = 1) {
+function spawnAdminMonster(def, count = 1, options = {}) {
   if (monsters.size + count > 1000)
     throw Error("Limite de 1000 monstros. Use /limpar para liberar espaço.");
   const add = [];
@@ -649,6 +649,8 @@ function spawnAdminMonster(def, count = 1) {
       definition: def,
       nextAttack: 0,
       adminSpawn: true,
+      ...(options.ally ? { gmAlly: true, featureSpawn: true } : {}),
+      ...(options.levelUp ? { gmLevelUp: true } : {}),
     };
     monsters.set(id, m);
     add.push(publicMonster(m));
@@ -812,13 +814,24 @@ function adminCommand(input) {
       result = `${item.name} criado para classe ${spec}${age ? `, aging +${age}` : ""}.`;
       break;
     }
+    case "mymonster": {
+      if (!args.length) throw Error('Use /mymonster NOME.');
+      const def = resolveName(wiki.monsters,args.join(' '));
+      for (const [id,m] of [...monsters]) if (m.gmAlly) {
+        monsters.delete(id);deliver({t:'monsters',remove:[id]});
+      }
+      result = spawnAdminMonster(def,1,{ally:true})+' Aliado GM ativo neste mapa.';
+      break;
+    }
     case "valento":
     case "monstro": {
       const forceDrop=args.at(-1)?.toLowerCase()==='drop';if(forceDrop)args.pop();
-      const def=resolveName(wiki.monsters,command==='valento'?'Valento':args.join(' '));
-      if(def.boss)return bossRoulette.spawn(def,forceDrop);
+      const levelUp = command==='monstro' && args.length===1 && args[0].toLowerCase()==='hopiup';
+      const count = command==='monstro' && !levelUp && /^\d+$/.test(args.at(-1)??'') ? integer(args.pop(),1,10) : 1;
+      const def=resolveName(wiki.monsters,command==='valento'?'Valento':levelUp?'Hopi':args.join(' '));
+      if(def.boss){if(count!==1)throw Error('Boss permite apenas uma invocação por vez.');return bossRoulette.spawn(def,forceDrop);}
       if(forceDrop)throw Error('A opção drop requer um Boss.');
-      result = spawnAdminMonster(def);
+      result = spawnAdminMonster(def,count,{levelUp});
       break;
     }
     case "criar": {
@@ -1813,7 +1826,7 @@ function damageMonster(id, power = 1, rangeOverride = null, options = {}) {
   if (monster.hp === 0) monster.seq++;
   deliver({
     t: "damage",
-    from: 0,
+    from: options.sourceId ?? 0,
     to: id,
     amount,
     hp: monster.hp,
@@ -1834,7 +1847,10 @@ function damageMonster(id, power = 1, rangeOverride = null, options = {}) {
     kills++;
     const gained = mapKillExperience(monster.definition);
     monster.gmTraining=gmExpActive();
-    if(!monster.gmTraining)gainExperience(gained);
+    if(monster.gmLevelUp && isAdmin && stats.level < 150) {
+      gainExperience(Math.max(0,experienceFloor(stats.level+1,balanceRules)-stats.exp));
+      notice('Hopi UP: +1 nível de GM!');
+    } else if(!monster.gmTraining && !monster.gmLevelUp) gainExperience(gained);
     dropLoot(monster);
     updateQuests('kill',{id:monster.definition.id,name:monster.name,field:field.id});
     for(const [code,at]of Object.entries(monster.skillMarks??{}))if(performance.now()-at<=10000)updateQuests("skillKill",{code});
@@ -2954,6 +2970,24 @@ try {
     );
     const update = [];
     for (const monster of monsters.values()) {
+      if(monster.gmAlly){
+        if(monster.hp<=0 || field.village || now < (monster.nextAllyAttack??0))continue;
+        const enemies=[...monsters.values()].filter(m=>m!==monster && !m.gmAlly && !m.owner && !m.sharedBoss && m.hp>0 && Math.hypot(game.pos.x-m.x,-game.pos.z-m.z)<1600);
+        enemies.sort((a,b)=>Math.hypot(monster.x-a.x,monster.z-a.z)-Math.hypot(monster.x-b.x,monster.z-b.z));
+        const enemy=enemies[0];if(!enemy)continue;
+        const distance=Math.hypot(monster.x-enemy.x,monster.z-enemy.z);
+        if(distance>150){
+          const x=enemy.x+(monster.x-enemy.x)/distance*95,z=enemy.z+(monster.z-enemy.z)/distance*95;
+          const ground=game.ground.spawnPoint(x,-z);
+          if(ground){monster.x=ground.x;monster.y=ground.y;monster.z=-ground.z;monster.seq++;update.push({id:monster.id,x:monster.x,y:monster.y,z:monster.z,seq:monster.seq,motion:'walk'});}
+        }
+        monster.nextAllyAttack=now+1200;
+        if(Math.hypot(monster.x-enemy.x,monster.z-enemy.z)<240){
+          monster.seq++;update.push({id:monster.id,motion:'attack',seq:monster.seq});
+          damageMonster(enemy.id,1,100000,{fixedDamage:Math.max(100,Math.ceil(enemy.hpMax/3)),noLeech:true,sourceId:monster.id});
+        }
+        continue;
+      }
       const timing = nativeMonsterTiming(game.monsters.views.get(monster.id)?.model);
       const step = stepMonster(monster, {
         attackDuration: timing.duration,
