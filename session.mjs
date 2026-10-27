@@ -1,6 +1,6 @@
 import { questTarget } from "/quest-targets.mjs";
 import { serviceDialog } from "/npc-panels.mjs";
-import { walkingStages, createMapTravel } from "/map-travel.mjs";
+import { walkingStages, createMapTravel, forestSeamArrival } from "/map-travel.mjs";
 import {
   repairPrice,
   salePrice,
@@ -2710,8 +2710,9 @@ async function activateMap(next) {
   monsters.clear();
   groundDrops.clear();
   for (const [id, pet] of companions) if (pet.converted) companions.delete(id);
+  const seamArrival = !next.portal && forestSeamArrival(field.id, target, game.playerPosition());
   Object.assign(field, target);
-  const at = next.portal ? next.position : game.playerPosition();
+  const at = next.portal ? next.position : seamArrival ?? game.playerPosition();
   Object.assign(enter, { fieldId: field.id, stage: field.stage, name: field.name,
     bgm: field.village ? "town2" : "forest", x: at.x, z: at.z, y: null });
   hero.startField = field.id;
@@ -2721,7 +2722,7 @@ async function activateMap(next) {
   game.attackHeld = false;
   deliver(fieldPacket());
   deliver({ t: "npcs", npcs });
-  if (next.portal) {
+  if (next.portal || seamArrival) {
     deliver({ t: "teleport", fieldId: field.id, x: at.x, z: at.z, y: null, warp: true });
   }
   await game.stageLoad;
