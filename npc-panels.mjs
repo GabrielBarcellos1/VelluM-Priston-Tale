@@ -16,56 +16,16 @@ export function mountClassCrest(game,B,rank){
  mesh.position.set(0,44,0);mesh.name=spec.name;game.player.object.add(mesh);
  return {dispose(){mesh.parent?.remove(mesh);geometry.dispose();material.dispose();}};
 }
-export function mountSkillChallenge(npc,ctx){
- document.getElementById('vellum-skill-challenge')?.remove();
- const box=document.createElement('dialog');
- box.id='vellum-skill-challenge';box.className='vellum-skill-challenge';
- box.setAttribute('aria-label','Desafio de classe');
- box.addEventListener('cancel',event=>event.preventDefault());
- box.addEventListener('keydown',event=>event.stopPropagation());
- const toggle=document.createElement('button'),details=document.createElement('div');
- toggle.type='button';toggle.className='vellum-challenge-toggle';toggle.textContent='Desafio de classe';
- details.className='vellum-challenge-details';details.hidden=true;
- const draw=()=>{
-  details.replaceChildren();
-  const title=document.createElement('strong');
-  const next=ctx.rank()+2,level=ctx.level(),required=[20,40,60][ctx.rank()]??0;
-  title.textContent=ctx.rank()>=3?'Todas as tiers concluídas':'Desafio da Tier '+next;
-  details.append(title);
-  const info=document.createElement('p');
-  info.textContent=ctx.rank()>=3?'Você já liberou todas as habilidades de classe.':
-   level<required?'Disponível no nível '+required+'. Seu nível atual: '+level+'.':
-   next===2?'Ao aceitar, a Tier 2 será concluída imediatamente e as novas habilidades serão liberadas.':
-   'Consulte e conclua os objetivos do desafio para liberar as habilidades da próxima Tier.';
-  details.append(info);
-  const quest=ctx.classQuests().find(q=>q.state==='ready'||q.state==='available'||q.state==='active');
-  if(quest&&level>=required){
-   const action=document.createElement('button');action.type='button';
-   action.textContent=quest.state==='ready'?'Concluir desafio':quest.state==='active'?'Ver desafio ativo':'Aceitar desafio';
-   action.disabled=quest.state==='active';
-   action.onclick=async()=>{action.disabled=true;try{await ctx.rankAction(quest,npc.id);draw();}catch(e){info.textContent=e.message;action.disabled=false;}};
-   details.append(action);
-  }
-  if(ctx.rank()===1){
-   const recover=document.createElement('button');recover.type='button';recover.textContent='Recuperar arma de desafio';
-   recover.onclick=()=>{try{ctx.recoverWeapon();}catch(e){info.textContent=e.message;}};
-   details.append(recover);
-  }
- };
- toggle.onclick=event=>{event.stopPropagation();details.hidden=!details.hidden;if(!details.hidden)draw();};
- const close=document.createElement('button');
- close.type='button';close.className='vellum-challenge-close';close.textContent='×';close.setAttribute('aria-label','Fechar desafio');
- close.onclick=()=>{box.close();box.remove();};
- box.append(toggle,close,details);
- document.body.append(box);
- box.show(); // Native non-modal top layer: game canvas cannot swallow the button click.
- return box;
-}
 export async function openNpcServices(npc,ctx){
  const services=npc.services??[];ctx.game()?.keys.clear();
  if(services.includes('skill')){
+  document.getElementById('vellum-skill-challenge')?.remove();
   ctx.skills(npc.id);
-  mountSkillChallenge(npc,ctx);
+  const tier=ctx.rank(),required=[20,40,60][tier];
+  if(tier<3 && ctx.level()>=required && ctx.canPromote()){
+   const panel=serviceDialog('Promoção de classe',`Todas as habilidades da Tier ${tier+1} foram aprendidas. Aceitar a nova classe conclui a promoção e libera as habilidades da Tier ${tier+2}.`);
+   panel.button('Aceitar nova classe - Tier '+(tier+2),async()=>{await ctx.promote();panel.close();});
+  }
   return;
  }
  const service=services.find(s=>['charity','post','clan','levelRanking','smelting','manufacture','bellatra'].includes(s));
