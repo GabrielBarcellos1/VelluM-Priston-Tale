@@ -35,7 +35,7 @@ import { promotionRank, createWorldQuests, mergeNpcRecords } from "/world-quests
 import { agingEventChances, eventExperience } from "/economy-effects.mjs";
 import { mountBossRoulette } from "/boss-roulette.mjs";
 import { createGameFeatures } from "/game-features.mjs";
-import { createClassicEndgame, CLASSIC_QUESTS } from "/classic-endgame.mjs";
+import { createClassicEndgame, CLASSIC_QUESTS, FURY_WEAPONS, furyHealthAfterHit } from "/classic-endgame.mjs";
 import { objectiveValue, objectiveIncrement, questCollectionCode } from "/quest-progress.mjs";
 import { experienceFloor, migrateExperience, killExperience, mapExperienceRange, mapExperienceAllowed, capKillExperience, classDamageScale, balanceMonster, questExperienceReward, potionCanUse, registerPotion } from "/balance-rules.mjs";
 import { monsterControl, applyConversionHealth, restoreConversionHealth, mountLocalSkillCasting } from "/skill-runtime.mjs";
@@ -344,6 +344,7 @@ function restoreItem(item, options = {}) {
   result.uid = number(item.uid, result.uid, 1);
   nextUid = Math.max(nextUid, result.uid);
   restoreItemRolls(result,item,options);
+  if(item.furyQuestReward)result.furyQuestReward=true;
   if(item.questWeapon){result.questWeapon=structuredClone(item.questWeapon);result.req={level:40};result.noGold=true;result.bound=true;result.name=item.name;}
   if(item.expiresAt){result.expiresAt=item.expiresAt;result.noGold=true;result.bound=true;}
   return result;
@@ -1810,8 +1811,37 @@ function npcTalk(id, interactive) {
   updateQuests("talk", id);
   if (classicEndgame?.actions(id).length) {
     const panel=serviceDialog(npc.name,"Missões clássicas do nível 80 em diante.");
-    for(const action of classicEndgame.actions(id)) panel.button(action.label+" — "+action.detail,()=>{
-      const response=classicEndgame.choose(action.id);notice(response);panel.close();recalculate();skills.publish();
+    for(const action of classicEndgame.actions(id)) panel.button(action.label+" ? "+action.detail,async()=>{
+      try {
+        if(action.id==='classic.furyghost' && classicEndgame.entries['classic.furyghost'].stage===8){
+          panel.close();
+          const choose=serviceDialog(npc.name,'Escolha uma arma especial do nivel 100 para receber na bolsa.');
+          for(const [code,name] of FURY_WEAPONS) choose.button(name,async()=>{
+            if(economyBusy)return;
+            economyBusy=true;
+            const oldInv=clone(inv);
+            try{
+              const item=instance(code);
+              if(item)item.furyQuestReward=true;
+              if(!item||!addBag(item))throw Error('Bolsa cheia. Libere espaco para a arma.');
+              classicEndgame.claimFury(code);
+              if(!save(true))throw Error('Falha ao salvar recompensa.');
+              await stateWrite;
+              recalculate();choose.close();notice(name+' recebida e missao concluida!');
+            }catch(error){
+              Object.assign(inv,oldInv);completed.delete('classic.furyghost');
+              const progress=classicEndgame.entries['classic.furyghost'];
+              progress.stage=8;delete progress.rewardCode;
+              recalculate();notice(error.message);
+            }finally{economyBusy=false;}
+          });
+          return;
+        }
+        const response=classicEndgame.choose(action.id);
+        notice(response);panel.close();recalculate();skills.publish();
+        if(action.id==='classic.furyghost' && classicEndgame.arenaPhase())
+          await gameFeatures.navigate(32);
+      }catch(error){notice(error.message);}
     });
     return;
   }
@@ -1939,6 +1969,17 @@ function damageMonster(id, power = 1, rangeOverride = null, options = {}) {
   else if(!options.noLeech)updateQuests('normalHit',{});
   if(monster.sharedBoss){bossRoulette.hit(monster,amount);monster.aggroUntil=performance.now()+10000;
    const recovered=options.noLeech?{hp:0,mp:0}:premiumRecovery(stats,premiumValue,dealt,{area:options.area});stats.hp+=recovered.hp;stats.mp+=recovered.mp;return dealt;}
+  if(monster.questFury){
+    const next=furyHealthAfterHit(monster.hp,monster.hpMax,monster.questFury.heals,amount);
+    monster.questFury.heals=next.heals;
+    if(next.recovered){
+      monster.hp=next.hp;monster.aggroUntil=performance.now()+10000;monster.seq++;
+      deliver({t:'damage',from:0,to:id,amount,hp:next.hp,hpMax:monster.hpMax,kind,atk:true,mseq:monster.seq});
+      deliver({t:'monsters',update:[{id,hp:next.hp,seq:monster.seq,motion:'stand'}],ts:performance.now()/1000});
+      notice('Furia recuperou HP! '+next.heals+' de 3 recuperacoes.');
+      return dealt;
+    }
+  }
   monster.hp = Math.max(0, monster.hp - amount);
   monster.aggroUntil = performance.now() + 10000;
   const recovered = options.noLeech
@@ -1967,6 +2008,14 @@ function damageMonster(id, power = 1, rangeOverride = null, options = {}) {
     ts: performance.now() / 1000,
   });
   if (monster.hp === 0) {
+    if(monster.questFury){
+      try{
+        classicEndgame.arenaDefeated(monster.questFury.heals);
+        notice('Furia derrotado! Retornando ao Mago Ray.');
+        setTimeout(()=>gameFeatures.navigate(21).catch(e=>notice(e.message)),1900);
+      }catch(error){notice(error.message);}
+      return dealt;
+    }
     if(gameFeatures.defeated(monster))return dealt;
     kills++;
     const gained = mapKillExperience(monster.definition);
@@ -2447,6 +2496,8 @@ async function handle(message) {
     }
     case "useItem": {
       const item = findItem(message.uid);
+      if(typeof field!=='undefined' && field.id===32 && classicEndgame?.arenaPhase() && item?.slot==='ECORE')
+        return notice('Nao e permitido usar Core durante o duelo com Fury.');
       if(item?.code===GM_POTION){try{await gmOperation("activate",{uid:item.uid});}catch(e){notice(e.message);}break;}
       if (item?.slot === "ECORE") {
         const destination = { EC101: 3, EC104: 21 }[item.code];
@@ -2824,6 +2875,7 @@ conn.send = (packet) => {
 conn.close = () => save();
 
 function spawnMapPopulation() {
+  if(field.id===32 && classicEndgame?.arenaPhase())return;
   let seed = field.id + 1337;
   const random = () => {
     seed = (seed * 1664525 + 1013904223) >>> 0;
@@ -2882,6 +2934,30 @@ function spawnMapPopulation() {
     });
   }
 
+}
+function spawnQuestFury(){
+  if(field.id!==32)return;
+  const phase=classicEndgame?.arenaPhase();
+  if(!phase)return;
+  const template=wiki.monsters.find(m=>m.maps.includes(28)&&m.level>=90) ??
+                 wiki.monsters.find(m=>m.level>=90);
+  if(!template){notice('Fury: referencia de combate indisponivel.');return;}
+  const health={defensive:65000,offensive:50000,balanced:60000}[phase.kind];
+  const attacks={defensive:[280,400],offensive:[570,800],balanced:[420,620]}[phase.kind];
+  const def={...template,name:'Fantasma do Furia - '+phase.kind,
+    model:'char/monster/monfury/monfury.ini',level:100,hp:health,attack:attacks,
+    defense:phase.kind==='defensive'?2400:1500,absorb:phase.kind==='defensive'?33:16,
+    boss:true,maps:[32]};
+  const place=game.ground.spawnPoint(game.pos.x+180,game.pos.z+90) ??
+              game.ground.spawnPoint(game.pos.x+90,game.pos.z);
+  if(!place){notice('Fury: arena sem terreno valido.');return;}
+  const monster={id:++nextPopulationId,name:def.name,level:100,
+    model:'char/monster/monfury/monfury',
+    x:place.x,y:place.y,z:-place.z,angle:0,hp:health,hpMax:health,motion:'stand',
+    seq:0,body:20,definition:def,nextAttack:0,questFury:{stage:phase.stage,heals:0},adminSpawn:true};
+  monsters.set(monster.id,monster);
+  deliver({t:'monsters',add:[publicMonster(monster)],ts:performance.now()/1000});
+  notice('Furia '+phase.kind+' apareceu! Aguarde tres recuperacoes de HP.');
 }
 function calibrateMapPortals() {
   for (const portal of mapLinks.portals.filter(p => p.fromField === field.id)) {
@@ -3133,6 +3209,7 @@ try {
   });
   updateQuests("reach", field.id);
   spawnMapPopulation();
+  spawnQuestFury();
   await refreshEconomy();
   setInterval(()=>refreshEconomy().catch(e=>recordDiagnostic(e.message)),5000);
   gameFeatures.start();

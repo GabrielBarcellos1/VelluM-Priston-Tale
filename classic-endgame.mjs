@@ -7,8 +7,20 @@ export const CLASSIC_QUESTS=[
  {id:'classic.calliar',name:'As Lágrimas de Calliar',level:85,npc:21222,prereq:['classic.fury'],goal:'Derrote 10 Grotescos na Estrada do Ferro do Caos.',target:'Grotesco',map:27,count:10,reward:'Menos 1 ponto percentual de EXP perdida ao morrer'},
  {id:'classic.eura',name:'A Vila Eura',level:90,npc:21137,prereq:['classic.calliar'],goal:'Derrote 10 Punhos de Aço no Coração de Perum.',target:'Punhos de Aco',map:28,count:10,reward:'Roitra: +40 HP permanente'},
  {id:'classic.bitter',name:'Desafio Amargo',level:90,npc:21244,prereq:['classic.eura'],goal:'Vença 50 inimigos determinados por Ray sob maldição de -30% de ataque.',reward:'10 pontos de status por nível'},
- {id:'classic.furyghost',name:'Fantasma do Fúria',level:100,npc:21113,prereq:['classic.eura'],goal:'Cinco etapas: caça, espectro defensivo, caça, espectro ofensivo e espectro balanceado.',reward:'Arma especial do nível 100'}
+ {id:'classic.furyghost',name:'Fantasma do Fúria',level:100,npc:21113,prereq:['classic.fury','classic.calliar','classic.eura'],goal:'Cinco etapas: caça, espectro defensivo, caça, espectro ofensivo e espectro balanceado.',reward:'Arma especial do nível 100'}
 ];
+export const FURY_WEAPONS=[
+ ['WA120','Machado Minotauro'],['WP121','Foice Infernal'],['WS223','Espada Imortal'],
+ ['WM121','Cajado Gotico'],['WT121','Lanca Salamandra'],['WH121','Martelo Osso de Dragao'],
+ ['WC120','Garra Extrema'],['WS122','Arco da Vinganca'],['WD121','Adaga Enigma'],
+ ['WN121','Fantasma Kahsehtha'],['WV121','Bracelete Arina']
+];
+export function furyHealthAfterHit(hp,hpMax,heals,damage){
+ if(!Number.isFinite(damage)||damage<=0)return {hp,heals,defeated:false,recovered:false};
+ const next=Math.max(0,hp-damage);
+ if(heals<3&&next<=hpMax*.15)return {hp:hpMax,heals:heals+1,defeated:false,recovered:true};
+ return {hp:next,heals,defeated:next===0,recovered:false};
+}
 const bosses={
  gold:['Rasha','Arqueiro STYX'],silver:['Vermun Actarun','HellSing','Bloody Rose','Slayon','Cavaleiro Profano','Vega Demitri'],
  bronze:['Vega Demir','Apostasy','Fright Nemyun','El Rasi Kun','Duende das Trevas','Bauton','Ciclone','Grave Shakins','Platin Mav','Eed','Mekhist','Zzangpi']
@@ -25,6 +37,12 @@ export function createClassicEndgame({meta,completed,level,notice,award,save,ran
   if(completed.has(id))return q.name+': concluída.';
   if(!unlocked(q))return q.name+': indisponível (nível '+q.level+' e pré-requisitos).';
   if(!p.stage)return q.name+': disponível com '+({21222:'Clériga do Templo',21244:'Derik',21137:'Mestre da Força',21113:'Ray'}[q.npc]??'NPC')+'.';
+  if(id==='classic.furyghost'){
+   const steps={1:'50 monstros em Coracao de Perum',2:'Furia defensivo na Arena',
+    3:'Retorne a Ray',4:'100 monstros em Vale Gallubia',5:'Furia ofensivo na Arena',
+    6:'Retorne a Ray',7:'Furia balanceado na Arena',8:'Volte a Ray e escolha a arma'};
+   return q.name+': '+(steps[p.stage]??'Fale com Ray')+' ('+p.kills+' abates).';
+  }
   if(id==='classic.royal')return q.name+': '+p.vamps.join(', ')+' / Ouro, Prata, Bronze.';
   return q.name+': '+Math.min(p.kills,q.count??50)+' / '+(q.count??50)+' — '+q.goal;
  }
@@ -42,9 +60,14 @@ export function createClassicEndgame({meta,completed,level,notice,award,save,ran
     if(npcId===21244 && p.stage===0)out.push({id,label:'Iniciar Desafio Amargo',detail:'Derik enviará você ao Mago Real Ray.'});
     if(npcId===21113 && p.stage===1)out.push({id,label:'Aceitar o desafio de Ray',detail:'Seu ataque cairá 30% até completar 50 mortes.'});
     if(npcId===21113 && p.stage===2 && p.kills>=50)out.push({id,label:'Concluir Desafio Amargo',detail:q.reward});
-   } else if(id==='classic.furyghost'){
-    if(npcId===21113 && p.stage===0)out.push({id,label:'Iniciar Fantasma do Fúria',detail:'Primeira etapa: 50 monstros no Coração de Perum.'});
-    if(npcId===21113 && p.stage===1 && p.kills>=50)out.push({id,label:'Preparar arena do espectro defensivo',detail:'A etapa de combate requer o modelo próprio do Fantasma do Fúria.'});
+   } else if(id==='classic.furyghost'&&npcId===21113){
+    const label={0:'Iniciar Fantasma do Furia',1:'Entrar na Arena: Furia defensivo',
+     2:'Voltar a Arena: Furia defensivo',3:'Iniciar caca em Vale Gallubia',
+     4:'Entrar na Arena: Furia ofensivo',5:'Voltar a Arena: Furia ofensivo',
+     6:'Entrar na Arena: Furia balanceado',7:'Voltar a Arena: Furia balanceado',
+     8:'Escolher arma da Quest 100'};
+    const canAct=p.stage!==1||p.kills>=50;
+    if(label[p.stage]&&canAct)out.push({id,label:label[p.stage],detail:q.goal});
    } else if(npcId===q.npc){
     if(p.stage===0)out.push({id,label:'Aceitar: '+q.name,detail:q.goal});
     if(p.stage===1 && p.kills>=q.count)out.push({id,label:'Concluir: '+q.name,detail:q.reward});
@@ -68,7 +91,12 @@ export function createClassicEndgame({meta,completed,level,notice,award,save,ran
    else throw Error('Faltam monstros para concluir o desafio.');
   }else if(id==='classic.furyghost'){
    if(p.stage===0){p.stage=1;p.kills=0;}
-   else throw Error('A arena do Fantasma do Fúria ainda não está habilitada neste servidor. A etapa de caça permanece salva.');
+   else if(p.stage===1&&p.kills>=50){p.stage=2;p.heals=0;}
+   else if(p.stage===3){p.stage=4;p.kills=0;}
+   else if(p.stage===4&&p.kills>=100){p.stage=5;p.heals=0;}
+   else if(p.stage===6){p.stage=7;p.heals=0;}
+   else if(p.stage===8)return 'Escolha uma arma de nivel 100 com Ray.';
+   else if(![2,5,7].includes(p.stage))throw Error('Conclua a etapa atual antes de falar com Ray.');
   }else if(p.stage===0){p.stage=1;p.kills=0;}
   else if(p.stage===1 && p.kills>=q.count){complete(q);return q.name+' concluída! '+q.reward+'.';}
   else throw Error('Objetivos incompletos.');
@@ -92,12 +120,30 @@ export function createClassicEndgame({meta,completed,level,notice,award,save,ran
     }
    }else if(q.id==='classic.bitter'&&p.stage===2&&map===28&&clean(name)===clean(p.target)){
     p.kills=Math.min(50,p.kills+1);changed=true;
-   }else if(q.id==='classic.furyghost'&&p.stage===1&&map===28){p.kills=Math.min(50,p.kills+1);changed=true;}
+   }else if(q.id==='classic.furyghost'&&((p.stage===1&&map===28)||(p.stage===4&&map===31))){p.kills=Math.min(p.stage===1?50:100,p.kills+1);changed=true;}
    else if(q.target&&p.stage===1&&map===q.map&&clean(name)===clean(q.target)){
     p.kills=Math.min(q.count,p.kills+1);changed=true;
    }
   }
   if(changed)save();return changed;
+ }
+ function arenaPhase(){
+  const p=data('classic.furyghost');
+  return unlocked(CLASSIC_QUESTS.find(q=>q.id==='classic.furyghost'))&&[2,5,7].includes(p.stage)
+   ? {stage:p.stage,kind:({2:'defensive',5:'offensive',7:'balanced'})[p.stage]} : null;
+ }
+ function arenaDefeated(heals){
+  const p=data('classic.furyghost');
+  if(!arenaPhase()||heals!==3)throw Error('O Fury precisa recuperar HP tres vezes antes de cair.');
+  p.stage=({2:3,5:6,7:8})[p.stage];p.kills=0;p.heals=3;save();
+  return p.stage;
+ }
+ function claimFury(code){
+  const p=data('classic.furyghost');
+  if(p.stage!==8||completed.has('classic.furyghost'))throw Error('A missao ainda nao terminou.');
+  if(!FURY_WEAPONS.some(([id])=>id===code))throw Error('Arma especial desconhecida.');
+  completed.add('classic.furyghost');p.stage=99;p.rewardCode=code;save();
+  notice('Fantasma do Furia concluido! Arma especial recebida.');
  }
  function resetOnDeath(){
   let changed=false;
@@ -107,5 +153,5 @@ export function createClassicEndgame({meta,completed,level,notice,award,save,ran
   if(changed){save();notice('Um desafio clássico foi reiniciado após sua derrota.');}
  }
  function activePenalty(){return !completed.has('classic.bitter') && data('classic.bitter').stage===2 ? 0.3 : 0;}
- return {actions,choose,kill,summary,resetOnDeath,activePenalty,entries,definitions:CLASSIC_QUESTS};
+ return {actions,choose,kill,summary,resetOnDeath,activePenalty,arenaPhase,arenaDefeated,claimFury,entries,definitions:CLASSIC_QUESTS};
 }

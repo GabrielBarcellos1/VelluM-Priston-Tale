@@ -3,6 +3,7 @@
 export function decorateCraftItem(item, bridge) {
   delete item.agingNeeds;
   delete item.agingPrice;
+  if(item.furyQuestReward)return item;
   if (
     !bridge.craftAccept("aging", "item", item.code) ||
     item.mixed ||
@@ -44,6 +45,8 @@ export function craftAtNpc(message, ctx) {
     throw Error("Use sheltoms comuns da bolsa.");
   if (message.stone && kind !== "mixReset")
     throw Error("Esta pedra especial ainda não tem regra de proteção validada; nada foi gasto.");
+  if(item?.furyQuestReward && ['aging','mix','mixReset'].includes(kind))
+    throw Error('A arma da Quest do Nivel 100 nao aceita Aging ou Mix.');
   if (kind !== "force" && !item) throw Error("Coloque um equipamento da bolsa.");
   let fee = 0,
     recipe;

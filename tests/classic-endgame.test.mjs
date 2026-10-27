@@ -68,11 +68,46 @@ test('90 Eura requires 10 Iron Fists; bitter curse selects one of three monsters
  assert.equal(q.activePenalty(),0);
  assert.ok(f.completed.has('classic.bitter'));
 });
-test('level 100 starts 50-kill phase but does not fake missing specter boss or reward',()=>{
- const f=fixture(100,['classic.eura']),q=f.q;
+test('five classic level-100 stages and three Fury battles save correct progress',()=>{
+ const f=fixture(100,['classic.fury','classic.calliar','classic.eura']),q=f.q;
  q.choose('classic.furyghost');
- for(let n=0;n<50;n++)q.kill('Máquina-D',28);
+ for(let n=0;n<50;n++)q.kill('Maquina-D',28);
  assert.equal(q.entries['classic.furyghost'].kills,50);
- assert.throws(()=>q.choose('classic.furyghost'),/ainda não está habilitada/);
+ q.choose('classic.furyghost');
+ assert.equal(q.arenaPhase().kind,'defensive');
+ assert.throws(()=>q.arenaDefeated(2),/tres vezes/);
+ q.arenaDefeated(3);
+ assert.equal(q.entries['classic.furyghost'].stage,3);
+ q.choose('classic.furyghost');
+ for(let n=0;n<99;n++)q.kill('Qualquer monstro',31);
+ assert.equal(q.entries['classic.furyghost'].kills,99);
+ assert.ok(!q.arenaPhase());
+ q.kill('Outro monstro',31);
+ q.choose('classic.furyghost');
+ assert.equal(q.arenaPhase().kind,'offensive');
+ q.arenaDefeated(3);
+ q.choose('classic.furyghost');
+ assert.equal(q.arenaPhase().kind,'balanced');
+ q.arenaDefeated(3);
+ assert.equal(q.entries['classic.furyghost'].stage,8);
  assert.ok(!f.completed.has('classic.furyghost'));
+ q.claimFury('WP121');
+ assert.ok(f.completed.has('classic.furyghost'));
+ assert.equal(q.entries['classic.furyghost'].rewardCode,'WP121');
+ assert.throws(()=>q.claimFury('WP121'),/ainda nao terminou/);
+});
+test('Fury recovers health three times before the final defeat',async()=>{
+ const {furyHealthAfterHit}=await import('../classic-endgame.mjs');
+ let hp=1000,heals=0;
+ for(let i=1;i<=3;i++){
+  const state=furyHealthAfterHit(hp,1000,heals,2000);
+  assert.equal(state.hp,1000);
+  assert.equal(state.heals,i);
+  assert.equal(state.recovered,true);
+  assert.equal(state.defeated,false);
+  hp=state.hp;heals=state.heals;
+ }
+ const final=furyHealthAfterHit(hp,1000,heals,2000);
+ assert.equal(final.hp,0);
+ assert.equal(final.defeated,true);
 });
