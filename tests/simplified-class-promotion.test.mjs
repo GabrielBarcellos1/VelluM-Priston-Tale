@@ -23,7 +23,8 @@ test('20 40 60 level gates and all learned skills are required at master',()=>{
  assert.match(skills,/const rank = \(\) => ctx\.rank\(\)/);
 });
 test('old evolution quest view and top toolbar are disabled, commands use normal chat',()=>{
- assert.match(session,/\.filter\(\(q\) => !q\.id\.startsWith\('rank\.'\)/);
+ assert.match(session,/function questViews\(\)\s*\{[\s\S]*?return \[\];/);
+ assert.match(session,/disableLegacyMissions\(\);/);
  assert.doesNotMatch(session,/\n  mountLocalMenu\(\);/);
  assert.match(session,/slashCommandInProgress \? "normal" : "system"/);
  assert.doesNotMatch(npc,/mountSkillChallenge/);
