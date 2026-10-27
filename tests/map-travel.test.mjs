@@ -31,7 +31,7 @@ function fixture(extra={}){
  save:()=>{calls.push(['save']);return true;},flush:async()=>calls.push(['flush']),
  activate:async next=>calls.push(['activate',next]),
  rollback:()=>calls.push(['rollback']),notice:t=>calls.push(['notice',t]),now:()=>clock,...extra};
- return {calls,options,travel:createMapTravel(options),advance:()=>{clock=3000;}};
+ return {calls,options,travel:createMapTravel(options),advance:(ms=3000)=>{clock+=ms;}};
 }
 test('walking saves crossing position and activates in place; duplicate transitions ignored',async()=>{
  const f=fixture();const first=f.travel.walk(1);
@@ -69,12 +69,21 @@ test('portal triggers use converted collision-floor elevations rather than legac
 test('one controller crosses successive borders and returns without leaving the session',async()=>{
  const f=fixture();
  for(const id of [1,0,1,2,3,2,4]){
+  f.advance();
   assert.equal(await f.travel.walk(id),true);
   assert.equal(f.travel.current,id);
   assert.equal(f.travel.busy,false);
  }
  assert.equal(f.calls.filter(c=>c[0]==='activate').length,7);
  assert.equal(f.calls.filter(c=>c[0]==='rollback').length,0);
+});
+test('walking map crossing ignores immediate bounce-back until terrain settles',async()=>{
+ const f=fixture();
+ assert.equal(await f.travel.walk(1),true);
+ assert.equal(await f.travel.walk(2),false);
+ assert.equal(f.travel.current,1);
+ f.advance(2100);
+ assert.equal(await f.travel.walk(2),true);
 });
 test('failed destination activation keeps the previous map and allows a later retry',async()=>{
  let fail=true;
