@@ -703,3 +703,17 @@ aside nav {
   overflow-wrap: anywhere;
   font-size: 11px;
 }
+
+.admin-quick-start{margin:0 0 23px;padding:22px 24px;border:1px solid #455342;border-radius:16px;background:linear-gradient(125deg,#26352b,#18211e 72%);box-shadow:0 10px 32px #0003}
+.admin-quick-heading>span{display:block;font-size:11px;font-weight:700;letter-spacing:.18em;color:#d6c18b}
+.admin-quick-heading h2{margin:5px 0 4px;font-size:23px;color:#f3e9d1}
+.admin-quick-heading p{margin:0 0 18px;color:#bfcbc0;max-width:800px;font-size:13px}
+.admin-quick-grid{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:12px}
+.admin-quick-grid button{display:flex;flex-direction:column;align-items:flex-start;text-align:left;gap:5px;padding:16px;min-height:125px;border:1px solid #4e5b4e;border-radius:11px;background:#192820;color:#ede9da;transition:background .15s,border-color .15s,transform .15s}
+.admin-quick-grid button:hover{background:#293d2e;border-color:#e1c585;transform:translateY(-1px)}
+.admin-quick-grid button:focus-visible{outline:2px solid #e1c585}
+.admin-quick-grid button span{font-size:22px}
+.admin-quick-grid button strong{font-size:14px}
+.admin-quick-grid button small{color:#b5c4b6;font-size:12px;font-weight:400}
+@media(max-width:1020px){.admin-quick-grid{grid-template-columns:repeat(2,minmax(0,1fr))}}
+@media(max-width:580px){.admin-quick-start{padding:16px}.admin-quick-grid{grid-template-columns:1fr}.admin-quick-grid button{min-height:85px}}
