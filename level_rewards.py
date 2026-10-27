@@ -19,20 +19,21 @@ def preferred(item,job):
 
 def kit_codes(level,job):
     import game_control as game,server_economy as economy
-    result=[]
     base={'str':25,'spi':15,'tal':20,'dex':19,'health':24}
-    required=dict(base)
-    def fits(item):
-        next_stats={k:max(value,item.get('req',{}).get(k,0)) for k,value in required.items()}
-        return sum(next_stats[k]-base[k] for k in base)<=5*(level-1)
-    for slot in ('weapon','ARMOR','BOOTS','GLOVES','ARMLET','RING','RING','AMULET'):
-        pool=[i for i in game.ITEMS.values() if economy.allowed(i['code']) and preferred(i,job)
-              and (i.get('slot') in ('WEAPON_ONE','WEAPON_TWO') if slot=='weapon' else i.get('slot')==slot)
-              and i.get('req',{}).get('level',0)<=level and fits(i)]
-        if not pool:raise ValueError('Catálogo sem equipamento para o kit de evolução.')
-        selected=max(pool,key=lambda i:(i.get('req',{}).get('level',0),i.get('price',0),i['code']))
-        result.append(selected['code'])
-        for key in required:required[key]=max(required[key],selected.get('req',{}).get(key,0))
+    required=dict(base);result=[]
+    for milestone in sorted(n for n in rules()['kitLevels'] if n<=level):
+        result=[]
+        def fits(item):
+            next_stats={k:max(value,item.get('req',{}).get(k,0)) for k,value in required.items()}
+            return sum(next_stats[k]-base[k] for k in base)<=5*(milestone-1)
+        for slot in ('weapon','ARMOR','BOOTS','GLOVES','ARMLET','RING','RING','AMULET'):
+            pool=[i for i in game.ITEMS.values() if economy.allowed(i['code']) and preferred(i,job)
+                  and (i.get('slot') in ('WEAPON_ONE','WEAPON_TWO') if slot=='weapon' else i.get('slot')==slot)
+                  and i.get('req',{}).get('level',0)<=milestone and fits(i)]
+            if not pool:raise ValueError('Catálogo sem equipamento para o kit de evolução.')
+            selected=max(pool,key=lambda i:(i.get('req',{}).get('level',0),i.get('price',0),i['code']))
+            result.append(selected['code'])
+            for key in required:required[key]=max(required[key],selected.get('req',{}).get(key,0))
     return result
 
 def drop_band(field,player_level,monster_level):

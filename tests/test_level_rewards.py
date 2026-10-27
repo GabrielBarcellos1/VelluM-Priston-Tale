@@ -16,12 +16,15 @@ class LevelRewards(ServerAudit):
         return s
     def test_all_classes_and_milestones_receive_eight_legal_level_appropriate_pieces(self):
         for job in range(1,12):
+            cumulative={'str':25,'spi':15,'tal':20,'dex':19,'health':24}
             for level in rewards.rules()['kitLevels']:
                 codes=rewards.kit_codes(level,job)
                 self.assertEqual(len(codes),8)
                 base={'str':25,'spi':15,'tal':20,'dex':19,'health':24}
                 needed={k:max([v]+[game.ITEMS[c].get('req',{}).get(k,0) for c in codes]) for k,v in base.items()}
                 self.assertLessEqual(sum(needed[k]-base[k] for k in base),5*(level-1))
+                cumulative={k:max(cumulative[k],needed[k]) for k in base}
+                self.assertLessEqual(sum(cumulative[k]-base[k] for k in base),5*(level-1))
                 for code in codes:
                     item=game.ITEMS[code]
                     self.assertTrue(economy.allowed(code));self.assertTrue(rewards.preferred(item,job))
