@@ -35,6 +35,7 @@ import { promotionRank, createWorldQuests, mergeNpcRecords } from "/world-quests
 import { agingEventChances, eventExperience } from "/economy-effects.mjs";
 import { mountBossRoulette } from "/boss-roulette.mjs";
 import { createGameFeatures } from "/game-features.mjs";
+import { createClassicEndgame, CLASSIC_QUESTS } from "/classic-endgame.mjs";
 import { objectiveValue, objectiveIncrement, questCollectionCode } from "/quest-progress.mjs";
 import { experienceFloor, migrateExperience, killExperience, mapExperienceRange, mapExperienceAllowed, capKillExperience, classDamageScale, balanceMonster, questExperienceReward, potionCanUse, registerPotion } from "/balance-rules.mjs";
 import { monsterControl, applyConversionHealth, restoreConversionHealth, mountLocalSkillCasting } from "/skill-runtime.mjs";
@@ -570,7 +571,7 @@ const objectiveProgress =
     : {};
 
 const questMeta=stored?.questMeta&&typeof stored.questMeta==='object'?stored.questMeta:{};
-let worldQuests,gameFeatures,bossRoulette;
+let worldQuests,gameFeatures,bossRoulette,classicEndgame;
 let economyEffects={xp:1,discount:0,successBonus:0,events:[]};
 async function refreshEconomy(){const mapId=field.id;const result=await postLocal("/api/local/game/economy",{field:mapId});if(field.id!==mapId)return result;const changed=JSON.stringify(economyEffects)!==JSON.stringify(result.effects);economyEffects=result.effects;globalThis.__localEconomy=()=>economyEffects;if(changed&&game){recalculate();deliver({t:'inventory',inv});if(economyEffects.events.length)notice('Eventos ativos: '+economyEffects.events.map(e=>e.name).join(', '));}return result;}
 // Administration belongs to this independent local session only.
@@ -771,8 +772,9 @@ function adminCommand(input) {
       return postLocal('/api/local/game/economy',{field:field.id}).then(r=>{
        const p=r.policy,d=r.globalDrops;return `Drops de ${field.name}: ${p.paused?'SUSPENSOS':p.custom?`ouro ${p.gold.chance}% entre ${p.gold.min} e ${p.gold.max}; equipamentos: ${p.equipment.map(g=>g.label+' '+Math.min(100,g.chance*r.effects.drops)+'%').join(', ')||'nenhum grupo'}`:`padrão global — ouro ${d.goldChance}%; equipamentos ${d.equipmentChance}% / ${d.highLevelChance}%`}. Evento XP ×${r.effects.xp}, ouro ×${r.effects.gold}. Bosses usam roleta e tabela própria.`;
       });
+    case "quests": return CLASSIC_QUESTS.filter(q=>q.level<=stats.level).map(q=>classicEndgame?.summary(q.id)).filter(Boolean).join(" | ")||"Missões clássicas disponíveis a partir do nível 80.";
     case "ajuda":
-      return 'Comandos: /personagens, /bolsa, /jogar NOME_DO_ITEM, /status, /habilidades, /loja, /skins, /salvar, /sair.'+
+      return 'Comandos: /quests, /personagens, /bolsa, /jogar NOME_DO_ITEM, /status, /habilidades, /loja, /skins, /salvar, /sair.'+
         (isAdmin?' GM: /monstro, /mymonster, /velocidade, /gmkit, /gmrota, /gmexp, /link.':'');
     case "habilidades":
       if (args[0]?.toLowerCase() === "liberar") {
@@ -1137,6 +1139,7 @@ function publishBuffs() {
 const skills = createSkillSystem({
   catalog: skillData,
   job: characterClass.job,
+  extraSkillPoints:()=>completed.has('classic.fury')?2:0,
   rank: () => isAdmin&&endgameEnabled?3:stats.classRank,
   name: hero.name,
   stats,
@@ -1175,6 +1178,7 @@ const skills = createSkillSystem({
   },
   resurrect: (percent) => {
     if(!game.dead&&stats.hp>0)return;
+    classicEndgame?.resetOnDeath();
     stats.hp=Math.max(1,Math.floor(stats.hpMax*percent/100));
     (async()=>{save(true);await stateWrite;location.reload();})().catch(e=>notice(e.message));
   },
@@ -1306,6 +1310,10 @@ if (stored?.warehouse) {
     .map((p) => ({ ...p, item: restoreItem(p.item) }))
     .filter((p) => p.item);
 }
+classicEndgame=createClassicEndgame({meta:questMeta,completed,level:()=>stats.level,notice,save:()=>save(true),award:id=>{
+ if(id==="classic.fury") stats.statPoints+=5;
+ recalculate();skills.publish();
+}});
 worldQuests=createWorldQuests({name:hero.name,job:characterClass.job,tribe:characterClass.tribe,stats,
  completed,accepted,progress:objectiveProgress,meta:questMeta,definitions:questData.quests,catalog:skillData,policy:questData.classQuestPolicy,
  learned:()=>skills.exportState(),equipment:()=>inv.equip,now:()=>serverNow()/1000,notice,ready:q=>gameFeatures?.ready(q),changed:()=>skills.publish()});
@@ -1318,7 +1326,7 @@ gameFeatures=createGameFeatures({name:hero.name,job:characterClass.job,tribe:cha
  reload:()=>location.reload()});
 bossRoulette=mountBossRoulette({meta:questMeta,monsters,wiki,field,zones:spawnData.stages[field.stage]?.zones,game:()=>game,post:postLocal,requestId,deliver,publicMonster,save,
  flush:()=>stateWrite,busy:()=>economyBusy,notice,diagnostic:recordDiagnostic,
- defeated:def=>{kills++;gainExperience(mapKillExperience(def));updateQuests('kill',{id:def.id,name:def.name,field:field.id});recalculate();},
+ defeated:def=>{kills++;gainExperience(mapKillExperience(def));classicEndgame?.kill(def.name,field.id);updateQuests('kill',{id:def.id,name:def.name,field:field.id});recalculate();},
  claim:async award=>{if(economyBusy||pendingLoot)throw Error('Aguarde a operação atual.');economyBusy=true;
   try{if(!save(true))throw Error('Falha ao salvar.');await stateWrite;const r=await postLocal('/api/local/game/boss',{action:'claim',award,savedAt:lastSavedAt,requestId:requestId()});
    for(const key of ['bag','bagB'])inv[key]=(r.state.inv[key]??[]).map(p=>({...p,item:restoreItem(p.item)})).filter(p=>p.item);lastSavedAt=r.state.savedAt;recalculate();save(true);notice('Recompensa do Boss recebida.');
@@ -1457,6 +1465,7 @@ function recalculate() {
     (stats.health - 24) * 2 +
     ((stats.classRank ?? 0) >= 2 ? 15 : 0) +
     (endgameEnabled ? 1000 : 0) +
+    (completed.has("classic.eura") ? 40 : 0) +
     bonus("hpAdd") +
     (specBonus.hpAdd ?? 0) +
     effects.hp;
@@ -1472,6 +1481,10 @@ function recalculate() {
   stats.expLevel = experienceFloor(stats.level,balanceRules);
   stats.expNext = experienceFloor(stats.level+1,balanceRules);
   Object.assign(stats, combatStats(stats, combatEquipment, specBonus, effects));
+  if (questMeta?.classicEndgame?.["classic.bitter"]?.stage===2 && !completed.has("classic.bitter")) {
+    stats.damageMin=Math.floor(stats.damageMin*0.7);
+    stats.damageMax=Math.floor(stats.damageMax*0.7);
+  }
   applyGmAttack(stats,gmProtection(isAdmin,inv.equip));
   protectGm(stats,gmSheltomActive());
   const force =
@@ -1652,7 +1665,7 @@ function gainExperience(gained) {
   deliver({ t: "exp", gained, exp: stats.exp });
   while (stats.exp >= stats.expNext && stats.level < 150) {
     stats.level++;
-    stats.statPoints += 5;
+    stats.statPoints += completed.has("classic.bitter") ? 10 : completed.has("classic.royal") ? 7 : 5;
     recalculate();
     stats.hp = stats.hpMax;
     stats.mp = stats.mpMax;
@@ -1660,7 +1673,11 @@ function gainExperience(gained) {
     deliver({ t: "levelUp", level: stats.level });
   }
   skills.publish();
-  if(stats.level!==previousLevel)noticeMapProgression();
+  if(stats.level!==previousLevel){
+    noticeMapProgression();
+    for(const milestone of [80,85,90,100]) if(previousLevel<milestone && stats.level>=milestone)
+      notice('Novas missões clássicas disponíveis no nível '+milestone+'. Consulte /quests e os NPCs das cidades.');
+  }
 }
 function completeQuest(id,npcId=null) {
   const quest = questViews().find((q) => q.id === id);
@@ -1791,6 +1808,13 @@ function npcTalk(id, interactive) {
   if (!interactive) return;
   if(Math.hypot(game.pos.x-npc.x,-game.pos.z-npc.z)>500)return notice('Aproxime-se do NPC.');
   updateQuests("talk", id);
+  if (classicEndgame?.actions(id).length) {
+    const panel=serviceDialog(npc.name,"Missões clássicas do nível 80 em diante.");
+    for(const action of classicEndgame.actions(id)) panel.button(action.label+" — "+action.detail,()=>{
+      const response=classicEndgame.choose(action.id);notice(response);panel.close();recalculate();skills.publish();
+    });
+    return;
+  }
   if (npc.services?.includes("event") && /event girl/i.test(npc.name)) {
     showRedistribution(npc);
   } else if (npc.services?.includes("shop")) {
@@ -1952,6 +1976,7 @@ function damageMonster(id, power = 1, rangeOverride = null, options = {}) {
       notice('Hopi UP: +1 nível de GM!');
     } else if(!monster.gmTraining && !monster.gmLevelUp) gainExperience(gained);
     dropLoot(monster);
+    classicEndgame?.kill(monster.name,field.id);
     updateQuests('kill',{id:monster.definition.id,name:monster.name,field:field.id});
     for(const [code,at]of Object.entries(monster.skillMarks??{}))if(performance.now()-at<=10000)updateQuests("skillKill",{code});
     recalculate();
@@ -2645,6 +2670,7 @@ async function handle(message) {
             "reconectar",
             "skins",
             "drops",
+            "quests",
             "loja",
           ];
           if (!isAdmin && !safe.includes(name)) throw Error("Comando reservado ao administrador.");
@@ -2695,6 +2721,7 @@ async function handle(message) {
       break;
     case "respawn": {
       if (!game?.dead || !["field", "town"].includes(message.where)) return;
+      classicEndgame?.resetOnDeath();
       if (economyBusy || pendingLoot)
         return notice("Aguarde a confirmação dos drops antes de renascer.");
       const destination =

@@ -66,7 +66,7 @@ export function createSkillSystem(ctx) {
   const points = () => ({
     skill: Math.max(
       0,
-      Math.floor(Math.max(0, ctx.stats.level - 8) / 2) -
+      Math.floor(Math.max(0, ctx.stats.level - 8) / 2) + (ctx.extraSkillPoints?.() ?? 0) -
         list.filter((s) => s.tier < 4).reduce((sum, s) => sum + learned(s.id), 0),
     ),
     elite: Math.max(

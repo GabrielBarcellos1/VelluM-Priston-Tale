@@ -1,4 +1,5 @@
 export const commands = [
+  {name:"quests",syntax:"/quests",example:"/quests",description:"Exibe o progresso das missões clássicas dos níveis 80, 85, 90 e 100.",category:"Jogador",aliases:[]},
  {name:'gmkit',syntax:'/gmkit',example:'/gmkit',description:'Entrega Poção EXP GM e equipa Sheltom GM, guardando a Sheltom anterior na bolsa. Não duplica itens já existentes. Protege HP/MP/RES. Exclusivo da Staff.',category:'Personagem',admin:true},
  {name:'gmrota',syntax:'/gmrota',example:'/gmrota',description:'Mostra a rota por nível e multiplicador da Poção EXP GM. Meta aproximada de 1 hora até 120 em caça ativa solo.',category:'Personagem',admin:true},
  {name:'gmexp',syntax:'/gmexp on|off',example:'/gmexp on',description:'Consome a Poção EXP GM da bolsa (on) ou encerra o teste (off). O bônus é privado, não acumula com eventos e termina no nível 120.',category:'Personagem',admin:true},
