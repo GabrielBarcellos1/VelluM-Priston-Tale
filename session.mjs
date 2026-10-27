@@ -1,6 +1,7 @@
 import { questTarget } from "/quest-targets.mjs";
 import { serviceDialog } from "/npc-panels.mjs";
 import { walkingStages, createMapTravel, forestSeamArrival } from "/map-travel.mjs";
+import { nextUpMap, showUpMapNotice } from "/up-map-notice.mjs";
 import {
   repairPrice,
   salePrice,
@@ -1514,14 +1515,14 @@ function mapKillExperience(monster) {
 }
 let lastMapProgressionNotice = '';
 function noticeMapProgression() {
-  if(mapExperienceAllowed(stats.level,field.id,balanceRules))return;
+  const info=nextUpMap(stats.level,field.id,balanceRules,mapExperienceAllowed);
+  showUpMapNotice(info);
+  if(!info)return;
   const band=mapExperienceRange(field.id,balanceRules),key=field.id+':'+stats.level;
   if(lastMapProgressionNotice===key)return;
   lastMapProgressionNotice=key;
-  const next=balanceRules.maps.filter(m=>m.experienceMin!==undefined&&m.minimum<=stats.level&&mapExperienceAllowed(stats.level,m.id,balanceRules))
-    .sort((a,b)=>b.experienceMin-a.experienceMin);
   notice(field.name+' não rende EXP no nível '+stats.level+'. Faixa: '+band.min+'–'+band.max+'.'+
-    (next.length?' Próximo mapa de UP: '+next[0].name+'.':''));
+    (info.next?' Próximo mapa de UP: '+info.next.name+'.':''));
 }
 async function claimLevelKits() {
   if (!game || game.dead || economyBusy || economyUncertain || pendingLoot || mapTravel?.busy ||
@@ -2890,6 +2891,7 @@ try {
     if (!document.hidden) skills.tickCooldowns();
   });
   loading.hide();
+  noticeMapProgression();
   document.title = "FREEston Tale";
   brandInterface();
   mountLocalMenu();
