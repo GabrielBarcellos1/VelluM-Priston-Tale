@@ -730,6 +730,14 @@ async function gmRoute(){
  for(const line of lines){const p=document.createElement('p');p.textContent=line;panel.append(p);}
  document.body.append(panel);panel.showModal();return 'Guia de evolução GM aberto.';
 }
+async function leaveFromChat(logout=false){
+  if(economyBusy||pendingLoot||economyUncertain)throw Error('Aguarde as operações pendentes antes de sair.');
+  if(!save(true))throw Error('Não foi possível salvar seu personagem.');
+  await stateWrite;
+  await globalThis.__localSession.online?.dispose();
+  if(logout){const r=await fetch('/api/local/logout',{method:'POST',headers:{'Content-Type':'application/json'},body:'{}'});if(!r.ok)throw Error('Não foi possível encerrar a conta.');}
+  location.replace(logout?'/':'/personagens');
+}
 function adminCommand(input) {
   const [rawCommand, ...args] = input.trim().replace(/^\//, "").split(/\s+/);
   const command = canonicalCommand(rawCommand);
@@ -741,6 +749,11 @@ function adminCommand(input) {
   };
   let result = "OK";
   switch (command?.toLowerCase()) {
+    case 'personagens': return leaveFromChat(false).then(()=>null);
+    case 'sair': return leaveFromChat(true).then(()=>null);
+    case 'bolsa': {const w=globalThis.__localSession.ui?.windows;w?.get('inventory')?.toggle();return 'Bolsa aberta.';}
+    case 'status': {const w=globalThis.__localSession.ui?.windows;w?.get('status')?.toggle();return 'Status aberto.';}
+    case 'link': if(!isAdmin)throw Error('Comando de administrador.');window.open('/painel','_blank','noopener');return 'Painel aberto.';
     case "gmkit":return gmOperation('grant').then(()=>null);
     case "gmrota":return gmRoute();
     case "gmexp":
@@ -758,19 +771,8 @@ function adminCommand(input) {
        const p=r.policy,d=r.globalDrops;return `Drops de ${field.name}: ${p.paused?'SUSPENSOS':p.custom?`ouro ${p.gold.chance}% entre ${p.gold.min} e ${p.gold.max}; equipamentos: ${p.equipment.map(g=>g.label+' '+Math.min(100,g.chance*r.effects.drops)+'%').join(', ')||'nenhum grupo'}`:`padrão global — ouro ${d.goldChance}%; equipamentos ${d.equipmentChance}% / ${d.highLevelChance}%`}. Evento XP ×${r.effects.xp}, ouro ×${r.effects.gold}. Bosses usam roleta e tabela própria.`;
       });
     case "ajuda":
-      game?.keys.clear();
-      openCommandHelp({
-        isAdmin,
-        onUse: (example) => {
-          const input = document.querySelector("input.hud-chat-input");
-          if (input) {
-            input.value = example;
-            input.focus();
-            input.dispatchEvent(new Event("input", { bubbles: true }));
-          }
-        },
-      });
-      return null;
+      return 'Comandos: /personagens, /bolsa, /status, /habilidades, /loja, /skins, /salvar, /sair.'+
+        (isAdmin?' GM: /monstro, /mymonster, /velocidade, /gmkit, /gmrota, /gmexp, /link.':'');
     case "habilidades":
       if (args[0]?.toLowerCase() === "liberar") {
         if (!isAdmin) throw Error("Liberar habilidades é exclusivo do administrador.");
@@ -1323,8 +1325,9 @@ function deliver(message) {
   if (conn.gameHandler) conn.gameHandler(copy);
   else conn.gameBacklog.push(copy);
 }
+let slashCommandInProgress = false;
 function notice(text) {
-  deliver({ t: "chat", from: "", text, channel: "system" });
+  deliver({ t: "chat", from: "", text, channel: slashCommandInProgress ? "normal" : "system" });
 }
 function recalculate() {
   for (const item of [
@@ -1461,7 +1464,7 @@ function save(force = false) {
 }
 function questViews() {
   return questData.quests
-    .filter((q) => q.id.startsWith('rank.')?worldQuests.eligible(q):questEligible(q, stats, characterClass.tribe, completed))
+    .filter((q) => !q.id.startsWith('rank.') && questEligible(q, stats, characterClass.tribe, completed))
     .map((raw) => {
       const q=worldQuests.resolve(raw);
       const objectives = q.steps
@@ -2501,10 +2504,15 @@ async function handle(message) {
         const commandKey = message.text.trim().toLowerCase();
         if (pendingCommands.has(commandKey)) return;
         pendingCommands.add(commandKey);
+        slashCommandInProgress = true;
         try {
           const name = canonicalCommand(message.text.trim().slice(1).split(/\s+/)[0]);
           const safe = [
             "ajuda",
+            "personagens",
+            "sair",
+            "bolsa",
+            "status",
             "habilidades",
             "itens",
             "monstros",
@@ -2534,6 +2542,7 @@ async function handle(message) {
           notice(`[Sistema] Erro: ${error.message}`);
         } finally {
           pendingCommands.delete(commandKey);
+          slashCommandInProgress = false;
         }
         break;
       }
@@ -2894,7 +2903,6 @@ try {
   noticeMapProgression();
   document.title = "FREEston Tale";
   brandInterface();
-  mountLocalMenu();
   let customSkinState=null;
   const customCatalog=await get('/api/local/custom-skins');
   globalThis.__localSession.customSkins=mountCustomSkins({B,game,own:()=>customSkinState,inventory:()=>inv.equip,catalog:customCatalog.skins,peers:()=>globalThis.__localSession.online?.peers()??[]});
