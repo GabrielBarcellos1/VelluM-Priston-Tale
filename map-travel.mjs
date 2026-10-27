@@ -9,6 +9,15 @@ export function walkingStages(fields, current, canEnter = () => true) {
   const from = fields.find(f => f.id === current);
   return from ? [from, ...adjacentFields(fields, current).filter(canEnter)] : [];
 }
+// The Bamboo/Acacias boundary overlaps terrain collision zones. Move arrivals
+// into the destination's interior rather than leaving them on an ambiguous seam.
+export function forestSeamArrival(from, target, position) {
+  if (!((from === 0 && target?.id === 1) || (from === 1 && target?.id === 0))) return null;
+  const starts = (target.start ?? []).filter(p => Array.isArray(p) && p.length >= 2 && p.every(Number.isFinite));
+  if (!starts.length) return null;
+  const [x, z] = starts.reduce((a, b) => Math.hypot(b[0] - position.x, b[1] - position.z) < Math.hypot(a[0] - position.x, a[1] - position.z) ? b : a);
+  return { x, z };
+}
 export function portalAt(portals, current, position) {
   if (!position || !Number.isFinite(position.x) || !Number.isFinite(position.z)) return null;
   return portals.find(p => !p.disabled && p.fromField === current &&
