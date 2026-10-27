@@ -31,6 +31,7 @@ import premium_store
 import online_world
 import game_control
 import npc_services
+import level_rewards
 import boss_roulette
 import server_economy
 import custom_skins
@@ -341,7 +342,7 @@ class Handler(SimpleHTTPRequestHandler):
                 return self.json_reply({'error':'Entre na conta local.'},401)
             if path.startswith('/api/local/game/'):
                 action=path.rsplit('/',1)[-1]
-                handlers={'gm':gm_tools.action,'aging':game_control.aging,'kill':game_control.kill,'pickup':game_control.pickup,'report':game_control.report,'skin':game_control.skin_action,'npc':npc_services.action,'boss':boss_roulette.action,'economy':server_economy.runtime}
+                handlers={'rewards':level_rewards.claim,'gm':gm_tools.action,'aging':game_control.aging,'kill':game_control.kill,'pickup':game_control.pickup,'report':game_control.report,'skin':game_control.skin_action,'npc':npc_services.action,'boss':boss_roulette.action,'economy':server_economy.runtime}
                 if action not in handlers:return self.json_reply({'error':'Ação inválida.'},404)
                 try:
                     if action!='report' and not isinstance(data.get('generation'),str):raise ValueError('Atualize a página e selecione seu personagem novamente.')

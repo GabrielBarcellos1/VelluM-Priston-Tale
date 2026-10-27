@@ -214,6 +214,8 @@ try {
 }
 const gameplayTestMode = isAdmin && stored?.gmGameplayTest === true;
 let lastSavedAt = Math.max(0, Number(stored?.savedAt) || 0);
+const claimedKitLevels = new Set(stored?.progressionRewards ?? []);
+let nextKitAttempt = 0;
 let activeForce = stored?.force && Number.isFinite(stored.force.expiresAt) ? stored.force : null;
 const requestedMap = Number(
   params.get("mapa") ?? stored?.field ?? (characterClass.tribe === "morion" ? 21 : 3),
@@ -1237,7 +1239,9 @@ function dropLoot(monster) {
           id = ++nextDropId;
         if (!item) continue;
         const specEntry = specializationRule(item.code, wiki.specs ?? {});
-        if (specEntry && Math.random() < dropRules.common.specializationChance) {
+        if (entry.spec === characterClass.job) {
+          applySpecialization(item, entry.spec);
+        } else if (specEntry && Math.random() < dropRules.common.specializationChance) {
           const jobs = B.specJobs(specEntry.rule);
           if (jobs.length) applySpecialization(item, jobs[Math.floor(Math.random() * jobs.length)]);
         }
@@ -1407,6 +1411,7 @@ function save(force = false) {
         savedAt: (lastSavedAt = Math.max(lastSavedAt + 1, Math.floor(serverNow()))),
         endgame: endgameEnabled,
         gmGameplayTest: gameplayTestMode,
+        progressionRewards: [...claimedKitLevels],
         name: stats.name,
         stats,
         inv,
@@ -1502,6 +1507,35 @@ function noticeMapProgression() {
     .sort((a,b)=>Number(!field.neighbors?.includes(a.id))-Number(!field.neighbors?.includes(b.id)));
   notice(field.name+' não rende EXP no nível '+stats.level+'. Faixa: '+band.min+'–'+band.max+'.'+
     (next.length?' Continue em '+next.slice(0,3).map(m=>m.name).join(' / ')+'.':''));
+}
+async function claimLevelKits() {
+  if (!game || game.dead || economyBusy || economyUncertain || pendingLoot || mapTravel?.busy ||
+      stats.level < 10 || stats.level >= 80 || performance.now() < nextKitAttempt ||
+      ![10,20,30,40,50,60,70].some(level => level <= stats.level && !claimedKitLevels.has(level))) return;
+  nextKitAttempt = performance.now() + 30000;
+  economyBusy = true;
+  try {
+    if (!save(true)) throw Error('Não foi possível salvar para receber o kit.');
+    await stateWrite;
+    const payload = {savedAt:lastSavedAt,requestId:requestId()};
+    let result;
+    for (let attempt=0;attempt<3;attempt++) {
+      try { result=await postLocal('/api/local/game/rewards',payload); break; }
+      catch(error) {
+        if(error.status) throw error;
+        if(attempt===2) {economyUncertain=true;throw Error('Recarregue para recuperar o kit confirmado pelo servidor.');}
+      }
+    }
+    for(const level of result.levels ?? []) claimedKitLevels.add(level);
+    if(result.state) {
+      for(const group of ['bag','bagB'])
+        inv[group]=(result.state.inv[group]??[]).map(p=>({...p,item:restoreItem(p.item)})).filter(p=>p.item);
+      lastSavedAt=result.state.savedAt;
+      recalculate(); save(true);
+      notice('Kit de evolução do nível '+result.awarded+' recebido: 8 equipamentos com o spec da sua classe. Confira a bolsa.');
+    }
+  } catch(error) { notice('Kit de evolução: '+error.message); }
+  finally { economyBusy=false; }
 }
 function gainExperience(gained) {
   const previousLevel=stats.level;
@@ -3022,6 +3056,8 @@ try {
   }, 1000);
   if(isAdmin)gmOperation("status").catch(e=>recordDiagnostic(e.message));
   setInterval(save, 2000);
+  setInterval(() => claimLevelKits(), 5000);
+  claimLevelKits();
   setInterval(async () => {
     if (document.hidden) return;
     try {

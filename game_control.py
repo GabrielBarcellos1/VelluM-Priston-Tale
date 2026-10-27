@@ -257,7 +257,7 @@ def kill(user,data):
             third=db.execute("SELECT value FROM premium_active WHERE username=? AND kind='thirdEyes' AND expires>?",(user['username'],time.time())).fetchone()
             if third:premiums=[max([third['value'],*premiums])]
             if db.execute("SELECT 1 FROM premium_active WHERE username=? AND kind='phoenix' AND expires>?",(user['username'],time.time())).fetchone():premiums.append(25)
-        rolled=server_economy.roll(db,monster,map_id,premiums,RNG);gold=rolled['gold'];items=rolled['items']
+        rolled=server_economy.roll(db,monster,map_id,premiums,RNG,job=job,player_level=saved.get('stats',{}).get('level',1));gold=rolled['gold'];items=rolled['items']
         origin='staff-test' if user['role'] in ('admin','gm') else 'client-kill/server-roll'
         event(db,user,'monster.kill','kill',job=job,character=name,map_id=map_id,monster=monster['name'],trust=origin,detail={'monsterId':monster['id'],'rulesVersion':table['version'],'combatVerified':False})
         if data.get('trialToken'):
@@ -272,7 +272,10 @@ def kill(user,data):
             event(db,user,'drop.gold','drop',job=job,character=name,map_id=map_id,monster=monster['name'],code='GOLD',item_name='Ouro',quantity=gold,status='collected',trust=origin)
         for code,count,category in items:
             item=ITEMS[code];event_id=event(db,user,'drop.'+category,'drop',job=job,character=name,map_id=map_id,monster=monster['name'],code=code,item_name=item['name'],item_level=item.get('req',{}).get('level',0),quantity=count,status='generated',trust=origin)
-            result.append({'code':code,'count':count,'eventId':event_id})
+            entry={'code':code,'count':count,'eventId':event_id}
+            import level_rewards
+            if category=='equipment' and level_rewards.preferred(item,job) and RNG.random()<level_rewards.rules()['ownSpecChance']:entry['spec']=job
+            result.append(entry)
         monitor=table['monitor'];conditions=['username=?',"kind='drop'",'created>?','item_level BETWEEN ? AND ?',"trust!='staff-test'"]
         args=[user['username'],time.time()-monitor['windowMinutes']*60,monitor['minLevel'],monitor['maxLevel']]
         if monitor['codes']:conditions.append('code IN ('+','.join('?' for _ in monitor['codes'])+')');args+=monitor['codes']

@@ -1,0 +1,17 @@
+{
+  "version": 1,
+  "kitLevels": [
+    10,
+    20,
+    30,
+    40,
+    50,
+    60,
+    70
+  ],
+  "preferredClassChance": 0.8,
+  "ownSpecChance": 0.9,
+  "minimumEquipmentChance": 12,
+  "minimumHighLevelChance": 8,
+  "dropLevelWindow": 15
+}

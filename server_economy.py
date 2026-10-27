@@ -146,17 +146,27 @@ def runtime(user,data):
     if field not in MAPS:raise ValueError('Mapa desconhecido.')
     with accounts.connection() as db:g.setup(db);return {'ok':True,'effects':effects(db,field),'policy':policy(db,field),'globalDrops':g.rules_in(db)['drops'],'serverTime':time.time()}
 
-def roll(db,monster,field,premium_extra=0,rng=None,preview=False):
+def roll(db,monster,field,premium_extra=0,rng=None,preview=False,job=None,player_level=None):
     import game_control as g
     rng=rng or g.RNG;p=policy(db,field);e=effects(db,field);gold=0;items=[]
     if field not in monster['maps'] or not any(monster.get('attack',[])) or p['paused']:return {'gold':0,'items':[],'effects':e,'policyVersion':p['version']}
     rules=g.rules_in(db)['drops'];level=monster['level'];low=max(0,level-20)
     groups=p['equipment'] if p['custom'] else [{'minLevel':low,'maxLevel':min(level,79),'chance':rules['equipmentChance']},{'minLevel':max(80,low),'maxLevel':level,'chance':rules['highLevelChance']}]
+    import level_rewards
+    assisted=job in level_rewards.WEAPONS and player_level is not None
+    if assisted and not p['custom']:
+        low,high=level_rewards.drop_band(field,player_level,level)
+        config=level_rewards.rules()
+        groups=[{'minLevel':low,'maxLevel':min(high,79),'chance':max(rules['equipmentChance'],config['minimumEquipmentChance']) if rules['equipmentChance']>0 else 0},
+                {'minLevel':max(80,low),'maxLevel':high,'chance':max(rules['highLevelChance'],config['minimumHighLevelChance']) if rules['highLevelChance']>0 else 0}]
     def wins(ch):return rng.random()*100<min(100,ch)
+    def choose(pool):
+        useful=[i for i in pool if level_rewards.preferred(i,job)] if assisted else []
+        return rng.choice(useful if useful and rng.random()<level_rewards.rules()['preferredClassChance'] else pool)
     def equipment():
         for group in groups:
             pool=equipment_pool(group) if p['custom'] else _legacy_pool(group['minLevel'],group['maxLevel'])
-            if pool and wins(group['chance']*e['drops']):items.append((rng.choice(pool)['code'],1,'equipment'))
+            if pool and wins(group['chance']*e['drops']):items.append((choose(pool)['code'],1,'equipment'))
     if p['custom']:
         if wins(p['gold']['chance']):gold=rng.randint(p['gold']['min'],p['gold']['max'])
     elif wins(rules['goldChance']):gold=math.floor(level*3*rules['goldMultiplier'])
@@ -167,7 +177,7 @@ def roll(db,monster,field,premium_extra=0,rng=None,preview=False):
             else:
                 pool=_legacy_pool(low,level)
                 if pool:
-                    selected=rng.choice(pool);ch=rules['highLevelChance'] if selected.get('req',{}).get('level',0)>=80 else rules['equipmentChance']
+                    selected=choose(pool);ch=rules['highLevelChance'] if selected.get('req',{}).get('level',0)>=80 else rules['equipmentChance']
                     if wins(ch*e['drops']):items.append((selected['code'],1,'equipment'))
     potion=p['potionChance'] if p['custom'] else rules['potionChance']
     if wins(potion):items.append((g.common_potion(level,rng.random()),1,'potion'))
