@@ -34,12 +34,18 @@ export function createGameFeatures(c){
  async function rankAction(q,npcId){
   if(!npcTeacher(npcId))throw Error('Procure o Mestre de Habilidades correto.');
   if(q.state==='ready'){c.complete(q.id,npcId);return;}
+  if(q.state==='available' && q.id.startsWith('rank.1.') && c.stats.level>=20 && c.world.rank()===0){
+   c.completed.add(q.id);c.accepted.delete(q.id);c.world.done(q);
+   c.recalculate();c.publish();c.save(true);
+   c.notice('Desafio de classe aceito e concluído! Tier 2 liberada. As habilidades da nova Tier estão disponíveis no Mestre.');
+   c.promoted();return;
+  }
   if(q.state==='available'){c.world.accept(q);c.save();c.publish();c.notice('Desafio aceito: '+q.title);}
   if(q.id==='rank.3.duel'){startDuel(npcId);return;}
   if(q.id.startsWith('rank.2.2.'))loanWeapon();
   c.notice(q.offer??'Consulte os objetivos no Guia de Missões (Q).');
  }
- function openNpc(npc){return openNpcServices(npc,{game:c.game,rank:c.world.rank,classQuests:()=>c.views().filter(q=>q.id.startsWith('rank.')),skills:c.openSkills,rankAction,recoverWeapon:()=>{if(!c.completed.has('rank.2'))throw Error('Conclua a coleta dos Vamps primeiro.');loanWeapon();c.save();c.notice('Arma emprestada disponível.');},action:npcAction,refresh:c.refresh,trial:()=>c.meta.trial,enterTrial:t=>{c.meta.trial=t;c.meta.trial.kills=0;c.navigate(30);}});}
+ function openNpc(npc){return openNpcServices(npc,{game:c.game,rank:c.world.rank,level:()=>c.stats.level,classQuests:()=>c.views().filter(q=>q.id.startsWith('rank.')),skills:c.openSkills,rankAction,recoverWeapon:()=>{if(!c.completed.has('rank.2'))throw Error('Conclua a coleta dos Vamps primeiro.');loanWeapon();c.save();c.notice('Arma emprestada disponível.');},action:npcAction,refresh:c.refresh,trial:()=>c.meta.trial,enterTrial:t=>{c.meta.trial=t;c.meta.trial.kills=0;c.navigate(30);}});}
  function spawn(def,extra={},offset=200){
   const g=c.game(),p=g.ground.spawnPoint(g.pos.x+offset,g.pos.z+80);if(!p)return null;
   const m={id:++id,name:def.name,level:def.level,definition:def,model:def.model.replace(/\\/g,'/').replace(/\.[^/.]+$/,'').toLowerCase(),x:p.x,y:p.y,z:-p.z,hp:def.hp,hpMax:def.hp,motion:'stand',angle:0,seq:0,body:20,nextAttack:0,featureSpawn:true,...extra};
