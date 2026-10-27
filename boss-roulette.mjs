@@ -26,10 +26,10 @@ export function mountBossRoulette(c){
   if(m){const old=m.hp;m.hp=b.hp;m.hpMax=b.hpMax;if(!m.hp&&old>0){m.motion='dead';m.seq++;setTimeout(()=>{if(c.monsters.get(id)!==m)return;c.deliver({t:'monsters',remove:[id]});c.monsters.delete(id);},3500);}c.deliver({t:'monsters',update:[{id,hp:m.hp,hpMax:m.hpMax,motion:m.motion,seq:m.seq}],ts:performance.now()/1000});}
   if(b.dead&&participated.includes(b.id)&&!deadSeen.has(b.id)){deadSeen.add(b.id);c.meta.bossDeaths=[...deadSeen].slice(-256);c.defeated(def);c.save();c.notice(`${def.name} derrotado! A roleta terá de 3 a 5 rodadas.`);}
  }
- async function observe(m){seeds.set(m.definition.id,m);if(Date.now()-(observed.get(m.definition.id)??0)<60000)return;observed.set(m.definition.id,Date.now());try{await c.post('/api/local/game/boss',{action:'observe',monster:m.definition.id,x:m.x,y:m.y,z:m.z,requestId:c.requestId()});}catch(e){observed.delete(m.definition.id);c.notice(e.message);}}
+ async function observe(m){if(!c.field||!m.definition.maps.includes(c.field.id))return;const epoch=mapEpoch;seeds.set(m.definition.id,m);if(Date.now()-(observed.get(m.definition.id)??0)<60000)return;observed.set(m.definition.id,Date.now());try{await c.post('/api/local/game/boss',{action:'observe',monster:m.definition.id,x:m.x,y:m.y,z:m.z,requestId:c.requestId()});}catch(e){if(epoch!==mapEpoch)return;c.diagnostic('Boss observe: '+e.message);}}
  async function poll(){if(polling||suspended||!c.game())return;polling=true;const epoch=mapEpoch;
-  try{for(const[id,m]of c.monsters)if(m.definition.boss&&!m.sharedBoss&&!m.featureSpawn&&!m.owner){await observe(m);c.monsters.delete(id);c.deliver({t:'monsters',remove:[id]});}
-   for(const seed of seeds.values())await observe(seed);
+  try{for(const[id,m]of c.monsters)if(m.definition.boss&&!m.sharedBoss&&!m.featureSpawn&&!m.owner){if(epoch!==mapEpoch)return;await observe(m);if(epoch!==mapEpoch)return;c.monsters.delete(id);c.deliver({t:'monsters',remove:[id]});}
+   for(const seed of [...seeds.values()]){if(epoch!==mapEpoch)return;await observe(seed);}
    const result=await c.post('/api/local/game/boss',{action:'state'});if(epoch!==mapEpoch)return;for(const b of result.bosses)apply(b,result.participated);for(const r of result.rounds)round(r);
    if(JSON.stringify(awards)!==JSON.stringify(result.awards)){awards=result.awards;rewards();}
   }catch(e){c.diagnostic('Boss: '+e.message);}finally{polling=false;}
