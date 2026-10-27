@@ -233,3 +233,39 @@
   color: #f0cf88;
   min-height: 20px;
 }
+
+/* Próximo mapa de UP: aviso discreto semelhante aos indicadores de missão. */
+.vellum-next-up-map {
+  position: fixed;
+  top: 154px;
+  right: 16px;
+  z-index: 1100;
+  width: min(310px, calc(100vw - 32px));
+  display: flex;
+  flex-direction: column;
+  gap: 5px;
+  padding: 11px 14px;
+  border: 1px solid #c79b48;
+  border-left: 4px solid #e5b653;
+  border-radius: 9px;
+  background: rgba(22, 29, 33, .94);
+  box-shadow: 0 5px 18px rgba(0, 0, 0, .35);
+  color: #f3eee1;
+  pointer-events: none;
+  font: 13px/1.45 system-ui, sans-serif;
+}
+.vellum-next-up-title {
+  color: #f1c975;
+  font-size: 13px;
+  letter-spacing: .15px;
+}
+.vellum-next-up-detail { color: #f0f0e8; }
+@media (max-width: 650px) {
+  .vellum-next-up-map {
+    top: 104px;
+    right: 8px;
+    width: min(260px, calc(100vw - 16px));
+    padding: 9px 11px;
+    font-size: 12px;
+  }
+}
