@@ -83,6 +83,23 @@ test('forest boundary places the character at a safe destination spawn',()=>{
  assert.deepEqual(forestSeamArrival(0,bamboo,{x:-8000,z:-11000}),{x:-7192,z:-11175});
  assert.equal(forestSeamArrival(1,fields.find(f=>f.id===2),{x:0,z:0}),null);
 });
+test('forest entry blocks false return to Bamboo until the player leaves the arrival area',async()=>{
+ let where={x:-7000,z:-11000},clock=10000;
+ const travel=createMapTravel({fields,current:1,portals:[],canEnter:()=>true,alive:()=>true,
+  position:()=>where,prepare:async()=>{},save:()=>true,flush:async()=>{},activate:async next=>{
+   const arrival=forestSeamArrival(1,fields.find(f=>f.id===next.field),where);
+   if(arrival)where=arrival;
+  },rollback:async()=>{},notice:()=>{},now:()=>clock});
+ assert.equal(await travel.walk(0),true);
+ assert.equal(travel.current,0);
+ clock+=15000;
+ assert.equal(travel.forestReturnBlocked(1),true);
+ assert.equal(await travel.walk(1),false);
+ assert.equal(travel.current,0);
+ where={x:where.x+3000,z:where.z};
+ assert.equal(travel.forestReturnBlocked(1),false);
+ assert.equal(await travel.walk(1),true);
+});
 test('walking map crossing ignores immediate bounce-back until terrain settles',async()=>{
  const f=fixture();
  assert.equal(await f.travel.walk(1),true);
