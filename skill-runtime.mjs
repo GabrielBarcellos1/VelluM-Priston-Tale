@@ -135,7 +135,7 @@ export function createRuntimeSkillSystem(ctx) {
   function publish(){ctx.emit?.(snapshot());tickCooldowns();}
   function bonuses(){return sumEffects([...list.filter(s=>s.kind==='passive'&&learned(s)).map(s=>effectFor(s,learned(s),ctx.catalog.rules,ctx.equipment?.()??null)),
     ...liveBuffs().map(b=>effectFor(b,b.level,ctx.catalog.rules,ctx.equipment?.()??null))]);}
-  function buffs(){return liveBuffs().map(b=>({code:'skill:'+b.code,name:b.name,level:b.level,icon:b.icon??b.classicIcon,
+  function buffs(){return liveBuffs().map(b=>({code:'skill:'+b.code,name:b.name,level:b.level,icon:b.classicIcon??b.icon,
     secondsLeft:Math.ceil(b.until-now()),left:Math.ceil(b.until-now()),total:at(profile(b).duration,b.level),
     rows:effectRows(effectFor(b,b.level,ctx.catalog.rules)).map(r=>({label:r.label,value:r.cur}))}));}
   function buff(s,n,seconds=at(profile(s).duration,n),party=false){active.set((party?'party:':'')+s.code,{...s,level:n,until:now()+seconds,party});ctx.recalculate?.();ctx.buffsChanged?.();}
@@ -155,6 +155,7 @@ export function createRuntimeSkillSystem(ctx) {
     if(game.worldLocked||game.air?.motion)throw Error('Aguarde o personagem ficar disponível.');
     const offensive=!['buff','party','heal','summon'].includes(s.kind);
     if(ctx.isVillage?.()&&offensive)throw Error('Habilidades de combate só podem ser usadas fora da cidade.');
+    if(['SKILL_DIVINE_INHALATION','SKILL_GODLY_SHIELD'].includes(s.code)&&!ctx.equipment?.()?.shield)throw Error('Equipe um escudo para usar esta habilidade.');
     if(s.code==='SKILL_SWIFT_AXE'&&!ctx.equipment?.()?.weapon?.code?.startsWith('WA1'))throw Error('Equipe um machado para usar Machado Veloz.');
     if((ready.get(id)??0)>now())throw Error('Aguarde a recarga da habilidade.');
     if(actionReady>now())throw Error('Aguarde a animação do golpe terminar.');
@@ -246,4 +247,25 @@ export function createRuntimeSkillSystem(ctx) {
       else if(event.kind==='resurrection')ctx.resurrect?.(event.hpPercent);
       ctx.recalculate?.();ctx.buffsChanged?.();ctx.save?.();},
   };
+}
+
+// The native client blocks every skill in villages; local rules allow self buffs.
+export function mountLocalSkillCasting(game, isVillage) {
+  const original = game.useSkill;
+  game.useSkill = function(id, side = 'right', target) {
+    const skill = this.skillInfo(id);
+    if (!isVillage() || skill?.target !== 'self' || !['buff','party'].includes(skill.kind))
+      return original.call(this,id,side,target);
+    this.markManual();
+    if (!skill.level || skill.passive || this.dead || this.worldLocked || this.air?.motion) return false;
+    if (this.charging) return true;
+    if (this.skillCooldownLeft(id)>0 || this.time<this.attackAnimUntil || this.eatHold()) return false;
+    const stats=this.gm.god?null:this.lastStats;
+    if (stats && (stats.mp<skill.mp || stats.sp<(skill.stamina??0))) return false;
+    this.allyCast=null;
+    // Keep the ordinary cast packet, runtime validation, costs, FX and recast timer.
+    this.sendSkill(id,target);
+    return true;
+  };
+  return () => { game.useSkill=original; };
 }

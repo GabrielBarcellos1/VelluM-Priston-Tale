@@ -227,3 +227,25 @@ test('Knight: Sword of Justice hits the advertised circular area, including enem
  const v=f.system.cast(s.id);f.pending.forEach(fn=>fn());assert.equal(v.area.radius,175);
  assert.deepEqual(f.calls.damage.map(a=>a[0]).sort(),[1,2,3]);
 });
+
+
+test('native village adapter casts self buffs through the real runtime, preserving costs and blocking cooldown, death and offense',async()=>{
+ const {mountLocalSkillCasting}=await import('../skill-runtime.mjs');
+ const s=catalog.skills.find(s=>s.code==='SKILL_HOLY_BODY'),f=fixture(s,10,{isVillage:()=>true});
+ let delegated=0;const game={gm:{god:false},lastStats:f.stats,time:0,attackAnimUntil:0,markManual(){},eatHold:()=>false,skillCooldownLeft:()=>0,skillInfo:id=>f.system.snapshot().skills.find(s=>s.id===id),useSkill(){delegated++;return false;},sendSkill:id=>f.system.cast(id)};
+ const original=game.useSkill,dispose=mountLocalSkillCasting(game,()=>true),mp=f.stats.mp;
+ assert.equal(game.useSkill(s.id),true);assert.equal(f.stats.mp,mp-catalog.rules.skills[s.code].runtime.mp[9]);assert.equal(f.system.bonuses().undeadAbsorb,33);
+ game.skillCooldownLeft=()=>17;assert.equal(game.useSkill(s.id),false);assert.equal(f.stats.mp,mp-catalog.rules.skills[s.code].runtime.mp[9]);
+ game.skillCooldownLeft=()=>0;game.dead=true;assert.equal(game.useSkill(s.id),false);game.dead=false;
+ game.lastStats={mp:0,sp:0};assert.equal(game.useSkill(s.id),false);
+ assert.equal(game.useSkill(601),false);assert.equal(delegated,1);dispose();assert.equal(game.useSkill,original);
+});
+
+test('Knight shield skills reject missing shields before charging MP or cooldown',()=>{
+ for(const code of ['SKILL_DIVINE_INHALATION','SKILL_GODLY_SHIELD']){const s=catalog.skills.find(s=>s.code===code),f=fixture(s,10);f.equipment.shield=null;const before={...f.stats};assert.throws(()=>f.system.cast(s.id),/escudo/);assert.deepEqual(f.stats,before);assert.deepEqual(f.system.exportCooldowns(),{});assert.equal(f.system.buffs().length,0);}
+});
+
+
+test('Knight restored buffs retain their classic icon after travel or reconnect',()=>{
+ for(const code of ['SKILL_HOLY_BODY','SKILL_HOLY_VALOR','SKILL_DRASTIC_SPIRIT','SKILL_DIVINE_INHALATION','SKILL_GODLY_SHIELD','SKILL_GOD_BLESS']){const s=catalog.skills.find(s=>s.code===code),f=fixture(s,10);f.system.cast(s.id);const restored=fixture(s,10,{savedBuffs:f.system.exportBuffs()});assert.equal(restored.system.buffs()[0].icon,s.classicIcon,code);assert.equal(restored.system.buffs()[0].icon,f.system.buffs()[0].icon);}
+});

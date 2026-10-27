@@ -36,8 +36,9 @@ import { mountBossRoulette } from "/boss-roulette.mjs";
 import { createGameFeatures } from "/game-features.mjs";
 import { objectiveValue, objectiveIncrement, questCollectionCode } from "/quest-progress.mjs";
 import { experienceFloor, migrateExperience, killExperience, mapExperienceRange, mapExperienceAllowed, capKillExperience, classDamageScale, balanceMonster, questExperienceReward, potionCanUse, registerPotion } from "/balance-rules.mjs";
-import { monsterControl, applyConversionHealth, restoreConversionHealth } from "/skill-runtime.mjs";
+import { monsterControl, applyConversionHealth, restoreConversionHealth, mountLocalSkillCasting } from "/skill-runtime.mjs";
 import { createSkillSystem } from "/skill-system.mjs";
+
 import { mountCustomSkins, openSapphirePreview } from "/custom-skins.mjs";
 import { mountSkinShop } from "/skins-shop.mjs";
 import { resolveName } from "/admin-names.mjs";
@@ -2854,6 +2855,7 @@ try {
   }
   globalThis.__localSession.ui = B.ui(game, conn, hero);
   B.Runtime.set(game);
+  mountLocalSkillCasting(game,()=>!!field.village);
   mountGmMovement();
   syncGm();
   B.state("field");
