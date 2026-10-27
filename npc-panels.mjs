@@ -16,17 +16,49 @@ export function mountClassCrest(game,B,rank){
  mesh.position.set(0,44,0);mesh.name=spec.name;game.player.object.add(mesh);
  return {dispose(){mesh.parent?.remove(mesh);geometry.dispose();material.dispose();}};
 }
+export function mountSkillChallenge(npc,ctx){
+ document.getElementById('vellum-skill-challenge')?.remove();
+ const box=document.createElement('section');
+ box.id='vellum-skill-challenge';box.className='vellum-skill-challenge';
+ const toggle=document.createElement('button'),details=document.createElement('div');
+ toggle.type='button';toggle.className='vellum-challenge-toggle';toggle.textContent='Desafio de classe';
+ details.className='vellum-challenge-details';details.hidden=true;
+ const draw=()=>{
+  details.replaceChildren();
+  const title=document.createElement('strong');
+  const next=ctx.rank()+2,level=ctx.level(),required=[20,40,60][ctx.rank()]??0;
+  title.textContent=ctx.rank()>=3?'Todas as tiers concluídas':'Desafio da Tier '+next;
+  details.append(title);
+  const info=document.createElement('p');
+  info.textContent=ctx.rank()>=3?'Você já liberou todas as habilidades de classe.':
+   level<required?'Disponível no nível '+required+'. Seu nível atual: '+level+'.':
+   next===2?'Ao aceitar, a Tier 2 será concluída imediatamente e as novas habilidades serão liberadas.':
+   'Consulte e conclua os objetivos do desafio para liberar as habilidades da próxima Tier.';
+  details.append(info);
+  const quest=ctx.classQuests().find(q=>q.state==='ready'||q.state==='available'||q.state==='active');
+  if(quest&&level>=required){
+   const action=document.createElement('button');action.type='button';
+   action.textContent=quest.state==='ready'?'Concluir desafio':quest.state==='active'?'Ver desafio ativo':'Aceitar desafio';
+   action.disabled=quest.state==='active';
+   action.onclick=async()=>{action.disabled=true;try{await ctx.rankAction(quest,npc.id);draw();}catch(e){info.textContent=e.message;action.disabled=false;}};
+   details.append(action);
+  }
+  if(ctx.rank()===1){
+   const recover=document.createElement('button');recover.type='button';recover.textContent='Recuperar arma de desafio';
+   recover.onclick=()=>{try{ctx.recoverWeapon();}catch(e){info.textContent=e.message;}};
+   details.append(recover);
+  }
+ };
+ toggle.onclick=()=>{details.hidden=!details.hidden;if(!details.hidden)draw();};
+ box.append(toggle,details);
+ document.body.append(box);
+ return box;
+}
 export async function openNpcServices(npc,ctx){
  const services=npc.services??[];ctx.game()?.keys.clear();
  if(services.includes('skill')){
-  const panel=serviceDialog(npc.name,`Seu estágio atual: Tier ${ctx.rank()+1}. Os desafios de classe liberam habilidades e a insígnia da cabeça.`);
-  panel.button('Aprender e evoluir habilidades',()=>{panel.close();ctx.skills(npc.id);});
-  for(const q of ctx.classQuests()){
-   panel.line(q.title+' — '+q.state);
-   for(const o of q.objectives??[])panel.line(`${o.text}: ${o.done}/${o.need}`);
-   panel.button(q.state==='ready'?'Entregar o desafio':q.state==='available'?'Aceitar o desafio':'Continuar o desafio',()=>ctx.rankAction(q,npc.id));
-  }
-  if(ctx.rank()===1)panel.button('Recuperar arma emprestada, se necessário',()=>ctx.recoverWeapon());
+  ctx.skills(npc.id);
+  mountSkillChallenge(npc,ctx);
   return;
  }
  const service=services.find(s=>['charity','post','clan','levelRanking','smelting','manufacture','bellatra'].includes(s));
