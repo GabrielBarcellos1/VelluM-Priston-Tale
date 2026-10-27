@@ -291,7 +291,7 @@ const stats = {
   shootingRange: definitions.get(starterWeapon)?.range ?? 0,
 };
 migrateExperience(stats, balanceRules);
-stats.classRank=promotionRank(stored?.completed,characterClass.job);
+stats.classRank=promotionRank(stored?.completed,characterClass.job,stats.level);
 const fieldMinimum=balanceRules.maps?.find(m=>m.id===field.id)?.minimum??1;
 if((!isAdmin||gameplayTestMode)&&stats.level<fieldMinimum&&!((field.id===30&&stored?.questMeta?.trial?.expires>serverNow()/1000)||(field.id===32&&stored?.questMeta?.duel?.expires>serverNow()/1000))){location.replace(`?classe=${characterClass.job}&mapa=${characterClass.tribe==='morion'?21:3}`);throw Error(`Este mapa requer nível ${fieldMinimum}.`);}
 const inv = {
@@ -1174,6 +1174,52 @@ const skills = createSkillSystem({
   },
 });
 const groundDrops = new Map();
+let inventoryRevision=stored?.inventoryRevision??0,groundRefreshing=false;
+
+async function refreshGroundItems(force=false) {
+  if(groundRefreshing||!game||mapTravel?.busy||(!force&&(economyBusy||economyUncertain||pendingLoot)))return;
+  groundRefreshing=true;const map=field.id;
+  try{
+    const result=await postLocal('/api/local/game/ground',{action:'list'});
+    if(field.id!==map||mapTravel?.busy)return;
+    const seen=new Set(),add=[],remove=[];
+    for(const entry of result.items){
+      const id=300000000+entry.id;seen.add(id);if(groundDrops.has(id))continue;
+      const item=restoreItem(entry.item);if(!item)continue;
+      const floor=game.ground.heightAt(entry.x,-entry.z,null);
+      const state={...item,id,x:entry.x,y:Number.isFinite(floor)?floor:entry.y,z:entry.z,owner:entry.owner};
+      groundDrops.set(id,{item,state,groundId:entry.id});add.push(state);
+    }
+    for(const [id,drop]of groundDrops)if(drop.groundId&&!seen.has(id)){groundDrops.delete(id);remove.push(id);}
+    if(add.length||remove.length)deliver({t:'ground',add,remove});
+  }catch(error){if(force)notice('Itens no chão: '+error.message);}
+  finally{groundRefreshing=false;}
+}
+async function groundItemAction(action,values) {
+  if(!game||game.dead||stats.hp<=0||economyBusy||economyUncertain||pendingLoot||mapTravel?.busy)return notice('Aguarde a operação atual terminar.');
+  economyBusy=true;
+  try{
+    if(!save(true))throw Error('Não foi possível salvar antes de mover o item.');
+    await stateWrite;
+    const payload={action,...values,savedAt:lastSavedAt,requestId:requestId()};let result;
+    for(let attempt=0;attempt<3;attempt++){
+      try{result=await postLocal('/api/local/game/ground',payload);break;}
+      catch(error){if(error.status)throw error;if(attempt===2){economyUncertain=true;throw Error('Recarregue para recuperar o inventário confirmado pelo servidor.');}}
+    }
+    const confirmed=result.state;
+    for(const group of ['bag','bagB'])inv[group]=(confirmed.inv[group]??[]).map(p=>({...p,item:restoreItem(p.item)}));
+    for(const group of ['equip','equipB'])inv[group]=Object.fromEntries(Object.entries(confirmed.inv[group]??{}).map(([key,item])=>[key,restoreItem(item)]).filter(([,item])=>item));
+    inv.belt=(confirmed.inv.belt??[]).map(item=>item?restoreItem(item):null);
+    inventoryRevision=confirmed.inventoryRevision??inventoryRevision;
+    lastSavedAt=confirmed.savedAt;recalculate();
+    await refreshGroundItems(true);
+    if(action==='pickup'){updateQuests('pickup',{});notice('Item recolhido.');}
+    else notice('Item no chão. Reservado por 15 segundos; desaparece em 15 minutos.');
+    return true;
+  }catch(error){notice(error.message);recalculate();return false;}
+  finally{economyBusy=false;}
+}
+
 let nextDropId = 1000000;
 const warehouse = { items: [], gold: 0, pages: 3, weightMax: 10000, locked: [] };
 if (stored?.warehouse) {
@@ -1313,6 +1359,9 @@ function notice(text) {
   deliver({ t: "chat", from: "", text, channel: "system" });
 }
 function recalculate() {
+  const oldRank=stats.classRank;
+  stats.classRank=promotionRank([],characterClass.job,stats.level);
+  hero.rank=stats.classRank;
   for (const item of [
     ...Object.values(inv.equip),
     ...Object.values(inv.equipB),
@@ -1368,6 +1417,7 @@ function recalculate() {
     [...inv.bag, ...inv.bagB].reduce((a, b) => a + (b.item.weight ?? 0) * (b.item.count ?? 1), 0);
   deliver({ t: "stats", stats });
   deliver({ t: "inventory", inv });
+  if(game&&oldRank!==stats.classRank)game.events.emit("classPromotion",{rank:stats.classRank});
 }
 function sendState(state, unload = false) {
   const write = (snapshot) =>
@@ -1429,6 +1479,7 @@ function save(force = false) {
         skillCooldowns: skills.exportCooldowns(),
         skillBuffs: skills.exportBuffs(),
         force: activeForce,
+        inventoryRevision,
         selectedSkills: game ? { ...game.skillSlots } : stored?.selectedSkills,
       }),
     );
@@ -1589,20 +1640,17 @@ function findSpace(item) {
 function addBag(item) {
   if(!item||!Number.isInteger(item.count??1)||(item.count??1)<1||(item.count??1)>9999)return false;
   item.count??=1;
-  if (item.slot === "POTION" || item.premiumManaged) {
-    const existing = inv.bag.find(
-      (p) => p.item.code === item.code && !!p.item.premiumManaged === !!item.premiumManaged,
-    );
-    if (existing) {
-      if(existing.item.count+item.count>9999)return false;
-      existing.item.count += item.count;
-      return true;
-    }
+  if(item.slot==='POTION'||item.premiumManaged){
+    const existing=[...inv.bag,...inv.bagB].find(p=>p.item.code===item.code&&!!p.item.premiumManaged===!!item.premiumManaged);
+    if(existing){if(existing.item.count+item.count>9999)return false;existing.item.count+=item.count;return true;}
   }
-  const position = findSpace(item);
-  if (!position) return false;
-  inv.bag.push({ ...position, item });
-  return true;
+  for(const key of ['bag','bagB']){
+    const position=firstSpace(inv[key],item);
+    if(position){inv[key].push({...position,item});return true;}
+    const packed=organizeBag([...inv[key],{item}]);
+    if(packed){inv[key]=packed;return true;}
+  }
+  return false;
 }
 function syncPremiumInventory() {
   if(gameplayTestMode)return;
@@ -1952,8 +2000,15 @@ async function handle(message) {
     case "skillRelease":
     case "skillCancel":
       break;
+    case "dropItem": {
+      const uid=message.uid??message.item?.uid??message.item;
+      const count=message.count??message.quantity??message.amount;
+      await groundItemAction('drop',{uid,...(count===undefined?{}:{count})});
+      break;
+    }
     case "pickup": {
       const drop = groundDrops.get(message.id);
+      if(drop?.groundId){await groundItemAction('pickup',{id:drop.groundId});break;}
       if (!drop) return;
       if (Math.hypot(game.pos.x - drop.state.x, game.pos.z + drop.state.z) > 100)
         return notice("Aproxime-se do item.");
@@ -2935,6 +2990,8 @@ try {
   updateQuests("reach", field.id);
   spawnMapPopulation();
   await refreshEconomy();
+  await refreshGroundItems();
+  setInterval(()=>refreshGroundItems(),2000);
   setInterval(()=>refreshEconomy().catch(e=>recordDiagnostic(e.message)),5000);
   gameFeatures.start();
   bossRoulette.start();

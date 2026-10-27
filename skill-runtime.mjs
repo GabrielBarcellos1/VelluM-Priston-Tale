@@ -149,7 +149,7 @@ export function createRuntimeSkillSystem(ctx) {
   function reveal(){let changed=false;for(const [id,b]of active)if(profile(b).special==='stealth'){active.delete(id);changed=true;}if(changed){ctx.recalculate?.();ctx.buffsChanged?.();}}
   function cast(id,target) {
     const s=list.find(s=>s.id===id),n=learned(id);if(!s||!n||s.kind==='passive')throw Error('Aprenda uma habilidade ativa antes de usá-la.');
-    if(s.tier>rank()+1&&!ctx.freeCast?.())throw Error('Conclua o desafio de classe para liberar este tier.');
+    if(s.tier>rank()+1&&!ctx.freeCast?.())throw Error('Alcance o nível necessário para liberar este tier.');
     const game=ctx.game(),p=profile(s),v=view(s);
     if(!game||game.dead||ctx.stats.hp<=0)throw Error('O personagem está morto.');
     if(game.worldLocked||game.air?.motion)throw Error('Aguarde o personagem ficar disponível.');

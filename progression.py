@@ -19,3 +19,8 @@ def cap_experience(amount, stats, field):
     maximum=config.get('experienceMax',data['maxLevel'])
     limit=data['experience'][maximum] if maximum<data['maxLevel'] else 2**53-1
     return max(0,min(math.floor(amount),limit-stats.get('exp',0)))
+
+
+def class_rank(level):
+    """Skill tier promotion is earned by level, independently of legacy quests."""
+    return 3 if level>=60 else 2 if level>=40 else 1 if level>=20 else 0

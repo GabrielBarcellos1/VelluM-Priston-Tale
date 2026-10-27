@@ -2,7 +2,8 @@ import {openNpcServices,questReadyToast,mountClassCrest} from './npc-panels.mjs'
 import {balanceMonster} from './balance-rules.mjs';
 const families={1:'WA1',2:'WH1',3:'WS1',4:'WP1',5:'WT1',6:'WS2',7:'WM1',8:'WM1',9:'WD1',10:'WN1',11:'WV1'};
 export function createGameFeatures(c){
- let id=800000,timer,crest;const encounters=new Set();
+ let id=800000,timer,crest,offPromotion;const encounters=new Set();
+ const refreshCrest=()=>{crest?.dispose();crest=mountClassCrest(c.game(),c.B,c.world.rank());};
  const now=()=>c.now()/1000,town=()=>c.tribe==='morion'?21:3;
  const activeItems=()=>[...Object.values(c.inv.equip),...Object.values(c.inv.equipB),...c.inv.bag.map(p=>p.item),...c.inv.bagB.map(p=>p.item),...c.warehouse.items.map(p=>p.item)].filter(Boolean);
  function loanWeapon(){
@@ -107,6 +108,6 @@ export function createGameFeatures(c){
   return false;
  }
  return {openNpc,loanWeapon,npcTeacher,defeated,tick,travel:map=>c.navigate(map),ready(q){c.notice('Objetivos concluídos: '+q.title+'. Abra Q para concluir.');questReadyToast(q,id=>id.startsWith('rank.')?(c.notice('Entregue este desafio ao Mestre de Habilidades.'),false):c.complete(id));},
-  promoted(){c.stats.classRank=c.world.rank();if(c.stats.classRank>0)c.notice('Promoção concluída! Nova insígnia e habilidades liberadas.');c.save();setTimeout(()=>c.reload(),1500);},
-  start(){crest=mountClassCrest(c.game(),c.B,c.world.rank());tick();timer=setInterval(tick,5000);},dispose(){clearInterval(timer);crest?.dispose();}};
+  promoted(){c.stats.classRank=c.world.rank();refreshCrest();if(c.stats.classRank>0)c.notice('Tier '+(c.stats.classRank+1)+' liberado pelo nível! Coroa e novas habilidades disponíveis.');c.save();},
+  start(){refreshCrest();offPromotion=c.game().events?.on?.('classPromotion',()=>{refreshCrest();c.notice('Tier '+(c.world.rank()+1)+' liberado pelo nível! Coroa e novas habilidades disponíveis.');});tick();timer=setInterval(tick,5000);},dispose(){clearInterval(timer);offPromotion?.();crest?.dispose();}};
 }

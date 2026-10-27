@@ -8,6 +8,7 @@ import secrets
 import sqlite3
 import time
 import re
+from progression import class_rank
 from contextlib import contextmanager
 
 ROOT = Path(__file__).resolve().parent
@@ -69,16 +70,22 @@ def logout(token):
         db.execute('DELETE FROM sessions WHERE token=?', (hashlib.sha256(token.encode()).hexdigest(),))
 
 
+def promote_by_level(state):
+    if isinstance(state,dict) and isinstance(state.get('stats'),dict) and type(state['stats'].get('level')) is int:
+        state['stats']['classRank']=class_rank(state['stats']['level'])
+    return state
+
+
 def load_state(username, job):
     with connection() as db:
         row = db.execute('SELECT state FROM characters WHERE username=? AND job=?',(username,job)).fetchone()
-        return json.loads(row['state']) if row else None
+        return promote_by_level(json.loads(row['state'])) if row else None
 
 
 def character_record(username,job):
     with connection() as db:
         row=db.execute('SELECT c.state,v.generation FROM characters c JOIN character_versions v USING(username,job) WHERE c.username=? AND c.job=? AND v.deleted=0',(username,job)).fetchone()
-        return {'state':json.loads(row['state']),'generation':row['generation']} if row else {'state':None,'generation':None}
+        return {'state':promote_by_level(json.loads(row['state'])),'generation':row['generation']} if row else {'state':None,'generation':None}
 
 
 def save_state(user, job, state, generation=None, require_generation=False):
@@ -89,6 +96,8 @@ def save_state(user, job, state, generation=None, require_generation=False):
         for item in (state.get('inv',{}).get('equip',{}) or {}).values():
             if isinstance(item,dict):
                 item.pop('endgame',None)
+    if isinstance(state.get('stats'),dict) and type(state['stats'].get('level')) is int:
+        state['stats']['classRank']=class_rank(state['stats']['level'])
     fixed_name=identity(user['username'],user['role'])['displayName']
     if fixed_name:
         state['name']=fixed_name
@@ -105,6 +114,8 @@ def save_state(user, job, state, generation=None, require_generation=False):
         version=db.execute('SELECT generation,deleted FROM character_versions WHERE username=? AND job=?',(user['username'],job)).fetchone()
         if (version and version['deleted']) or (require_generation and (not previous or not version or generation!=version['generation'])):
             raise ValueError('Este personagem mudou ou foi excluído. Volte à seleção de personagens.')
+        if previous and state.get('inventoryRevision',0)!=json.loads(previous['state']).get('inventoryRevision',0):
+            raise ValueError('Inventário atualizado em outra sessão. Recarregue o personagem.')
         if previous and require_generation:
             original=json.loads(previous['state'])
             state['name']=fixed_name or original.get('name') or user['username']

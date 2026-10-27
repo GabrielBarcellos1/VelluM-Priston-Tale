@@ -28,21 +28,39 @@ export function firstSpace(bag, item) {
   return null;
 }
 export function organizeBag(bag) {
-  // Place large rectangles first. Fail atomically if this packing cannot fit.
-  const sorted = [...bag].sort(
-    (a, b) =>
-      b.item.h * b.item.w - a.item.h * a.item.w ||
-      b.item.h - a.item.h ||
-      a.item.code.localeCompare(b.item.code) ||
-      a.item.uid - b.item.uid,
-  );
-  const placed = [];
-  for (const p of sorted) {
-    const position = firstSpace(placed, p.item);
-    if (!position) return null;
-    placed.push({ ...position, item: p.item });
+  if(!Array.isArray(bag)||bag.some(p=>!p?.item||![p.item.w,p.item.h].every(Number.isInteger)||p.item.w<1||p.item.h<1||p.item.w>BAG_COLUMNS||p.item.h>BAG_ROWS))return null;
+  const area=bag.reduce((n,p)=>n+p.item.w*p.item.h,0);
+  if(area>BAG_COLUMNS*BAG_ROWS)return null;
+  const sorted=[...bag].sort((a,b)=>b.item.w*b.item.h-a.item.w*a.item.h||b.item.h-a.item.h||b.item.w-a.item.w||String(a.item.code).localeCompare(String(b.item.code))||(a.item.uid??0)-(b.item.uid??0));
+  if(!sorted.length)return [];
+  // Search the lowest possible occupied height, with identical-shape symmetry pruning.
+  // Bound work so a crowded bag cannot freeze the client; keep a valid old layout as fallback.
+  for(let height=Math.max(...sorted.map(p=>p.item.h),Math.ceil(area/BAG_COLUMNS));height<=BAG_ROWS;height++){
+    const rows=Array(height).fill(0),placed=[],failed=new Set();let budget=80000;
+    const search=index=>{
+      if(index===sorted.length)return true;
+      if(--budget<0)return false;
+      const {w,h}=sorted[index].item,previous=sorted[index-1]?.item;
+      const lower=previous?.w===w&&previous?.h===h?placed[index-1].y*BAG_COLUMNS+placed[index-1].x+1:0;
+      const key=index+':'+lower+':'+rows.join(',');if(failed.has(key))return false;
+      for(let y=0;y<=height-h;y++)for(let x=0;x<=BAG_COLUMNS-w;x++){
+        if(y*BAG_COLUMNS+x<lower)continue;
+        const mask=((1<<w)-1)<<x;let free=true;
+        for(let j=0;j<h;j++)if(rows[y+j]&mask){free=false;break;}
+        if(!free)continue;
+        for(let j=0;j<h;j++)rows[y+j]|=mask;
+        placed[index]={x,y,item:sorted[index].item};
+        if(search(index+1))return true;
+        for(let j=0;j<h;j++)rows[y+j]^=mask;
+        if(budget<0)return false;
+      }
+      failed.add(key);return false;
+    };
+    if(search(0))return placed;
   }
-  return placed;
+  const valid=[];
+  for(const p of bag){if(!canPlace(valid,p.item,p.x,p.y))return null;valid.push({...p});}
+  return valid;
 }
 export function repairBags(inv) {
   const target=inv;

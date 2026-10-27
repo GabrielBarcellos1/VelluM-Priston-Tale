@@ -30,7 +30,7 @@ function fixture(){
  return {context,inv,stats,notices,packets,handle,advance:n=>{time+=n;}};
 }
 test('full bag purchase fails atomically and cannot deduct gold or partially add items',async()=>{
- const f=fixture();f.inv.bag=[{x:0,y:0,item:{uid:1,code:'FULL',w:12,h:6,count:1}}];const before=structuredClone(f.inv);
+ const f=fixture();f.inv.bag=[{x:0,y:0,item:{uid:1,code:'FULL',w:12,h:6,count:1}}];f.inv.bagB=structuredClone(f.inv.bag);f.inv.bagB[0].item.uid=2;const before=structuredClone(f.inv);
  await f.handle({t:'buy',npcId:1,code:'WA101',count:2});assert.deepEqual(f.inv,before);assert.equal(f.stats.gold,10000);
  const poor=fixture();poor.stats.gold=0;await poor.handle({t:'buy',npcId:1,code:'WA101',count:1});assert.equal(poor.stats.gold,0);assert.equal(poor.inv.bag.length,0);
 });

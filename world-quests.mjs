@@ -1,5 +1,6 @@
 // Class challenges and map quest lifecycle. Quest objects are data, never executable instructions.
-export function promotionRank(completed,job){
+export function promotionRank(completed,job,level){
+ if(Number.isFinite(level))return level>=60?3:level>=40?2:level>=20?1:0;
  const c=new Set(completed??[]);
  if(c.has('rank.3.duel'))return 3;
  if(['rank.2.2.melee','rank.2.2.ranged','rank.2.2.caster'].some(id=>c.has(id)))return 2;
@@ -14,7 +15,8 @@ export function createWorldQuests(ctx){
  meta.choices??={};meta.deadlines??={};meta.readyNotified??=[];
  const marked=new Set(meta.readyNotified);
  const branch=()=>hash(ctx.name+':'+job)%2?'oil':'jelly';
- const rank=()=>promotionRank(completed,job);
+ const automatic=ctx.automaticPromotions!==false;
+ const rank=()=>promotionRank(completed,job,automatic?stats.level:undefined);
  function allSkillsThrough(tier){return catalog.skills.filter(s=>s.job===job&&s.tier<=tier).every(s=>(learned()[s.code]??0)>=1);}
  function prerequisite(q){
   const id=q.id;
@@ -35,7 +37,7 @@ export function createWorldQuests(ctx){
   const choice=meta.choices[q.id];const source=(ctx.policy?.rankPools?.[stage]??[]).find(p=>p.id===choice)??pool[hash(ctx.name+job+stage)%Math.max(1,pool.length)];
   return source?{...q,steps:source.steps.map(s=>({...s,need:50})),offer:source.offer}:q;
  }
- function eligible(q){return !completed.has(q.id)&&stats.level>=q.minLevel&&(!q.race||q.race===tribe)&&(!q.jobs?.length||q.jobs.includes(job))&&prerequisite(q);}
+ function eligible(q){if(automatic&&q.id.startsWith('rank.'))return false;return !completed.has(q.id)&&stats.level>=q.minLevel&&(!q.race||q.race===tribe)&&(!q.jobs?.length||q.jobs.includes(job))&&prerequisite(q);}
  function accept(q){
   if(!eligible(q))throw Error('Este desafio ainda não está disponível.');
   if(!allSkillsThrough(rank()+1))throw Error('Aprenda pelo menos um nível de todas as habilidades dos tiers anteriores.');

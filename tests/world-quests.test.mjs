@@ -6,7 +6,7 @@ const data=await read('quests'),catalog=await read('skills');
 function fixture(job=1){
  const stats={level:120,classRank:0},completed=new Set(),accepted=new Set(),progress={},meta={},equipment={};let clock=0,ready=0;
  const learned=Object.fromEntries(catalog.skills.filter(s=>s.job===job).map(s=>[s.code,1]));
- const ctx={name:'Scenario Hero',job,tribe:[5,6,7,8,10].includes(job)?'morion':'tempskron',stats,completed,accepted,progress,meta,definitions:data.quests,catalog,policy:data.classQuestPolicy,learned:()=>learned,equipment:()=>equipment,now:()=>clock,random:()=>0,ready:()=>ready++};
+ const ctx={automaticPromotions:false,name:'Scenario Hero',job,tribe:[5,6,7,8,10].includes(job)?'morion':'tempskron',stats,completed,accepted,progress,meta,definitions:data.quests,catalog,policy:data.classQuestPolicy,learned:()=>learned,equipment:()=>equipment,now:()=>clock,random:()=>0,ready:()=>ready++};
  const world=createWorldQuests(ctx),views=q=>({...world.resolve(q),objectives:world.resolve(q).steps.map(o=>({...o,done:progress[q.id+':'+o.id]??0}))});
  function finish(q){const v=views(q);assert.ok(v.objectives.every(o=>o.done>=o.need),q.id);completed.add(q.id);world.done(q);}
  function play(q){world.accept(q);if(q.id.startsWith('rank.2.2.'))equipment.weapon={questWeapon:{challenge:q.id}};
@@ -28,7 +28,7 @@ test('rank quests enforce level and previous skills; active skills cannot bypass
  const f=fixture();f.stats.level=19;const q=data.quests.find(q=>q.id==='rank.1.tempskron');assert.throws(()=>f.world.accept(q));
  f.stats.level=120;delete f.learned.SKILL_MELEE_MASTERY;assert.throws(()=>f.world.accept(q),/habilidades/);
  const s=catalog.skills.find(s=>s.job===1&&s.tier===2);const sys=createSkillSystem({catalog,job:1,stats:{level:120,hp:100,mp:100,sp:100},rank:()=>0,saved:{[s.code]:1},monsters:new Map(),game:()=>({pos:{x:0,z:0}})});
- assert.equal(sys.snapshot().skills.find(x=>x.id===s.id).locked,true);assert.throws(()=>sys.cast(s.id),/desafio de classe/);
+ assert.equal(sys.snapshot().skills.find(x=>x.id===s.id).locked,true);assert.throws(()=>sys.cast(s.id),/nível necessário/);
 });
 test('maturation requires the right equipped loan weapon and advances only the first unfinished step',()=>{
  const f=fixture();f.play(f.world.pending()[0]);f.play(f.world.pending().find(q=>q.id==='rank.2'));

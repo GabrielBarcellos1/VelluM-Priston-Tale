@@ -19,14 +19,14 @@ export function mountClassCrest(game,B,rank){
 export async function openNpcServices(npc,ctx){
  const services=npc.services??[];ctx.game()?.keys.clear();
  if(services.includes('skill')){
-  const panel=serviceDialog(npc.name,`Seu estágio atual: Tier ${ctx.rank()+1}. Os desafios de classe liberam habilidades e a insígnia da cabeça.`);
+  const panel=serviceDialog(npc.name,`Seu estágio atual: Tier ${ctx.rank()+1}. Promoções e coroas automáticas: Tier 2 no nível 20, Tier 3 no 40 e Tier 4 no 60.`);
   panel.button('Aprender e evoluir habilidades',()=>{panel.close();ctx.skills(npc.id);});
   for(const q of ctx.classQuests()){
    panel.line(q.title+' — '+q.state);
    for(const o of q.objectives??[])panel.line(`${o.text}: ${o.done}/${o.need}`);
    panel.button(q.state==='ready'?'Entregar o desafio':q.state==='available'?'Aceitar o desafio':'Continuar o desafio',()=>ctx.rankAction(q,npc.id));
   }
-  if(ctx.rank()===1)panel.button('Recuperar arma emprestada, se necessário',()=>ctx.recoverWeapon());
+
   return;
  }
  const service=services.find(s=>['charity','post','clan','levelRanking','smelting','manufacture','bellatra'].includes(s));

@@ -30,6 +30,8 @@ CREATE TABLE IF NOT EXISTS game_rules(id INTEGER PRIMARY KEY CHECK(id=1),version
 CREATE TABLE IF NOT EXISTS game_events(id INTEGER PRIMARY KEY,created REAL NOT NULL,username TEXT NOT NULL,job INTEGER,character TEXT,kind TEXT NOT NULL,severity TEXT NOT NULL,action TEXT NOT NULL,map INTEGER,monster TEXT,code TEXT,item_name TEXT,item_level INTEGER NOT NULL DEFAULT 0,quantity INTEGER NOT NULL DEFAULT 0,status TEXT NOT NULL,trust TEXT NOT NULL,detail TEXT NOT NULL);
 CREATE INDEX IF NOT EXISTS game_event_actor_time ON game_events(username,created);
 CREATE INDEX IF NOT EXISTS game_event_loot ON game_events(kind,item_level,code,id);
+CREATE TABLE IF NOT EXISTS ground_items(id INTEGER PRIMARY KEY AUTOINCREMENT,username TEXT NOT NULL,job INTEGER NOT NULL,generation TEXT NOT NULL,map INTEGER NOT NULL,item TEXT NOT NULL,x REAL NOT NULL,y REAL NOT NULL,z REAL NOT NULL,created REAL NOT NULL,expires REAL NOT NULL,collected INTEGER NOT NULL DEFAULT 0);
+CREATE INDEX IF NOT EXISTS ground_items_map ON ground_items(map,collected,expires);
 CREATE TABLE IF NOT EXISTS game_requests(username TEXT,request_id TEXT,payload TEXT NOT NULL,result TEXT NOT NULL,PRIMARY KEY(username,request_id));
 CREATE TABLE IF NOT EXISTS skin_offers(id TEXT PRIMARY KEY,data TEXT NOT NULL,enabled INTEGER NOT NULL DEFAULT 0,version INTEGER NOT NULL DEFAULT 1);
 CREATE TABLE IF NOT EXISTS skin_owned(username TEXT,id TEXT,created REAL,PRIMARY KEY(username,id));
@@ -471,3 +473,63 @@ def inspect_state(db,user,job,state,previous):
         last=db.execute("SELECT 1 FROM game_events WHERE username=? AND action='state.anomaly' AND created>?",(user['username'],time.time()-60)).fetchone()
         if not last:event(db,user,'state.anomaly',severity='info' if user['role'] in ('admin','gm') else 'warning',job=job,trust='heuristic',detail={'signals':flags,'staff':user['role'] in ('admin','gm'),'note':'Indício para revisão; pode ser teste de GM, recompensa ou erro do cliente.'})
 
+
+
+def ground(user,data):
+    """Atomic drop/reclaim; the floor copy survives reconnects and can be picked once."""
+    import copy
+    import npc_services as npc
+    action=data.get('action','list')
+    if action not in ('list','drop','pickup'):raise ValueError('Ação de chão inválida.')
+    with accounts.connection() as db:
+        setup(db)
+        if action!='list':db.execute('BEGIN IMMEDIATE')
+        job,saved,name=context(user,data,db)
+        generation=db.execute('SELECT generation FROM character_versions WHERE username=? AND job=?',(user['username'],job)).fetchone()['generation']
+        map_id=saved.get('field');now=time.time()
+        if action=='list':
+            rows=db.execute('SELECT * FROM ground_items WHERE map=? AND collected=0 AND expires>? AND (created<=? OR (username=? AND job=? AND generation=?)) ORDER BY id LIMIT 500',(map_id,now,now-15,user['username'],job,generation)).fetchall()
+            return {'ok':True,'items':[{'id':r['id'],'item':json.loads(r['item']),'x':r['x'],'y':r['y'],'z':r['z'],'owner':name if r['created']>now-15 else ''} for r in rows]}
+        key,payload,old=request(db,user,data,'ground.'+action)
+        if old:return old
+        if saved.get('savedAt')!=data.get('savedAt'):raise ValueError('Inventário mudou. Aguarde o salvamento e tente novamente.')
+        if saved.get('stats',{}).get('hp',1)<=0:raise ValueError('O personagem está morto.')
+        pos=saved.get('position',{});x=pos.get('x',pos.get('posX',0));z=pos.get('z',pos.get('posZ',0));y=pos.get('y',0)
+        for value in (x,y,z):number(value,-1000000,1000000,'Posição')
+        if action=='drop':
+            uid=int_value(data.get('uid'),1,2**53-1,'Item');inv=saved.get('inv',{});item=None;remove=None
+            for group in ('bag','bagB'):
+                for entry in inv.get(group,[]):
+                    if entry['item'].get('uid')==uid:item=entry['item'];remove=lambda group=group,entry=entry:inv[group].remove(entry);break
+                if item:break
+            if not item:
+                for group in ('equip','equipB'):
+                    for slot,candidate in inv.get(group,{}).items():
+                        if candidate and candidate.get('uid')==uid:item=candidate;remove=lambda group=group,slot=slot:inv[group].pop(slot);break
+                    if item:break
+            if not item:raise ValueError('Item não encontrado nas bolsas ou equipamentos.')
+            definition=ITEMS.get(item.get('code'))
+            if not definition:raise ValueError('Item desconhecido.')
+            if item.get('bound') or item.get('premiumManaged') or item.get('questWeapon') or item.get('endgame') or item['code'] in (gm_tools.SHELTOM,gm_tools.POTION):raise ValueError('Este item é vinculado e não pode ser jogado no chão.')
+            count=int_value(data.get('count',item.get('count',1)),1,item.get('count',1),'Quantidade')
+            floor_item=copy.deepcopy(item);floor_item['count']=count
+            if count==item.get('count',1):remove()
+            else:item['count']-=count
+            floor_id=db.execute('INSERT INTO ground_items(username,job,generation,map,item,x,y,z,created,expires) VALUES(?,?,?,?,?,?,?,?,?,?)',(user['username'],job,generation,map_id,json.dumps(floor_item,ensure_ascii=False),x+12,y,z+12,now,now+900)).lastrowid
+            event(db,user,'item.drop','inventory',job=job,character=name,map_id=map_id,code=item['code'],quantity=count,detail={'groundId':floor_id})
+        else:
+            floor_id=int_value(data.get('id'),1,2**53-1,'Drop')
+            row=db.execute('SELECT * FROM ground_items WHERE id=? AND collected=0 AND expires>?',(floor_id,now)).fetchone()
+            if not row or row['map']!=map_id:raise ValueError('Item inexistente, expirado ou já recolhido.')
+            own=row['username']==user['username'] and row['job']==job and row['generation']==generation
+            if not own and row['created']>now-15:raise ValueError('Este item ainda está reservado ao dono.')
+            if math.hypot(x-row['x'],z-row['z'])>120:raise ValueError('Aproxime-se do item.')
+            floor_item=json.loads(row['item']);floor_item['uid']=max([int(i.get('uid',0)) for i in npc.all_items(saved)]+[100])+1
+            if floor_item['uid']>999999999:raise ValueError('Identificadores de inventário excedidos. Nada foi recolhido.')
+            npc.add_bag(saved,floor_item)
+            db.execute('UPDATE ground_items SET collected=1 WHERE id=?',(floor_id,))
+            event(db,user,'item.pickup','inventory',job=job,character=name,map_id=map_id,code=floor_item['code'],quantity=floor_item.get('count',1),detail={'groundId':floor_id})
+        saved['inventoryRevision']=saved.get('inventoryRevision',0)+1
+        saved['savedAt']=max(int(now*1000),int(saved.get('savedAt',0))+1)
+        db.execute('UPDATE characters SET state=? WHERE username=? AND job=?',(json.dumps(saved,ensure_ascii=False),user['username'],job))
+        return remember(db,user,key,payload,{'ok':True,'id':floor_id,'state':saved})
