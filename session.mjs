@@ -1145,6 +1145,7 @@ const skills = createSkillSystem({
   name: hero.name,
   stats,
   saved: stored?.skills,
+  masteryProgress:questMeta.skillMastery??=(Object.create(null)),
   savedCooldowns: stored?.skillCooldowns,
   savedBuffs: stored?.skillBuffs,
   equipment: () => inv.equip,

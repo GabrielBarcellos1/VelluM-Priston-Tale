@@ -1,5 +1,6 @@
 import { effectFor, sumEffects, effectRows } from "./skill-effects.mjs";
 import { configuredSkillCooldown } from "./skill-cooldowns.mjs";
+import { initialMastery, afterSkillUse, hitsRemaining, MASTERY_MAX } from "./skill-maturity.mjs";
 import { createRuntimeSkillSystem } from "./skill-runtime.mjs";
 import {
   skillAttackProfile,
@@ -158,7 +159,7 @@ export function createSkillSystem(ctx) {
       desc:
         s.descriptionPt ?? `${s.name} · ${passive ? "habilidade passiva" : "habilidade ativa"}.`,
       rows: [],
-      mastery: level ? 10000 : 0,
+      mastery: initialMastery(ctx.masteryProgress,s.code,level,passive),
     };
     if (!passive) {
       if ((ready.get(s.id) ?? 0) > now()) result.cooldown = cooldownTotals.get(s.id);
@@ -189,7 +190,11 @@ export function createSkillSystem(ctx) {
       result.damageSource = attack.source;
       result.rows = skillAttackRows(attack, next);
     }
-    if (!passive) result.rows.push({ label: "Recarga", cur: `${result.cooldown.toFixed(2)} s` });
+    if (!passive) {
+      result.rows.push({ label: "Recarga", cur: `${result.cooldown.toFixed(2)} s` });
+      if(level && ctx.masteryProgress)
+        result.rows.push({label:"Maturação (estimativa)",cur:`${(result.mastery/100).toFixed(1)}% · ~${hitsRemaining(result.mastery,s.tier)} acertos restantes`});
+    }
     return result;
   }
   function snapshot() {
@@ -234,6 +239,7 @@ export function createSkillSystem(ctx) {
     if (ctx.stats.gold < v.price) throw Error(`Ouro insuficiente: precisa de ${v.price}.`);
     ctx.stats.gold -= v.price;
     levels.set(id, v.level + 1);
+    if(ctx.masteryProgress)ctx.masteryProgress[s.code]=s.kind==='passive'?MASTERY_MAX:0;
     publish();
     ctx.recalculate();
     ctx.save();
@@ -394,6 +400,12 @@ export function createSkillSystem(ctx) {
                 },
               );
         }, hit * 1000);
+    }
+    // Mastery advances with valid skill use, not elapsed time. This provisional
+    // training gauge does not change damage/cooldowns until exact classic rates are verified.
+    if(ctx.masteryProgress && !ctx.freeCast?.()){
+      const earlier=initialMastery(ctx.masteryProgress,s.code,v.level,false);
+      ctx.masteryProgress[s.code]=afterSkillUse(earlier,s.tier,Math.max(1,hitTimes?.length??1));
     }
     ctx.recalculate();
     ctx.save();

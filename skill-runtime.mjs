@@ -1,4 +1,5 @@
 import { emptyEffects, effectFor, effectRows, sumEffects } from './skill-effects.mjs';
+import {initialMastery,afterSkillUse,hitsRemaining,MASTERY_MAX} from './skill-maturity.mjs';
 import { skillAttackProfile, skillAttackRows, skillHitTimes, skillHealingRange } from './skill-damage.mjs';
 
 const at = (a, n) => a?.[Math.max(0, Math.min(9, Math.trunc(n) - 1))];
@@ -97,7 +98,7 @@ export function createRuntimeSkillSystem(ctx) {
       mpNext:passive||ctx.resourceFree?.()?0:Math.ceil(at(p.mp,next)*(1-(ctx.premiumValue?.('manaReduce')??0)/100)),
       stamina:passive||ctx.resourceFree?.()?0:Math.ceil(at(p.stamina,n)*(1-(ctx.premiumValue?.('staminaReduce')??0)/100)),
       recharge:at(p.cooldown,n),cooldown:at(p.cooldown,n),duration:at(p.duration,n),range:at(p.range,n),
-      target:p.target,slot:passive?undefined:rule(s).slot??'both',mastery:n?10000:0,
+      target:p.target,slot:passive?undefined:rule(s).slot??'both',mastery:initialMastery(ctx.masteryProgress,s.code,n,passive),
       ruleSource:p.source,cooldownSource:p.source,desc:s.descriptionPt??s.name,rows:[],
       area:{radius:at(p.radius,n),targetLimit:at(p.targetLimit,n),shape:p.shape.type}};
     if(p.shape.type === 'line') v.range = Math.min(v.range, at(p.shape.length,n) ?? v.range);
@@ -126,7 +127,10 @@ export function createRuntimeSkillSystem(ctx) {
         if(c[field]||d[field])v.rows.push({label,cur:`${c[field]}${field==='stunSeconds'?' s':'%'}`,next:`${d[field]}${field==='stunSeconds'?' s':'%'}`});
     }
     if(v.duration)v.rows.push({label:'Duração',cur:`${v.duration} s`,next:`${at(p.duration,next)} s`});
-    if(!passive)v.rows.push({label:'Recarga',cur:`${v.cooldown.toFixed(2)} s`,next:`${at(p.cooldown,next).toFixed(2)} s`});
+    if(!passive){
+      v.rows.push({label:'Recarga',cur:`${v.cooldown.toFixed(2)} s`,next:`${at(p.cooldown,next).toFixed(2)} s`});
+      if(n && ctx.masteryProgress)v.rows.push({label:'Maturação (estimativa)',cur:`${(v.mastery/100).toFixed(1)}% · ~${hitsRemaining(v.mastery,s.tier)} acertos restantes`});
+    }
     return v;
   }
   const snapshot=()=>({t:'skills',job:ctx.job,className:ctx.catalog.classes.find(c=>c.job===ctx.job).name,
@@ -213,6 +217,10 @@ export function createRuntimeSkillSystem(ctx) {
         }reveal();
       },time*1000);
     }
+    if(ctx.masteryProgress && !ctx.freeCast?.()){
+      const earlier=initialMastery(ctx.masteryProgress,s.code,n,false);
+      ctx.masteryProgress[s.code]=afterSkillUse(earlier,s.tier,Math.max(1,hits?.length??1));
+    }
     ctx.progress?.("skillCast",{code:s.code});
     if(s.kind==='debuff')ctx.progress?.("skillAffect",{code:s.code,count:targets.length});
     ctx.recalculate?.();ctx.buffsChanged?.();publish();ctx.save?.();return v;
@@ -227,7 +235,9 @@ export function createRuntimeSkillSystem(ctx) {
     if(ctx.stats.level<v.reqLevel||s.tier>rank()+1)throw Error(`Requer nível ${v.reqLevel}.`);
     const previous=list.find(x=>x.id===id-1);if(!v.level&&previous&&!learned(previous))throw Error(`Aprenda ${previous.name} primeiro.`);
     if((s.tier===4?p.elite:p.skill)<1)throw Error('Sem pontos de habilidade.');if(ctx.stats.gold<v.price)throw Error('Ouro insuficiente.');
-    ctx.stats.gold-=v.price;levels.set(id,v.level+1);publish();ctx.recalculate?.();ctx.save?.();return `${s.name} aprendida no nível ${v.level+1}.`;}
+    ctx.stats.gold-=v.price;levels.set(id,v.level+1);
+    if(ctx.masteryProgress)ctx.masteryProgress[s.code]=s.kind==='passive'?MASTERY_MAX:0;
+    publish();ctx.recalculate?.();ctx.save?.();return `${s.name} aprendida no nível ${v.level+1}.`;}
   const exportBuffs=()=>liveBuffs().map(b=>({code:b.code,level:b.level,party:!!b.party,expiresAt:wall()+b.until-now()}));
   for(const s of list){const p=profile(s),saved=ctx.savedCooldowns?.[s.code];if(saved&&at(p.cooldown,learned(s))!==0){const left=Math.min(3600,saved.expiresAt-wall());if(left>0){ready.set(s.id,now()+left);totals.set(s.id,saved.total);}}}
   for(const saved of ctx.savedBuffs??[]){const s=definitions.find(s=>s.code===saved.code);if(!s||!saved.party&&!learned(s))continue;
