@@ -1246,7 +1246,7 @@ function renderGroundLoot() {
   }
 }
 
-async function dropBagItem(name) {
+async function dropBagItem(name, requestedCount) {
   const term = (name ?? '').trim().toLocaleLowerCase('pt-BR');
   if (!term) throw Error('Use /jogar NOME_DO_ITEM ou /jogar CODIGO_DO_ITEM.');
   if (game?.dead || !game?.ground || economyBusy || pendingLoot || economyUncertain)
@@ -1265,15 +1265,25 @@ async function dropBagItem(name) {
   const floor = game.ground.spawnPoint(game.pos.x + 60, game.pos.z + 45);
   if (!floor) throw Error('Posicione-se em um terreno válido para descartar.');
   const original = clone(inv);
+  const count = requestedCount === undefined ? item.count ?? 1 : Number(requestedCount);
+  if (!Number.isSafeInteger(count) || count < 1 || count > (item.count ?? 1))
+    throw Error('Quantidade inválida para descartar.');
   economyBusy = true;
   try {
-    bag.splice(bag.indexOf(slot),1);
+    const dropped = clone(item);
+    if (count === (item.count ?? 1)) bag.splice(bag.indexOf(slot),1);
+    else {
+      item.count -= count;
+      dropped.count = count;
+      const ids = new Set([...inv.bag,...inv.bagB].map(p=>p.item.uid));
+      do {const r=crypto.getRandomValues(new Uint32Array(2));dropped.uid=(r[0]*2097152+(r[1]&2097151))||1;} while(ids.has(dropped.uid));
+    }
     recalculate();
     if (!save(true)) throw Error('Falha ao salvar o inventário antes do descarte.');
     await stateWrite;
     const id = ++nextDropId;
-    const state = {...item,id,x:floor.x,y:floor.y,z:-floor.z,owner:hero.name};
-    groundDrops.set(id,{state,item,manual:true});
+    const state = {...dropped,id,x:floor.x,y:floor.y,z:-floor.z,owner:hero.name};
+    groundDrops.set(id,{state,item:dropped,manual:true});
     deliver({t:'ground',add:[state]});
     renderGroundLoot();
     return `${item.name} foi colocado no chão. Aproxime-se para recolher.`;
@@ -2049,6 +2059,12 @@ async function handle(message) {
     case "skillRelease":
     case "skillCancel":
       break;
+    case 'drop':
+    case 'dropItem': {
+      try { notice(await dropBagItem(String(message.uid ?? message.code ?? ''),message.count)); }
+      catch(error) { notice(error.message); }
+      break;
+    }
     case "pickup": {
       const drop = groundDrops.get(message.id);
       if (!drop || drop.pickupBusy || economyBusy) return;

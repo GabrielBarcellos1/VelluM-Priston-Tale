@@ -31,6 +31,7 @@ CREATE TABLE IF NOT EXISTS game_events(id INTEGER PRIMARY KEY,created REAL NOT N
 CREATE INDEX IF NOT EXISTS game_event_actor_time ON game_events(username,created);
 CREATE INDEX IF NOT EXISTS game_event_loot ON game_events(kind,item_level,code,id);
 CREATE TABLE IF NOT EXISTS game_requests(username TEXT,request_id TEXT,payload TEXT NOT NULL,result TEXT NOT NULL,PRIMARY KEY(username,request_id));
+CREATE TABLE IF NOT EXISTS game_skill_overrides(code TEXT PRIMARY KEY,version INTEGER NOT NULL,data TEXT NOT NULL);
 CREATE TABLE IF NOT EXISTS skin_offers(id TEXT PRIMARY KEY,data TEXT NOT NULL,enabled INTEGER NOT NULL DEFAULT 0,version INTEGER NOT NULL DEFAULT 1);
 CREATE TABLE IF NOT EXISTS skin_owned(username TEXT,id TEXT,created REAL,PRIMARY KEY(username,id));
 CREATE TABLE IF NOT EXISTS skin_equipped(username TEXT,job INTEGER,cat TEXT,id TEXT,PRIMARY KEY(username,job,cat));
@@ -494,3 +495,73 @@ def inspect_state(db,user,job,state,previous):
         last=db.execute("SELECT 1 FROM game_events WHERE username=? AND action='state.anomaly' AND created>?",(user['username'],time.time()-60)).fetchone()
         if not last:event(db,user,'state.anomaly',severity='info' if user['role'] in ('admin','gm') else 'warning',job=job,trust='heuristic',detail={'signals':flags,'staff':user['role'] in ('admin','gm'),'note':'Indício para revisão; pode ser teste de GM, recompensa ou erro do cliente.'})
 
+
+# Adjustable skill cooldowns and durations, persisted outside the deployed source catalog.
+def merged_skills():
+    catalog=json.loads((ROOT/'data/skills.json').read_text(encoding='utf-8'))
+    with accounts.connection() as db:
+        setup(db)
+        custom={row['code']:json.loads(row['data']) for row in db.execute('SELECT code,data FROM game_skill_overrides')}
+    for code,values in custom.items():
+        rule=catalog['rules']['skills'].get(code)
+        if rule and isinstance(rule.get('runtime'),dict):
+            rule['runtime'].update({key:values[key] for key in ('cooldown','duration','effects') if key in values})
+            rule['runtime']['source']='admin-configured'
+    return catalog
+
+
+def skill_balance(user):
+    import admin_service as admin
+    admin.require_admin(user)
+    catalog=json.loads((ROOT/'data/skills.json').read_text(encoding='utf-8'))
+    with accounts.connection() as db:
+        setup(db)
+        custom={r['code']:(r['version'],json.loads(r['data'])) for r in db.execute('SELECT code,version,data FROM game_skill_overrides')}
+    rows=[]
+    for skill in catalog['skills']:
+        code=skill['code'];runtime=catalog['rules']['skills'][code]['runtime']
+        version,override=custom.get(code,(0,{}))
+        rows.append({'code':code,'name':skill['name'],'className':skill.get('className'),'job':skill['job'],
+            'tier':skill['tier'],'kind':runtime['kind'],'version':version,'customized':bool(override),
+            'cooldown':override.get('cooldown',runtime['cooldown']),'duration':override.get('duration',runtime['duration']),
+            'defaultCooldown':runtime['cooldown'],'defaultDuration':runtime['duration'],
+            'effects':override.get('effects',runtime['effects']),'defaultEffects':runtime['effects']})
+    return {'skills':rows}
+
+
+def save_skill_balance(user,data):
+    import admin_service as admin
+    admin.require_admin(user)
+    code=data.get('code')
+    catalog=json.loads((ROOT/'data/skills.json').read_text(encoding='utf-8'))
+    definitions={s['code']:s for s in catalog['skills']}
+    if not isinstance(code,str) or code not in definitions:raise ValueError('Habilidade desconhecida.')
+    version=int_value(data.get('version'),0,100000000,'Versão')
+    reset=data.get('reset') is True
+    if not reset:
+        value=data.get('value')
+        if not isinstance(value,dict) or not {'cooldown','duration'}<=set(value) or not set(value)<={'cooldown','duration','effects'}:raise ValueError('Informe recarga e duração.')
+        for field,max_value in [('cooldown',600),('duration',3600)]:
+            values=value[field]
+            if not isinstance(values,list) or len(values)!=10:raise ValueError('Informe dez níveis da habilidade.')
+            for n in values:number(n,0,max_value,field)
+        if 'effects' in value:
+            base=catalog['rules']['skills'][code]['runtime']['effects']
+            if not isinstance(value['effects'],list) or len(value['effects'])!=10:raise ValueError('Informe dez níveis de bônus.')
+            for edited,original in zip(value['effects'],base):
+                if not isinstance(edited,dict) or set(edited)!=set(original):raise ValueError('Estrutura de bônus inválida.')
+                for key,old in original.items():
+                    if isinstance(old,(int,float)) and not isinstance(old,bool):number(edited[key],-100000,100000,key)
+                    elif edited[key]!=old:raise ValueError('Bônus complexo não pode ser alterado por este editor.')
+        if catalog['rules']['skills'][code]['runtime']['kind']=='passive' and any(value['cooldown']):
+            raise ValueError('Habilidade passiva não tem recarga.')
+    with accounts.connection() as db:
+        setup(db)
+        db.execute('BEGIN IMMEDIATE')
+        previous=db.execute('SELECT version,data FROM game_skill_overrides WHERE code=?',(code,)).fetchone()
+        current=previous['version'] if previous else 0
+        if current!=version:raise ValueError('Esta habilidade foi alterada em outra aba. Recarregue.')
+        before=json.loads(previous['data']) if previous else None
+        db.execute('INSERT INTO game_skill_overrides(code,version,data) VALUES(?,?,?) ON CONFLICT(code) DO UPDATE SET version=excluded.version,data=excluded.data',(code,current+1,json.dumps({} if reset else value)))
+        admin.audit(db,user,'skill.reset' if reset else 'skill.save',code,{'before':before,'after':None if reset else value})
+        return {'ok':True,'code':code,'version':current+1}

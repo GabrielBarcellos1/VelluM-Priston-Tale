@@ -180,10 +180,11 @@ class Handler(SimpleHTTPRequestHandler):
                     game_control.log(user,'admin.denied','warning',{'path':path})
                     return self.json_reply({'error':'Painel exclusivo do administrador.'},403)
                 resource=path.rsplit('/',1)[-1]
-                if resource in ('rules','rule-defaults','game-history','skins','item-library'):
+                if resource in ('rules','rule-defaults','game-history','skins','item-library','skill-balance'):
                     try:
                         query=parse_qs(urlsplit(self.path).query)
-                        if resource=='rules':result=game_control.rules(user)
+                        if resource=='skill-balance':result=game_control.skill_balance(user)
+                        elif resource=='rules':result=game_control.rules(user)
                         elif resource=='rule-defaults':result=game_control.DEFAULTS
                         elif resource=='skins':result=game_control.skin_admin(user)
                         elif resource=='item-library':result=[{'code':i['code'],'name':i['name'],'level':i.get('req',{}).get('level',0)} for i in game_control.ITEMS.values()]
@@ -232,7 +233,7 @@ class Handler(SimpleHTTPRequestHandler):
             elif path == '/api/local/balance':
                 self.json_reply(json.loads((ROOT/'data/balance.json').read_text(encoding='utf-8')))
             elif path == '/api/local/skills':
-                self.reply((ROOT / 'data' / 'skills.json').read_bytes(),'application/json; charset=utf-8')
+                self.json_reply(game_control.merged_skills())
             elif path == '/api/local/drops':
                 self.reply((ROOT / 'data' / 'drops.json').read_bytes(),'application/json; charset=utf-8')
             elif path == '/api/local/me':
@@ -364,7 +365,7 @@ class Handler(SimpleHTTPRequestHandler):
                     game_control.log(user,'admin.denied','warning',{'path':path})
                     return self.json_reply({'error':'Painel exclusivo do administrador.'},403)
                 action=path.rsplit('/',1)[-1]
-                handlers={'rules-save':game_control.save_rules,'skin-save':game_control.save_skin,'product-save':admin_service.save_product,'product-remove':admin_service.remove_product,'user-save':admin_service.mutate_user,'boss-config':boss_roulette.configs,'boss-save':boss_roulette.save_config,'economy-config':server_economy.admin_data,'map-save':server_economy.save_map,'event-save':server_economy.save_event,'economy-preview':server_economy.preview}
+                handlers={'rules-save':game_control.save_rules,'skill-save':game_control.save_skill_balance,'skin-save':game_control.save_skin,'product-save':admin_service.save_product,'product-remove':admin_service.remove_product,'user-save':admin_service.mutate_user,'boss-config':boss_roulette.configs,'boss-save':boss_roulette.save_config,'economy-config':server_economy.admin_data,'map-save':server_economy.save_map,'event-save':server_economy.save_event,'economy-preview':server_economy.preview}
                 if action=='coins':
                     result=premium_store.transact(user,'grant',data)
                     if not result.get('repeated'):

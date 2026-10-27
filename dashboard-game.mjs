@@ -20,7 +20,7 @@ export function mountGameControls({ api, toast }) {
   panel("aging").innerHTML =
     `<article class="card"><h2>Chances reais de Aging</h2><p>O servidor sorteia o resultado com a tabela salva aqui. Sucesso é a soma de +1 e +2. Cada linha deve somar 100%. Pedras especiais de proteção continuam indisponíveis.</p><div class="toolbar"><button id="aging-defaults" class="secondary" type="button">Carregar padrão do cliente</button><button id="aging-guaranteed" class="secondary" type="button">Preencher +1 com 100%</button></div><form id="aging-form"><div class="table-wrap"><table><thead><tr><th>Etapa</th><th>+1 %</th><th>+2 %</th><th>−1 %</th><th>−2 %</th><th>Quebra %</th><th>Mantém %</th><th>Sucesso / soma</th></tr></thead><tbody id="aging-rows"></tbody></table></div><p class="form-error" role="alert"></p><button class="primary" type="submit">Salvar chances de Aging</button></form><p class="muted">Preencher não salva automaticamente. Alterações salvas valem no próximo sorteio; a janela do jogo consulta a tabela a cada 5 segundos.</p></article>`;
   panel("drops").innerHTML =
-    `<article class="card"><h2>Probabilidade por monstro derrotado</h2><p>Uma chance de 100% garante o sorteio quando há itens elegíveis para o nível e mapa do monstro. Os Bosses usam a roleta compartilhada configurada abaixo.</p><form id="drops-form"><div class="control-grid">${numeric("goldChance", "Chance de ouro %")}${numeric("goldMultiplier", "Multiplicador da quantidade de ouro", 0, 100)}${numeric("equipmentChance", "Equipamentos abaixo do nível 80 %")}${numeric("highLevelChance", "Equipamentos nível 80 ou superior %")}${numeric("potionChance", "Poções %")}${numeric("bossChance", "Itens exclusivos de boss — chance geral %")}</div><details><summary>Chance por boss (opcional)</summary><p class="muted">Deixe vazio para usar a chance geral.</p><div id="boss-overrides" class="control-grid"></div></details><p class="muted">Ouro recebido automaticamente; quantidade base = nível do monstro × 3. Poções, equipamentos comuns e exclusivos são sorteios separados. Terceiro Olho permite uma tentativa comum adicional, sem duplicar o exclusivo do boss.</p><p class="form-error" role="alert"></p><button class="primary" type="submit">Salvar regras de drops</button></form></article>`;
+    `<article class="card"><h2>Probabilidade por monstro derrotado</h2><p>Uma chance de 100% garante o sorteio quando há itens elegíveis para o nível e mapa do monstro. Os Bosses usam a roleta compartilhada configurada abaixo.</p><form id="drops-form"><div class="control-grid">${numeric("goldChance", "Chance de ouro %")}${numeric("goldMultiplier", "Multiplicador da quantidade de ouro", 0, 100)}${numeric("equipmentChance", "Equipamentos abaixo do nível 80 %")}${numeric("highLevelChance", "Equipamentos nível 80 ou superior %")}${numeric("potionChance", "Poções %")}${numeric("bossChance", "Itens exclusivos de boss — chance geral %")}</div><details><summary>Chance por boss (opcional)</summary><p class="muted">Deixe vazio para usar a chance geral.</p><div id="boss-overrides" class="control-grid"></div></details><p class="muted">Ouro gerado no chão e recolhido pelo loot; quantidade base = nível do monstro × 3. Poções, equipamentos comuns e exclusivos são sorteios separados. Terceiro Olho permite uma tentativa comum adicional, sem duplicar o exclusivo do boss.</p><p class="form-error" role="alert"></p><button class="primary" type="submit">Salvar regras de drops</button></form></article>`;
   const filters = (kind) =>
     `<form id="${kind}-filter" class="toolbar"><label>Conta<input name="username" placeholder="ID de login"></label>${kind === "loot" ? '<label class="search">Códigos dos itens<input name="codes" list="control-item-list" placeholder="OR205, OA130 ou GOLD"></label><label>Nível mínimo do item<input name="minLevel" type="number" min="0" max="200" value="0"></label><label>Nível máximo do item<input name="maxLevel" type="number" min="0" max="200" value="200"></label><label>Situação<select name="status"><option value="">Todas</option><option value="generated">Gerado no chão</option><option value="collected">Recolhido / ouro recebido</option><option value="expired">Expirado</option></select></label>' : '<label>Área<select name="kind"><option value="security">Segurança e alertas</option><option value="craft">Aging</option><option value="shop">Skins e compras</option><option value="kill">Relatos de abate</option></select></label><label>Gravidade<select name="severity"><option value="">Todas</option><option value="warning">Atenção</option><option value="info">Informação</option></select></label><label>Ação<input name="action" placeholder="auth., gm., request., state."></label>'}<label>Origem<select name="trust"><option value="">Todas</option><option value="client-kill/server-roll">Jogador / sorteio no servidor</option><option value="staff-test">Teste de Staff</option><option value="server">Servidor</option><option value="heuristic">Indício para revisão</option><option value="client-report">Relato do navegador</option></select></label><label>Início<input name="since" type="datetime-local"></label><label>Fim<input name="until" type="datetime-local"></label><button type="submit" class="primary">Filtrar</button></form>`;
   panel("drop-history").innerHTML =
@@ -31,6 +31,7 @@ export function mountGameControls({ api, toast }) {
     `<article class="card"><h2>Modelos cosméticos do cliente</h2><p>O motor possui skins de armas, escudos e armaduras/robes. Publique modelos, altere preços e pause a venda. Aparência não concede atributos. Nenhum modelo é publicado automaticamente nesta atualização.</p><div class="toolbar"><label class="search">Buscar modelo<input id="skin-search" type="search" placeholder="Nome ou código"></label><label>Categoria<select id="skin-cat"><option value="">Todas</option><option value="arma">Armas</option><option value="escudo">Escudos</option><option value="traje">Armaduras / robes</option></select></label><label>Situação<select id="skin-state"><option value="">Todas</option><option value="on">Publicadas</option><option value="off">Fora da loja</option></select></label></div><p id="skins-count"></p><div class="table-wrap"><table><thead><tr><th>Modelo</th><th>Categoria</th><th>Preço</th><th>Venda</th><th>Ações</th></tr></thead><tbody id="skin-rows"></tbody></table></div></article><dialog id="skin-editor"><form id="skin-form"><div class="dialog-heading"><h2>Editar skin</h2><button type="button" id="skin-close" aria-label="Fechar edição da skin">×</button></div><input name="id" type="hidden"><input name="version" type="hidden"><p id="skin-model"></p><label>Nome<input name="name" maxlength="100" required></label>${numeric("price", "Preço em coins", 0, 1000000000)}<label>Descrição<textarea name="description" maxlength="1000"></textarea></label><label class="check"><input name="enabled" type="checkbox"> Publicar na loja de Skins</label><p class="muted">Pausar não remove skins já adquiridas. No jogo, abra o botão Skins.</p><p class="form-error" role="alert"></p><div class="dialog-footer"><button class="primary" type="submit">Salvar skin</button></div></form></dialog>`;
   mountBossAdmin({api,toast,panel:panel("drops")});
   mountEconomyAdmin({api,toast,drops:panel("drops"),events:panel("events")});
+  mountSkillAdmin({api,toast,host:panel("skills")});
   $("#drops-form input[name=bossChance]").closest("label").hidden=true;
   $("#boss-overrides").closest("details").hidden=true;
   for (const input of $("#monitor-form").querySelectorAll("input[type=number]")) input.step = "1";
@@ -384,3 +385,114 @@ export function mountGameControls({ api, toast }) {
 }
 
 
+
+function mountSkillAdmin({api,toast,host}) {
+  const el=(tag,value)=>{const e=document.createElement(tag);if(value!==undefined)e.textContent=value;return e;};
+  const card=el('article');card.className='card';
+  card.append(el('h2','Balanceamento de habilidades'),el('p','Edite a recarga (delay) e a duração de buffs por nível. Nenhuma Tier 5 será criada. Alterações valem após o jogador entrar novamente no jogo.'));
+  const filters=el('div');filters.className='toolbar';
+  const job=el('select'),search=el('input'),choice=el('select');
+  search.placeholder='Buscar pelo nome ou código';search.type='search';
+  choice.className='skill-select';
+  for(const [label,control] of [['Classe',job],['Buscar habilidade',search],['Skill',choice]]){
+    const wrapper=el('label',label);wrapper.append(control);filters.append(wrapper);
+  }
+  card.append(filters);
+  const summary=el('p');summary.className='muted';
+  const form=el('form');const grid=el('div');grid.className='skill-level-grid';
+  const fields=[];
+  const header=el('div');header.className='skill-level-header';header.append(el('strong','Nível'),el('strong','Recarga (segundos)'),el('strong','Duração (segundos)'));grid.append(header);
+  for(let level=1;level<=10;level++){
+    const row=el('div');row.className='skill-level-row';
+    const rank=el('span',String(level));
+    const cd=el('input'),duration=el('input');
+    for(const [input,max] of [[cd,600],[duration,3600]]){
+      input.type='number';input.min='0';input.max=String(max);input.step='0.01';input.required=true;
+      input.setAttribute('aria-label',(input===cd?'Recarga':'Duração')+' nível '+level);
+    }
+    row.append(rank,cd,duration);grid.append(row);fields.push({cd,duration});
+  }
+  const effectsPanel=el('section');effectsPanel.className='skill-effects-editor';
+  effectsPanel.append(el('h3','Adicionais da habilidade'),el('p','Ajuste os bônus numéricos por nível. Efeitos compostos permanecem protegidos.'));
+  const effectsGrid=el('div');effectsGrid.className='skill-effects-grid';effectsPanel.append(effectsGrid);
+  const effectFields=new Map();
+  const controls=el('div');controls.className='toolbar';
+  const save=el('button','Salvar balanceamento'),reset=el('button','Restaurar valores padrão');
+  save.type='submit';save.className='primary';reset.type='button';reset.className='secondary';
+  const message=el('p');message.setAttribute('role','status');
+  controls.append(save,reset);form.append(summary,grid,effectsPanel,controls,message);card.append(form);
+  host.append(card);
+  let skills=[],active=null;
+  function draw(){
+    active=skills.find(s=>s.code===choice.value)??null;
+    form.hidden=!active;
+    if(!active)return;
+    summary.textContent=`${active.name} • ${active.className} • Tier ${active.tier} • ${active.customized?'Personalizada (versão '+active.version+')':'Padrão do catálogo'}`;
+    for(let i=0;i<10;i++){
+      fields[i].cd.value=active.cooldown[i]??0;
+      fields[i].duration.value=active.duration[i]??0;
+      fields[i].cd.disabled=active.kind==='passive';
+    }
+    effectFields.clear();effectsGrid.replaceChildren();
+    const source=active.effects??[];
+    const editable=['buff','party','summon','passive'].includes(active.kind);
+    const keys=editable?Object.keys(source[0]??{}).filter(key=>source.every(row=>typeof row[key]==='number')):[];
+    for(const key of keys){
+      const wrapper=el('fieldset');const legend=el('legend',key.replace(/([A-Z])/g,' $1').trim());
+      const row=el('div');row.className='skill-effect-values';const inputs=[];
+      for(let i=0;i<10;i++){
+        const label=el('label','Lv '+(i+1)),input=el('input');
+        input.type='number';input.min='-100000';input.max='100000';input.step='0.01';
+        input.required=true;input.value=source[i][key];input.setAttribute('aria-label',key+' nível '+(i+1));
+        label.append(input);row.append(label);inputs.push(input);
+      }
+      wrapper.append(legend,row);effectsGrid.append(wrapper);effectFields.set(key,inputs);
+    }
+    effectsPanel.hidden=!effectFields.size;
+    reset.disabled=!active.customized;
+    message.textContent='Defina os valores para cada nível e salve para aplicar aos próximos logins.';
+  }
+  function options(){
+    const selected=choice.value;
+    const filtered=skills.filter(s=>(job.value===''||String(s.job)===job.value)&&
+      (s.name+' '+s.code).toLocaleLowerCase('pt-BR').includes(search.value.toLocaleLowerCase('pt-BR')));
+    choice.replaceChildren(...filtered.map(s=>{const o=el('option',`Tier ${s.tier} • ${s.name}${s.customized?' ●':''}`);o.value=s.code;return o;}));
+    if(filtered.some(s=>s.code===selected))choice.value=selected;
+    draw();
+  }
+  job.onchange=options;search.oninput=options;choice.onchange=draw;
+  async function reload(selected){
+    message.textContent='Carregando habilidades…';
+    const data=await api('/api/local/admin/skill-balance');
+    skills=data.skills??[];
+    const prev=job.value;
+    const jobs=new Map(skills.map(s=>[s.job,s.className]));
+    job.replaceChildren(el('option','Todas as classes'),...([...jobs].sort((a,b)=>a[0]-b[0]).map(([id,name])=>{const o=el('option',name);o.value=id;return o;})));
+    job.options[0].value='';
+    if([...job.options].some(o=>o.value===prev))job.value=prev;
+    options();
+    if(selected&&[...choice.options].some(o=>o.value===selected))choice.value=selected;
+    draw();
+  }
+  form.onsubmit=async e=>{
+    e.preventDefault();if(!active)return;
+    save.disabled=true;
+    try {
+      const value={cooldown:fields.map(f=>Number(f.cd.value)),duration:fields.map(f=>Number(f.duration.value))};
+      if(effectFields.size) value.effects=active.effects.map((entry,i)=>({...entry,...Object.fromEntries([...effectFields].map(([key,inputs])=>[key,Number(inputs[i].value)]))}));
+      const code=active.code;
+      await api('/api/local/admin/skill-save',{code,version:active.version,value});
+      toast('Skill salva. A nova configuração vale quando o personagem entrar novamente.');
+      await reload(code);
+    } catch(error){message.textContent=error.message;}
+    finally{save.disabled=false;}
+  };
+  reset.onclick=async()=>{
+    if(!active||!confirm('Restaurar os valores originais desta habilidade?'))return;
+    reset.disabled=true;
+    try{const code=active.code;await api('/api/local/admin/skill-save',{code,version:active.version,reset:true});
+      toast('Skill restaurada para o padrão.');await reload(code);
+    }catch(error){message.textContent=error.message;}finally{reset.disabled=false;}
+  };
+  reload().catch(error=>{message.textContent=error.message;});
+}
