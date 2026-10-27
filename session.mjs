@@ -754,6 +754,7 @@ function adminCommand(input) {
     case 'bolsa': {const w=globalThis.__localSession.ui?.windows;w?.get('inventory')?.toggle();return 'Bolsa aberta.';}
     case 'status': {const w=globalThis.__localSession.ui?.windows;w?.get('status')?.toggle();return 'Status aberto.';}
     case 'link': if(!isAdmin)throw Error('Comando de administrador.');window.open('/painel','_blank','noopener');return 'Painel aberto.';
+    case 'jogar': return dropBagItem(args.join(' '));
     case "gmkit":return gmOperation('grant').then(()=>null);
     case "gmrota":return gmRoute();
     case "gmexp":
@@ -771,7 +772,7 @@ function adminCommand(input) {
        const p=r.policy,d=r.globalDrops;return `Drops de ${field.name}: ${p.paused?'SUSPENSOS':p.custom?`ouro ${p.gold.chance}% entre ${p.gold.min} e ${p.gold.max}; equipamentos: ${p.equipment.map(g=>g.label+' '+Math.min(100,g.chance*r.effects.drops)+'%').join(', ')||'nenhum grupo'}`:`padrão global — ouro ${d.goldChance}%; equipamentos ${d.equipmentChance}% / ${d.highLevelChance}%`}. Evento XP ×${r.effects.xp}, ouro ×${r.effects.gold}. Bosses usam roleta e tabela própria.`;
       });
     case "ajuda":
-      return 'Comandos: /personagens, /bolsa, /status, /habilidades, /loja, /skins, /salvar, /sair.'+
+      return 'Comandos: /personagens, /bolsa, /jogar NOME_DO_ITEM, /status, /habilidades, /loja, /skins, /salvar, /sair.'+
         (isAdmin?' GM: /monstro, /mymonster, /velocidade, /gmkit, /gmrota, /gmexp, /link.':'');
     case "habilidades":
       if (args[0]?.toLowerCase() === "liberar") {
@@ -1226,6 +1227,44 @@ function renderGroundLoot() {
   }
 }
 
+async function dropBagItem(name) {
+  const term = (name ?? '').trim().toLocaleLowerCase('pt-BR');
+  if (!term) throw Error('Use /jogar NOME_DO_ITEM ou /jogar CODIGO_DO_ITEM.');
+  if (game?.dead || !game?.ground || economyBusy || pendingLoot || economyUncertain)
+    throw Error('Aguarde o fim da operação atual antes de descartar um item.');
+  const matches = [];
+  for (const bag of [inv.bag, inv.bagB]) for (const slot of bag) {
+    const item = slot.item;
+    if (item && (item.name?.toLocaleLowerCase('pt-BR').includes(term) ||
+        item.code?.toLocaleLowerCase('pt-BR') === term || String(item.uid) === term))
+      matches.push({bag,slot});
+  }
+  if (!matches.length) throw Error('Item não encontrado na bolsa.');
+  const {bag,slot} = matches[0], item = slot.item;
+  if (item.bound || item.premiumManaged || item.managed || item.premium)
+    throw Error('Este item é vinculado à conta e não pode ser jogado no chão.');
+  const floor = game.ground.spawnPoint(game.pos.x + 60, game.pos.z + 45);
+  if (!floor) throw Error('Posicione-se em um terreno válido para descartar.');
+  const original = clone(inv);
+  economyBusy = true;
+  try {
+    bag.splice(bag.indexOf(slot),1);
+    recalculate();
+    if (!save(true)) throw Error('Falha ao salvar o inventário antes do descarte.');
+    await stateWrite;
+    const id = ++nextDropId;
+    const state = {...item,id,x:floor.x,y:floor.y,z:-floor.z,owner:hero.name};
+    groundDrops.set(id,{state,item,manual:true});
+    deliver({t:'ground',add:[state]});
+    renderGroundLoot();
+    return `${item.name} foi colocado no chão. Aproxime-se para recolher.`;
+  } catch(error) {
+    Object.assign(inv,original);
+    recalculate();
+    save(true);
+    throw error;
+  } finally { economyBusy = false; }
+}
 let nextDropId = 1000000;
 const warehouse = { items: [], gold: 0, pages: 3, weightMax: 10000, locked: [] };
 if (stored?.warehouse) {
@@ -1992,13 +2031,22 @@ async function handle(message) {
       break;
     case "pickup": {
       const drop = groundDrops.get(message.id);
-      if (!drop) return;
-      if (Math.hypot(game.pos.x - drop.state.x, game.pos.z + drop.state.z) > 100)
-        return notice("Aproxime-se do item.");
+      if (!drop || drop.pickupBusy || economyBusy) return;
+      drop.pickupBusy = true;
+      if (Math.hypot(game.pos.x - drop.state.x, game.pos.z + drop.state.z) > 100) {
+        drop.pickupBusy = false;return notice("Aproxime-se do item.");
+      }
       const before = clone(inv);
-      if (!addBag(drop.item)) return notice("Bolsa cheia. O item continua no chão.");
+      if (!addBag(drop.item)) {
+        drop.pickupBusy = false;return notice("Bolsa cheia. O item continua no chão.");
+      }
       economyBusy = true;
       try {
+        if (drop.manual) {
+          recalculate();
+          if (!save(true)) throw Error('Não foi possível salvar o recolhimento.');
+          await stateWrite;
+        } else {
         drop.pickupRequestId ??= requestId();
         const payload = { eventId: drop.eventId, requestId: drop.pickupRequestId };
         for (let attempt = 0; attempt < 3; attempt++) {
@@ -2010,6 +2058,7 @@ async function handle(message) {
             await new Promise((resolve) => setTimeout(resolve, 500 * (attempt + 1)));
           }
         }
+        }
       } catch (error) {
         Object.assign(inv, before);
         recalculate();
@@ -2017,6 +2066,7 @@ async function handle(message) {
         return;
       } finally {
         economyBusy = false;
+        drop.pickupBusy = false;
       }
       groundDrops.delete(message.id);
       deliver({ t: "ground", remove: [message.id] });
@@ -2531,6 +2581,7 @@ async function handle(message) {
             "personagens",
             "sair",
             "bolsa",
+            "jogar",
             "status",
             "habilidades",
             "itens",
