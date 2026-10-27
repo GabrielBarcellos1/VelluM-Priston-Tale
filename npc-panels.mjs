@@ -18,8 +18,11 @@ export function mountClassCrest(game,B,rank){
 }
 export function mountSkillChallenge(npc,ctx){
  document.getElementById('vellum-skill-challenge')?.remove();
- const box=document.createElement('section');
+ const box=document.createElement('dialog');
  box.id='vellum-skill-challenge';box.className='vellum-skill-challenge';
+ box.setAttribute('aria-label','Desafio de classe');
+ box.addEventListener('cancel',event=>event.preventDefault());
+ box.addEventListener('keydown',event=>event.stopPropagation());
  const toggle=document.createElement('button'),details=document.createElement('div');
  toggle.type='button';toggle.className='vellum-challenge-toggle';toggle.textContent='Desafio de classe';
  details.className='vellum-challenge-details';details.hidden=true;
@@ -49,9 +52,13 @@ export function mountSkillChallenge(npc,ctx){
    details.append(recover);
   }
  };
- toggle.onclick=()=>{details.hidden=!details.hidden;if(!details.hidden)draw();};
- box.append(toggle,details);
+ toggle.onclick=event=>{event.stopPropagation();details.hidden=!details.hidden;if(!details.hidden)draw();};
+ const close=document.createElement('button');
+ close.type='button';close.className='vellum-challenge-close';close.textContent='×';close.setAttribute('aria-label','Fechar desafio');
+ close.onclick=()=>{box.close();box.remove();};
+ box.append(toggle,close,details);
  document.body.append(box);
+ box.show(); // Native non-modal top layer: game canvas cannot swallow the button click.
  return box;
 }
 export async function openNpcServices(npc,ctx){
