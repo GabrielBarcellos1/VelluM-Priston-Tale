@@ -1204,7 +1204,7 @@ gameFeatures=createGameFeatures({name:hero.name,job:characterClass.job,tribe:cha
  definitions,completed,accepted,meta:questMeta,world:worldQuests,game:()=>game,now:serverNow,instance,addBag,restoreItem,notice,deliver,recalculate,
  save,flush:()=>stateWrite,savedAt:()=>lastSavedAt,setSavedAt:n=>{lastSavedAt=Math.max(lastSavedAt,n??0)},post:postLocal,requestId,applyWallet,refresh:refreshWallet,
  busy:()=>economyBusy||!!mapTravel?.busy,setBusy:value=>{economyBusy=value},pendingLoot:()=>pendingLoot,lootFlush:()=>lootQueue,dropLoot,
- views:questViews,publish:()=>deliver({t:'quests',list:questViews()}),complete:completeQuest,update:updateQuests,openSkills:showSkillBook,
+ views:questViews,publish:()=>deliver({t:'quests',list:questViews()}),complete:completeQuest,update:updateQuests,openSkills:showSkillBook,promoted:()=>gameFeatures.promoted(),
  navigate:async map=>{if(!save(true))throw Error('Não foi possível salvar.');await stateWrite;await globalThis.__localSession.online?.dispose();location.search=`?classe=${characterClass.job}&mapa=${map}`;},
  reload:()=>location.reload()});
 bossRoulette=mountBossRoulette({meta:questMeta,monsters,wiki,field,zones:spawnData.stages[field.stage]?.zones,game:()=>game,post:postLocal,requestId,deliver,publicMonster,save,
