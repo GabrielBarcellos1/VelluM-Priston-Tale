@@ -133,3 +133,97 @@ test('line skills include the validated primary target inside the native collisi
  f.monster.x=190;f.system.cast(skill.id,1);f.pending.forEach(fn=>fn());
  assert.ok(f.calls.damage.some(call=>call[0]===1));
 });
+
+
+test('Knight: Grand Cross 10 repeats without cooldown after its animation; Divine Piercing 10 retains seven strikes and delay',()=>{
+ const cross=catalog.skills.find(s=>s.code==='SKILL_GRAND_CROSS'),f=fixture(cross,10);
+ const view=f.system.cast(cross.id,1);f.pending.splice(0).forEach(fn=>fn());
+ assert.equal(view.recharge,0);assert.equal(f.calls.damage.length,2);
+ assert.equal(f.calls.damage[0][3].undeadDamagePercent,50);
+ assert.ok(view.rows.some(r=>r.label==='No. de acertos'&&r.cur==='2'));
+ assert.throws(()=>f.system.cast(cross.id,1),/animação/);
+ f.advance(1);f.system.cast(cross.id,1);assert.deepEqual(f.system.exportCooldowns(),{});
+ const piercing=catalog.skills.find(s=>s.code==='SKILL_DIVINE_PIERCING'),g=fixture(piercing,10);
+ const p=g.system.cast(piercing.id,1);g.pending.forEach(fn=>fn());assert.equal(g.calls.damage.length,7);
+ assert.equal(p.recharge,17.5);g.advance(1);assert.throws(()=>g.system.cast(piercing.id,1),/recarga/);
+ const h=fixture(piercing,10,{savedCooldowns:g.system.exportCooldowns(),wallNow:()=>1});
+ assert.throws(()=>h.system.cast(piercing.id,1),/recarga/);
+ g.advance(16.5);g.system.cast(piercing.id,1);
+});
+
+test('Knight: attack profiles honor damage, accuracy, repeats and undead bonus tables at every rank',async()=>{
+ const {skillAttackProfile}=await import('../skill-damage.mjs');
+ const tableNames={SKILL_DOUBLE_CRASH:'D_Crash_Damage',SKILL_BRANDISH:'Brandish_Damage',SKILL_PIERCING:'Piercing_Damage',SKILL_GRAND_CROSS:'Grand_Cross_Damage',SKILL_SWORD_OF_JUSTICE:'Sword_Of_Justice_DamagePercent',SKILL_DIVINE_PIERCING:'Divine_Piercing_DamagePercent'};
+ for(const [code,key]of Object.entries(tableNames))for(let n=1;n<=10;n++){
+  const s=catalog.skills.find(s=>s.code===code),r=catalog.rules.skills[code],f=fixture(s,n),a=skillAttackProfile(s,r,n,f.stats,f.equipment);
+  assert.equal(a.power,1+r.tables[key][n-1]/100,code+'/'+n);
+  const count=code==='SKILL_DIVINE_PIERCING'?r.tables.Divine_Piercing_AttackNum[n-1]:['SKILL_DOUBLE_CRASH','SKILL_GRAND_CROSS'].includes(code)?2:1;
+  assert.equal(a.hitCount,count,code+'/'+n);
+  f.system.cast(s.id,1);f.pending.forEach(fn=>fn());assert.equal(f.calls.damage.length,count,code+'/'+n);
+  if(code==='SKILL_GRAND_CROSS'){assert.equal(a.attackRatingPercent,r.tables.Grand_Cross_AttackRate[n-1]);assert.equal(a.undeadDamagePercent,r.tables.Grand_Cross_UndeadDamage[n-1]);}
+ }
+});
+
+test('Knight: buffs reach combat stats, refresh without stacking, survive reconnect and expire; shield and sword conditions apply',()=>{
+ const cases=[['SKILL_HOLY_BODY','undeadAbsorb',33],['SKILL_HOLY_VALOR','undeadDamage',54],['SKILL_DRASTIC_SPIRIT','defensePercent',25],['SKILL_DIVINE_INHALATION','undeadConversion',90],['SKILL_GODLY_SHIELD','absorbPercent',20],['SKILL_GOD_BLESS','damageFlat',33]];
+ for(const [code,key,value]of cases){
+  const s=catalog.skills.find(s=>s.code===code),f=fixture(s,10);f.system.cast(s.id);
+  assert.equal(f.system.bonuses()[key],value,code);assert.equal(f.system.bonuses().hp,0,code+' must not fabricate max HP');
+  const actual=combatStats(f.stats,f.equipment,{},f.system.bonuses()),base=combatStats(f.stats,f.equipment);
+  if(key==='undeadAbsorb'||key==='undeadDamage'||key==='undeadConversion')assert.equal(actual[key],value);
+  if(key==='defensePercent')assert.ok(actual.defense>base.defense);
+  if(key==='absorbPercent')assert.equal(actual.damageReduction,value);
+  if(key==='damageFlat')assert.equal(actual.damageMin-base.damageMin,value);
+  f.advance(20);f.system.cast(s.id);assert.equal(f.system.bonuses()[key],value);
+  const h=fixture(s,10,{savedBuffs:f.system.exportBuffs(),wallNow:()=>20});assert.equal(h.system.bonuses()[key],value);
+  f.advance(301);f.system.expire();assert.equal(f.system.bonuses()[key],0);
+  if(['SKILL_DIVINE_INHALATION','SKILL_GODLY_SHIELD'].includes(code)){h.equipment.shield=null;assert.equal(h.system.bonuses()[key],0);}
+ }
+ const sword=catalog.skills.find(s=>s.code==='SKILL_SWORD_MASTERY'),f=fixture(sword,10);
+ assert.equal(f.system.bonuses().weaponDamage,.38);f.equipment.weapon.code='WA101';assert.equal(f.system.bonuses().weaponDamage,0);
+ const training=catalog.skills.find(s=>s.code==='SKILL_PHYSICAL_TRANING');assert.equal(fixture(training,10).system.bonuses().spPercent,30);
+});
+
+test('Knight: Divine Inhalation converts only landed undead damage into HP, bounded by maximum HP',async()=>{
+ const {incomingHit}=await import('../monster-ai.mjs');
+ const stats={level:50,defense:0,absorb:0,undeadConversion:90,hp:500,hpMax:1000};
+ const foe={level:50,attack:[100,100],undead:true};
+ // Zero rolls avoid misses, blocks and evade with zero defensive chances.
+ assert.deepEqual(incomingHit(foe,stats,catalog.rules.accuracy,()=>0),{amount:10,heal:90,kind:'normal'});
+ assert.deepEqual(incomingHit({...foe,undead:false},stats,catalog.rules.accuracy,()=>0),{amount:100,heal:0,kind:'normal'});
+ assert.equal(incomingHit(foe,{...stats,block:100},catalog.rules.accuracy,()=>0).heal,undefined);
+ const source=await readFile(new URL('../session.mjs',import.meta.url),'utf8');
+ const apply=source.slice(source.indexOf('        let amount = hit.amount;'),source.indexOf('        const reflected ='));
+ const execute=(hp)=>{const state={...stats,hp};vm.runInNewContext(apply,{stats:state,hit:{amount:10,heal:90,kind:'normal'},monster:{id:1},deliver(){}});return state.hp;};
+ assert.equal(execute(500),580);assert.equal(execute(990),1000);
+});
+
+test('Knight: actual damage handler applies Grand Cross undead bonus only to undead targets',async()=>{
+ const source=await readFile(new URL('../session.mjs',import.meta.url),'utf8');
+ const fn=source.slice(source.indexOf('function damageMonster('),source.indexOf('function publicMonster('));
+ const monster={id:1,x:10,z:0,hp:10000,hpMax:10000,seq:0,definition:{level:100,defense:0,absorb:0,attack:[1,1],undead:false}};
+ const math=Object.create(Math);math.random=()=>.5;
+ const context={mapTravel:null,monsters:new Map([[1,monster]]),game:{pos:{x:0,z:0}},stats:{hp:1000,damageMin:100,damageMax:100,critical:0,attackRating:1000,level:100,undeadDamage:54},skillData:catalog,Math:math,physicalHit,monsterControl,classDamageScale,characterClass:{job:6},balanceRules:{classes:{6:{damageCurve:[{level:1,value:1},{level:150,value:1}]}}},performance:{now:()=>0},skills:{reveal(){}},updateQuests(){},premiumRecovery:()=>({hp:0,mp:0}),premiumValue:()=>0,deliver(){}};
+ const hit=vm.runInNewContext(`(${fn})`,context);
+ assert.equal(hit(1,1.8,500,{magic:true,undeadDamagePercent:50}),180);
+ monster.definition.undead=true;assert.equal(hit(1,1.8,500,{magic:true,undeadDamagePercent:50}),367);
+});
+
+test('Knight: Holy Incantation applies advertised HP bonus only on success and restores health on release',async()=>{
+ const {applyConversionHealth,restoreConversionHealth}=await import('../skill-runtime.mjs');
+ const source=await readFile(new URL('../session.mjs',import.meta.url),'utf8');
+ const fn=source.slice(source.indexOf('  convert: (monster, skill) => {')+11,source.indexOf('\n});\nconst groundDrops'));
+ const math=Object.create(Math),companions=new Map();math.random=()=>0;
+ const convert=vm.runInNewContext('('+fn.trim().replace(/,$/,'')+')',{skillData:catalog,Math:math,notice(){},hero:{name:'Knight'},applyConversionHealth,performance:{now:()=>0},updateQuests(){},companions,deliver(){},publicMonster:m=>m});
+ const make=()=>({id:1,hp:50,hpMax:100,seq:0,definition:{attack:[10,20]}});
+ const m=make();convert(m,{code:'SKILL_HOLY_INCANTATION',level:10,duration:300});assert.equal(m.hpMax,380);assert.equal(m.hp,190);assert.equal(m.owner,'Knight');assert.equal(companions.size,1);
+ restoreConversionHealth(m);assert.equal(m.hpMax,100);assert.equal(m.hp,50);
+ math.random=()=>.99;const failed=make();convert(failed,{code:'SKILL_HOLY_INCANTATION',level:10,duration:300});assert.equal(failed.owner,undefined);assert.equal(failed.hpMax,100);
+});
+
+test('Knight: Sword of Justice hits the advertised circular area, including enemies beside and behind',()=>{
+ const s=catalog.skills.find(s=>s.code==='SKILL_SWORD_OF_JUSTICE'),f=fixture(s,10);
+ for(const m of [{id:2,hp:100,x:0,z:170},{id:3,hp:100,x:-170,z:0},{id:4,hp:100,x:176,z:0}])f.ctx.monsters.set(m.id,m);
+ const v=f.system.cast(s.id);f.pending.forEach(fn=>fn());assert.equal(v.area.radius,175);
+ assert.deepEqual(f.calls.damage.map(a=>a[0]).sort(),[1,2,3]);
+});

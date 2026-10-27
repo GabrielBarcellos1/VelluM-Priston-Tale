@@ -46,6 +46,21 @@ export function selectSkillTargets(profile, level, origin, primary, monsters) {
     .sort((a,b)=>Number(b===primary)-Number(a===primary)||Math.hypot(a.x-center.x,a.z-center.z)-Math.hypot(b.x-center.x,b.z-center.z)).slice(0,count);
 }
 
+// Temporary converted-monster health keeps its current health fraction on release.
+export function applyConversionHealth(monster, percent) {
+  monster.conversionBaseHpMax ??= monster.hpMax;
+  const ratio = monster.hp / monster.hpMax;
+  monster.hpMax = Math.max(1, Math.floor(monster.conversionBaseHpMax * (1 + percent / 100)));
+  monster.hp = Math.max(1, Math.floor(monster.hpMax * ratio));
+}
+export function restoreConversionHealth(monster) {
+  if (!monster.conversionBaseHpMax) return;
+  const ratio = monster.hp / monster.hpMax;
+  monster.hpMax = monster.conversionBaseHpMax;
+  monster.hp = Math.max(0, Math.floor(monster.hpMax * ratio));
+  delete monster.conversionBaseHpMax;
+}
+
 export function monsterControl(monster, now = performance.now()) {
   const out={slowPercent:0,attackReductionPercent:0,criticalBonus:0,stunned:false};
   for (const [key,c] of Object.entries(monster.skillControls??{})) {
@@ -103,6 +118,7 @@ export function createRuntimeSkillSystem(ctx) {
       v.rows.push({label:'HP recuperado',cur:heal(n).join('–'),next:heal(next).join('–')});
     }
     if(p.special==='agony')v.rows.push({label:'HP convertido em MP',cur:`${at(rule(s).tables.Agony_ConvLife,n)}%`,next:`${at(rule(s).tables.Agony_ConvLife,next)}%`});
+    if(p.special==='convert')for(const [key,label] of [['H_Incantation_Success','Chance de conversão'],['H_Incantation_AddLife','HP adicional do aliado']])v.rows.push({label,cur:`${at(rule(s).tables[key],n)}%`,next:`${at(rule(s).tables[key],next)}%`});
     if(p.special==='resurrection')v.rows.push({label:'HP ao ressuscitar',cur:`${30+Math.max(1,n)*5}%`,next:`${30+next*5}%`});
     if(p.kind==='debuff'||p.special==='stun') {
       const c=at(p.controls,n),d=at(p.controls,next);

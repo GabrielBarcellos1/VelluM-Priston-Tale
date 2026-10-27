@@ -50,13 +50,13 @@ const summonTables = { METAL_GOLEM:['Metal_Golem_Damage','Metal_Golem_Life'],
 const geometryTables = { MECHANIC_BOMB:'Mechanic_Bomb_Attack_Range', PIKE_WIND:'Pike_Wind_Push_Lenght',
  GROUND_PIKE:'G_Pike_Range', VENOM_SPEAR:'VenomSpear_Range', ROAR:'Roar_Range', DISTORTION:'Distortion_Area',
  COMPULSION:'Compulsion_Area', REGENERATION_FIELD:'Regeneration_Field_Area', CYCLONE_STRIKE:'Cyclone_Strike_Area',
- BRANDISH:'Brandish_Range', FIRE_BALL:'FireBall_Area', WATORNADO:'Watornado_Area', M_METEO:'Meteo_Area',
+ SWORD_OF_JUSTICE:'Sword_Of_Justice_Area', BRANDISH:'Brandish_Range', FIRE_BALL:'FireBall_Area', WATORNADO:'Watornado_Area', M_METEO:'Meteo_Area',
  DIASTROPHISM:'Diastrophism_Area', FLAME_WAVE:'Flame_Wave_Area', GLACIAL_SPIKE:'Glacial_Spike_Area',
  ARROW_OF_RAGE:'A_Rage_Area', BOMB_SHOT:'BombShot_Area', X_RAGE:'X_Rage_Area', TORNADO:'Tornado_Range' };
 const lines={PERFORATION:[40,[270,274,278,282,286,290,294,298,305,310]],PHOENIX_SHOT:[50,340],
  SHIELD_STRIKE:[50,160],SOUL_SUCKER:[30,200],STORM_JAVELIN:[30,340],
  SWORD_BLAST:[40,[120,125,130,135,140,145,150,155,160,170]],PIERCING:[40,140],
- SWORD_OF_JUSTICE:[70,[140,150,160,170,180,200,220,240,260,280]],FLAME_WAVE:[60,340],
+ FLAME_WAVE:[60,340],
  GLACIAL_SPIKE:[50,340],EXPANSION:[30,levels(n=>100+Math.trunc(480*n/100))]};
 const targetCircles=new Set(['ARROW_OF_RAGE','BOMB_SHOT','X_RAGE','BRANDISH','FIRE_BALL','WATORNADO','M_METEO','MECHANIC_BOMB','GREAT_SMASH','SPARK','IMPULSION','LIGHTNING_JAVELIN']);
 for (const skill of catalog.skills) {
@@ -91,6 +91,7 @@ for (const skill of catalog.skills) {
  if(name==='HEALING')profile.target='ally';
  if(name==='RESURRECTION')profile.target='self';
  if(name==='HOLY_INCANTATION')profile.target='enemy';
+ if(name==='SWORD_OF_JUSTICE')profile.target='area';
  if (kind==='passive') { profile.mp=levels(()=>0); profile.stamina=levels(()=>0); }
  for (let n=1;n<=10;n++) {
    const e=ownEffects[name]?emptyEffects():effectFor(skill,n,rules);
@@ -102,7 +103,7 @@ for (const skill of catalog.skills) {
    if(name==='VANISH'||name==='BLIND')e.stealth=1;
    if(name==='REGENERATION_FIELD') {e.hpRegen=tables.Regeneration_Field_LifeRegen?.[n-1]??n;e.regen=tables.Regeneration_Field_ManaRegen?.[n-1]??n;}
    if(name==='GOLDEN_FALCON')e.hpRegen=tables.Golden_Falcon_LifeRegen?.[n-1]??0;
-   if(name==='DIVINE_INHALATION')e.hp=tables.D_Inhalation_Life?.[n-1]??0;
+
    if(name==='SUMMON_MUSPELL'){e.undeadAbsorb=tables.Summon_Muspell_UndeadAbsorbPercent?.[n-1]??0;e.block=tables.Summon_Muspell_BlockPercent?.[n-1]??0;}
    profile.effects.push(Object.fromEntries(Object.entries(e).filter(([,v])=>typeof v==='object'?Object.values(v).some(Boolean):v!==0)));
    const evaluated=skillAttackProfile(skill,old,n,{level:100,spi:100},{});

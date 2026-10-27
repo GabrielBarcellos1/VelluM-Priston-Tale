@@ -29772,44 +29772,44 @@
           ],
           "effects": [
             {
-              "hp": 9,
-              "block": 2
+              "block": 2,
+              "undeadConversion": 9
             },
             {
-              "hp": 18,
-              "block": 2
+              "block": 2,
+              "undeadConversion": 18
             },
             {
-              "hp": 27,
-              "block": 3
+              "block": 3,
+              "undeadConversion": 27
             },
             {
-              "hp": 36,
-              "block": 3
+              "block": 3,
+              "undeadConversion": 36
             },
             {
-              "hp": 45,
-              "block": 4
+              "block": 4,
+              "undeadConversion": 45
             },
             {
-              "hp": 54,
-              "block": 4
+              "block": 4,
+              "undeadConversion": 54
             },
             {
-              "hp": 63,
-              "block": 5
+              "block": 5,
+              "undeadConversion": 63
             },
             {
-              "hp": 72,
-              "block": 5
+              "block": 5,
+              "undeadConversion": 72
             },
             {
-              "hp": 81,
-              "block": 6
+              "block": 6,
+              "undeadConversion": 81
             },
             {
-              "hp": 90,
-              "block": 6
+              "block": 6,
+              "undeadConversion": 90
             }
           ],
           "attacks": [
@@ -30458,7 +30458,7 @@
             0.5,
             0.5,
             0.5,
-            0.5
+            0
           ],
           "range": [
             130,
@@ -31797,16 +31797,16 @@
             500
           ],
           "radius": [
-            0,
-            0,
-            0,
-            0,
-            0,
-            0,
-            0,
-            0,
-            0,
-            0
+            130,
+            135,
+            140,
+            145,
+            150,
+            155,
+            160,
+            165,
+            170,
+            175
           ],
           "targetLimit": [
             7,
@@ -31948,23 +31948,23 @@
           ],
           "summon": null,
           "shape": {
-            "type": "line",
-            "center": "target",
-            "width": 70,
+            "type": "circle",
+            "center": "self",
+            "width": 0,
             "length": [
-              140,
-              150,
-              160,
-              170,
-              180,
-              200,
-              220,
-              240,
-              260,
-              280
+              0,
+              0,
+              0,
+              0,
+              0,
+              0,
+              0,
+              0,
+              0,
+              0
             ]
           },
-          "target": "enemy"
+          "target": "area"
         }
       },
       "SKILL_SHIELD_STRIKE": {
@@ -64773,6 +64773,12 @@
         "minimumLevel": 10,
         "cooldownSeconds": 0,
         "source": "user-requested FREEston primary attack; separate native animation lock retained",
+        "verifiedForZephira": false
+      },
+      "SKILL_GRAND_CROSS": {
+        "minimumLevel": 10,
+        "cooldownSeconds": 0,
+        "source": "user-requested VelluM Knight primary attack; native animation lock retained",
         "verifiedForZephira": false
       }
     },

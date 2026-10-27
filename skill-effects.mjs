@@ -33,6 +33,7 @@ export function emptyEffects() {
     manaShield: 0,
     undeadDamage: 0,
     undeadAbsorb: 0,
+    undeadConversion: 0,
     elementalDamage: { fire: 0, ice: 0, lightning: 0 },
     resist: { bio: 0, poison: 0, fire: 0, lightning: 0, ice: 0 },
   };
@@ -83,7 +84,7 @@ const mappings = {
   SKILL_HOLY_VALOR: [["undeadDamage", "Holy_Valor_Damage"]],
   SKILL_DRASTIC_SPIRIT: [["defensePercent", "Drastic_Spirit_Defense"]],
   SKILL_SWORD_MASTERY: [["weaponDamage", "Sword_Mastery_DamagePercent", 0.01]],
-  SKILL_DIVINE_INHALATION: [["block", "D_Inhalation_Block"]],
+  SKILL_DIVINE_INHALATION: [["block", "D_Inhalation_Block"], ["undeadConversion", "D_Inhalation_Life"]],
   SKILL_GODLY_SHIELD: [["absorbPercent", "Godly_Shield_AbsorbPercent"]],
   SKILL_GOD_BLESS: [["damageFlat", "God_Bless_AddDamage"]],
   SKILL_ZENITH: [["resist.all", "Zenith_Element"]],
@@ -209,6 +210,7 @@ export function effectRows(effect) {
     manaShield: "Escudo de mana",
     undeadDamage: "Dano em mortos-vivos",
     undeadAbsorb: "Proteção contra mortos-vivos",
+    undeadConversion: "Dano de mortos-vivos convertido em HP",
   };
   const fraction = new Set(["damage", "damageMax", "weaponDamage", "weaponDamageMax"]);
   const percent = new Set([
@@ -228,6 +230,7 @@ export function effectRows(effect) {
     "manaShield",
     "undeadDamage",
     "undeadAbsorb",
+    "undeadConversion",
     "magicPowerPercent",
   ]);
   const rows = [];

@@ -36,7 +36,7 @@ import { mountBossRoulette } from "/boss-roulette.mjs";
 import { createGameFeatures } from "/game-features.mjs";
 import { objectiveValue, objectiveIncrement, questCollectionCode } from "/quest-progress.mjs";
 import { experienceFloor, migrateExperience, killExperience, mapExperienceRange, mapExperienceAllowed, capKillExperience, classDamageScale, balanceMonster, questExperienceReward, potionCanUse, registerPotion } from "/balance-rules.mjs";
-import { monsterControl } from "/skill-runtime.mjs";
+import { monsterControl, applyConversionHealth, restoreConversionHealth } from "/skill-runtime.mjs";
 import { createSkillSystem } from "/skill-system.mjs";
 import { mountCustomSkins, openSapphirePreview } from "/custom-skins.mjs";
 import { mountSkinShop } from "/skins-shop.mjs";
@@ -1163,6 +1163,7 @@ const skills = createSkillSystem({
   convert: (monster, skill) => {
     const chance=skillData.rules.skills[skill.code].tables.H_Incantation_Success?.[skill.level-1]??40+skill.level*4;
     if(Math.random()*100>=chance){notice('A conversão falhou.');return;}
+    applyConversionHealth(monster,skillData.rules.skills[skill.code].tables.H_Incantation_AddLife[skill.level-1]);
     monster.owner=hero.name;monster.seq++;monster.motion='stand';
     updateQuests("skillConverted",{code:skill.code});
     const until=performance.now()+skill.duration*1000;
@@ -1658,7 +1659,7 @@ async function redistributeAtNpc(npcId, mode) {
       skills.reset();
       for (const side of ["left", "right"]) game.setSkillSlot(side, null);
       const removed = [...companions.keys()].filter(id=>!companions.get(id).converted);
-      for(const pet of companions.values())if(pet.converted)delete pet.state.owner;
+      for(const pet of companions.values())if(pet.converted){restoreConversionHealth(pet.state);delete pet.state.owner;}
       companions.clear();
       if (removed.length) deliver({ t: "monsters", remove: removed });
       deliver({ t: "pets", list: [] });
@@ -1764,7 +1765,7 @@ function damageMonster(id, power = 1, rangeOverride = null, options = {}) {
   const adjustedPower =
     options.fixedDamage !== undefined
       ? 1
-      : power * (monster.definition.undead ? 1 + (stats.undeadDamage ?? 0) / 100 : 1);
+      : power * (monster.definition.undead ? 1 + ((stats.undeadDamage ?? 0) + (options.undeadDamagePercent ?? 0)) / 100 : 1);
   const hit = physicalHit(
     attack,
     monster.definition,
@@ -2990,7 +2991,8 @@ try {
           stats.mp -= absorbed;
           amount -= absorbed;
         }
-        stats.hp = Math.max(0, stats.hp - amount);
+        stats.hp = Math.max(0, Math.min(stats.hpMax, stats.hp - amount + (hit.heal ?? 0)));
+
         deliver({
           t: "damage",
           from: monster.id,
@@ -3028,7 +3030,7 @@ try {
     for (const [id, pet] of companions) {
       if (performance.now() > pet.until || (!pet.converted && !skills.buffs().some(b=>b.code==='skill:'+pet.code))) {
         companions.delete(id);
-        if(pet.converted){delete pet.state.owner;pet.state.seq++;deliver({t:'monsters',remove:[id]});deliver({t:'monsters',add:[publicMonster(pet.state)]});}
+        if(pet.converted){restoreConversionHealth(pet.state);delete pet.state.owner;pet.state.seq++;deliver({t:'monsters',remove:[id]});deliver({t:'monsters',add:[publicMonster(pet.state)]});}
         else deliver({ t: "monsters", remove: [id] });
         petChanged = true;
         continue;

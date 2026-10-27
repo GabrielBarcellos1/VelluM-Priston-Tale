@@ -126,6 +126,8 @@ export function skillAttackProfile(skill, rule, level, stats, equipment = {}, sp
   }
   if (skill.code === "SKILL_BRUTAL_SWING") profile.criticalPercent = value("B_Swing_Critical") ?? 0;
   if (skill.code === "SKILL_AVALANCHE") profile.criticalScale = 0.5;
+  if (["SKILL_DOUBLE_CRASH", "SKILL_GRAND_CROSS"].includes(skill.code)) profile.hitCount = 2;
+  if (skill.code === "SKILL_GRAND_CROSS") profile.undeadDamagePercent = value("Grand_Cross_UndeadDamage") ?? 0;
   const hitCount = at(rule?.hitCount, level) ?? value(repeats[skill.code]);
   if (Number.isFinite(hitCount)) profile.hitCount = Math.max(1, Math.min(10, Math.trunc(hitCount)));
   if (skill.code === "SKILL_SPLIT_JAVELIN") {
@@ -163,6 +165,8 @@ export function skillAttackRows(current, next) {
        !!(current.criticalBonus || next.criticalBonus));
   pair("Bônus no crítico", "criticalPercent", (n) => `+${n}%`,
        !!(current.criticalPercent || next.criticalPercent));
+  pair("Dano adicional em mortos-vivos", "undeadDamagePercent", n => `+${n}%`,
+       !!(current.undeadDamagePercent || next.undeadDamagePercent));
   return rows;
 }
 // Native event frames place strikes visually, but do not prove the number of

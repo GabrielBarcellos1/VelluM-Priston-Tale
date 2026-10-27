@@ -104,7 +104,8 @@ export function incomingHit(definition, stats, table, random = Math.random, opti
   const protection = Math.min(90, stats.damageReduction ?? 0);
   amount = Math.max(1, Math.floor(amount * (1 - protection / 100)));
   if(options.defenseCap)amount=Math.max(1,Math.floor(amount*(1-defenseMitigation(stats.defense??0,definition.level,options.defenseCap))));
-  return { amount, kind: "normal" };
+  const heal = definition.undead ? Math.floor(amount * Math.max(0, Math.min(100, stats.undeadConversion ?? 0)) / 100) : 0;
+  return { amount: amount - heal, heal, kind: "normal" };
 }
 
 // Explicit FREEston elemental profile, not recovered private attack definitions.

@@ -114,6 +114,7 @@ export function combatStats(s, equipment, spec = {}, e = {}) {
     ),
     damageReduction: Math.min(75, e.absorbPercent ?? 0),
     undeadAbsorb: e.undeadAbsorb ?? 0,
+    undeadConversion: Math.max(0, Math.min(100, e.undeadConversion ?? 0)),
     undeadDamage: e.undeadDamage ?? 0,
     reflection: Math.min(100, e.reflection ?? 0),
     retaliationFlat: e.retaliationFlat ?? 0,
