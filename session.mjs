@@ -1463,40 +1463,21 @@ function save(force = false) {
   }
 }
 function questViews() {
-  return questData.quests
-    .filter((q) => !q.id.startsWith('rank.') && questEligible(q, stats, characterClass.tribe, completed))
-    .map((raw) => {
-      const q=worldQuests.resolve(raw);
-      const objectives = q.steps
-        .filter((o) => !o.race || o.race === characterClass.tribe)
-        .map((o) => {
-          const npc = wiki.npcs.find(
-            (n) => (o.npcIds ?? []).includes(n.id) && n.map === o.target?.field,
-          );
-          return {
-            ...o,
-            done: Math.min(o.need,objectiveValue(q,o,objectiveProgress[`${q.id}:${o.id}`],stats,skills.exportState(),skillData,inv)),
-            target: questTarget(o, fieldData.fields, spawnData.stages, wiki.npcs),
-          };
-        });
-      return {
-        ...q,
-        state:
-          !q.auto && !accepted.has(q.id)
-            ? "available"
-            : objectives.every((o) => o.done >= o.need)
-              ? "ready"
-              : "active",
-        objectives,
-        dialogue: {
-          offer: q.offer ?? "",
-          progress: q.offer ?? "",
-          complete: "Objetivos concluídos.",
-        },
-        giverNpc: q.giver?.find(n=>!n.race||n.race===characterClass.tribe),
-        turnInNpc: q.turnIn?.find(n=>!n.race||n.race===characterClass.tribe),
-      };
-    });
+  // Quest definitions and saved progress remain stored for future level 80+ missions.
+  return [];
+}
+function disableLegacyMissions() {
+  const hide = () => {
+    for (const panel of document.querySelectorAll('.hud-win')) {
+      const content = panel.textContent ?? '';
+      if (content.includes('Missões') && (content.includes('Jornada') || content.includes('Diárias') || content.includes('Mensal'))) {
+        panel.style.setProperty('display', 'none', 'important');
+        panel.setAttribute('aria-hidden', 'true');
+      }
+    }
+  };
+  new MutationObserver(hide).observe(document.body, { childList: true, subtree: true });
+  hide();
 }
 function updateQuests(type,value){
  const data={...(value&&typeof value==='object'?value:{}),field:field.id};
@@ -2889,6 +2870,7 @@ try {
       game.setSkillSlot(side, id);
   }
   globalThis.__localSession.ui = B.ui(game, conn, hero);
+  disableLegacyMissions();
   B.Runtime.set(game);
   mountLocalSkillCasting(game,()=>!!field.village);
   mountGmMovement();
