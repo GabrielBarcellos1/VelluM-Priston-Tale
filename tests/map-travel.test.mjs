@@ -1,7 +1,7 @@
 import test from 'node:test';
 import assert from 'node:assert/strict';
 import {readFile} from 'node:fs/promises';
-import {adjacentFields,walkingStages,portalAt,createMapTravel} from '../map-travel.mjs';
+import {adjacentFields,walkingStages,portalAt,createMapTravel,forestSeamArrival} from '../map-travel.mjs';
 const fields=JSON.parse(await readFile(new URL('../data/map-fields.json',import.meta.url))).fields;
 const portals=JSON.parse(await readFile(new URL('../data/map-links.json',import.meta.url))).portals;
 test('every declared outdoor connection loads both directions, including Jardim/Bamboo',()=>{
@@ -76,6 +76,12 @@ test('one controller crosses successive borders and returns without leaving the 
  }
  assert.equal(f.calls.filter(c=>c[0]==='activate').length,7);
  assert.equal(f.calls.filter(c=>c[0]==='rollback').length,0);
+});
+test('forest boundary places the character at a safe destination spawn',()=>{
+ const bamboo=fields.find(f=>f.id===1),acacias=fields.find(f=>f.id===0);
+ assert.deepEqual(forestSeamArrival(1,acacias,{x:-7000,z:-11000}),{x:-10585,z:-11810});
+ assert.deepEqual(forestSeamArrival(0,bamboo,{x:-8000,z:-11000}),{x:-7192,z:-11175});
+ assert.equal(forestSeamArrival(1,fields.find(f=>f.id===2),{x:0,z:0}),null);
 });
 test('walking map crossing ignores immediate bounce-back until terrain settles',async()=>{
  const f=fixture();
