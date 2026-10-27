@@ -1,9 +1,9 @@
 // Class challenges and map quest lifecycle. Quest objects are data, never executable instructions.
 export function promotionRank(completed,job){
  const c=new Set(completed??[]);
- if(c.has('rank.3.duel'))return 3;
- if(['rank.2.2.melee','rank.2.2.ranged','rank.2.2.caster'].some(id=>c.has(id)))return 2;
- if(c.has('rank.1.tempskron')||c.has('rank.1.morion-jelly')||c.has('rank.1.morion-oil'))return 1;
+ if(c.has('rank.auto.3')||c.has('rank.3.duel'))return 3;
+ if(c.has('rank.auto.2')||['rank.2.2.melee','rank.2.2.ranged','rank.2.2.caster'].some(id=>c.has(id)))return 2;
+ if(c.has('rank.auto.1')||c.has('rank.1.tempskron')||c.has('rank.1.morion-jelly')||c.has('rank.1.morion-oil'))return 1;
  return 0;
 }
 export function classCrest(rank){return rank>0?{color:[0,0xdab35c,0x72c7ff,0xcf95ff][Math.min(3,rank)],points:[0,3,4,8][Math.min(3,rank)],name:['','Insígnia do Tier 2','Insígnia do Tier 3','Insígnia do Tier 4'][Math.min(3,rank)]}:null;}
