@@ -2190,9 +2190,16 @@ async function handle(message) {
       if (q) completeQuest(q.id,message.npcId);
       break;
     }
-    case "field":
-      await mapTravel.walk(message.id);
+    case "field": {
+      const blocked=mapTravel.forestReturnBlocked(message.id);
+      const changed=await mapTravel.walk(message.id);
+      if (!changed && blocked && game.currentStage!==field.stage) {
+        game.currentStage=field.stage;
+        game.stagePicker.reset();
+        deliver(fieldPacket());
+      }
       return;
+    }
     case "move":
       return;
     case "attack":
