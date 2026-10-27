@@ -2723,9 +2723,9 @@ async function activateMap(next) {
   deliver({ t: "npcs", npcs });
   if (next.portal) {
     deliver({ t: "teleport", fieldId: field.id, x: at.x, z: at.z, y: null, warp: true });
-    await game.stageLoad;
-    await game.npcsReady.catch(error => recordDiagnostic(error.message));
   }
+  await game.stageLoad;
+  await game.npcsReady.catch(error => recordDiagnostic(error.message));
   calibrateMapPortals();
   spawnMapPopulation();
   for (const pet of companions.values()) {
@@ -2761,13 +2761,13 @@ mapTravel = createMapTravel({
     mapBackup = { field: { ...field }, enter: { ...enter }, position: game.playerPosition(),
       npcs: [...npcs], monsters: [...monsters], drops: [...groundDrops] };
     await bossRoulette.pauseMap();
+    const target = fieldData.fields.find(f => f.id === landing.field);
+    if (!game.stageMeshes.has(target.stage))
+      await (game.stageLoading.get(target.stage)?.promise ?? game.loadNeighbor(target.stage));
+    if (!game.stageInfo.has(target.stage)) throw Error('Não foi possível carregar o terreno de destino.');
     if (landing.portal) {
       game.keys.clear();
       game.target = null;
-      const target = fieldData.fields.find(f => f.id === landing.field);
-      if (!game.stageMeshes.has(target.stage))
-        await (game.stageLoading.get(target.stage)?.promise ?? game.loadNeighbor(target.stage));
-      if (!game.stageInfo.has(target.stage)) throw Error('Não foi possível carregar o terreno de destino.');
     }
     pendingMapTravel = landing;
   },
