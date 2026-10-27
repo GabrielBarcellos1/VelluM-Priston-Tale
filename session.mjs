@@ -579,7 +579,7 @@ const adminState = {
   hidden: false,
   fly: false,
   altitude: 200,
-  speed: 1,
+  speed: isAdmin ? 4 : 1,
 };
 const diagnostics = [];
 try {
@@ -1505,10 +1505,10 @@ function noticeMapProgression() {
   const band=mapExperienceRange(field.id,balanceRules),key=field.id+':'+stats.level;
   if(lastMapProgressionNotice===key)return;
   lastMapProgressionNotice=key;
-  const next=balanceRules.maps.filter(m=>m.experienceMin!==undefined&&mapExperienceAllowed(stats.level,m.id,balanceRules))
-    .sort((a,b)=>Number(!field.neighbors?.includes(a.id))-Number(!field.neighbors?.includes(b.id)));
+  const next=balanceRules.maps.filter(m=>m.experienceMin!==undefined&&m.minimum<=stats.level&&mapExperienceAllowed(stats.level,m.id,balanceRules))
+    .sort((a,b)=>b.experienceMin-a.experienceMin);
   notice(field.name+' não rende EXP no nível '+stats.level+'. Faixa: '+band.min+'–'+band.max+'.'+
-    (next.length?' Continue em '+next.slice(0,3).map(m=>m.name).join(' / ')+'.':''));
+    (next.length?' Próximo mapa de UP: '+next[0].name+'.':''));
 }
 async function claimLevelKits() {
   if (!game || game.dead || economyBusy || economyUncertain || pendingLoot || mapTravel?.busy ||
