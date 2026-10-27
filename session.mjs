@@ -1191,6 +1191,25 @@ const skills = createSkillSystem({
   },
 });
 const groundDrops = new Map();
+function spawnGoldDrop(data, announce = false) {
+  if (!data || !(data.gold > 0) || !Number.isInteger(data.eventId)) return;
+  if ([...groundDrops.values()].some(drop => drop.gold && drop.eventId === data.eventId)) return;
+  const id = ++nextDropId;
+  const x = Number(data.x), z = Number(data.z);
+  const floor = game?.ground?.spawnPoint(x, -z);
+  const state = {id,code:'GOLD',name:`${data.gold} ouro`,gold:data.gold,
+    x:floor?.x ?? x,y:floor?.y ?? game?.pos?.y ?? 0,z:floor ? -floor.z : z,owner:hero.name};
+  groundDrops.set(id,{state,gold:data.gold,eventId:data.eventId});
+  deliver({t:'ground',add:[state]});
+  renderGroundLoot();
+  if (announce) notice(`${data.gold} de ouro caiu no chão. Recolha com o auto loot ou clique no drop.`);
+}
+async function restorePendingGold() {
+  try {
+    const data = await postLocal('/api/local/game/ground',{});
+    for (const drop of data.goldDrops ?? []) spawnGoldDrop(drop);
+  } catch (error) { recordDiagnostic('Ouro pendente: '+error.message); }
+}
 function renderGroundLoot() {
   let panel = document.getElementById('vellum-ground-loot');
   if (!groundDrops.size) { panel?.remove(); return; }
@@ -1210,7 +1229,7 @@ function renderGroundLoot() {
     row.className = 'vellum-loot-row';
     const distance = game?.pos ? Math.hypot(game.pos.x-drop.state.x, game.pos.z+drop.state.z) : Infinity;
     const label = document.createElement('span');
-    label.textContent = `${drop.item.name} ×${drop.item.count ?? 1}`;
+    label.textContent = drop.gold ? `${drop.gold} ouro` : `${drop.item.name} ×${drop.item.count ?? 1}`;
     const take = document.createElement('button');
     take.type = 'button'; take.textContent = distance <= 100 ? 'Pegar' : 'Aproxime-se';
     take.disabled = distance > 100 || economyBusy;
@@ -1306,6 +1325,7 @@ function dropLoot(monster) {
         map: field.id,
         adminSpawn: !!source.adminSpawn,
         gmTraining: !!source.gmTraining,
+        x: source.x, z: source.z,
         ...(source.trialToken?{trialToken:source.trialToken}:{}),
         requestId: key,
       };
@@ -1320,7 +1340,7 @@ function dropLoot(monster) {
         }
       }
       lastSavedAt = Math.max(lastSavedAt, result.savedAt ?? 0);
-      stats.gold += result.gold;
+      if (result.goldDrop) spawnGoldDrop(result.goldDrop, true);
       if(source.gmTraining){
         const normal=mapKillExperience(source.definition);
         gainExperience(result.gmExperience??normal);recalculate();
@@ -2036,8 +2056,8 @@ async function handle(message) {
       if (Math.hypot(game.pos.x - drop.state.x, game.pos.z + drop.state.z) > 100) {
         drop.pickupBusy = false;return notice("Aproxime-se do item.");
       }
-      const before = clone(inv);
-      if (!addBag(drop.item)) {
+      const before = drop.gold ? null : clone(inv);
+      if (!drop.gold && !addBag(drop.item)) {
         drop.pickupBusy = false;return notice("Bolsa cheia. O item continua no chão.");
       }
       economyBusy = true;
@@ -2047,11 +2067,18 @@ async function handle(message) {
           if (!save(true)) throw Error('Não foi possível salvar o recolhimento.');
           await stateWrite;
         } else {
+        if (drop.gold) await stateWrite;
         drop.pickupRequestId ??= requestId();
         const payload = { eventId: drop.eventId, requestId: drop.pickupRequestId };
         for (let attempt = 0; attempt < 3; attempt++) {
           try {
-            await postLocal("/api/local/game/pickup", payload);
+            const confirmed = await postLocal("/api/local/game/pickup", payload);
+            if (drop.gold) {
+              stats.gold = confirmed.goldBalance;
+              lastSavedAt = Math.max(lastSavedAt, confirmed.savedAt ?? 0);
+              recalculate();
+              save(true);
+            }
             break;
           } catch (error) {
             if (error.status || attempt === 2) throw error;
@@ -2060,7 +2087,7 @@ async function handle(message) {
         }
         }
       } catch (error) {
-        Object.assign(inv, before);
+        if (before) Object.assign(inv, before);
         recalculate();
         notice(error.message);
         return;
@@ -2072,7 +2099,7 @@ async function handle(message) {
       deliver({ t: "ground", remove: [message.id] });
       renderGroundLoot();
       recalculate();
-      updateQuests("item", drop.item.code);
+      if (!drop.gold) updateQuests("item", drop.item.code);
       updateQuests("pickup",{});
       break;
     }
@@ -2852,6 +2879,8 @@ async function activateMap(next) {
   url.searchParams.set("mapa", String(field.id));
   history.replaceState(history.state, "", url);
   save(true);
+  await stateWrite;
+  await restorePendingGold();
   mapBackup = null;
 }
 
@@ -2968,6 +2997,7 @@ try {
   syncGm();
   B.state("field");
   await game.warmedUp(() => loading.setStatus("Preparando as texturas originais…"));
+  await restorePendingGold();
   skills.publish();
   addEventListener("visibilitychange", () => {
     if (!document.hidden) skills.tickCooldowns();

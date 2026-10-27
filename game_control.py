@@ -263,13 +263,13 @@ def kill(user,data):
         if data.get('trialToken'):
             import npc_services
             npc_services.record_trial_kill(db,user,data,monster)
-        result=[]
+        result=[];gold_drop=None
         if gold:
-            latest=json.loads(db.execute('SELECT state FROM characters WHERE username=? AND job=?',(user['username'],job)).fetchone()['state'])
-            latest['stats']['gold']=latest['stats'].get('gold',0)+gold
-            latest['savedAt']=max(int(time.time()*1000),int(latest.get('savedAt',0))+1)
-            db.execute('UPDATE characters SET state=? WHERE username=? AND job=?',(json.dumps(latest,ensure_ascii=False),user['username'],job))
-            event(db,user,'drop.gold','drop',job=job,character=name,map_id=map_id,monster=monster['name'],code='GOLD',item_name='Ouro',quantity=gold,status='collected',trust=origin)
+            # Gold is a durable, unclaimed world drop. It is credited only by pickup().
+            x=number(data.get('x',saved.get('position',{}).get('x',0)),-1000000,1000000,'Posição X')
+            z=number(data.get('z',saved.get('position',{}).get('z',0)),-1000000,1000000,'Posição Z')
+            event_id=event(db,user,'drop.gold','drop',job=job,character=name,map_id=map_id,monster=monster['name'],code='GOLD',item_name='Ouro',quantity=gold,status='generated',trust=origin,detail={'x':x,'z':z})
+            gold_drop={'eventId':event_id,'gold':gold,'x':x,'z':z}
         for code,count,category in items:
             item=ITEMS[code];event_id=event(db,user,'drop.'+category,'drop',job=job,character=name,map_id=map_id,monster=monster['name'],code=code,item_name=item['name'],item_level=item.get('req',{}).get('level',0),quantity=count,status='generated',trust=origin)
             entry={'code':code,'count':count,'eventId':event_id}
@@ -282,7 +282,7 @@ def kill(user,data):
         amount=db.execute('SELECT count(*) FROM game_events WHERE '+' AND '.join(conditions),args).fetchone()[0]
         last=db.execute("SELECT 1 FROM game_events WHERE username=? AND action='monitor.drop-volume' AND created>?",(user['username'],time.time()-monitor['windowMinutes']*60)).fetchone()
         if amount>=monitor['threshold'] and not last:event(db,user,'monitor.drop-volume',severity='warning',job=job,character=name,trust='heuristic',detail={'count':amount,'monitor':monitor,'note':'Volume para revisão; não comprova trapaça.'})
-        return remember(db,user,key,payload,{'ok':True,'gold':gold,'items':result,'rulesVersion':table['version'],'economyVersion':rolled['policyVersion'],'gmExperience':gm_tools.experience(db,user,data,saved,monster),'combatVerified':False,'savedAt':latest['savedAt'] if gold else saved.get('savedAt',0)})
+        return remember(db,user,key,payload,{'ok':True,'gold':0,'goldDrop':gold_drop,'items':result,'rulesVersion':table['version'],'economyVersion':rolled['policyVersion'],'gmExperience':gm_tools.experience(db,user,data,saved,monster),'combatVerified':False,'savedAt':saved.get('savedAt',0)})
 
 
 def pickup(user,data):
@@ -290,9 +290,32 @@ def pickup(user,data):
         setup(db);db.execute('BEGIN IMMEDIATE');key,payload,old=request(db,user,data,'pickup')
         if old:return old
         row=db.execute("SELECT * FROM game_events WHERE id=? AND username=? AND kind='drop'",(data.get('eventId'),user['username'])).fetchone()
-        if not row or row['code']=='GOLD' or row['status']!='generated' or ('job' in data and row['job']!=data['job']):raise ValueError('Drop inexistente ou já recolhido para este personagem.')
+        if not row or row['status']!='generated' or ('job' in data and row['job']!=data['job']):raise ValueError('Drop inexistente ou já recolhido para este personagem.')
+        result={'ok':True,'eventId':row['id']}
+        if row['code']=='GOLD':
+            job,saved,_=context(user,data,db)
+            if row['job']!=job or row['map']!=saved.get('field'):raise ValueError('Ouro não pertence ao personagem neste mapa.')
+            amount=int_value(row['quantity'],1,10**12,'Quantidade de ouro')
+            saved['stats']['gold']=int_value(saved['stats'].get('gold',0),0,10**12,'Ouro')+amount
+            if saved['stats']['gold']>10**12:raise ValueError('Limite de ouro excedido.')
+            saved['savedAt']=max(int(time.time()*1000),int(saved.get('savedAt',0))+1)
+            db.execute('UPDATE characters SET state=? WHERE username=? AND job=?',(json.dumps(saved,ensure_ascii=False),user['username'],job))
+            result.update(goldBalance=saved['stats']['gold'],savedAt=saved['savedAt'],gold=amount)
         db.execute("UPDATE game_events SET status='collected' WHERE id=?",(row['id'],))
-        return remember(db,user,key,payload,{'ok':True,'eventId':row['id']})
+        return remember(db,user,key,payload,result)
+
+
+def pending_gold(user,data):
+    # Recover unclaimed gold when returning to the same map after reconnecting.
+    with accounts.connection() as db:
+        setup(db)
+        job,saved,_=context(user,data,db)
+        rows=db.execute("SELECT id,quantity,detail FROM game_events WHERE username=? AND job=? AND map=? AND kind='drop' AND code='GOLD' AND status='generated' ORDER BY id DESC LIMIT 200",(user['username'],job,saved.get('field'))).fetchall()
+        result=[]
+        for row in rows:
+            point=json.loads(row['detail'] or '{}')
+            result.append({'eventId':row['id'],'gold':row['quantity'],'x':point.get('x',0),'z':point.get('z',0)})
+        return {'ok':True,'goldDrops':result}
 
 
 def history(user,query,kind='drop'):

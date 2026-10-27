@@ -77,7 +77,10 @@ class Economy(ServerAudit):
     def test_actual_kill_uses_map_policy_and_request_replay(self):
         self.config(equipment=[{'label':'80D','minLevel':80,'maxLevel':80,'chance':100,'codes':['DA121']}],gold={'chance':100,'min':100,'max':100})
         s=self.state(field=37);self.save(s);payload={'job':1,'generation':self.generation,'map':37,'monster':self.monster()['id'],'requestId':uuid.uuid4().hex}
-        r=game.kill(self.user,payload);self.assertEqual(r['gold'],100);self.assertEqual(r['items'][0]['code'],'DA121');self.assertTrue(game.kill(self.user,payload)['repeated']);self.assertEqual(accounts.load_state('audituser',1)['stats']['gold'],1000100)
+        r=game.kill(self.user,payload);self.assertEqual(r['gold'],0);self.assertEqual(r['goldDrop']['gold'],100);self.assertEqual(r['items'][0]['code'],'DA121');self.assertTrue(game.kill(self.user,payload)['repeated']);self.assertEqual(accounts.load_state('audituser',1)['stats']['gold'],1000000)
+        claim={'job':1,'generation':self.generation,'eventId':r['goldDrop']['eventId'],'requestId':uuid.uuid4().hex}
+        self.assertEqual(game.pickup(self.user,claim)['goldBalance'],1000100)
+        self.assertEqual(accounts.load_state('audituser',1)['stats']['gold'],1000100)
     def test_event_versions_and_bounds(self):
         r=self.event('xp',{'multiplier':2});
         with self.assertRaises(ValueError):economy.save_event(self.admin,{'id':r['id'],'version':0,'value':{'kind':'xp','name':'Stale','enabled':True,'start':0,'end':200,'maps':[],'params':{'multiplier':3}}})
