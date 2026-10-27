@@ -26,3 +26,47 @@ export function faceNearbyNpcs(npcs, player, time, range = 180) {
     npc.faceUntil = Math.max(npc.faceUntil ?? 0, time + 1);
   }
 }
+
+
+// Stable initial view: edge hovering must never turn the camera during UI/combat.
+export function mountStableCamera(game, windowTarget = window, documentTarget = document) {
+  const original = game.mouseCamera;
+  if (game.cameraMode === 1) game.setCameraMode(0);
+  game.autoCamera = false;
+  if (game.edgeRot) { game.edgeRot.ds=0; game.edgeRot.spent=true; }
+  game.mouseCamera = function(...args) {
+    const mouseIn=this.mouseIn;
+    this.mouseIn=false;
+    if(this.edgeRot){this.edgeRot.ds=0;this.edgeRot.spent=true;}
+    try { return original.apply(this,args); }
+    finally { this.mouseIn=mouseIn; }
+  };
+  const releaseMouse = () => {
+    game.rotating=null;
+    game.rpgLook=null;
+    game.rpgButtons=0;
+    game.mouseHeld?.clear();
+  };
+  const releaseAll = () => {
+    releaseMouse();
+    for(const key of ['keys','rpgHeld','sideKeys'])game[key]?.clear();
+    game.caMovAngle=0;
+    game.holding=false;
+    game.attackHeld=false;
+    game.rmbHeld=false;
+    game.rmbTrace=false;
+  };
+  const mouseUp = event => { if(!event.buttons)releaseMouse(); };
+  const hidden = () => { if(documentTarget.hidden)releaseAll(); };
+  windowTarget.addEventListener('blur',releaseAll);
+  windowTarget.addEventListener('mouseup',mouseUp);
+  windowTarget.addEventListener('pointercancel',releaseAll);
+  documentTarget.addEventListener('visibilitychange',hidden);
+  return () => {
+    game.mouseCamera=original;
+    windowTarget.removeEventListener('blur',releaseAll);
+    windowTarget.removeEventListener('mouseup',mouseUp);
+    windowTarget.removeEventListener('pointercancel',releaseAll);
+    documentTarget.removeEventListener('visibilitychange',hidden);
+  };
+}

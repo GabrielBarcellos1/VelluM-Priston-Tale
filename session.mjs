@@ -14,7 +14,7 @@ import {
 } from "/gameplay-rules.mjs";
 import { craftAtNpc, decorateCraftItem } from "/npc-crafting.mjs";
 import { mountOnlineSession } from "/online-session.mjs";
-import { worldFacingAngle, faceNearbyNpcs } from "/character-facing.mjs";
+import { worldFacingAngle, faceNearbyNpcs, mountStableCamera } from "/character-facing.mjs";
 import {GM_SHELTOM,GM_POTION,gmProtection,gmClientLevel,gmProtectionEnabled,gmCombatEquipment,protectGm,applyGmAttack,gmTrainingActive} from "/gm-tools.mjs";
 import { premiumRecovery } from "/premium-effects.mjs";
 import { captureBaseRolls, restoreItemRolls } from "/item-save.mjs";
@@ -2842,6 +2842,7 @@ try {
   document.body.dataset.localDevice = mobile ? "touch" : "desktop";
   B.state("loading");
   game = await B.Game.create(B.root, conn, hero, () => location.reload());
+  mountStableCamera(game);
   globalThis.__localSession.game = game;
   game.skillSlotStore = () =>
     `freeston-skills-${account.username}-${characterClass.job}-${characterGeneration}`;
