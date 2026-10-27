@@ -24,7 +24,16 @@ export function mountEconomyAdmin({api,toast,drops,events}){
  card.append(button('Preparar exemplo: Ilha Perdida, 80D a 20% e ouro até 100 a 30%',()=>{search.value='';mapOptions(map,'37');drawMap();custom.input.checked=true;goldChance.input.value=30;goldMin.input.value=1;goldMax.input.value=100;groups.replaceChildren();group({label:'80D clássico',minLevel:80,maxLevel:80,chance:20,codes:data.presets['80D'].codes});status.textContent='Exemplo preparado. Confira e clique em Salvar para aplicar.';}));
  const eventCard=el('article');eventCard.className='card';eventCard.append(el('h2','Eventos do servidor'),el('p','Agende início e fim no horário deste computador. Sem mapas selecionados, o evento é global. Eventos do mesmo benefício usam o maior valor ativo, sem multiplicação entre eventos. XP acumula com o premium de XP; eventos de drops não aumentam exclusivos de Boss.'));
  const list=el('div'),eventForm=el('form'),eventStatus=el('p'),name=el('input'),kind=el('select'),start=el('input'),end=el('input'),enabled=check('Evento habilitado'),scope=el('select'),params=el('div');scope.multiple=true;scope.size=6;name.maxLength=80;name.required=true;name.placeholder='Nome do evento';start.type=end.type='datetime-local';start.required=end.required=true;
- const dateLabel=(text,input)=>{const l=el('label',text);l.append(input);return l;};eventForm.append(name,kind,enabled.label,dateLabel('Início',start),dateLabel('Fim',end),dateLabel('Mapas (nenhum = todos)',scope),params);const eventSave=el('button','Salvar evento');eventSave.type='submit';eventSave.className='primary';eventForm.append(eventSave);eventCard.append(button('Novo evento',()=>editEvent()),button('Recarregar eventos',()=>load()),list,el('h3','Editor de evento'),eventStatus,eventForm);events.append(eventCard);
+ const dateLabel=(text,input)=>{const l=el('label',text);l.append(input);return l;};eventForm.append(name,kind,enabled.label,dateLabel('Início',start),dateLabel('Fim',end),dateLabel('Mapas (nenhum = todos)',scope),params);const eventSave=el('button','Salvar evento');eventSave.type='submit';eventSave.className='primary';eventForm.append(eventSave);eventCard.append(button('Novo evento',()=>editEvent()),button('Preparar evento EXP 2x (24 horas)',()=>{
+  editEvent();
+  const current=new Date(),tomorrow=new Date(current.getTime()+24*60*60*1000);
+  name.value='EXP 2x - 24 horas';kind.value='xp';enabled.input.checked=true;
+  start.value=localDate(current.getTime()/1000);end.value=localDate(tomorrow.getTime()/1000);
+  for(const option of scope.options)option.selected=false;
+  drawParams({multiplier:2});
+  eventStatus.textContent='EXP 2x preparado para todos os mapas por 24h. Confira os horários e clique em Salvar evento para ativar.';
+  eventForm.scrollIntoView({behavior:'smooth',block:'center'});
+}),button('Recarregar eventos',()=>load()),list,el('h3','Editor de evento'),eventStatus,eventForm);events.append(eventCard);
  let paramInputs={};const localDate=seconds=>{const d=new Date(seconds*1000);return new Date(d.getTime()-d.getTimezoneOffset()*60000).toISOString().slice(0,16);};
  function drawParams(p={}){params.replaceChildren();paramInputs={};const k=kind.value;
   const specs=['moriph','aging_free'].includes(k)?[['discount','Desconto de ouro no Aging (%)',0,100,k==='aging_free'?100:50],['successBonus','Bônus de sucesso (+pontos percentuais)',0,100,10]]:k==='sheltoms'?[]:[['multiplier','Multiplicador (2 = dobro)',1,10,2]];
