@@ -175,9 +175,10 @@ def roll(db,monster,field,premium_extra=0,rng=None,preview=False,job=None,player
         if extra and wins(extra):
             if p['custom']:equipment()
             else:
-                pool=_legacy_pool(low,level)
+                pool=_legacy_pool(low,high if assisted else level)
                 if pool:
-                    selected=choose(pool);ch=rules['highLevelChance'] if selected.get('req',{}).get('level',0)>=80 else rules['equipmentChance']
+                    selected=choose(pool);item_level=selected.get('req',{}).get('level',0)
+                    ch=next((group['chance'] for group in groups if group['minLevel']<=item_level<=group['maxLevel']),0) if assisted else (rules['highLevelChance'] if item_level>=80 else rules['equipmentChance'])
                     if wins(ch*e['drops']):items.append((selected['code'],1,'equipment'))
     potion=p['potionChance'] if p['custom'] else rules['potionChance']
     if wins(potion):items.append((g.common_potion(level,rng.random()),1,'potion'))

@@ -96,3 +96,13 @@ class LevelRewards(ServerAudit):
             self.assertEqual(len(gear),1);self.assertEqual(gear[0]['spec'],1)
             replay=game.kill(self.user,data)
             self.assertTrue(replay['repeated']);self.assertEqual(replay['items'],result['items'])
+
+    def test_premium_extra_roll_uses_the_same_current_map_equipment_band(self):
+        monster=next(m for m in game.MONSTERS.values() if 43 in m['maps'] and not m.get('boss') and any(m.get('attack',[])))
+        config={**rewards.rules(),'minimumHighLevelChance':100,'minimumEquipmentChance':100}
+        with accounts.connection() as db, patch.object(rewards,'rules',return_value=config):
+            game.setup(db)
+            entries=economy.roll(db,monster,43,premium_extra=100,rng=random.Random(7),job=6,player_level=120)['items']
+        gear=[game.ITEMS[c] for c,n,kind in entries if kind=='equipment']
+        self.assertEqual(len(gear),2)
+        self.assertTrue(all(111<=i.get('req',{}).get('level',0)<=120 for i in gear))
