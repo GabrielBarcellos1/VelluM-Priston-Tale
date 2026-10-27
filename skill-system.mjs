@@ -61,8 +61,7 @@ export function createSkillSystem(ctx) {
     }
   }
   let actionReadyAt = 0, generation = 0;
-  const rank = () =>
-    ctx.stats.level >= 60 ? 3 : ctx.stats.level >= 40 ? 2 : ctx.stats.level >= 20 ? 1 : 0;
+  const rank = () => ctx.rank();
   const learned = (id) => levels.get(id) ?? 0;
   const points = () => ({
     skill: Math.max(
