@@ -28,9 +28,14 @@ export function portalAt(portals, current, position) {
 export function createMapTravel({ fields, current: initial, portals = [], canEnter, alive,
   position, prepare, save, flush, activate, rollback, notice,
   ready = () => true, now = () => Date.now() }) {
-  let current = initial, busy = false, readyAt = now() + 2000, blockedUntil = 0, walkingCooldownUntil = 0;
+  let current = initial, busy = false, readyAt = now() + 2000, blockedUntil = 0, walkingCooldownUntil = 0, forestArrival = null;
   const travel = async (id, portal = null) => {
     if (busy || id === current && !portal || (!portal && now() < walkingCooldownUntil)) return false;
+    if (!portal && forestArrival && current === forestArrival.to && id === forestArrival.from) {
+      const pos = position();
+      if (pos && Math.hypot(pos.x-forestArrival.x,pos.z-forestArrival.z)<2200) return false;
+      forestArrival = null;
+    }
     const target = fields.find(f => f.id === id);
     if (!target || !alive()) return false;
     if (portal) {
@@ -58,6 +63,10 @@ export function createMapTravel({ fields, current: initial, portals = [], canEnt
       await flush();
       await activate(next);
       current = id;
+      if (!portal && ((previous===0&&id===1)||(previous===1&&id===0))) {
+        const arrival=forestSeamArrival(previous,target,landing);
+        forestArrival = arrival ? {from:previous,to:id,...arrival} : null;
+      } else forestArrival=null;
       readyAt = now() + 1500;
       if (!portal) walkingCooldownUntil = now() + 2000;
       busy = false;
@@ -73,6 +82,7 @@ export function createMapTravel({ fields, current: initial, portals = [], canEnt
   return {
     get current() { return current; },
     get busy() { return busy; },
+    forestReturnBlocked: id => !!forestArrival && current===forestArrival.to && id===forestArrival.from && Math.hypot(position().x-forestArrival.x,position().z-forestArrival.z)<2200,
     walk: id => travel(id),
     tick() {
       if (busy || !alive() || !ready() || now() < readyAt || now() < blockedUntil) return;
