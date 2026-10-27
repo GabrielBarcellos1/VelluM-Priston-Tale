@@ -51,6 +51,8 @@ BRIDGE = b'globalThis.__localGameBridge={Session:$1,Game:eA,Runtime:Jw,ui:Uex,ro
 DOWNLOADS = threading.Semaphore(6)
 LOCKS = {}
 LOCKS_GUARD = threading.Lock()
+MISSING_ASSETS = {}
+MISSING_ASSET_TTL = 300  # Retry missing upstream assets after five minutes.
 MAX_ASSET = 64 * 1024 * 1024
 LOGIN_FAILURES = {}
 LOGIN_LOCK = threading.Lock()
@@ -69,6 +71,8 @@ def static_asset(path):
     with LOCKS_GUARD:
         lock = LOCKS.setdefault(path, threading.Lock())
     with lock:
+        if MISSING_ASSETS.get(path, 0) > time.monotonic():
+            raise FileNotFoundError('Asset not available upstream: ' + path)
         if destination.is_file():
             data = destination.read_bytes()
         else:
@@ -84,6 +88,9 @@ def static_asset(path):
                             data = response.read(MAX_ASSET + 1)
                         break
                     except (HTTPError, URLError, TimeoutError, ConnectionError) as error:
+                        if isinstance(error, HTTPError) and error.code in (404, 410):
+                            MISSING_ASSETS[path] = time.monotonic() + MISSING_ASSET_TTL
+                            raise FileNotFoundError('Asset not available upstream: ' + path) from error
                         if isinstance(error, HTTPError) and error.code not in (408, 429) and error.code < 500:
                             raise
                         if attempt == 2:
@@ -291,6 +298,8 @@ class Handler(SimpleHTTPRequestHandler):
                 self.send_error(404)
         except (BrokenPipeError, ConnectionResetError):
             pass
+        except FileNotFoundError:
+            self.send_error(404, 'Recurso nao encontrado')
         except Exception as error:
             print('Falha ao carregar recurso publico:', path, str(error), flush=True)
             try:
