@@ -24,7 +24,7 @@ export function mountStaffPresence({ game, bridge: B, fetchCommunity, deliver })
   }
   function makeAura(name, scope) {
     // Reuse the original client's textured additive ring, light column and particles.
-    const effect = new B.Aura(0xffd05c, 25),
+    const effect = new B.Aura(scope==="staff"?0xb56aff:0xffd05c, scope==="staff"?37:25),
       root = effect.object;
     root.name = `FREEston aura ${scope}: ${name}`;
     root.userData.scope = scope;
@@ -74,7 +74,7 @@ export function mountStaffPresence({ game, bridge: B, fetchCommunity, deliver })
         const key = entity.name.toLowerCase(),
           staff = staffNames.has(key);
         const self = entity.char === game.player;
-        const scope = self ? status.aura : staff ? "staff" : topNames.has(key) ? "player" : null;
+        const scope = self ? (staff ? "staff" : status.aura) : staff ? "staff" : topNames.has(key) ? "player" : null;
         if (!scope || !entity.char) continue;
         const aura = auras.get(key) ?? makeAura(key, scope);
         aura.userData.scope = scope;

@@ -93,7 +93,8 @@ export function mountSkinShop({
     const list = dialog.querySelector(".skin-cards");
     list.replaceChildren();
     for (const skin of snapshot?.catalog ?? []) {
-      if (filter && skin.cat !== filter) continue;
+      if (filter === "owned" && !snapshot.owned.includes(skin.id)) continue;
+      if (filter && filter !== "owned" && skin.cat !== filter) continue;
       if (search && !`${skin.name} ${skin.look}`.toLowerCase().includes(search)) continue;
       const card = element("article"),
         img = element("img");
@@ -120,6 +121,10 @@ export function mountSkinShop({
       b.disabled = busy || (owned && !equipped && !compatible(skin));
       b.onclick = () => mutate(action, skin);
       card.append(b);
+      if (owned) {
+        const ownedTag=element("strong",equipped?"✓ Adquirida e equipada":"✓ Adquirida — sua conta já possui esta skin");
+        ownedTag.className="skin-owned-status";card.prepend(ownedTag);
+      }
       if (owned && !compatible(skin))
         card.append(element("small", "Requer equipamento do mesmo tipo."));
       list.append(card);
@@ -142,6 +147,8 @@ export function mountSkinShop({
       header.append(title, close);
       const balance = element("p");
       balance.className = "skin-balance";
+      const explanation=element("p","Skins são visuais permanentes da conta: não ocupam espaço na bolsa. Para aparecer na arma, equipe um modelo compatível e use Equipar visual. Compras anteriores não serão cobradas novamente.");
+      explanation.className="skin-inventory-guide";
       const controls = element("div");
       controls.className = "skin-filters";
       const search = element("input");
@@ -152,6 +159,7 @@ export function mountSkinShop({
       const filter = element("select");
       filter.setAttribute("aria-label", "Categoria de skin");
       for (const [value, label] of [
+        ["owned", "Minhas skins"],
         ["", "Todas"],
         ["arma", "Armas"],
         ["escudo", "Escudos"],
@@ -162,12 +170,13 @@ export function mountSkinShop({
         filter.append(o);
       }
       filter.onchange = render;
+      filter.value="owned";
       controls.append(search, filter);
       const cards = element("div");
       cards.className = "skin-cards";
       const status = element("p");
       status.setAttribute("role", "status");
-      dialog.append(header, balance, controls, status, cards);
+      dialog.append(header, balance, explanation, controls, status, cards);
       document.body.append(dialog);
       dialog.addEventListener("click", (event) => {
         if (event.target === dialog) dialog.close();

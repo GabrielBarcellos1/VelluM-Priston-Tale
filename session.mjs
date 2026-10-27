@@ -775,7 +775,7 @@ function adminCommand(input) {
     case "quests": return CLASSIC_QUESTS.filter(q=>q.level<=stats.level).map(q=>classicEndgame?.summary(q.id)).filter(Boolean).join(" | ")||"Missões clássicas disponíveis a partir do nível 80.";
     case "ajuda":
       return 'Comandos: /quests, /personagens, /bolsa, /jogar NOME_DO_ITEM, /status, /habilidades, /loja, /skins, /salvar, /sair.'+
-        (isAdmin?' GM: /monstro, /mymonster, /velocidade, /gmkit, /gmrota, /gmexp, /link.':'');
+        (isAdmin?' GM: /> MENSAGEM (anúncio global), /monstro, /mymonster, /velocidade, /gmkit, /gmrota, /gmexp, /link.':'');
     case "habilidades":
       if (args[0]?.toLowerCase() === "liberar") {
         if (!isAdmin) throw Error("Liberar habilidades é exclusivo do administrador.");
@@ -2646,6 +2646,16 @@ async function handle(message) {
       break;
     }
     case "chat":
+      if (typeof message.text === "string" && message.text.trim().startsWith("/>")) {
+        try {
+          if (!isAdmin) throw Error("Anúncio exclusivo da equipe.");
+          const content=message.text.trim().slice(2).trim();
+          if (!content) throw Error("Use /> SUA MENSAGEM.");
+          if (!globalThis.__localSession.online) throw Error("Aguarde a conexão com o mundo.");
+          await globalThis.__localSession.online.chat(content,"all",true);
+        } catch (error) { notice(error.message); }
+        break;
+      }
       if (typeof message.text === "string" && message.text.trim().startsWith("/")) {
         const commandKey = message.text.trim().toLowerCase();
         if (pendingCommands.has(commandKey)) return;

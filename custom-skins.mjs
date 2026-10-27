@@ -16,7 +16,7 @@ export function mountCustomSkins({B,game,own,peers,catalog,inventory}){
   if(record&&record.id!==skin?.id){remove(root,record);record=null;}
   if(!skin||record)continue;
   const materials=[];root.traverse(n=>{if(!n.isMesh)return;materials.push([n,n.material]);const hidden=m=>{const mask=m.clone();mask.visible=false;return mask;};n.material=Array.isArray(n.material)?n.material.map(hidden):hidden(n.material);});
-  const model=createSapphireMesh(B,skin.customModel,skin.hands);model.rotation.x=Math.PI/2;model.scale.setScalar(skin.customScale??.8);
+  const model=createSapphireMesh(B,skin.customModel,skin.hands);model.rotation.x=Math.PI/2;model.scale.setScalar((skin.customScale??.8)*(skin.id?.startsWith('sapphire-wp1-')?2:1));
   const mesh=new B.Group();mesh.matrixAutoUpdate=false;const bind=tool.model.boneMatrix?.(0,root.matrix.clone().identity());if(bind)mesh.matrix.copy(bind);mesh.add(model);root.add(mesh);records.set(root,{id:skin.id,mesh,materials});
  }}
  function tick(){if(stopped)return;const live=new Set(),skin=own()?.worn?.find(s=>s.customModel&&s.cat==='arma'),base=inventory()?.weapon;apply(game.player,valid(skin,base)?skin:null,live);

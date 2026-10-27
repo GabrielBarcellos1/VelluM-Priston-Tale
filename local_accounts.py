@@ -151,7 +151,7 @@ def change_password(username,current_password,new_password,current_token):
 
 
 def identity(username, role):
-    return {'displayName':'VelluM' if username=='admin' else None,
+    return {'displayName':'ADM-VelluM' if username=='admin' else None,
             'preferredClass':2 if username=='huss' else 1,
             'staff':role in ('admin','gm')}
 

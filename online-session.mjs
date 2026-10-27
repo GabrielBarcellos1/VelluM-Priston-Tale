@@ -127,6 +127,6 @@ export function mountOnlineSession({
     dispose,
     canResurrect: () => [...peers.values()].some(p=>p.dead&&Math.hypot(p.x-game.pos.x,p.z+game.pos.z)<=500),
     support: (code,target) => post('skill',{code,target,generation}),
-    chat: async (text, channel = "normal") => post("chat", { text, channel }),
+    chat: async (text, channel = "normal", announcement = false) => post("chat", { text, channel, announcement }),
   };
 }

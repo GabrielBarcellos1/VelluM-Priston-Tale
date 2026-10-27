@@ -114,13 +114,17 @@ def skill(user,data):
 def chat(user,data):
     global SEQ
     text=data.get('text');channel=data.get('channel','normal')
+    announcement=data.get('announcement') is True
+    if announcement and user.get('role') not in ('admin','gm'):raise ValueError('Anúncios exclusivos da equipe.')
     if not isinstance(text,str) or not text.strip() or len(text)>240 or text.strip().startswith('/') or channel not in ('normal','all'):raise ValueError('Mensagem inválida. Use o chat normal ou global.')
     with LOCK:
         now=time.monotonic();prune(now);p=PLAYERS.get(user['username'])
         if not p or p['client']!=data.get('clientId'):raise ValueError('Entre no mapa antes de conversar.')
         if now-p.get('chatAt',-100)<.5:raise ValueError('Aguarde um instante entre mensagens.')
         p['chatAt']=now;SEQ+=1
-        EVENTS.append({'seq':SEQ,'at':time.time(),'field':None if channel=='all' else p['field'],'packet':{'t':'chat','from':p['packet']['name'],'text':re.sub(r'[\x00-\x1f]',' ',text.strip()),'channel':channel}})
+        tag='[ADM]' if user.get('role')=='admin' else '[GM]'
+        sender=(tag+' '+p['packet']['name']) if announcement else p['packet']['name']
+        EVENTS.append({'seq':SEQ,'at':time.time(),'field':None if announcement or channel=='all' else p['field'],'packet':{'t':'chat','from':sender,'text':re.sub(r'[\x00-\x1f]',' ',text.strip()),'channel':'all' if announcement else channel,'staff':announcement}})
         return {'ok':True}
 
 def leave(user,data):
