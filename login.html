@@ -446,6 +446,12 @@
       body.roster-cinematic .character-model-stage{display:flex;align-items:center;justify-content:center;pointer-events:none!important}
       body.roster-cinematic .character-miniature{height:104px}
       body.roster-cinematic .character-card[aria-pressed="true"]{filter:brightness(1.17)}
+      body.roster-cinematic .roster-layout { isolation:isolate; pointer-events:none; }
+      body.roster-cinematic #character-list { pointer-events:auto!important; z-index:90!important; }
+      body.roster-cinematic #character-list .character-card { pointer-events:auto!important; }
+      body.roster-cinematic #character-detail { pointer-events:none!important; z-index:1; }
+      body.roster-cinematic #character-detail #play-character,
+      body.roster-cinematic #character-detail #delete-character { pointer-events:auto!important; }
       /* Full-screen classic character-selection stage. The foreground hero is
          the authentic model, others remain visible as selectable miniatures. */
       body.roster-cinematic {
