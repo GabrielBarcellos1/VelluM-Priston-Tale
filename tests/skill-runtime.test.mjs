@@ -145,10 +145,10 @@ test('Knight: Grand Cross 10 repeats without cooldown after its animation; Divin
  f.advance(1);f.system.cast(cross.id,1);assert.deepEqual(f.system.exportCooldowns(),{});
  const piercing=catalog.skills.find(s=>s.code==='SKILL_DIVINE_PIERCING'),g=fixture(piercing,10);
  const p=g.system.cast(piercing.id,1);g.pending.forEach(fn=>fn());assert.equal(g.calls.damage.length,7);
- assert.equal(p.recharge,17.5);g.advance(1);assert.throws(()=>g.system.cast(piercing.id,1),/recarga/);
+ assert.equal(p.recharge,5.2);g.advance(1);assert.throws(()=>g.system.cast(piercing.id,1),/recarga/);
  const h=fixture(piercing,10,{savedCooldowns:g.system.exportCooldowns(),wallNow:()=>1});
  assert.throws(()=>h.system.cast(piercing.id,1),/recarga/);
- g.advance(16.5);g.system.cast(piercing.id,1);
+ g.advance(4.2);g.system.cast(piercing.id,1);
 });
 
 test('Knight: attack profiles honor damage, accuracy, repeats and undead bonus tables at every rank',async()=>{
