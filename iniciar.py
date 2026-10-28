@@ -47,6 +47,10 @@ PINNED = {
     CSS_PATH: 'ac6a92d028c2bd04f63aff9ddeaa4a6645eb34dde463851f198635e6b4cf4b5b',
 }
 STARTUP = b'const $0t=$M?null:AYt();$M?T0x($M):$0t?L0x($0t):tE();'
+# The native localization helper receives missing values during some UI boots.
+# Patch only the served response, after checking the pinned original checksum.
+TRANSLATION_UNSAFE = b'function a8(s){if(!n7||!wDt.test(s))return null;'
+TRANSLATION_SAFE = b'function a8(s){if(typeof s!=="string"||!n7||!wDt.test(s))return null;'
 BRIDGE = b'globalThis.__localGameBridge={Session:$1,Game:eA,Runtime:Jw,ui:Uex,root:eE,loading:g1,classes:HAt,settings:y0,low:(preset="low")=>VS(y0.get(),preset,pB()),state:i7,servers:Rc,keyOf:Fl,item:up,extra:j7e,age:GSt,maxAging:NS,itemClass:GG,premiumCatalog:_st,premiumIcons:KCe,specialize:dot,specJobs:Qce,itemSlots:U9,skillMotion:Hq,skillVisual:Pw,Aura:hMe,agingChance:Fg,craftAccept:Id,mixRecipe:Vxt,applyMix:cMt,forceInfo:$w,forceIcon:lEt,forceRecipe:sE,mixById:zO,Crowns:$w0,RingGeometry:H7,MeshBasicMaterial:gi,Mesh:yt,Group:ea,BufferGeometry:C0,Float32BufferAttribute:Q0,MeshStandardMaterial:lke,AmbientLight:O2t,DirectionalLight:R2t,PerspectiveCamera:Ra,Scene:dl,WebGLRenderer:Ake,Color:$e};import("/session.mjs");'
 DOWNLOADS = threading.Semaphore(6)
 LOCKS = {}
@@ -112,7 +116,9 @@ def static_asset(path):
         if path == JS_PATH:
             if data.count(STARTUP) != 1:
                 raise ValueError('Unsupported client entrypoint; local startup patch not applied')
-            return data.replace(STARTUP, BRIDGE)
+            if data.count(TRANSLATION_UNSAFE) != 1:
+                raise ValueError('Unsupported localization helper; safety patch not applied')
+            return data.replace(STARTUP, BRIDGE).replace(TRANSLATION_UNSAFE, TRANSLATION_SAFE)
         return data
 
 
