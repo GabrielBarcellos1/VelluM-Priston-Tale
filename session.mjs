@@ -3141,8 +3141,8 @@ globalThis.__localSession = {
 try {
   const mobile = matchMedia("(pointer: coarse)").matches || navigator.maxTouchPoints > 0;
   B.settings.set({
-    ...B.low(mobile ? "potato" : "low"),
-    ...(mobile ? { maxPixelRatio: 1, renderScale: 0.7 } : {}),
+    ...B.low("low"),
+    ...(mobile ? { maxPixelRatio: Math.min(2, window.devicePixelRatio || 1.5), renderScale: 1 } : {}),
   });
   document.body.dataset.localDevice = mobile ? "touch" : "desktop";
   B.state("loading");
@@ -3476,27 +3476,22 @@ function mountLocalMenu() {
   const charactersButton = document.createElement("button");
   charactersButton.textContent = "Personagens";
   async function leaveCharacter(logoutAccount = false) {
-    if (economyUncertain) throw Error("Há uma operação sem confirmação. Recarregue antes de sair.");
-    if (economyBusy || pendingLoot)
-      throw Error("Aguarde a confirmação das operações antes de sair.");
-    if (!save()) throw Error("Não foi possível salvar. Tente novamente antes de sair.");
-    // A queued state write may still be in progress. Wait for it before
-    // invalidating the live session to avoid losing the final save.
-    const state = localStorage.getItem(saveKey);
-    if (state) await sendState(JSON.parse(state));
-    if (stateWrite) await stateWrite;
-    await globalThis.__localSession.online?.dispose();
-    if (logoutAccount) {
-      const response = await fetch("/api/local/logout", {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: "{}",
-      });
-      if (!response.ok) throw Error("Não foi possível encerrar a sessão.");
-    }
-    location.replace("/personagens");
+    // Use the same fully flushed exit flow as the in-game chat commands.
+    // Never navigate before the final character save completes.
+    await leaveFromChat(logoutAccount);
   }
-  charactersButton.onclick = () => leaveCharacter().catch((error) => notice(error.message));
+  function exitFromMenu(logoutAccount, button) {
+    if (button.disabled) return;
+    button.disabled = true;
+    button.textContent = 'Salvando...';
+    compact.open = false;
+    leaveCharacter(logoutAccount).catch(error => {
+      button.disabled = false;
+      button.textContent = logoutAccount ? 'Trocar usuario' : 'Sair do jogo';
+      notice(error.message);
+      alert(error.message);
+    });
+  }  charactersButton.onclick = () => exitFromMenu(false, charactersButton);
   // Keep the independent mobile character-selection link safe: save first.
   const rosterLink = document.querySelector("#vellum-roster-link");
   if (rosterLink) rosterLink.addEventListener("click", (event) => {
@@ -3565,12 +3560,12 @@ function mountLocalMenu() {
     menu.append(panel);
   }
   const logout = document.createElement("button");
-  logout.textContent = "Sair";
-  logout.onclick = () => leaveCharacter(false).catch((error) => notice(error.message));
+  logout.textContent = "Sair do jogo";
+  logout.onclick = () => exitFromMenu(false, logout);
   menu.append(logout);
   const switchAccount = document.createElement("button");
   switchAccount.textContent = "Trocar usuario";
-  switchAccount.onclick = () => leaveCharacter(true).catch((error) => notice(error.message));
+  switchAccount.onclick = () => exitFromMenu(true, switchAccount);
   menu.append(switchAccount);
   const compact = document.createElement("details");
   compact.className = "local-mobile-menu";

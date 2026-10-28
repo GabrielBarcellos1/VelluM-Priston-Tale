@@ -4,16 +4,13 @@ import {readFile} from 'node:fs/promises';
 const session=await readFile(new URL('../session.mjs',import.meta.url),'utf8');
 const login=await readFile(new URL('../login.mjs',import.meta.url),'utf8');
 const html=await readFile(new URL('../login.html',import.meta.url),'utf8');
-test('character exit waits for final save and stays in roster',()=>{
- const a=session.slice(session.indexOf('async function leaveCharacter('),session.indexOf('charactersButton.onclick',session.indexOf('async function leaveCharacter(')));
- assert.match(a,/await sendState\(JSON\.parse\(state\)\)/);
- assert.match(a,/if \(stateWrite\) await stateWrite/);
- assert.match(a,/location\.replace\("\/personagens"\)/);
-});
-test('logout and switch account are separate actions',()=>{
- assert.match(session,/logout\.onclick = \(\) => leaveCharacter\(false\)/);
- assert.match(session,/switchAccount\.onclick = \(\) => leaveCharacter\(true\)/);
- assert.match(login,/\$\("#entry"\)\.hidden = false/);
+test('mobile account exits use the verified save-and-flush path',()=>{
+ assert.match(session,/async function leaveCharacter\(logoutAccount = false\) \{\s*\/\/ Use the same fully flushed exit flow[\s\S]*?await leaveFromChat\(logoutAccount\)/);
+ assert.match(session,/async function leaveFromChat\(logout=false\)[\s\S]*?if\(!save\(true\)\)/);
+ assert.match(session,/await stateWrite;[\s\S]*?location\.replace\('\/personagens'\)/);
+ assert.match(session,/logout\.onclick = \(\) => exitFromMenu\(false, logout\)/);
+ assert.match(session,/switchAccount\.onclick = \(\) => exitFromMenu\(true, switchAccount\)/);
+ assert.match(session,/maxPixelRatio: Math\.min\(2, window\.devicePixelRatio \|\| 1\.5\), renderScale: 1/);
 });
 test('roster swaps instantly and uses complete art for broken portraits',()=>{
  assert.match(login,/selected=ranked\[/);
