@@ -431,6 +431,201 @@
           margin-top: 30px;
         }
       }
+      /* Full-screen classic character-selection stage. The foreground hero is
+         the authentic model, others remain visible as selectable miniatures. */
+      body.roster-cinematic {
+        background: radial-gradient(ellipse at center 35%, #263d39 0%, #0d1617 74%);
+        overflow-x: hidden;
+      }
+      body.roster-cinematic header {
+        position: absolute;
+        z-index: 30;
+        max-width: none;
+        width: 100%;
+        padding: 12px clamp(15px, 3vw, 48px);
+        pointer-events: none;
+      }
+      body.roster-cinematic header > * { pointer-events: auto; }
+      body.roster-cinematic main { max-width: none; }
+      body.roster-cinematic .roster {
+        width: 100%;
+        min-height: 100svh;
+        padding: 0;
+      }
+      body.roster-cinematic .title-row {
+        position: absolute;
+        top: 85px;
+        left: clamp(16px, 3vw, 50px);
+        right: clamp(16px, 3vw, 50px);
+        z-index: 20;
+        align-items: start;
+        pointer-events: none;
+      }
+      body.roster-cinematic .title-row > * { pointer-events: auto; }
+      body.roster-cinematic .title-row h1 { font-size: clamp(24px, 3vw, 40px); }
+      body.roster-cinematic .roster-layout {
+        position: relative;
+        display: block;
+        min-height: 100svh;
+      }
+      body.roster-cinematic .detail {
+        position: absolute;
+        inset: 0;
+        display: block;
+        margin: 0;
+        padding: 0;
+        border: 0;
+        border-radius: 0;
+        background: none;
+        box-shadow: none;
+        overflow: hidden;
+        pointer-events: none;
+      }
+      body.roster-cinematic .character-model-stage {
+        position: absolute;
+        inset: 0;
+        width: 100%;
+        height: 100%;
+        margin: 0;
+        border: 0;
+        border-radius: 0;
+        background: radial-gradient(circle at 50% 43%, #314440 0%, #0f1c1d 80%);
+        pointer-events: auto;
+      }
+      body.roster-cinematic .character-model-frame {
+        width: 100%;
+        height: 100%;
+      }
+      body.roster-cinematic .model-loading {
+        top: 35%;
+        font-size: 18px;
+      }
+      body.roster-cinematic .detail > :not(.character-model-stage) {
+        position: relative;
+        z-index: 8;
+        pointer-events: auto;
+      }
+      body.roster-cinematic .detail > .class-icon,
+      body.roster-cinematic .detail > .eyebrow,
+      body.roster-cinematic .detail > h2,
+      body.roster-cinematic .detail > p.muted,
+      body.roster-cinematic .detail > dl {
+        display: none;
+      }
+      body.roster-cinematic .detail > #play-character,
+      body.roster-cinematic .detail > #delete-character {
+        position: absolute;
+        bottom: 32px;
+        margin: 0;
+        width: auto;
+        padding: 13px 27px;
+        box-shadow: 0 4px 22px #000a;
+      }
+      body.roster-cinematic .detail > #play-character {
+        left: 50%;
+        transform: translateX(-50%);
+        min-width: 220px;
+        font-size: 17px;
+      }
+      body.roster-cinematic .detail > #delete-character {
+        right: 24px;
+        bottom: 36px;
+        font-size: 11px;
+        opacity: .8;
+      }
+      body.roster-cinematic .cards {
+        position: absolute;
+        z-index: 12;
+        left: 50%;
+        bottom: 105px;
+        transform: translateX(-50%);
+        display: flex;
+        align-items: end;
+        justify-content: center;
+        width: min(100%, 1240px);
+        padding: 0 20px;
+        gap: clamp(4px, 1vw, 16px);
+        overflow-x: auto;
+        scrollbar-width: thin;
+        pointer-events: none;
+      }
+      body.roster-cinematic .character-card {
+        flex: 0 0 clamp(88px, 9.8vw, 155px);
+        min-height: 0;
+        height: clamp(125px, 14vw, 184px);
+        padding: 6px 7px 10px;
+        overflow: hidden;
+        border-radius: 10px 10px 4px 4px;
+        background: linear-gradient(0deg,#111b19ee,#1e332683 72%,#12232366);
+        border-color: #8b785e77;
+        box-shadow: 0 8px 18px #0007;
+        text-align: center;
+        pointer-events: auto;
+      }
+      body.roster-cinematic .character-card[aria-pressed="true"] {
+        height: clamp(128px, 14.5vw, 190px);
+        background: linear-gradient(0deg,#59472cbb,#172b2a8c);
+        border-color: #e9c682;
+      }
+      body.roster-cinematic .character-miniature {
+        display: block;
+        position: relative;
+        height: 104px;
+        overflow: hidden;
+        border-radius: 5px;
+        background: #162825;
+        pointer-events: none;
+      }
+      body.roster-cinematic .character-miniature-frame {
+        display: block;
+        border: 0;
+        width: 200%;
+        height: 205%;
+        transform: scale(.5);
+        transform-origin: top left;
+        pointer-events: none;
+      }
+      body.roster-cinematic .character-card .class-icon { display: none; }
+      body.roster-cinematic .character-card strong {
+        font: 700 clamp(11px, 1.2vw, 14px) Georgia,serif;
+        margin: 7px 0 2px;
+        white-space: nowrap;
+        overflow: hidden;
+        text-overflow: ellipsis;
+      }
+      body.roster-cinematic .character-card small { display: none; }
+      body.roster-cinematic .character-card span:not(.character-miniature):not(.online) {
+        font-size: 10px;
+      }
+      body.roster-cinematic #roster-message {
+        position: absolute;
+        bottom: 0;
+        left: 15px;
+        right: 15px;
+        z-index: 30;
+        text-align: center;
+        pointer-events: none;
+      }
+      body.roster-cinematic footer { display: none; }
+      @media (max-width: 760px) {
+        body.roster-cinematic header .brand { font-size: 15px; }
+        body.roster-cinematic .title-row {
+          top: 65px;left: 12px;right: 12px;gap: 6px;
+        }
+        body.roster-cinematic .title-row h1 { font-size: 23px; }
+        body.roster-cinematic .title-row nav { gap: 5px; }
+        body.roster-cinematic .title-row button { font-size: 11px; padding: 6px; }
+        body.roster-cinematic .cards {
+          bottom: 110px;
+          justify-content: flex-start;
+          width: 100%;
+          padding: 0 12px;
+        }
+        body.roster-cinematic .detail > #play-character { bottom: 38px; }
+        body.roster-cinematic .detail > #delete-character {
+          right: 7px; bottom: 12px; padding: 4px; font-size: 9px;
+        }
+      }
       @media (prefers-reduced-motion: reduce) {
         * {
           transition: none !important;
