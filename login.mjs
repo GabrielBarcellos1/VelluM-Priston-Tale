@@ -15,6 +15,12 @@ function rosterPortrait(job,mini=false){
  img.alt="Visualização da classe equipada com itens avançados";
  img.decoding="async";
  img.src=src;
+ if(Number(job)===11){
+  holder.classList.add('roster-composite');
+  const body=characterPortrait(job,{mini});
+  body.className='roster-composite-base';
+  holder.append(body);
+ }
  holder.append(img);
  holder.dataset.portraitJob=String(job);
  return holder;
