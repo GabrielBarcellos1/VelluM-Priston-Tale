@@ -211,6 +211,16 @@ function render() {
       node("span", `${type.name} · Nível ${character.level}`),
     );
     if (character.online) card.append(node("span", "● Em jogo", "online"));
+    // Warm the destination scene while the pointer approaches its card.
+    // This is speculative only for the hovered character, not all 11 at once.
+    card.addEventListener("pointerenter", () => {
+      const stage = document.querySelector(".character-model-stage");
+      if(stage && character.job!==selected?.job && !previewFrames.has(character.job)){
+        const entry=previewFor(character,stage);
+        entry.frame.hidden=true;
+        entry.loading.hidden=true;
+      }
+    },{passive:true});
     card.onclick = () => {
       if (selected?.job === character.job) return;
       selected = character;
