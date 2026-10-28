@@ -26,7 +26,7 @@ import { syncShopInventory } from "/shop-inventory.mjs";
 import { mountStaffPresence } from "/staff-presence.mjs";
 import { nativeSkillTiming, nativeShopPacket } from "/native-rules.mjs";
 import { specializationRule, effectiveSpecialization } from "/item-specialization.mjs";
-import { equipmentError } from "/equipment-rules.mjs";
+import { equipmentError, isShamanPhantom } from "/equipment-rules.mjs";
 import { brandInterface } from "/brand-ui.mjs";
 import { stepMonster, incomingHit, withAttackProfile, createMonsterTimeline } from "/monster-ai.mjs";
 import { watchRelease } from "/release-client.mjs";
@@ -2642,7 +2642,7 @@ async function handle(message) {
         recalculate();
         return notice("Sem espaço na bolsa.");
       }
-      if (slot === "weapon" && record.item.slot === "WEAPON_TWO" && inv.equip.shield) {
+      if (slot === "weapon" && (record.item.slot === "WEAPON_TWO" || isShamanPhantom(stats, record.item)) && inv.equip.shield) {
         if (!addBag(inv.equip.shield)) {
           Object.assign(inv, backup);
           recalculate();
