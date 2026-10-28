@@ -54,3 +54,15 @@ test('paired Shaman phantoms and Martial Artist fists use animated hand bones',(
  assert.match(skin,/record\.handModels\?\?/);
  assert.match(skin,/if\(root!==primary\)/);
 });
+
+test('classic shop uses original item images, actual 3D skin icons and empty inventory slots',async()=>{
+ const premium=await load('premium-shop.mjs');
+ const css=await load('freeston.css');
+ assert.match(premium,/ctx\.itemImage\?\.\(item\.look\)/);
+ assert.match(premium,/renderSapphireItemIcons\(ctx\.B/);
+ assert.match(premium,/Math\.max\(81,/);
+ assert.match(premium,/ft-native-slot-empty/);
+ assert.match(css,/\.ft-native-shop/);
+ assert.match(css,/\.ft-native-preview:not\(\[hidden\]\)/);
+ assert.doesNotMatch(premium,/sapphire-.*\.svg/);
+});
