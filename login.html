@@ -463,8 +463,10 @@
         left:50%!important;
         transform:translateX(-50%)!important;
         pointer-events:auto!important;
+        justify-content:flex-start!important;
+        scroll-snap-type:x proximity;
       }
-      body.roster-cinematic #character-list button { cursor:pointer; pointer-events:auto!important; }
+      body.roster-cinematic #character-list button { cursor:pointer; pointer-events:auto!important; scroll-snap-align:center; }
       body.roster-cinematic #character-detail { position:fixed!important; z-index:1!important; }
       body.roster-cinematic .roster { overflow:visible; }
       /* Full-screen classic character-selection stage. The foreground hero is
