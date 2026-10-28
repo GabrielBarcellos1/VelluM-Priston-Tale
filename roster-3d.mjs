@@ -22,6 +22,23 @@ export async function mountRosterCharacterPreview(B, game, hero) {
   stage.append(caption);
   document.body.append(stage);
   let angle=Math.PI,pressed=false,lastX=0,ended=false,frames=0;
+  // Native skeleton motions: stand breathes in place; walk advances the legs.
+  // Only accept commands from our own embedding window and never persist state.
+  const actor=game.player;
+  const nativeMotion=(motion)=>{
+    if(!actor || typeof actor.play!=='function')return false;
+    if(motion!=='stand' && motion!=='walk')return false;
+    if(typeof actor.hasMotion==='function' && !actor.hasMotion(motion))return false;
+    actor.play(motion);
+    return true;
+  };
+  const onRosterMotion=(event)=>{
+    if(event.origin!==location.origin || event.source!==parent)return;
+    if(event.data?.type!=='vellum-roster-motion')return;
+    nativeMotion(event.data.motion);
+  };
+  window.addEventListener('message',onRosterMotion);
+  nativeMotion('stand');
   const originalCamera={camDist:game.camDist,camPitch:game.camPitch,camYaw:game.camYaw};
   // These controls are consumed by the native renderer on each game frame.
   // A close, nearly level front-facing perspective presents the real character
@@ -57,6 +74,7 @@ export async function mountRosterCharacterPreview(B, game, hero) {
   addEventListener('pagehide',()=>{
     ended=true;
     window.removeEventListener('keydown',blockKeyboard,true);
+    window.removeEventListener('message',onRosterMotion);
     Object.assign(game,originalCamera);
   },{once:true});
 }
