@@ -128,7 +128,7 @@ HTML = '''<!doctype html><html lang="pt-BR"><head>
 <meta name="theme-color" content="#0e0b08"><title>FREEston Tale - sessao local</title>
 <link rel="stylesheet" href="/mobile.css"><link rel="stylesheet" href="/freeston.css"><link rel="icon" href="/_app/favicon-32-BruDaQOO.png">
 <link rel="stylesheet" href="%s"><script type="module" src="%s"></script>
-</head><body data-package="freeston-tale-21"><canvas id="gl"></canvas><div id="ui"></div><a id="vellum-roster-link" href="/personagens">Personagens</a></body></html>''' % (CSS_PATH, JS_PATH)
+</head><body data-package="freeston-tale-21"><canvas id="gl"></canvas><div id="ui"></div></body></html>''' % (CSS_PATH, JS_PATH)
 
 
 class Handler(SimpleHTTPRequestHandler):
