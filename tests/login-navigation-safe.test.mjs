@@ -18,7 +18,7 @@ test('logout and switch account are separate actions',()=>{
 test('roster swaps instantly and uses complete art for broken portraits',()=>{
  assert.match(login,/selected=ranked\[/);
  assert.match(login,/detail\(\);\s*updatePosition\(\)/);
- assert.match(login,/\[6,10,11\]\.includes\(Number\(job\)\)/);
+ assert.match(login,/Number\(job\)===11/);
  assert.doesNotMatch(login,/rosterPreview=1/);
 });
 

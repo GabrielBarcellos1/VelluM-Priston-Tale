@@ -4,9 +4,8 @@ let account, roster, selected, deleting;
 const skills = new Map();
 const fullPortraits=new Map();
 function rosterPortrait(job,mini=false){
- // These three recovered cutouts are incomplete or badly posed.
- // Use the complete upright class illustration until corrected assets exist.
- if([6,10,11].includes(Number(job)))return characterPortrait(job,{mini});
+ // Fighter still lacks a recoverable full-body capture; other classes use native renders.
+ if(Number(job)===11)return characterPortrait(job,{mini});
  const src=fullPortraits.get(Number(job));
  if(!src){
   const fallback=characterPortrait(job,{mini});
@@ -28,7 +27,7 @@ function rosterPortrait(job,mini=false){
  holder.dataset.portraitJob=String(job);
  return holder;
 }
-fetch("/assets/roster-full-portraits.json",{cache:"force-cache"})
+fetch("/assets/roster-full-portraits.json",{cache:"no-store"})
  .then(r=>{if(!r.ok)throw Error("retratos indisponíveis");return r.json();})
  .then(data=>{
   for(const [job,src] of Object.entries(data.portraits??{}))
