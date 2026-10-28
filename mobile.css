@@ -129,7 +129,8 @@ summary {
     top: max(6px, env(safe-area-inset-top));
     left: max(6px, env(safe-area-inset-left));
     transform: none;
-    z-index: 9999;
+    /* GPU fallback warning overlays the game; account exit must remain reachable. */
+    z-index: 2147483647;
   }
   body:has(.ms-shade:not(.hidden)) .local-mobile-menu.has-native-trigger {
     display: block;
