@@ -30,6 +30,10 @@ export function mountCustomSkins({B,game,own,peers,catalog,inventory}){
   if(record){updateHands(actor,record);continue;}
   const materials=[];root.traverse(n=>{if(!n.isMesh)return;materials.push([n,n.material]);const hidden=m=>{const mask=m.clone();mask.visible=false;return mask;};n.material=Array.isArray(n.material)?n.material.map(hidden):hidden(n.material);});
   if(['phantom','vambrace','claw'].includes(skin.customModel)&&actor.object&&actor.parts?.[0]?.boneMatrix){
+   // Martial Artists have two native weapon roots. Replace both, but create
+   // exactly one pair of hand-bound cosmetics (not four overlapping fists).
+   const primary=actor.tools.find(t=>t.slot==='weapon'&&t.model?.object)?.model.object;
+   if(root!==primary){records.set(root,{id:skin.id,mesh:null,materials});continue;}
    const handGroups=[],handModels=[];
    for(const bone of [15,25]){
     const hand=new B.Group();hand.matrixAutoUpdate=false;actor.object.add(hand);
