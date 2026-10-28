@@ -434,6 +434,11 @@
       /* Instant local SVG portraits: no iframe, WebGL or texture fetching. */
       .character-art{display:block;width:100%;height:100%;pointer-events:none}
       .character-art .roster-native-portrait{display:block;width:100%;height:100%;object-fit:contain;filter:drop-shadow(0 12px 20px #000b)}
+      .roster-composite {position:relative}
+      .roster-composite .roster-composite-base {position:absolute;inset:0;display:block;width:100%;height:100%;pointer-events:none}
+      .roster-composite .roster-composite-base svg {display:block;width:100%;height:100%}
+      .roster-composite .roster-native-portrait {position:absolute;top:22%;left:12%;width:76%!important;height:56%!important;object-fit:contain}
+
       .character-art-main .roster-native-portrait{width:min(72vw,500px);height:min(78vh,700px)}
       .character-art-mini .roster-native-portrait{width:100%;height:100%;object-fit:contain}
       .character-card[aria-pressed="true"] .roster-native-portrait{filter:drop-shadow(0 0 10px #e9c6828a)}
