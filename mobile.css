@@ -129,7 +129,10 @@ summary {
     top: max(6px, env(safe-area-inset-top));
     left: max(6px, env(safe-area-inset-left));
     transform: none;
-    z-index: 80;
+    z-index: 9999;
+  }
+  body:has(.ms-shade:not(.hidden)) .local-mobile-menu.has-native-trigger {
+    display: block;
   }
   .local-mobile-menu.has-native-trigger > summary {
     display: block;
