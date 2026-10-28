@@ -452,6 +452,21 @@
       body.roster-cinematic #character-detail { pointer-events:none!important; z-index:1; }
       body.roster-cinematic #character-detail #play-character,
       body.roster-cinematic #character-detail #delete-character { pointer-events:auto!important; }
+      /* Fixed viewport overlays avoid stacking and hit-test conflicts when
+         the account has all 11 characters and the strip scrolls. */
+      body.roster-cinematic .roster-layout { isolation:auto!important; pointer-events:auto!important; }
+      body.roster-cinematic #character-list {
+        position:fixed!important;
+        z-index:999!important;
+        bottom:105px!important;
+        top:auto!important;
+        left:50%!important;
+        transform:translateX(-50%)!important;
+        pointer-events:auto!important;
+      }
+      body.roster-cinematic #character-list button { cursor:pointer; pointer-events:auto!important; }
+      body.roster-cinematic #character-detail { position:fixed!important; z-index:1!important; }
+      body.roster-cinematic .roster { overflow:visible; }
       /* Full-screen classic character-selection stage. The foreground hero is
          the authentic model, others remain visible as selectable miniatures. */
       body.roster-cinematic {
