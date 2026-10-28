@@ -221,6 +221,7 @@ function applySpecialization(item, job) {
 }
 
 const params = new URLSearchParams(location.search);
+const rosterPreviewMode = params.get('rosterPreview') === '1';
 const characterClass =
   B.classes.find((c) => c.job === Number(params.get("classe"))) ??
   B.classes.find((c) => c.job === (account.preferredClass ?? 1));
@@ -3146,6 +3147,20 @@ try {
   document.body.dataset.localDevice = mobile ? "touch" : "desktop";
   B.state("loading");
   game = await B.Game.create(B.root, conn, hero, () => location.reload());
+  if (rosterPreviewMode) {
+    // Avoid presence registration, gameplay handlers, timers and all persistence
+    // in the character-selection preview iframe.
+    conn.sendGame = () => {};
+    conn.send = () => {};
+    conn.close = () => {};
+    B.Runtime.set(game);
+    B.state('field');
+    await game.warmedUp(() => loading.setStatus('Carregando personagem original em 3D…'));
+    loading.hide();
+    const {mountRosterCharacterPreview} = await import('/roster-3d.mjs');
+    await mountRosterCharacterPreview(B,game,hero);
+  } else {
+
   mountStableCamera(game);
   globalThis.__localSession.game = game;
   game.skillSlotStore = () =>
@@ -3424,6 +3439,7 @@ try {
   );
   if(gameplayTestMode)notice("Teste de jogabilidade: apenas ataque +50 e EXP GM. Defesa, poções e custos de MP/RES seguem as regras normais.");
   document.body.dataset.localReady = "true";
+  }
 } catch (error) {
   console.error("[local boot]", error);
   const detail = String(error?.stack ?? '').split('\n').slice(0, 4).join(' | ');
