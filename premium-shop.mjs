@@ -10,7 +10,9 @@ export function openPremiumShop(ctx) {
     balance = document.createElement("p"),
     status = document.createElement("p"),
     note = document.createElement("p"),
-    grid = document.createElement("div");
+    grid = document.createElement("div"),
+    tabs = document.createElement("nav"),
+    skinsHost = document.createElement("section");
   title.textContent = "FREEston Tale · Loja premium";
   close.className = "ft-close";
   close.textContent = "×";
@@ -33,8 +35,30 @@ export function openPremiumShop(ctx) {
   note.textContent =
     "Compras ficam em Meus premiums nesta conta, em qualquer classe. Ative quando quiser. A duração continua offline. Coins são moeda de teste do servidor.";
   grid.className = "ft-skill-grid";
+  const premiumTab = document.createElement("button");
+  const skinsTab = document.createElement("button");
+  premiumTab.type = skinsTab.type = "button";
+  premiumTab.textContent = "Itens premium";
+  skinsTab.textContent = "Skins 3D";
+  tabs.className = "ft-shop-tabs";
+  tabs.append(premiumTab, skinsTab);
+  skinsHost.className = "ft-shop-skins";
+  skinsHost.hidden = true;
+  const selectTab = async (skinTab) => {
+    grid.hidden = skinTab;
+    skinsHost.hidden = !skinTab;
+    premiumTab.setAttribute("aria-pressed", String(!skinTab));
+    skinsTab.setAttribute("aria-pressed", String(skinTab));
+    note.hidden = skinTab;
+    if (skinTab) {
+      try { await ctx.openSkins(skinsHost); }
+      catch (e) { status.textContent = e.message; }
+    }
+  };
+  premiumTab.onclick = () => selectTab(false);
+  skinsTab.onclick = () => selectTab(true);
   header.append(title, close);
-  dialog.append(header, balance, note, status, grid);
+  dialog.append(header, balance, tabs, note, status, grid, skinsHost);
   document.body.append(dialog);
   dialog.showModal();
   close.focus();
@@ -96,6 +120,7 @@ export function openPremiumShop(ctx) {
     }
   }
   draw();
+  if (ctx.initialTab === "skins") selectTab(true);
   const refresh = async () => {
     if (!dialog.isConnected) {
       clearInterval(timer);
