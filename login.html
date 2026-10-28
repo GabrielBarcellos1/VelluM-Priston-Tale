@@ -433,6 +433,11 @@
       }
       /* Instant local SVG portraits: no iframe, WebGL or texture fetching. */
       .character-art{display:block;width:100%;height:100%;pointer-events:none}
+      .character-art .roster-native-portrait{display:block;width:100%;height:100%;object-fit:contain;filter:drop-shadow(0 12px 20px #000b)}
+      .character-art-main .roster-native-portrait{width:min(72vw,500px);height:min(78vh,700px)}
+      .character-art-mini .roster-native-portrait{width:100%;height:100%;object-fit:contain}
+      .character-card[aria-pressed="true"] .roster-native-portrait{filter:drop-shadow(0 0 10px #e9c6828a)}
+
       .character-art svg{display:block;width:100%;height:100%;filter:drop-shadow(0 16px 25px #000b)}
       .character-art-main{position:absolute;inset:0;display:flex;align-items:center;justify-content:center}
       .character-art-main svg{width:min(72vw,460px);height:min(77vh,690px)}
