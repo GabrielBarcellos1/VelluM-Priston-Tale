@@ -144,7 +144,10 @@ async function showShop(initialTab = "premium") {
     serverNow,
     refresh: refreshWallet,
     initialTab,
-    openSkins: (host) => globalThis.__localSession.skinShop?.open(host),
+    skins: () => globalThis.__localSession.skinShop,
+    itemImage: (code) => definitions.get(code)?.image,
+    B,
+    preview: (skin, host) => openSapphirePreview(B, skin, host),
     action: async (action, code) => {
       const result = await postLocal("/api/local/premium/" + action, {
         code,
