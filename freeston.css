@@ -419,3 +419,53 @@
  background:linear-gradient(#8b775c,#43382a);color:#fff5d8;
  font:bold 22px/20px Georgia;
 }
+
+/* Skins: large, crisp renders of the exact equipped 3D models on the
+   dark blue backdrop shown in the player's reference image. */
+.ft-native-grid.ft-native-skins-grid {
+ grid-template-columns:repeat(4,minmax(0,1fr));
+ grid-auto-rows:92px;
+}
+.ft-native-skin-slot {
+ min-height:92px!important;
+ background:#0c1b28!important;
+ border-color:#36485a!important;
+ box-shadow:inset 0 0 9px #010c15!important;
+}
+.ft-native-skin-slot:hover,.ft-native-skin-slot.selected {
+ background:#102c41!important;
+}
+.ft-native-skin-slot .ft-native-item-art {
+ width:100%;height:100%;max-height:89px;
+ object-fit:contain;
+ filter:drop-shadow(1px 2px 2px #000a);
+}
+.ft-native-shop:has(.ft-native-skins-grid) .ft-native-selected-icon {
+ width:158px;height:137px;
+ background:#0c1b28;border-color:#67727d;
+}
+.ft-native-shop:has(.ft-native-skins-grid) .ft-native-selected-icon img {
+ max-width:154px;max-height:133px;
+}
+.ft-native-grid.ft-native-costumes-grid {
+ grid-template-columns:repeat(6,minmax(0,1fr));
+ grid-auto-rows:53px;
+}
+.ft-native-costume-slot {
+ min-height:53px!important;
+}
+.ft-native-costume-slot .ft-native-item-art {
+ max-height:50px!important;
+}
+.ft-native-kit-label {
+ position:absolute;left:0;right:0;bottom:2px;
+ color:#ffe1a0;font:bold 10px Georgia;
+ text-shadow:0 1px 2px #000;text-align:center;
+}
+.ft-native-kit-loading {visibility:hidden}
+@media(max-width:520px){
+ .ft-native-grid.ft-native-skins-grid {grid-template-columns:repeat(3,minmax(0,1fr));grid-auto-rows:92px}
+ .ft-native-grid.ft-native-costumes-grid {grid-template-columns:repeat(4,minmax(0,1fr));grid-auto-rows:53px}
+ .ft-native-shop:has(.ft-native-skins-grid) .ft-native-selected-icon {width:112px;height:110px}
+ .ft-native-shop:has(.ft-native-skins-grid) .ft-native-selected-icon img {max-width:108px;max-height:106px}
+}
