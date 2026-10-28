@@ -249,3 +249,32 @@ test('Knight shield skills reject missing shields before charging MP or cooldown
 test('Knight restored buffs retain their classic icon after travel or reconnect',()=>{
  for(const code of ['SKILL_HOLY_BODY','SKILL_HOLY_VALOR','SKILL_DRASTIC_SPIRIT','SKILL_DIVINE_INHALATION','SKILL_GODLY_SHIELD','SKILL_GOD_BLESS']){const s=catalog.skills.find(s=>s.code===code),f=fixture(s,10);f.system.cast(s.id);const restored=fixture(s,10,{savedBuffs:f.system.exportBuffs()});assert.equal(restored.system.buffs()[0].icon,s.classicIcon,code);assert.equal(restored.system.buffs()[0].icon,f.system.buffs()[0].icon);}
 });
+
+test('measured 2018 raw cooldowns are enforced at all ten ranks in actual runtime',()=>{
+  const measured={SKILL_FLAME_WAVE:2.5,SKILL_CURSE_LAZY:7.5,SKILL_SOUL_MANACLE:17.5,
+    SKILL_CHASING_HUNT:5,SKILL_JUDGEMENT:0.5,SKILL_MOURNING_OF_PRAY:5};
+  for(const [code,seconds] of Object.entries(measured)){
+    const skill=catalog.skills.find(s=>s.code===code);
+    assert.ok(skill,code);
+    for(let level=1;level<=10;level++){
+      const f=fixture(skill,level),p=catalog.rules.skills[code].runtime;
+      const v=f.system.snapshot().skills.find(s=>s.id===skill.id);
+      assert.equal(v.recharge,seconds,code+' rank '+level);
+      assert.equal(v.cooldownSource,'community-frame-measurement-2018',code);
+      const target=p.target==='enemy'||p.target==='ally'?1:undefined;
+      f.system.cast(skill.id,target);
+      const total=Math.max(1,seconds);
+      if(seconds>0.5){
+        assert.equal(f.system.exportCooldowns()[code].total,total,code+' persisted');
+        f.advance(total-0.01);
+        assert.throws(()=>f.system.cast(skill.id,target),/recarga|animação/,code);
+        f.advance(0.02);
+      }else{
+        f.advance(0.99);
+        assert.throws(()=>f.system.cast(skill.id,target),/animação/,code);
+        f.advance(0.02);
+      }
+      f.system.cast(skill.id,target);
+    }
+  }
+});
