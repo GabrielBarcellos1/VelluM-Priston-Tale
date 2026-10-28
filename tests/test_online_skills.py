@@ -36,6 +36,22 @@ class OnlineSkills(unittest.TestCase):
         self.assertEqual(self.heartbeat('ally',cursor=world.SEQ)['support'],[])
         self.heartbeat('caster')
         with self.assertRaisesRegex(ValueError,'recarga'):self.cast('SKILL_ZENITH')
+    def test_gm_pink_announcement_is_authenticated_and_global(self):
+        self.heartbeat('caster')
+        self.heartbeat('ally')
+        with self.assertRaisesRegex(ValueError, 'equipe'):
+            world.chat(self.users['caster'], {'clientId': self.clients['caster'],
+                                              'text': 'Não autorizado', 'announcement': True})
+        self.users['caster']['role'] = 'gm'
+        world.chat(self.users['caster'], {'clientId': self.clients['caster'],
+                                          'text': 'Evento começando!', 'announcement': True})
+        delivered = self.heartbeat('ally')['chats']
+        self.assertEqual(len(delivered), 1)
+        self.assertTrue(delivered[0]['staff'])
+        self.assertEqual(delivered[0]['channel'], 'all')
+        self.assertEqual(delivered[0]['text'], 'Evento começando!')
+        self.assertTrue(delivered[0]['from'].startswith('[GM]'))
+
     def test_server_rejects_unlearned_wrong_class_and_stale_generation(self):
         self.heartbeat('caster');self.heartbeat('ally')
         for code in ('SKILL_INPES','SKILL_GOD_BLESS'):
