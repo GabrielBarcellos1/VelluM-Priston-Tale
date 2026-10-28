@@ -15,10 +15,7 @@ export function mountSkinShop({
   let snapshot = null,
     dialog = null,
     busy = false;
-  const button = document.createElement("button");
-  button.textContent = "Skins";
-  button.className = "local-button";
-  document.querySelector(".local-controls")?.append(button);
+
   async function api(data) {
     const response = await fetch(
       data ? "/api/local/game/skin" : `/api/local/game/skins?job=${hero.jobCode}`,
@@ -113,7 +110,13 @@ export function mountSkinShop({
           skin.look + " · " + { arma: "Arma", escudo: "Escudo", traje: "Armadura/robe" }[skin.cat],
         ),
       );
-      if(skin.customModel&&preview){const view=element('button','Ver modelo 3D');view.type='button';view.onclick=()=>preview(skin);card.append(view);}
+      if (skin.customModel && preview) {
+        const view = element("button", "Visualizar modelo 3D");
+        view.type = "button";
+        view.className = "skin-preview-3d";
+        view.onclick = () => preview(skin, card);
+        card.append(view);
+      }
       const owned = snapshot.owned.includes(skin.id),
         equipped = snapshot.equip[skin.cat] === skin.id,
         action = owned ? (equipped ? "remove" : "equip") : "buy";
@@ -139,7 +142,7 @@ export function mountSkinShop({
         element("p", "Nenhuma skin nesta seleção. O ADM pode publicar modelos pelo painel."),
       );
   }
-  async function open() {
+  async function open(host = null) {
     if (!dialog) {
       dialog = element("dialog");
       dialog.id = "freeston-skins";
@@ -188,14 +191,25 @@ export function mountSkinShop({
       });
     }
     try {
+      if (host) {
+        if (dialog.open) dialog.close();
+        host.append(dialog);
+        dialog.style.cssText = "position:static;display:block;width:100%;max-width:none;margin:0;padding:0;border:0;background:transparent;color:inherit";
+        dialog.setAttribute("open", "");
+        dialog.querySelector("header").hidden = true;
+      } else {
+        if (dialog.open) dialog.close();
+        document.body.append(dialog);
+        dialog.removeAttribute("style");
+        dialog.querySelector("header").hidden = false;
+      }
       await refresh();
-      if (!dialog.open) dialog.showModal();
+      if (!host && !dialog.open) dialog.showModal();
       render();
     } catch (error) {
       notice(error.message);
     }
   }
-  button.onclick = open;
   refresh().catch((e) => notice(e.message));
   const timer = setInterval(() => {
     if (!document.hidden) refresh().catch(() => {});
