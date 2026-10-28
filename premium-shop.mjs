@@ -199,6 +199,11 @@ export function openPremiumShop(ctx) {
     previewHost.replaceChildren();previewHost.hidden=false;
     try{
       ctx.preview?.(item,previewHost);
+      const previewClose=el("button","ft-native-preview-close","×");
+      previewClose.type="button";
+      previewClose.setAttribute("aria-label","Fechar visualização 3D");
+      previewClose.onclick=()=>previewHost.querySelector(".skin-inline-preview button")?.click();
+      previewHost.append(previewClose);
       previewHost.querySelector(".skin-inline-preview button")?.addEventListener("click",()=>{
         previewHost.hidden=true;
       },{once:true});
