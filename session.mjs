@@ -3148,6 +3148,7 @@ try {
   B.state("loading");
   game = await B.Game.create(B.root, conn, hero, () => location.reload());
   if (rosterPreviewMode) {
+    globalThis.__localSession.game = game;
     // Avoid presence registration, gameplay handlers, timers and all persistence
     // in the character-selection preview iframe.
     conn.sendGame = () => {};
