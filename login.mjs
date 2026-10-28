@@ -78,7 +78,7 @@ function detail(){
   const stage=node("div",undefined,"character-model-stage");
   stage.append(characterPortrait(selected.job));
   panel.append(stage);
-  panel.append(icon(selected.job),node("span",type.tribe,"eyebrow"),
+  panel.append(node("span",type.tribe,"eyebrow"),
     node("h2",selected.name),
     node("p",descriptions[selected.job-1],"muted"));
   const dl=node("dl");
@@ -136,7 +136,6 @@ function render() {
     miniature.append(characterPortrait(character.job,{mini:true}));
     card.append(miniature);
     card.append(
-      icon(character.job),
       node("small", type.tribe.toUpperCase()),
       node("strong", character.name),
       node("span", `${type.name} · Nível ${character.level}`),
@@ -173,13 +172,7 @@ async function enterAccount() {
     location.replace("/painel");
     return;
   }
-  try {
-    const catalog = await api("/api/local/skills");
-    for (const skill of catalog.skills)
-      if (!skills.has(skill.job) && skill.classicIcon) skills.set(skill.job, skill.classicIcon);
-  } catch {
-    /* The roster remains usable if decorative icons are unavailable. */
-  }
+  // No skills API request or icon downloads are needed for portrait selection.
   await refresh();
   $("#login").reset();
 }
