@@ -469,3 +469,15 @@
  .ft-native-shop:has(.ft-native-skins-grid) .ft-native-selected-icon {width:112px;height:110px}
  .ft-native-shop:has(.ft-native-skins-grid) .ft-native-selected-icon img {max-width:108px;max-height:106px}
 }
+
+/* Premium shop: concise effect summary, no nested description scrollbar. */
+.ft-native-description {
+ max-height:none!important;
+ overflow:visible!important;
+ scrollbar-width:none;
+ line-height:1.35;
+ font-size:12px;
+ padding:2px 0;
+}
+.ft-native-description::-webkit-scrollbar {display:none}
+.ft-native-details {gap:4px}
