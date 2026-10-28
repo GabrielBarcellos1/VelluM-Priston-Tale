@@ -155,3 +155,31 @@ Os testes automatizados por classe e nível verificam invocação, recursos, res
 - QA criado exclusivamente para o teste e removido ao final. Nenhum dado real de jogadores foi alterado.
 - O servidor público respondeu `deployment.status=current`, commit `a9f34534007e7ef3dc42c6337837b315411c5ed8`, e retornou HTTP 200 para `/jogar?classe=10` e `/skill-measured-cooldowns.mjs`.
 - Testes de navegador validam **abertura e catálogo**, não demonstram combate real 1.760 vezes nem precisão histórica de animação.
+
+## Complemento: auditoria da animação realmente executada (28/10/2026)
+
+O cliente original recompilado executa a animação pelo valor `skillFx.dur` recebido: a função `player.playSkill(motion, duration)` ajusta a velocidade de reprodução ao tempo informado. Assim, o novo ajuste em `native-rules.mjs` altera **a duração visível real**, não apenas o indicador de cooldown, e redimensiona os timestamps dos golpes para acompanhar a mesma animação.
+
+| Habilidade | Duração observada no VelluM antes | Referência BPT 2018 | Duração calibrada no VelluM |
+|---|---:|---:|---:|
+| Mago Raio da Morte | 1,429 s | 1,15 s | 1,15 s |
+| Mago Terremoto nível 10 | 2,457 s | 1,65 s | 1,65 s |
+| Mago Ondas de Fogo | 2,229 s | 1,6 s | 1,6 s |
+| Mago Meteoro | 1,886 s | 1,4 s | 1,4 s |
+| Xamã Maldição da Lentidão | 1,714 s | 1,6 s | 1,6 s |
+| Xamã Algemas da Alma | 1,600 s | 1,55 s | 1,55 s |
+| Xamã Caçada Perseguidora | 1,600 s | 1,8 s | 1,8 s |
+| Xamã Julgamento | 1,257 s | 1,25 s | 1,25 s |
+| Xamã Lamento da Prece | 1,886 s | 1,8 s | 1,8 s |
+
+Distorção não recebeu ajuste de animação porque a fonte só informa seu delay bruto. A medição de Terremoto vale **somente para nível 10**. Para as habilidades do Xamã sem nível explicitado, a aplicação aos níveis 1–10 permanece extrapolação provisória.
+
+O código inclui dez perfis de cooldown com fonte, nove durações de animação com fonte, dos quais seis cooldowns foram alterados nesta rodada e os demais confirmados como baselines. `data/classic-measured-timings-2018.csv` contém o conjunto com escopo explícito por nível. **As outras 166 habilidades não receberam confirmação histórica de recarga nesta auditoria**; tampouco foram modificados seus danos.
+
+### Testes após a calibração
+
+- 229/229 testes Node.js passaram, incluindo validação de nove durações reais de reprodução e dos timestamps de golpe, sem Tiers 5.
+- Teste de integração no Edge para as classes Mago e Xamã: `nativeSkillTiming` devolveu as nove durações calibradas com tolerância de 0,01 s, sem erros de JavaScript.
+- As 11 classes haviam passado no smoke-test completo de abertura e 16 habilidades cada, na mesma rodada de revisão.
+- Os dados de conta temporária foram usados apenas para QA. Os dados de jogadores reais foram preservados.
+- **Limite:** a reprodução foi calibrada para a referência BPT 2018. Não é prova de equivalência de todas as versões clássicas, nem comprovação de fidelidade dos danos, maturação, buffs de velocidade, PvP ou 176 animações.
