@@ -76,9 +76,11 @@ export function mountSkinShop({
           : action === "equip"
             ? "Skin equipada."
             : "Skin removida.";
-      dialog.querySelector("[role=status]").textContent = message;
+      if (dialog?.isConnected) dialog.querySelector("[role=status]").textContent = message;
+      return { ok: true, message, skins: result.skins };
     } catch (error) {
-      dialog.querySelector("[role=status]").textContent = error.message;
+      if (dialog?.isConnected) dialog.querySelector("[role=status]").textContent = error.message;
+      return { ok: false, message: error.message };
     } finally {
       busy = false;
       render();
@@ -218,6 +220,8 @@ export function mountSkinShop({
   return {
     open,
     refresh,
+    mutate,
+    compatible,
     get snapshot() {
       return snapshot;
     },
