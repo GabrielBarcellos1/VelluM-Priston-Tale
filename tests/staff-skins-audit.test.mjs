@@ -25,3 +25,20 @@ test('GM announcement command is routed before generic slash command and uses se
 test('staff aura is distinct from other players',()=>{
  assert.match(staff,/scope==="staff"\?0xb56aff:0xffd05c/);
 });
+
+test('Shaman phantom is a two-hand combat weapon and cannot pair with a shield',async()=>{
+ const {equipmentError,isShamanPhantom}=await import('../equipment-rules.mjs');
+ const shaman={job:10},phantom={code:'WN101',slot:'WEAPON_ONE'},shield={code:'DS101',slot:'SHIELDS'};
+ assert.equal(isShamanPhantom(shaman,phantom),true);
+ assert.match(equipmentError(shield,'shield',shaman,{weapon:phantom},()=>null),/Fantasma/);
+ assert.equal(equipmentError(shield,'shield',{job:7},{weapon:phantom},()=>null),null);
+ assert.equal(isShamanPhantom(shaman,{code:'WA101'}),false);
+ assert.match(session,/isShamanPhantom\(stats, record\.item\)/);
+});
+test('premium store exposes integrated 3D skin catalog',async()=>{
+ const premium=await load('premium-shop.mjs');
+ assert.match(premium,/Skins 3D/);
+ assert.match(premium,/ctx\.openSkins\(skinsHost\)/);
+ assert.match(shop,/preview\(skin, card\)/);
+ assert.match(skin,/skin\.customModel==='vambrace'/);
+});
