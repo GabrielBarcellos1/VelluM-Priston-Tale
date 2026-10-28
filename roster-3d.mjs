@@ -13,15 +13,13 @@ export async function mountRosterCharacterPreview(B,game,hero){
   const renderer=new B.WebGLRenderer({canvas,antialias:true,alpha:false});
   renderer.setPixelRatio(Math.min(1.5,window.devicePixelRatio||1));
   const camera=new B.PerspectiveCamera(34,1,.1,3000);
-  const scene=new B.Scene();scene.background=new B.Color(0x101d20);
-  const ambient=new B.AmbientLight(0xd2e6ff,2.2),key=new B.DirectionalLight(0xffdeb1,3),rim=new B.DirectionalLight(0x59baff,2.2);
-  key.position.set(-80,170,180);rim.position.set(100,115,-110);scene.add(ambient,key,rim);
-  // Clone the actual actor (body, armor, face and equipped weapon meshes), not
-  // a procedural approximation of the character.
-  const actor=game.player?.object;
-  if(!actor)throw Error('Modelo original do personagem indisponível.');
-  const model=actor.clone(true);
-  model.position.set(0,0,0);model.rotation.set(0,0,0);scene.add(model);
+  // Use the ORIGINAL runtime scene and its animated player object. The native
+  // actor relies on material/bone updates performed by the game renderer, and
+  // cloning it into a separate scene makes the model invisible.
+  const scene=game.scene;
+  const model=game.player?.object;
+  if(!model)throw Error('Modelo original do personagem indisponível.');
+  const originalRotation=model.rotation.y;
   let angle=0,dragging=false,previous=0,stopped=false;
   const pointerDown=e=>{dragging=true;previous=e.clientX;stage.style.cursor='grabbing';canvas.setPointerCapture?.(e.pointerId);};
   const pointerMove=e=>{if(dragging){angle+=(e.clientX-previous)*.012;previous=e.clientX;}};
@@ -31,12 +29,14 @@ export async function mountRosterCharacterPreview(B,game,hero){
   const resize=()=>{const w=Math.max(150,stage.clientWidth),h=Math.max(180,stage.clientHeight);renderer.setSize(w,h,false);camera.aspect=w/h;camera.updateProjectionMatrix();};
   resize();window.addEventListener('resize',resize);
   // Priston actor geometry is in native client units, roughly 100-160 units tall.
-  camera.position.set(0,82,185);camera.lookAt(0,74,0);
+  const actorPosition=model.position;
+  camera.position.set(actorPosition.x,actorPosition.y+92,actorPosition.z+180);
+  camera.lookAt(actorPosition.x,actorPosition.y+74,actorPosition.z);
   let frames=0;
-  const tick=()=>{if(stopped)return;model.rotation.y=angle+Math.PI;renderer.render(scene,camera);frames++;
+  const tick=()=>{if(stopped)return;model.rotation.y=originalRotation+angle;renderer.render(scene,camera);frames++;
     if(frames===5){document.body.dataset.rosterPreviewReady='true';parent.postMessage({type:'vellum-roster-preview',job:hero.jobCode,ready:true},location.origin);}
     requestAnimationFrame(tick);
   };
   requestAnimationFrame(tick);
-  addEventListener('pagehide',()=>{stopped=true;window.removeEventListener('resize',resize);model.traverse(n=>{});renderer.dispose();},{once:true});
+  addEventListener('pagehide',()=>{stopped=true;window.removeEventListener('resize',resize);model.rotation.y=originalRotation;renderer.dispose();},{once:true});
 }
