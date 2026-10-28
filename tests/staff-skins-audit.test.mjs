@@ -66,3 +66,18 @@ test('classic shop uses original item images, actual 3D skin icons and empty inv
  assert.match(css,/\.ft-native-preview:not\(\[hidden\]\)/);
  assert.doesNotMatch(premium,/sapphire-.*\.svg/);
 });
+
+test('Precious Item Shop opens three-tab store directly and keeps classic merchants unchanged',async()=>{
+ const session=await load('session.mjs');
+ const shop=await load('premium-shop.mjs');
+ assert.match(session,/\/\^Precious Item Shop\$\/i\.test\(npc\.name\)/);
+ assert.match(session,/showShop\(\)\.catch/);
+ assert.match(shop,/"Premiums"/);
+ assert.match(shop,/"Skins"/);
+ assert.match(shop,/"Trajes"/);
+ assert.match(shop,/item\.category==="costume"/);
+ assert.match(shop,/item\.category==="premium"/);
+ assert.match(shop,/item\.category==="items"/);
+ assert.match(shop,/item\.code==="BI900"/);
+ assert.match(shop,/canvas\.toDataURL\("image\/png"\)/);
+});
