@@ -269,6 +269,8 @@ class Handler(SimpleHTTPRequestHandler):
                 if playing and not accounts.load_state(user['username'],int(query.get('classe',[user['preferredClass']])[0])):
                     self.send_response(302);self.send_header('Location','/personagens');self.end_headers();return
                 self.reply(HTML.encode() if playing else (ROOT / 'login.html').read_bytes(), 'text/html; charset=utf-8')
+            elif path == '/assets/roster-full-portraits.json':
+                self.reply((ROOT / 'data' / 'roster-full-portraits.json').read_bytes(), 'application/json; charset=utf-8')
             elif path == '/assets/roster-scene.jpg':
                 scene=json.loads((ROOT / 'data' / 'roster-scene.json').read_text(encoding='utf-8'))
                 self.reply(base64.b64decode(scene['base64'], validate=True), 'image/jpeg')
