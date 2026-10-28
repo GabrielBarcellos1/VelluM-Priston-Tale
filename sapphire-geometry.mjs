@@ -42,8 +42,50 @@ export function buildSapphireWeapon(kind='scythe',hands=2){
   shaft(-3,3,.75);for(const side of [-1,1]){const outer=[],inner=[];for(let i=0;i<=20;i++){const t=i/20;outer.push([Math.sin(t*Math.PI)*8,side*(2+26*t)]);inner.push([Math.sin(t*Math.PI)*6,side*(2+26*t)]);}ribbon(outer,inner,.65);crystal([0,side*27,0],1.8,6);scroll(6,side*15,1.8,1);}
   rod([0,-29,0],[0,29,0],.075,5,5);skull(1,0,.72);
  }else if(kind==='sword'||kind==='dagger'||kind==='javelin'){
-  const spear=kind==='javelin',dagger=kind==='dagger',top=spear?38:dagger?19:long?37:28,bottom=spear?-20:dagger?-7:-10,guard=spear?21:4;
-  shaft(bottom,guard,.55);polygon([[-1.2,guard],[-3,guard+4],[-2.8,top-7],[0,top],[2.8,top-7],[3,guard+4],[1.2,guard]],.48,1);crystal([0,top-8,.7],.8,7,.4);skull(0,guard,.7);curve([[-7,guard+3,0],[-4,guard+1,0],[0,guard,0],[4,guard+1,0],[7,guard+3,0]],.5,2);pommel(bottom-1);
+  // Classic Priston silhouette: long, narrow, double-edged blade, not a giant
+  // rectangular turquoise paddle. Every family has a metal spine, split
+  // sapphire inlay, distinct teeth/serrations and a skeletal crossguard.
+  const spear=kind==='javelin',dagger=kind==='dagger';
+  const bottom=spear?-20:dagger?-9:-14,guard=spear?15:dagger?1:4;
+  const top=spear?44:dagger?21:long?42:33;
+  const gripTop=guard-.7;
+  shaft(bottom,gripTop,dagger?.42:.58);
+  for(let y=bottom+2;y<gripTop-1;y+=3.1){
+   rod([-.53,y,0],[.53,y+.7,0],.11,2,6);
+   rod([.53,y,0],[-.53,y+.7,0],.11,2,6);
+  }
+  const len=top-guard;
+  if(spear){
+   // Slender spearhead and two swept-back claws.
+   polygon([[0,top],[-1.8,top-7],[-2.5,guard+4],[-.85,guard+.6],[.85,guard+.6],[2.5,guard+4],[1.8,top-7]],.55,1);
+   polygon([[0,top-2],[-.62,top-8],[-.95,guard+5],[0,guard+2],[.95,guard+5],[.62,top-8]],.64,0);
+   for(const side of [-1,1]){
+    const pts=[[side*.8,guard+1],[side*5.8,guard+8],[side*6.8,guard+13],[side*4.4,guard+11],[side*3.2,guard+5]];
+    polygon(pts,.5,0);
+    curve([[side*.8,guard,1],[side*5.8,guard+8,1],[side*6.8,guard+13,1]],.26,2);
+   }
+  }else{
+   const w=dagger?2.3:long?4.2:3.5;
+   // Tapered steel edge with carved shoulders and a needle-sharp point.
+   polygon([[0,top],[-w*.56,top-5],[-w*.96,top-12],[-w,guard+len*.38],[-w*.72,guard+4],[-w*.32,guard+1],[w*.32,guard+1],[w*.72,guard+4],[w,guard+len*.38],[w*.96,top-12],[w*.56,top-5]],dagger?.42:.54,6);
+   polygon([[0,top-1],[-w*.36,top-7],[-w*.52,top-13],[-w*.49,guard+len*.37],[-w*.32,guard+5],[0,guard+2],[w*.32,guard+5],[w*.49,guard+len*.37],[w*.52,top-13],[w*.36,top-7]],.67,0);
+   // Narrow sapphire channel leaves both sharpened silver edges visible.
+   polygon([[0,top-6],[-w*.15,top-10],[-w*.22,guard+len*.4],[0,guard+7],[w*.22,guard+len*.4],[w*.15,top-10]],.75,1);
+   for(const side of [-1,1]){
+    for(let j=0;j<4;j++){
+     const y=guard+8+j*(len-16)/4;
+     curve([[0,y+.5,.85],[side*w*.17,y+1.9,.87],[side*w*.3,y+3,.77]],.11,2);
+    }
+    // Curved bone wings protect the hand and frame the skull.
+    curve([[side*.9,guard+.2,0],[side*3,guard+1,0],[side*(dagger?5.8:8.5),guard+4,0],[side*(dagger?7:10),guard+7,0]],.55,2);
+    rod([side*(dagger?5.8:8.5),guard+4,0],[side*(dagger?7:10),guard+7,0],.7,3,7,.12);
+    sphere([side*(dagger?5.8:8.5),guard+4,0],[.7,.7,.7],5,8,6);
+   }
+  }
+  skull(0,guard+(spear?2:.65),dagger?.47:.66);
+  crystal([0,guard+5,1.05],dagger?.6:.95,dagger?2.2:3.3,.28);
+  sphere([0,guard-1,0],[1.3,1.6,.85],2,10,6);
+  pommel(bottom-1);
  }else if(kind==='claw'||kind==='vambrace'){
   const arm=kind==='vambrace';polygon([[-3,-5],[-4,2],[-2,7],[2,7],[4,2],[3,-5]],1.8,0);skull(0,1,.9);for(const x of [-3,0,3]){curve([[x,4,0],[x*1.2,9,0],[x*1.4,15,0]],.65,2);polygon([[x*1.4-.7,10],[x*1.4,arm?20:18],[x*1.4+.7,10]],.45,1);crystal([x,5,1],.9,3);}scroll(0,-3,2,2);
  }else if(kind==='wand'||kind==='staff'){
