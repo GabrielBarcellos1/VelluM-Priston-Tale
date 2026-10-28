@@ -58,7 +58,7 @@ test('paired Shaman phantoms and Martial Artist fists use animated hand bones',(
 test('classic shop uses original item images, actual 3D skin icons and empty inventory slots',async()=>{
  const premium=await load('premium-shop.mjs');
  const css=await load('freeston.css');
- assert.match(premium,/ctx\.itemImage\?\.\(item\.look\)/);
+ assert.match(premium,/skinIcons\.get\(item\.id\)\|\|""/);
  assert.match(premium,/renderSapphireItemIcons\(ctx\.B/);
  assert.match(premium,/Math\.max\(81,/);
  assert.match(premium,/ft-native-slot-empty/);
@@ -80,4 +80,13 @@ test('Precious Item Shop opens three-tab store directly and keeps classic mercha
  assert.match(shop,/item\.category==="items"/);
  assert.match(shop,/item\.code==="BI900"/);
  assert.match(shop,/canvas\.toDataURL\("image\/png"\)/);
+});
+
+test('skin inventory does not flash stale catalog or wrong base equipment sprites',async()=>{
+ const premium=await load('premium-shop.mjs');
+ assert.match(premium,/if\(tab==="skins"\)return skinsLoading\?\[\]/);
+ assert.match(premium,/if\(kind==="skins"\)return skinIcons\.get\(item\.id\)\|\|""/);
+ assert.match(premium,/img\.hidden=true/);
+ assert.match(premium,/img\.src=data;img\.hidden=false/);
+ assert.match(premium,/await skinShop\(\)\?\.refresh\(\)/);
 });
