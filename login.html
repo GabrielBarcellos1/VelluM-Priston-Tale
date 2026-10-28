@@ -1039,9 +1039,9 @@
         justify-content:center;min-height:100svh;padding:105px 18px 65px;
         width:100%;max-width:none;overflow:hidden;
         background:
-          linear-gradient(90deg,#08132125,#081017b3 36%,#080c14eb 50%,#120d13af 64%,#34100c33),
+          linear-gradient(90deg,#08132125 0%,#081017dc 37%,#080c14f7 50%,#120d13df 63%,#34100c33 100%),
           linear-gradient(0deg,#05080cef,transparent 26%,transparent 78%,#05080b9e),
-          url('/assets/roster-scene.jpg') center/cover no-repeat;
+          url('/assets/login-scene.webp') center/cover no-repeat;
       }
       #entry.entry::before,#entry.entry::after {
         content:"";position:absolute;z-index:-1;top:11%;bottom:1%;
@@ -1070,13 +1070,17 @@
         text-shadow:0 3px 16px #000,0 0 30px #bd894c45;
         margin-bottom:20px;letter-spacing:.03em;
       }
-      #entry.entry > .panel h2 {font-size:23px;}
+      #entry.entry > .panel > .eyebrow,
+      #entry.entry > .panel > h2,
+      #entry.entry > .panel > .muted {display:none;}
       #entry.entry input {background:#070e11ed;border-color:#7d776b88;}
       #entry.entry input:focus {border-color:#ecc77d;outline:2px solid #e8c78777;}
       #entry.entry form > .primary {background:linear-gradient(180deg,#f1d59a,#c99a4b);border-color:#ffde9a;min-height:52px;}
       body:has(#entry:not([hidden])) footer {display:none;}
       @media(max-width:760px){
-        #entry.entry {padding:88px 16px 35px;}
+        #entry.entry {padding:88px 16px 35px;
+          background:linear-gradient(180deg,#071016ed,#071016f7 54%,#130d15ed),url('/assets/login-scene.webp') center/cover no-repeat;
+        }
         #entry.entry::before,#entry.entry::after {width:66vw;top:15%;bottom:17%;opacity:.54;}
         #entry.entry::before {left:-27vw;}
         #entry.entry::after {right:-27vw;}
