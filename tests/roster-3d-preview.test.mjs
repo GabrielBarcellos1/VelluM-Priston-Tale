@@ -12,7 +12,7 @@ test('selection preview uses original game renderer and keeps gameplay path sepa
  assert.match(session,/await mountRosterCharacterPreview\(B,game,hero\)/);
  assert.match(markup,/characterPortrait/);
  assert.doesNotMatch(markup,/rosterPreview=1/);
- assert.match(server,/frame-src 'self'/);
+ assert.match(server,/frame-src 'none'/);
  assert.match(server,/roster-3d\.mjs/);
 });
 test('original Priston actor preview camera is interactive but has no extra WebGL context or saves',async()=>{
