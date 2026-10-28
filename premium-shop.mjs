@@ -137,6 +137,11 @@ export function openPremiumShop(ctx) {
       slot.onclick=()=>{selectedId=itemKey(item);draw();};
       grid.append(slot);
     }
+    // Keep the empty inventory squares visible, as in the classic shop.
+    for(let i=items.length;i<Math.max(81,Math.ceil(items.length/9)*9);i++){
+      const blank=el("div","ft-native-slot ft-native-slot-empty");
+      blank.setAttribute("aria-hidden","true");grid.append(blank);
+    }
     empty.hidden=items.length>0;
     premiumTab.setAttribute("aria-selected",String(tab==="premium"));
     skinsTab.setAttribute("aria-selected",String(tab==="skins"));
@@ -152,7 +157,7 @@ export function openPremiumShop(ctx) {
       if(renderingIcons||!ctx.B)return;
       renderingIcons=true;
       await renderSapphireItemIcons(ctx.B,snapshot()?.catalog??[],(id,data)=>{
-        if(disposed||run!==iconRun)return;
+        if(disposed)return;
         skinIcons.set(id,data);
         for(const img of dialog.querySelectorAll(".ft-native-slot img")){
           if(img.parentElement?.dataset.itemId===id)img.src=data;
