@@ -953,25 +953,38 @@
       body.roster-cinematic .roster-enter-previous .roster-side-hero {
         animation:rosterSideReveal .46s ease-out both;
       }
+      /* Character select is a self-contained 2D stage: no in-game scene is opened. */
       @keyframes rosterWalkToLeft {
-        0% {transform:translateX(0) scale(1);opacity:1}
-        45% {transform:translateX(-13%) translateY(-7px) scale(.85);opacity:.9}
-        100% {transform:translateX(-30%) translateY(2px) scale(.65);opacity:0}
+        0% {transform:translate(0,0) scale(1);opacity:1}
+        20% {transform:translate(-7vw,-8px) rotate(-2deg) scale(.94);opacity:1}
+        40% {transform:translate(-15vw,1px) rotate(2deg) scale(.87);opacity:1}
+        60% {transform:translate(-23vw,-8px) rotate(-2deg) scale(.80);opacity:1}
+        80% {transform:translate(-31vw,1px) rotate(2deg) scale(.74);opacity:.95}
+        100% {transform:translate(-38vw,0) scale(.68);opacity:0}
       }
       @keyframes rosterWalkToRight {
-        0% {transform:translateX(0) scale(1);opacity:1}
-        45% {transform:translateX(13%) translateY(-7px) scale(.85);opacity:.9}
-        100% {transform:translateX(30%) translateY(2px) scale(.65);opacity:0}
+        0% {transform:translate(0,0) scale(1);opacity:1}
+        20% {transform:translate(7vw,-8px) rotate(2deg) scale(.94);opacity:1}
+        40% {transform:translate(15vw,1px) rotate(-2deg) scale(.87);opacity:1}
+        60% {transform:translate(23vw,-8px) rotate(2deg) scale(.80);opacity:1}
+        80% {transform:translate(31vw,1px) rotate(-2deg) scale(.74);opacity:.95}
+        100% {transform:translate(38vw,0) scale(.68);opacity:0}
       }
       @keyframes rosterWalkFromRight {
-        0% {transform:translateX(32%) translateY(3px) scale(.64);opacity:.24}
-        48% {transform:translateX(13%) translateY(-8px) scale(.85);opacity:.86}
-        100% {transform:translateX(0) scale(1);opacity:1}
+        0% {transform:translate(38vw,0) scale(.68);opacity:.7}
+        20% {transform:translate(31vw,-8px) rotate(-2deg) scale(.74);opacity:1}
+        40% {transform:translate(23vw,1px) rotate(2deg) scale(.80);opacity:1}
+        60% {transform:translate(15vw,-8px) rotate(-2deg) scale(.87);opacity:1}
+        80% {transform:translate(7vw,1px) rotate(2deg) scale(.94);opacity:1}
+        100% {transform:translate(0,0) scale(1);opacity:1}
       }
       @keyframes rosterWalkFromLeft {
-        0% {transform:translateX(-32%) translateY(3px) scale(.64);opacity:.24}
-        48% {transform:translateX(-13%) translateY(-8px) scale(.85);opacity:.86}
-        100% {transform:translateX(0) scale(1);opacity:1}
+        0% {transform:translate(-38vw,0) scale(.68);opacity:.7}
+        20% {transform:translate(-31vw,-8px) rotate(2deg) scale(.74);opacity:1}
+        40% {transform:translate(-23vw,1px) rotate(-2deg) scale(.80);opacity:1}
+        60% {transform:translate(-15vw,-8px) rotate(2deg) scale(.87);opacity:1}
+        80% {transform:translate(-7vw,1px) rotate(-2deg) scale(.94);opacity:1}
+        100% {transform:translate(0,0) scale(1);opacity:1}
       }
       @keyframes rosterSideReveal {
         from {opacity:0} to {opacity:.86}
