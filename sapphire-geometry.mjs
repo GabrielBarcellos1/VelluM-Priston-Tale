@@ -115,10 +115,41 @@ export function buildSapphireWeapon(kind='scythe',hands=2){
   sphere([0,guard-1,0],[1.3,1.6,.85],2,10,6);
   pommel(bottom-1);
  }else if(kind==='claw'||kind==='vambrace'){
-  const arm=kind==='vambrace';polygon([[-3,-5],[-4,2],[-2,7],[2,7],[4,2],[3,-5]],1.8,0);skull(0,1,.9);for(const x of [-3,0,3]){curve([[x,4,0],[x*1.2,9,0],[x*1.4,15,0]],.65,2);polygon([[x*1.4-.7,10],[x*1.4,arm?20:18],[x*1.4+.7,10]],.45,1);crystal([x,5,1],.9,3);}scroll(0,-3,2,2);
+  const arm=kind==='vambrace';
+  // Articulated fist/gauntlet: individual layered knuckle plates, three curved
+  // talons and a miniature skull badge; compact enough for hand-bone mounting.
+  polygon([[-3.4,-5],[-4.1,1],[-3.2,5],[-1,7.4],[2,7.4],[3.8,4.6],[4.2,0],[3.2,-5]],1.65,0);
+  polygon([[-2.7,-4],[-3.2,1],[-1.8,5.4],[1.8,5.4],[3.2,1],[2.7,-4]],1.82,1);
+  skull(0,1,.69);
+  for(const x of [-2.65,0,2.65]){
+   sphere([x,5.3,1.6],[1.15,1.1,1],2,9,6);
+   const tip=arm?17.2:15.5;
+   curve([[x,5.5,1],[x*1.2,9,1],[x*1.25,12,0],[x*1.3,tip,-.4]],.45,6);
+   polygon([[x*1.25-.75,10],[x*1.3,tip],[x*1.25+.75,10]],.38,6);
+   crystal([x,5.4,2.5],.7,2,.34);
+  }
+  for(const side of [-1,1]){
+   curve([[side*2,-4,1.7],[side*3.8,-1,1.9],[side*3,3,1.8]],.19,2);
+   sphere([side*3,-2,2],[.62,.62,.4],5,8,5);
+  }
+  crystal([0,-3,2.1],1,2.5,.35);
  }else if(kind==='wand'||kind==='staff'){
-  const staff=kind==='staff';shaft(staff?-19:-8,staff?29:16,.6);const y=staff?29:16;skull(0,y-1,staff?1:.7);crystal([0,y+5,0],staff?3:2.2,staff?11:7);
-  for(const side of [-1,1]){curve([[0,y-2,0],[side*5,y+1,0],[side*5,y+7,0],[side*2,y+10,0]],.4,2);scroll(side*4,y+1,1.7,1,side);}pommel(staff?-20:-9);
+  const staff=kind==='staff';shaft(staff?-20:-9,staff?30:17,.57);
+  const y=staff?30:17;
+  // The head is a halo of pointed bone prongs around a floating sapphire.
+  skull(0,y-2,staff?1.05:.74);
+  crystal([0,y+6,0],staff?3:2.1,staff?10:7);
+  for(const side of [-1,1]){
+   curve([[side*.6,y-3,0],[side*4,y,0],[side*7,y+6,0],[side*4,y+11,0]],.4,2);
+   rod([side*7,y+6,0],[side*5,y+13,0],.48,3,6,.1);
+   crystal([side*5,y+9,.8],1.1,3,.6);
+   scroll(side*4.5,y+.8,2,1,side);
+  }
+  for(let y0=staff?-12:-5;y0<y-8;y0+=6){
+   crystal([0,y0,0],.95,2.8);
+   rod([-.9,y0-1,.2],[.9,y0+1,.2],.2,2,6);
+  }
+  pommel(staff?-21:-10);
  }else if(kind==='phantom'){
   shaft(-7,8,.7);skull(0,7,1.2);for(const side of [-1,1]){crescent(side*2,9,.45,side);crystal([side*5,15,0],1.6,6);}crystal([0,17,0],2.1,9);pommel(-8);
  }else throw Error('Família de skin desconhecida: '+kind);
