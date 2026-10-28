@@ -1,3 +1,4 @@
+import { skillActionTiming } from './skill-action-timing.mjs';
 import { effectFor, sumEffects, effectRows } from "./skill-effects.mjs";
 import { configuredSkillCooldown } from "./skill-cooldowns.mjs";
 import { initialMastery, afterSkillUse, hitsRemaining, MASTERY_MAX } from "./skill-maturity.mjs";
@@ -325,11 +326,7 @@ export function createSkillSystem(ctx) {
       ctx.stats.mp -= v.mp;
       ctx.stats.sp -= v.stamina;
     }
-    // Keep the action locked until its last scheduled hit has resolved.
-    // A zero *additional* cooldown still requires completion of the cast.
-    const lastHit = hitTimes.length ? Math.max(0, ...hitTimes.filter(Number.isFinite)) : 0;
-    const actionDuration = Math.max(timing.duration, lastHit);
-    const cooldown = v.recharge === 0 ? 0 : Math.max(v.recharge, actionDuration);
+    const { actionDuration, cooldown } = skillActionTiming(timing, hitTimes, v.recharge);
     actionReadyAt = now() + actionDuration;
     if (cooldown) {
       ready.set(id, now() + cooldown);
