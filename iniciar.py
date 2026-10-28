@@ -273,9 +273,10 @@ class Handler(SimpleHTTPRequestHandler):
                 self.reply(HTML.encode() if playing else (ROOT / 'login.html').read_bytes(), 'text/html; charset=utf-8')
             elif path == '/assets/roster-full-portraits.json':
                 self.reply((ROOT / 'data' / 'roster-full-portraits.json').read_bytes(), 'application/json; charset=utf-8')
-            elif path in ('/assets/login-pike.png','/assets/login-knight.png'):
-                image_name=path.rsplit('/',1)[-1]
-                self.reply((ROOT / 'data' / image_name).read_bytes(), 'image/png')
+            elif path in ('/assets/login-pike.webp','/assets/login-knight.webp'):
+                actor=path.rsplit('/',1)[-1].split('.')[0].removeprefix('login-')
+                art=json.loads((ROOT / 'data' / 'login-battle-assets.json').read_text(encoding='utf-8'))
+                self.reply(base64.b64decode(art[actor],validate=True), 'image/webp')
             elif path == '/assets/roster-scene.jpg':
                 scene=json.loads((ROOT / 'data' / 'roster-scene.json').read_text(encoding='utf-8'))
                 self.reply(base64.b64decode(scene['base64'], validate=True), 'image/jpeg')
