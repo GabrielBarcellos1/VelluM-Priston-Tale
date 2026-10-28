@@ -142,3 +142,40 @@ summary {
     display: block;
   }
 }
+/* Mobile gameplay: native quick-action buttons replace repeated menu shortcuts.
+   Premium buffs stay in a compact single horizontal row below the safe area. */
+@media (pointer: coarse), (max-width: 700px) {
+  .local-controls > .mobile-duplicate-action { display: none !important; }
+  .hud-body:has(> .hud-buff.hud-keep-glow) {
+    position: fixed !important;
+    top: calc(env(safe-area-inset-top, 0px) + 6px) !important;
+    left: 50% !important;
+    right: auto !important;
+    bottom: auto !important;
+    transform: translateX(-50%) !important;
+    display: flex !important;
+    flex-direction: row !important;
+    flex-wrap: nowrap !important;
+    justify-content: flex-start !important;
+    align-items: center !important;
+    gap: 5px !important;
+    max-width: min(72vw, 460px) !important;
+    width: max-content !important;
+    padding: 5px 8px !important;
+    background: #0b1519d9 !important;
+    border: 1px solid #c5a46869;
+    border-radius: 10px;
+    overflow-x: auto !important;
+    overflow-y: hidden !important;
+    scrollbar-width: none;
+    z-index: 54 !important;
+    touch-action: pan-x !important;
+  }
+  .hud-body:has(> .hud-buff.hud-keep-glow)::-webkit-scrollbar { display:none; }
+  .hud-body:has(> .hud-buff.hud-keep-glow) > .hud-buff { flex: 0 0 auto !important; }
+  .local-mobile-menu:not([open]) > summary {font-size: 13px;}
+}
+@media (max-width: 740px) and (orientation: landscape) {
+  .hud-body:has(> .hud-buff.hud-keep-glow) { max-width: 48vw !important; }
+  .local-mobile-menu > .local-controls { max-height: 70dvh; }
+}

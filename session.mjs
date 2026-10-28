@@ -3475,6 +3475,7 @@ function mountLocalMenu() {
   menu.append(caption);
   const charactersButton = document.createElement("button");
   charactersButton.textContent = "Personagens";
+  charactersButton.classList.add("mobile-duplicate-action");
   async function leaveCharacter(logoutAccount = false) {
     // Use the same fully flushed exit flow as the in-game chat commands.
     // Never navigate before the final character save completes.
@@ -3513,6 +3514,7 @@ function mountLocalMenu() {
   ]) {
     const button = document.createElement("button");
     button.textContent = label;
+    button.classList.add("mobile-duplicate-action");
     button.onclick = () => {
       if (compactMedia.matches) compact.open = false;
       const windows = globalThis.__localSession.ui.windows;
