@@ -760,6 +760,91 @@
       body.roster-cinematic .character-art-main .roster-native-portrait {height:min(73vh,660px);filter:drop-shadow(0 20px 24px #0009)}
       body.roster-cinematic .selected-hero-badge {bottom:313px}
       @media(max-width:760px){body.roster-cinematic .character-card{flex-basis:102px;height:151px}body.roster-cinematic .character-miniature{height:98px}body.roster-cinematic .selected-hero-badge{bottom:282px}}
+      /* Single hero carousel: the original native 3D portrait remains center
+         stage, while the old thumbnail strip is replaced by two calm controls. */
+      body.roster-cinematic #character-list {
+        position:static!important;
+        transform:none!important;
+        display:contents!important;
+        background:none!important;
+        border:0!important;
+        overflow:visible!important;
+        padding:0!important;
+        width:auto!important;
+        height:auto!important;
+      }
+      body.roster-cinematic .roster-arrow {
+        position:fixed;
+        z-index:1000;
+        top:48%;
+        transform:translateY(-50%);
+        display:grid;
+        place-items:center;
+        width:clamp(56px,5.5vw,82px);
+        height:clamp(65px,7vw,92px);
+        padding:0 0 7px;
+        border:1px solid #e8ca865c;
+        border-radius:17px;
+        background:linear-gradient(140deg,#1b302ba6,#0b1718d9);
+        color:#f6ddb0;
+        font:300 clamp(55px,6vw,81px)/1 Georgia,serif;
+        box-shadow:0 8px 28px #0007,inset 0 1px #ffffff20;
+        backdrop-filter:blur(12px);
+        cursor:pointer;
+        transition:background .15s,border-color .15s,transform .15s;
+      }
+      body.roster-cinematic .roster-arrow-prev {left:clamp(14px,11vw,200px)}
+      body.roster-cinematic .roster-arrow-next {right:clamp(14px,11vw,200px)}
+      body.roster-cinematic .roster-arrow:not(:disabled):hover,
+      body.roster-cinematic .roster-arrow:focus-visible {
+        transform:translateY(-50%) scale(1.06);
+        border-color:#ffe3a6;
+        background:linear-gradient(145deg,#3b4c3eb8,#182824ef);
+        outline:2px solid #e8ca8666;
+        outline-offset:3px;
+      }
+      body.roster-cinematic .roster-arrow:disabled {opacity:.25;cursor:default}
+      body.roster-cinematic .roster-position {
+        position:fixed;
+        z-index:100;
+        bottom:132px;
+        left:50%;
+        transform:translateX(-50%);
+        display:flex;
+        flex-direction:column;
+        align-items:center;
+        gap:5px;
+        min-width:235px;
+        padding:9px 22px;
+        border:1px solid #cfb47a48;
+        border-radius:12px;
+        background:linear-gradient(135deg,#0c1817cc,#172621aa);
+        box-shadow:0 8px 23px #0007;
+        backdrop-filter:blur(9px);
+        pointer-events:none;
+      }
+      body.roster-cinematic .roster-position-count {
+        color:#f8dca3;
+        font:700 17px/1.2 Georgia,serif;
+        letter-spacing:.24em;
+      }
+      body.roster-cinematic .roster-position-hint {
+        font:11px Arial,sans-serif;
+        color:#ded6bd;
+        text-align:center;
+      }
+      body.roster-cinematic .selected-hero-badge {bottom:235px}
+      body.roster-cinematic .character-art-main .roster-native-portrait {
+        height:min(77vh,690px);
+        max-width:95%;
+      }
+      @media(max-width:760px){
+        body.roster-cinematic .roster-arrow {top:49%;width:48px;height:63px;font-size:55px;border-radius:12px}
+        body.roster-cinematic .roster-arrow-prev {left:8px}
+        body.roster-cinematic .roster-arrow-next {right:8px}
+        body.roster-cinematic .roster-position {bottom:124px;min-width:190px}
+        body.roster-cinematic .selected-hero-badge {bottom:218px}
+      }
       @media (prefers-reduced-motion: reduce) {
         * {
           transition: none !important;
