@@ -1,3 +1,4 @@
+import {characterPortrait} from './login-portrait.mjs';
 const $ = (selector) => document.querySelector(selector);
 let account, roster, selected, deleting;
 const skills = new Map();
@@ -62,68 +63,22 @@ function icon(job) {
   };
   return img;
 }
-// Each preview iframe is created once. Switching between visited characters
-// only toggles its visibility; the original WebGL game does not boot again.
-const previewFrames = new Map();
-function clearPreviewCache(){
-  for(const entry of previewFrames.values()){
-    entry.frame.remove();
-    entry.loading.remove();
-  }
-  previewFrames.clear();
-}
-function previewFor(character,stage) {
-  let entry=previewFrames.get(character.job);
-  if (entry) return entry;
-  const frame=node("iframe",undefined,"character-model-frame");
-  frame.title="Modelo 3D original de "+character.name;
-  frame.loading="eager";
-  frame.setAttribute("aria-label","Personagem 3D; arraste para girar");
-  frame.dataset.job=character.job;
-  const loading=node("p","Preparando visualização 3D…","model-loading muted");
-  frame.addEventListener("load",()=>{
-    if(!entry.ready)loading.textContent="Carregando modelo pela primeira vez…";
-  });
-  entry={frame,loading,ready:false};
-  // Mount before setting src so the navigation is done only once.
-  stage.append(loading,frame);
-  frame.src="/jogar?classe="+encodeURIComponent(character.job)+"&rosterPreview=1";
-  previewFrames.set(character.job,entry);
-  return entry;
-}
-window.addEventListener("message",event=>{
-  if(event.origin!==location.origin||event.data?.type!=="vellum-roster-preview")return;
-  const entry=previewFrames.get(Number(event.data.job));
-  if(!entry||entry.frame.contentWindow!==event.source)return;
-  entry.ready=true;
-  entry.loading.hidden=true;
-  entry.frame.dataset.ready="true";
-});
+// Instant character selection: no iframe, no 3D engine, no asset request.
+// Illustrated portraits are built synchronously in the current document.
+function clearPreviewCache() {}
 function detail(){
   const panel=$("#character-detail");
-  let stage=panel.querySelector(".character-model-stage");
-  if(!stage){
-    stage=node("div",undefined,"character-model-stage");
-    panel.prepend(stage);
-  }
-  // Preserve mounted iframes and WebGL contexts while replacing only labels.
-  for(const child of [...panel.children])if(child!==stage)child.remove();
+  panel.replaceChildren();
   if(!selected){
-    for(const entry of previewFrames.values()){entry.frame.hidden=true;entry.loading.hidden=true;}
-    panel.append(node("span","SEU PRÓXIMO CAPÍTULO","eyebrow"),
-      node("h2","Encontre seu herói."),
+    panel.append(node("h2","Encontre seu herói."),
       node("p","Crie um personagem para começar.","muted"));
     return;
   }
   const type=roster.classes.find(c=>c.job===selected.job);
-  const current=previewFor(selected,stage);
-  for(const [job,entry] of previewFrames){
-    const active=job===selected.job;
-    entry.frame.hidden=!active;
-    entry.loading.hidden=!active||entry.ready;
-  }
-  panel.append(icon(selected.job),
-    node("span",type.tribe,"eyebrow"),
+  const stage=node("div",undefined,"character-model-stage");
+  stage.append(characterPortrait(selected.job));
+  panel.append(stage);
+  panel.append(icon(selected.job),node("span",type.tribe,"eyebrow"),
     node("h2",selected.name),
     node("p",descriptions[selected.job-1],"muted"));
   const dl=node("dl");
@@ -132,31 +87,24 @@ function detail(){
     ["Status",selected.online?"Em jogo":"Disponível"],["Conta",account.username]
   ]){
     const group=node("div");
-    group.append(node("dt",label),node("dd",value));
-    dl.append(group);
+    group.append(node("dt",label),node("dd",value));dl.append(group);
   }
   panel.append(dl);
   const play=node("button","Entrar no mundo","primary");
   play.id="play-character";
-  play.onclick=()=>{
-    play.disabled=true;
-    location.assign("/jogar?classe="+selected.job);
-  };
+  play.onclick=()=>{play.disabled=true;location.assign("/jogar?classe="+selected.job);};
   const remove=node("button","Excluir personagem","quiet danger");
   remove.id="delete-character";
   remove.disabled=selected.online;
   remove.onclick=()=>{
     deleting={...selected};
-    $("#delete-form").reset();
-    $("#delete-form .status").textContent="";
-    $("#delete-description").textContent=
-      `Você está excluindo ${deleting.name}, ${type.name} nível ${deleting.level}. Esta ação não pode ser desfeita.`;
+    $("#delete-form").reset();$("#delete-form .status").textContent="";
+    $("#delete-description").textContent=`Você está excluindo ${deleting.name}, ${type.name} nível ${deleting.level}. Esta ação não pode ser desfeita.`;
     $("#delete-dialog").showModal();
   };
   panel.append(play,remove);
   if(selected.online)panel.append(node("p",
-    "Saia deste personagem antes de excluí-lo. Se fechou a aba do jogo, aguarde 12 segundos e atualize.",
-    "form-note"));
+    "Saia deste personagem antes de excluí-lo. Se fechou a aba do jogo, aguarde 12 segundos e atualize.","form-note"));
 }
 function render() {
   $("#entry").hidden = true;
@@ -169,13 +117,6 @@ function render() {
     `${roster.characters.length} de ${roster.limit} personagens · Um de cada classe`;
   $("#new-character").disabled = roster.characters.length >= roster.limit;
   const list = $("#character-list");
-  for(const [job,entry] of previewFrames){
-    if(!roster.characters.some(c=>c.job===job)){
-      entry.frame.remove();
-      entry.loading.remove();
-      previewFrames.delete(job);
-    }
-  }
   list.replaceChildren();
   if (!roster.characters.length) {
     const empty = node("div", undefined, "empty");
@@ -191,19 +132,9 @@ function render() {
     const card = node("button", undefined, "character-card");
     card.dataset.job = character.job;
     card.setAttribute("aria-pressed", String(selected?.job === character.job));
-    // Background characters use the same real 3D preview, scaled down.
-    // Reuse the selected hero's large scene without changing account state.
-    if (selected?.job !== character.job) {
-      const miniature = node("span", undefined, "character-miniature");
-      const miniFrame = node("iframe", undefined, "character-miniature-frame");
-      miniFrame.title = "Modelo de " + character.name;
-      miniFrame.loading = "lazy";
-      miniFrame.tabIndex = -1;
-      miniFrame.setAttribute("aria-hidden", "true");
-      miniFrame.src = "/jogar?classe=" + encodeURIComponent(character.job) + "&rosterPreview=1";
-      miniature.append(miniFrame);
-      card.append(miniature);
-    }
+    const miniature = node("span",undefined,"character-miniature");
+    miniature.append(characterPortrait(character.job,{mini:true}));
+    card.append(miniature);
     card.append(
       icon(character.job),
       node("small", type.tribe.toUpperCase()),
@@ -211,16 +142,6 @@ function render() {
       node("span", `${type.name} · Nível ${character.level}`),
     );
     if (character.online) card.append(node("span", "● Em jogo", "online"));
-    // Warm the destination scene while the pointer approaches its card.
-    // This is speculative only for the hovered character, not all 11 at once.
-    card.addEventListener("pointerenter", () => {
-      const stage = document.querySelector(".character-model-stage");
-      if(stage && character.job!==selected?.job && !previewFrames.has(character.job)){
-        const entry=previewFor(character,stage);
-        entry.frame.hidden=true;
-        entry.loading.hidden=true;
-      }
-    },{passive:true});
     card.onclick = () => {
       if (selected?.job === character.job) return;
       selected = character;
