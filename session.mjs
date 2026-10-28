@@ -455,7 +455,8 @@ function equipEndgame() {
           (b.damage?.[3] ?? b.defense?.[1] ?? b.price ?? 0) -
             (a.damage?.[3] ?? a.defense?.[1] ?? a.price ?? 0),
       )[0];
-  const weaponPrefix = starterWeapon.slice(0, 3);
+  const weaponPrefix = String(starterWeapon ?? '').slice(0, 3);
+  if (!weaponPrefix) throw Error('Classe sem arma inicial configurada.');
   const weapon = [...definitions.values()]
     .filter((d) => d.code.startsWith(weaponPrefix) && d.damage && d.req?.level > 0)
     .sort((a, b) => b.req.level - a.req.level || b.damage[3] - a.damage[3])[0];
@@ -3395,7 +3396,9 @@ try {
   document.body.dataset.localReady = "true";
 } catch (error) {
   console.error("[local boot]", error);
-  loading.setStatus("Falha ao abrir o cliente original: " + error.message);
+  const detail = String(error?.stack ?? '').split('\n').slice(0, 4).join(' | ');
+  recordDiagnostic('Falha ao abrir cliente: ' + detail);
+  loading.setStatus('Falha ao abrir o cliente original: ' + error.message + (detail ? ' | ' + detail : ''));
   document.body.dataset.localError = error.message;
 }
 
