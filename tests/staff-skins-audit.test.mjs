@@ -37,8 +37,11 @@ test('Shaman phantom is a two-hand combat weapon and cannot pair with a shield',
 });
 test('premium store exposes integrated 3D skin catalog',async()=>{
  const premium=await load('premium-shop.mjs');
- assert.match(premium,/Skins 3D/);
- assert.match(premium,/ctx\.openSkins\(skinsHost\)/);
+ assert.match(premium,/ft-native-shop/);
+ assert.match(premium,/"Premiums"/);
+ assert.match(premium,/"Skins"/);
+ assert.match(premium,/renderSapphireItemIcons\(ctx\.B/);
+ assert.match(premium,/ctx\.itemImage/);
  assert.match(shop,/preview\(skin, card\)/);
  assert.match(skin,/skin\.customModel==='vambrace'/);
 });
