@@ -143,7 +143,11 @@ class Handler(SimpleHTTPRequestHandler):
 
     def end_headers(self):
         # The original client cannot connect to production accounts or sockets.
-        self.send_header('Content-Security-Policy', "default-src 'self'; script-src 'self' 'wasm-unsafe-eval'; connect-src 'self'; img-src 'self' data: blob:; media-src 'self' data: blob:; style-src 'self' 'unsafe-inline'; font-src 'self' data:; worker-src 'self' blob:; frame-src 'none'; object-src 'none'; base-uri 'self'; form-action 'self'")
+        # Character roster embeds the same-origin 3D preview client.
+        # Other pages must continue to deny iframe embedding.
+        allow_roster_frame = self.path.split('?', 1)[0].rstrip('/') in ('', '/personagens')
+        frame_policy = "'self'" if allow_roster_frame else "'none'"
+        self.send_header('Content-Security-Policy', "default-src 'self'; script-src 'self' 'wasm-unsafe-eval'; connect-src 'self'; img-src 'self' data: blob:; media-src 'self' data: blob:; style-src 'self' 'unsafe-inline'; font-src 'self' data:; worker-src 'self' blob:; frame-src " + frame_policy + "; object-src 'none'; base-uri 'self'; form-action 'self'")
         self.send_header('X-Content-Type-Options', 'nosniff')
         super().end_headers()
 

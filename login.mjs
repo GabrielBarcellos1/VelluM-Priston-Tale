@@ -116,7 +116,12 @@ window.addEventListener('message',event=>{
   const frame=[...document.querySelectorAll('.roster-native-frame')].find(f=>f.contentWindow===event.source);
   if(!frame || Number(frame.dataset.job)!==Number(event.data.job))return;
   frame.classList.add('roster-native-ready');
-  sendRosterMotion(frame,frame.closest('.roster-transition-exit')?'walk':'stand');
+  const stage=frame.closest('.character-model-stage');
+  const entering=stage?.classList.contains('roster-enter-next') || stage?.classList.contains('roster-enter-previous');
+  if(entering && performance.now()-(Number(stage.dataset.enteredAt)||0)<520){
+    sendRosterMotion(frame,'walk');
+    setTimeout(()=>{if(frame.isConnected)sendRosterMotion(frame,'stand');},520);
+  } else sendRosterMotion(frame,'stand');
 });
 function detail(direction=0){
   const panel=$("#character-detail");
@@ -148,6 +153,7 @@ function detail(direction=0){
   hero.append(rosterPortrait(selected.job),nativeRosterFrame(selected));
   stage.append(hero);
   if(direction){
+    stage.dataset.enteredAt=String(performance.now());
     stage.classList.add(direction>0?"roster-enter-next":"roster-enter-previous");
   }
   panel.append(stage);
