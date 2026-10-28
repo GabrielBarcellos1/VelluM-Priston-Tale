@@ -138,8 +138,9 @@ async function refreshWallet() {
 }
 async function showShop(initialTab = "premium") {
   game?.keys.clear();
-  await refreshWallet();
-  openPremiumShop({
+  // The wallet was loaded at session boot. Show the shop immediately instead
+  // of blocking its opening on a potentially slow wallet refresh.
+  const dialog = openPremiumShop({
     wallet: () => wallet,
     serverNow,
     refresh: refreshWallet,
@@ -159,6 +160,9 @@ async function showShop(initialTab = "premium") {
       return result;
     },
   });
+  refreshWallet()
+    .then(() => dialog.dispatchEvent(new Event("walletRefresh")))
+    .catch(error => dialog.dispatchEvent(new CustomEvent("walletRefreshError", {detail:error.message})));
 }
 const [fieldData, wikiData, itemData, questData, spawnData, dropRules, skillData,npcStageData,mapLinks] =
   await Promise.all([
