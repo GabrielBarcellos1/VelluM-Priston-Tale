@@ -668,6 +668,89 @@
           right: 7px; bottom: 12px; padding: 4px; font-size: 9px;
         }
       }
+      /* Cinematic polish, without animated 3D or additional requests. */
+      body.roster-cinematic::before {
+        background: linear-gradient(90deg,#030a0c88 0%,#03090a14 28%,#04090d0a 70%,#020a0a44 100%),
+                    linear-gradient(180deg,#07120eb5 0%,#0d180c05 26%,#050c0a1c 57%,#050c0ae5 100%);
+      }
+      body.roster-cinematic .title-row h1 {
+        text-shadow:0 3px 20px #000a;
+        letter-spacing:-.045em;
+      }
+      body.roster-cinematic .character-model-stage::after {
+        content:"";
+        position:absolute;
+        left:50%;bottom:20%;
+        width:min(65vw,520px);height:80px;
+        transform:translateX(-50%);
+        border-radius:50%;
+        background:radial-gradient(ellipse,#e5cb8752 0%,#e5cb871b 38%,transparent 75%);
+        filter:blur(13px);
+        z-index:0;
+      }
+      body.roster-cinematic .character-model-stage .character-art-main {z-index:1}
+      body.roster-cinematic .selected-hero-badge {
+        position:fixed!important;
+        z-index:10!important;
+        bottom:312px;left:50%;
+        transform:translateX(-50%);
+        display:flex;flex-direction:column;align-items:center;gap:5px;
+        min-width:220px;max-width:min(80vw,430px);
+        padding:9px 26px 12px;
+        border:1px solid #d7b77455;
+        border-radius:14px;
+        background:linear-gradient(155deg,#0d1b1ccc,#162725aa);
+        box-shadow:0 8px 28px #0006,inset 0 1px #eed7a125;
+        backdrop-filter:blur(9px);
+        text-align:center;
+        pointer-events:none;
+      }
+      body.roster-cinematic .selected-hero-badge small {
+        color:#bfa779;font:600 10px Arial,sans-serif;
+        letter-spacing:.21em;
+      }
+      body.roster-cinematic .selected-hero-badge strong {
+        color:#f5dfad;font:700 clamp(19px,2vw,27px) Georgia,serif;
+        overflow:hidden;text-overflow:ellipsis;white-space:nowrap;max-width:100%;
+      }
+      body.roster-cinematic .selected-hero-badge span {
+        color:#d9dfd7;font:12px Arial,sans-serif;
+      }
+      body.roster-cinematic .character-card {
+        border:1px solid #c9b47a77;
+        background:linear-gradient(180deg,#1c292814 10%,#0a1212bb 84%);
+        box-shadow:0 6px 15px #0007;
+        transition:border-color .13s ease,background .13s ease,filter .13s ease;
+      }
+      body.roster-cinematic .character-card:hover,
+      body.roster-cinematic .character-card:focus-visible {
+        border-color:#f3d398;
+        background:linear-gradient(180deg,#27382c55,#17201cdb);
+        outline:2px solid #e9ca7433;
+        outline-offset:2px;
+      }
+      body.roster-cinematic .character-card[aria-pressed="true"] {
+        border-color:#ffdf96;
+        box-shadow:0 0 0 1px #f4cf8b88,0 0 23px #e8c17e33;
+      }
+      body.roster-cinematic .detail > #play-character {
+        border-radius:11px;
+        background:linear-gradient(150deg,#f4d99d,#cda05c);
+        border:1px solid #ffe5b0;
+        color:#222017;
+        box-shadow:0 9px 28px #0008,0 2px 0 #fff4 inset;
+        transition:filter .13s ease,box-shadow .13s ease;
+      }
+      body.roster-cinematic .detail > #play-character:hover {
+        filter:brightness(1.11);
+        box-shadow:0 9px 33px #0009,0 0 20px #efc77977;
+      }
+      @media(max-width:760px) {
+        body.roster-cinematic .selected-hero-badge {bottom:310px;padding:7px 16px;min-width:160px}
+        body.roster-cinematic .selected-hero-badge strong {font-size:18px}
+        body.roster-cinematic .selected-hero-badge small {font-size:8px}
+        body.roster-cinematic .selected-hero-badge span {font-size:10px}
+      }
       @media (prefers-reduced-motion: reduce) {
         * {
           transition: none !important;
