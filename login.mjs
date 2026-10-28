@@ -111,7 +111,7 @@ function detail(){
   const stage=node("div",undefined,"character-model-stage");
   const ranked=rankedCharacters(),index=ranked.findIndex(c=>c.job===selected.job);
   if(ranked.length>1){
-    for(const [offset,cls] of [[-1,"side-previous"],[1,"side-next"]]){
+    for(const [offset,cls] of [[-1,"roster-side-previous"],[1,"roster-side-next"]]){
       const other=ranked[(index+offset+ranked.length)%ranked.length];
       if(other.job===selected.job)continue;
       const side=node("button",undefined,"roster-side-hero "+cls);
