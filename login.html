@@ -922,6 +922,63 @@
         body.roster-cinematic .selected-hero-badge{bottom:115px;min-width:200px}
         body.roster-cinematic .roster-position{bottom:77px}
       }
+      /* Walk-in / walk-out effect uses already decoded transparent portraits.
+         No new WebGL scenes, requests, or character asset loads. */
+      body.roster-cinematic .character-model-stage.roster-transition-exit {
+        z-index:5!important;pointer-events:none!important;
+      }
+      body.roster-cinematic .roster-transition-exit .roster-side-hero {
+        opacity:0!important;pointer-events:none!important;
+      }
+      body.roster-cinematic .roster-exit-next .roster-center-hero {
+        animation:rosterWalkToLeft .52s cubic-bezier(.35,0,.7,1) both;
+      }
+      body.roster-cinematic .roster-exit-previous .roster-center-hero {
+        animation:rosterWalkToRight .52s cubic-bezier(.35,0,.7,1) both;
+      }
+      body.roster-cinematic .roster-enter-next .roster-center-hero {
+        animation:rosterWalkFromRight .52s cubic-bezier(.18,.7,.28,1) both;
+      }
+      body.roster-cinematic .roster-enter-previous .roster-center-hero {
+        animation:rosterWalkFromLeft .52s cubic-bezier(.18,.7,.28,1) both;
+      }
+      body.roster-cinematic .roster-enter-next .roster-side-hero,
+      body.roster-cinematic .roster-enter-previous .roster-side-hero {
+        animation:rosterSideReveal .46s ease-out both;
+      }
+      @keyframes rosterWalkToLeft {
+        0% {transform:translateX(0) scale(1);opacity:1}
+        45% {transform:translateX(-13%) translateY(-7px) scale(.85);opacity:.9}
+        100% {transform:translateX(-30%) translateY(2px) scale(.65);opacity:0}
+      }
+      @keyframes rosterWalkToRight {
+        0% {transform:translateX(0) scale(1);opacity:1}
+        45% {transform:translateX(13%) translateY(-7px) scale(.85);opacity:.9}
+        100% {transform:translateX(30%) translateY(2px) scale(.65);opacity:0}
+      }
+      @keyframes rosterWalkFromRight {
+        0% {transform:translateX(32%) translateY(3px) scale(.64);opacity:.24}
+        48% {transform:translateX(13%) translateY(-8px) scale(.85);opacity:.86}
+        100% {transform:translateX(0) scale(1);opacity:1}
+      }
+      @keyframes rosterWalkFromLeft {
+        0% {transform:translateX(-32%) translateY(3px) scale(.64);opacity:.24}
+        48% {transform:translateX(-13%) translateY(-8px) scale(.85);opacity:.86}
+        100% {transform:translateX(0) scale(1);opacity:1}
+      }
+      @keyframes rosterSideReveal {
+        from {opacity:0} to {opacity:.86}
+      }
+      @media (prefers-reduced-motion:reduce) {
+        body.roster-cinematic .roster-enter-next .roster-center-hero,
+        body.roster-cinematic .roster-enter-previous .roster-center-hero,
+        body.roster-cinematic .roster-transition-exit .roster-center-hero,
+        body.roster-cinematic .roster-enter-next .roster-side-hero,
+        body.roster-cinematic .roster-enter-previous .roster-side-hero {
+          animation:none!important;
+        }
+        body.roster-cinematic .roster-transition-exit {display:none!important}
+      }
       @media (prefers-reduced-motion: reduce) {
         * {
           transition: none !important;
