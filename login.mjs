@@ -96,9 +96,28 @@ function icon(job) {
   };
   return img;
 }
-// Instant character selection: no iframe, no 3D engine, no asset request.
-// Illustrated portraits are built synchronously in the current document.
+// Native game previews are loaded only for the selected character. The portrait
+// remains visible until the original client reports its animated actor ready.
 function clearPreviewCache() {}
+function nativeRosterFrame(character){
+  const frame=node('iframe',undefined,'character-model-frame roster-native-frame');
+  frame.title='Personagem 3D: '+character.name;
+  frame.loading='eager';
+  frame.setAttribute('allow','autoplay');
+  frame.src='/jogar?classe='+encodeURIComponent(character.job)+'&rosterPreview=1';
+  frame.dataset.job=String(character.job);
+  return frame;
+}
+function sendRosterMotion(frame,motion){
+  if(frame?.contentWindow)frame.contentWindow.postMessage({type:'vellum-roster-motion',motion},location.origin);
+}
+window.addEventListener('message',event=>{
+  if(event.origin!==location.origin || event.data?.type!=='vellum-roster-preview' || !event.data.ready)return;
+  const frame=[...document.querySelectorAll('.roster-native-frame')].find(f=>f.contentWindow===event.source);
+  if(!frame || Number(frame.dataset.job)!==Number(event.data.job))return;
+  frame.classList.add('roster-native-ready');
+  sendRosterMotion(frame,frame.closest('.roster-transition-exit')?'walk':'stand');
+});
 function detail(direction=0){
   const panel=$("#character-detail");
   // Preserve only the currently visible stage when switching rapidly.
@@ -126,12 +145,19 @@ function detail(direction=0){
     }
   }
   const hero=node("div",undefined,"roster-center-hero");
-  hero.append(rosterPortrait(selected.job));
+  hero.append(rosterPortrait(selected.job),nativeRosterFrame(selected));
   stage.append(hero);
   if(direction){
     stage.classList.add(direction>0?"roster-enter-next":"roster-enter-previous");
   }
   panel.append(stage);
+  if(direction){
+    const nextFrame=stage.querySelector('.roster-native-frame');
+    const oldFrame=previousStage?.querySelector('.roster-native-frame');
+    sendRosterMotion(oldFrame,'walk');
+    sendRosterMotion(nextFrame,'walk');
+    setTimeout(()=>sendRosterMotion(nextFrame,'stand'),540);
+  }
   if(previousStage){
     previousStage.className="character-model-stage roster-transition-exit "+
       (direction>0?"roster-exit-next":"roster-exit-previous");

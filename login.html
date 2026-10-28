@@ -922,6 +922,13 @@
         body.roster-cinematic .selected-hero-badge{bottom:115px;min-width:200px}
         body.roster-cinematic .roster-position{bottom:77px}
       }
+      /* Original 3D actor overlays the static fallback only after it is ready. */
+      body.roster-cinematic .roster-center-hero .roster-native-frame {
+        position:absolute;inset:0;width:100%;height:100%;z-index:4;
+        border:0;pointer-events:none;opacity:0;background:transparent;
+      }
+      body.roster-cinematic .roster-center-hero .roster-native-frame.roster-native-ready {opacity:1}
+      body.roster-cinematic .roster-center-hero:has(.roster-native-ready) > .character-art-main {opacity:0}
       /* Walk-in / walk-out effect uses already decoded transparent portraits.
          No new WebGL scenes, requests, or character asset loads. */
       body.roster-cinematic .character-model-stage.roster-transition-exit {
