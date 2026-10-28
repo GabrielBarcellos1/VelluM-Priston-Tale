@@ -21,8 +21,9 @@ export function openPremiumShop(ctx) {
   const tabs=el("nav","ft-native-tabs");
   const premiumTab=el("button","ft-native-tab","Premiums");
   const skinsTab=el("button","ft-native-tab","Skins");
-  premiumTab.type=skinsTab.type="button";
-  tabs.append(premiumTab,skinsTab);
+  const costumesTab=el("button","ft-native-tab","Trajes");
+  premiumTab.type=skinsTab.type=costumesTab.type="button";
+  tabs.append(premiumTab,skinsTab,costumesTab);
   const body=el("div","ft-native-body");
   const inventory=el("section","ft-native-inventory");
   inventory.setAttribute("aria-label","Itens da loja");
@@ -54,13 +55,22 @@ export function openPremiumShop(ctx) {
   dialog.append(heading,tabs,body,footer,previewHost);
   document.body.append(dialog);
   dialog.showModal();
-  let tab=ctx.initialTab==="skins"?"skins":"premium";
+  let tab=["premium","skins","costume"].includes(ctx.initialTab)?ctx.initialTab:"premium";
   let selectedId=null,busy=false,disposed=false,renderingIcons=false;
   const skinIcons=new Map();
+  let kitIcon=null;
   let iconRun=0;
   const skinShop=()=>ctx.skins?.();
   const snapshot=()=>skinShop()?.snapshot;
-  const currentItems=()=>tab==="skins"?(snapshot()?.catalog??[]):(ctx.wallet()?.catalog??[]);
+  // Legacy 3/24/48/72h effects are retained server-side for existing owners,
+  // but the storefront only shows the individually purchasable Item Shop range.
+  const currentItems=()=>{
+    if(tab==="skins")return snapshot()?.catalog??[];
+    const products=ctx.wallet()?.catalog??[];
+    return products.filter(item=>tab==="costume"
+      ? item.category==="costume"||item.kind==="costume"
+      : item.category==="premium"||item.category==="items"||item.kind==="item");
+  };
   const itemKey=(item)=>tab==="skins"?item.id:item.code;
   const formatCoins=(v)=>Number(v??0).toLocaleString("pt-BR");
   const owned=(skin)=>!!snapshot()?.owned?.includes(skin.id);
@@ -68,12 +78,17 @@ export function openPremiumShop(ctx) {
   const itemIcon=(item,kind=tab)=>{
     if(kind==="skins")return skinIcons.get(item.id)||
       (ctx.itemImage?.(item.look)?"/assets/"+ctx.itemImage(item.look):"");
-    return item.icon?"/assets/"+item.icon:"";
+    if(item.code==="BI900")return kitIcon??"";
+    return item.icon?"/assets/"+item.icon:(ctx.itemImage?.(item.code)?"/assets/"+ctx.itemImage(item.code):"");
   };
   function image(item,kind=tab){
     const src=itemIcon(item,kind);
     const img=el("img","ft-native-item-art");
     if(src)img.src=src;
+    else if(item.code==="BI900") {
+      img.alt="Kit Up — conjunto de itens premium";
+      img.classList.add("ft-native-kit-loading");
+    }
     img.alt=item.name;
     img.loading="lazy";
     img.onerror=()=>{img.style.visibility="hidden";};
@@ -132,21 +147,64 @@ export function openPremiumShop(ctx) {
       slot.setAttribute("aria-label",slot.title);
       if(selectedId===itemKey(item))slot.classList.add("selected");
       if(tab==="skins"&&owned(item))slot.classList.add("owned");
+      if(tab==="skins")slot.classList.add("ft-native-skin-slot");
+      if(tab==="costume")slot.classList.add("ft-native-costume-slot");
       slot.append(image(item));
+      if(item.code==="BI900"&&!kitIcon)slot.append(el("span","ft-native-kit-label","KIT"));
       if(tab==="skins"&&equipped(item))slot.append(el("span","ft-native-equipped","E"));
       slot.onclick=()=>{selectedId=itemKey(item);draw();};
       grid.append(slot);
     }
     // Keep the empty inventory squares visible, as in the classic shop.
-    for(let i=items.length;i<Math.max(81,Math.ceil(items.length/9)*9);i++){
-      const blank=el("div","ft-native-slot ft-native-slot-empty");
+    const cols=tab==="skins"?4:9;
+    const minSlots=tab==="skins"?Math.max(20,Math.ceil(items.length/cols)*cols):Math.max(81,Math.ceil(items.length/cols)*cols);
+    for(let i=items.length;i<minSlots;i++){
+      const blank=el("div","ft-native-slot ft-native-slot-empty"+(tab==="skins"?" ft-native-skin-slot":""));
       blank.setAttribute("aria-hidden","true");grid.append(blank);
     }
     empty.hidden=items.length>0;
+    grid.classList.toggle("ft-native-skins-grid",tab==="skins");
+    grid.classList.toggle("ft-native-costumes-grid",tab==="costume");
     premiumTab.setAttribute("aria-selected",String(tab==="premium"));
     skinsTab.setAttribute("aria-selected",String(tab==="skins"));
+    costumesTab.setAttribute("aria-selected",String(tab==="costume"));
+    caption.textContent=tab==="costume"?"Trajes":tab==="skins"?"Skins":"Miscellaneous";
     balance.textContent="Saldo: "+formatCoins(tab==="skins"?(snapshot()?.coins??ctx.wallet().coins):ctx.wallet().coins)+" coins";
     showDetails();
+  }
+
+  // Compose a distinct Kit Up inventory sprite from genuine Priston premium
+  // item art. No Fenix-only thumbnail and no external generated illustration.
+  async function buildKitIcon(){
+    if(kitIcon||disposed)return;
+    const codes=["BI133","BI901","BI906"];
+    const images=await Promise.all(codes.map(async code=>{
+      const item=ctx.wallet()?.catalog?.find(x=>x.code===code);
+      const src=item?.icon;
+      if(!src)return null;
+      return new Promise(resolve=>{
+        const img=new Image();
+        img.onload=()=>resolve(img);img.onerror=()=>resolve(null);
+        img.src="/assets/"+src;
+      });
+    }));
+    if(disposed)return;
+    const canvas=document.createElement("canvas");canvas.width=96;canvas.height=96;
+    const g=canvas.getContext("2d");
+    if(!g)return;
+    const fill=g.createLinearGradient(0,0,96,96);
+    fill.addColorStop(0,"#a47c37");fill.addColorStop(.5,"#3b2816");fill.addColorStop(1,"#9a6a28");
+    g.fillStyle=fill;g.fillRect(0,0,96,96);
+    g.strokeStyle="#efc46d";g.lineWidth=3;g.strokeRect(3,3,90,90);
+    g.fillStyle="#181b1b";g.fillRect(8,8,80,64);
+    g.strokeStyle="#b68d49";g.lineWidth=1;g.strokeRect(8,8,80,64);
+    const positions=[[8,13,46,46],[49,13,34,34],[49,44,34,28]];
+    images.forEach((img,i)=>{if(img){const [x,y,w,h]=positions[i];g.drawImage(img,x,y,w,h);}});
+    g.fillStyle="#d8b86b";g.fillRect(8,75,80,15);
+    g.fillStyle="#26170d";g.font="bold 14px Georgia";g.textAlign="center";
+    g.fillText("KIT UP",48,87);
+    kitIcon=canvas.toDataURL("image/png");
+    draw();
   }
   async function loadSkins(){
     const run=++iconRun;
@@ -175,6 +233,7 @@ export function openPremiumShop(ctx) {
   }
   premiumTab.onclick=()=>selectTab("premium");
   skinsTab.onclick=()=>selectTab("skins");
+  costumesTab.onclick=()=>selectTab("costume");
   buy.onclick=async()=>{
     if(busy)return;
     const item=selectedItem();if(!item)return;
@@ -209,9 +268,10 @@ export function openPremiumShop(ctx) {
       },{once:true});
     }catch(error){notify(error.message);previewHost.hidden=true;}
   };
-  dialog.addEventListener("walletRefresh",draw);
+  dialog.addEventListener("walletRefresh",()=>{draw();buildKitIcon();});
   dialog.addEventListener("walletRefreshError",e=>notify(e.detail));
   draw();
+  buildKitIcon();
   if(tab==="skins")loadSkins();
   const timer=setInterval(async()=>{
     if(disposed||document.hidden||busy)return;
