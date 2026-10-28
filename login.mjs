@@ -109,10 +109,33 @@ function detail(){
   }
   const type=roster.classes.find(c=>c.job===selected.job);
   const stage=node("div",undefined,"character-model-stage");
-  stage.append(rosterPortrait(selected.job));
+  const ranked=rankedCharacters(),index=ranked.findIndex(c=>c.job===selected.job);
+  if(ranked.length>1){
+    for(const [offset,cls] of [[-1,"side-previous"],[1,"side-next"]]){
+      const other=ranked[(index+offset+ranked.length)%ranked.length];
+      if(other.job===selected.job)continue;
+      const side=node("button",undefined,"roster-side-hero "+cls);
+      side.type="button";side.title="Selecionar "+other.name;
+      side.setAttribute("aria-label","Selecionar "+other.name);
+      side.append(rosterPortrait(other.job));
+      side.onclick=()=>{selected=other;detail();updatePosition();};
+      stage.append(side);
+    }
+  }
+  const hero=node("div",undefined,"roster-center-hero");
+  hero.append(rosterPortrait(selected.job));
+  stage.append(hero);
   panel.append(stage);
   const info=node('div',undefined,'selected-hero-badge');
   info.append(node('small','PERSONAGEM SELECIONADO'),node('strong',selected.name),node('span',type.name+' · Nível '+selected.level));
+  const favorite=node("button",isFavorite(selected.job)?"★ Personagem padrão":"☆ Definir como padrão","roster-favorite");
+  favorite.type="button";
+  favorite.title="Escolher qual personagem aparece primeiro nesta conta neste navegador";
+  favorite.onclick=()=>{
+    try{localStorage.setItem(favoriteKey(),String(selected.job));}catch{}
+    detail();
+  };
+  info.append(favorite);
   panel.append(info);
   panel.append(node("span",type.tribe,"eyebrow"),
     node("h2",selected.name),
@@ -144,6 +167,11 @@ function detail(){
 }
 // Highest character level wins. Experience breaks ties without altering saves;
 // the original order breaks any remaining ties predictably.
+function favoriteKey(){return "vellum-roster-favorite:"+String(account?.username??"");}
+function favoriteJob(){
+  try{const value=Number(localStorage.getItem(favoriteKey()));return Number.isInteger(value)&&value>=1&&value<=11?value:null;}catch{return null;}
+}
+function isFavorite(job){return favoriteJob()===job;}
 function rankedCharacters(){
   return [...(roster?.characters??[])].sort((a,b)=>
     (Number(b.level)||0)-(Number(a.level)||0) ||
@@ -218,6 +246,7 @@ async function refresh(preferredJob = selected?.job) {
   roster = await api("/api/local/characters");
   selected =
     roster.characters.find((c) => c.job === preferredJob) ??
+    roster.characters.find(c=>c.job===favoriteJob()) ??
     rankedCharacters()[0];
   render();
 }
