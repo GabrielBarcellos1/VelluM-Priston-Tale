@@ -13,7 +13,7 @@ test('measured mage/shaman animations control real skillFx playback duration and
     measured++;
     for(let level=1;level<=10;level++){
       const expected=measuredSkillAnimation(code,level);
-      const job=code.startsWith('SKILL_DIASTROPHISM')||['SKILL_FLAME_WAVE','SKILL_DEAD_RAY','SKILL_M_METEO'].includes(code)?7:10;
+      const job=code.startsWith('SKILL_DIASTROPHISM')||['SKILL_FLAME_WAVE','SKILL_DEAD_RAY','SKILL_M_METEO'].includes(code)?7:code==='SKILL_DIVINE_PIERCING'?6:10;
       const timing=nativeSkillTiming(player,{code,job,kind:'aoe',level},'Test',{motionLoops:1},80);
       assert.ok(Math.abs(timing.duration-(expected??2))<1e-8,code+' level '+level);
       assert.equal(timing.hits.length,2);
@@ -21,7 +21,7 @@ test('measured mage/shaman animations control real skillFx playback duration and
       assert.ok(Math.abs(timing.hits[0]-timing.duration*.2)<1e-8,code);
     }
   }
-  assert.equal(measured,9);
+  assert.equal(measured,10);
   const loops=nativeSkillTiming(player,{code:'SKILL_FLAME_WAVE',job:7,kind:'aoe',level:10},'Test',{motionLoops:2});
   assert.ok(Math.abs(loops.duration-1.6)<1e-8);
   assert.equal(loops.hits.length,4);
