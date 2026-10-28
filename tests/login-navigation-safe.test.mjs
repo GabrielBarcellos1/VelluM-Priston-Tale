@@ -15,6 +15,12 @@ test('logout and switch account are separate actions',()=>{
  assert.match(session,/switchAccount\.onclick = \(\) => leaveCharacter\(true\)/);
  assert.match(login,/\$\("#entry"\)\.hidden = false/);
 });
+test('rapid character switching discards stale outgoing stages',()=>{
+ assert.match(login,/querySelector\("\.character-model-stage:not\(\.roster-transition-exit\)"\)/);
+ assert.match(login,/panel\.replaceChildren\(\)/);
+ assert.match(login,/previousStage\.className="character-model-stage roster-transition-exit /);
+});
+
 test('new character nick is editable and roster selection is visually highlighted',()=>{
  assert.match(login,/name\.readOnly = false/);
  assert.match(login,/name\.value = ""/);

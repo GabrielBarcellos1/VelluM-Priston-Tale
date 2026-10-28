@@ -101,8 +101,9 @@ function icon(job) {
 function clearPreviewCache() {}
 function detail(direction=0){
   const panel=$("#character-detail");
-  const previousStage=direction?panel.querySelector(".character-model-stage"):null;
-  if(previousStage)previousStage.remove();
+  // Preserve only the currently visible stage when switching rapidly.
+  // Old outgoing stages must not accumulate during repeated arrow presses.
+  const previousStage=direction?panel.querySelector(".character-model-stage:not(.roster-transition-exit)"):null;
   panel.replaceChildren();
   if(!selected){
     panel.append(node("h2","Encontre seu herói."),
