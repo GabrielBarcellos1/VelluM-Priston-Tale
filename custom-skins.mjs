@@ -74,3 +74,47 @@ export function openSapphirePreview(B,skin,host=null){
  const dispose=()=>{if(stopped)return;stopped=true;cancelAnimationFrame(frame);disposeSapphire(model);renderer.dispose();renderer.forceContextLoss();dialog.remove();};close.onclick=()=>{if(host)dispose();else dialog.close();};dialog.addEventListener('close',dispose,{once:true});
  return{dialog,dispose};
 }
+
+/**
+ * Make inventory-sized icons directly from the very same 3D meshes equipped
+ * in-game. Never substitute the old generated SVG illustrations.
+ * A single temporary WebGL context is shared by all items and disposed.
+ */
+export async function renderSapphireItemIcons(B,skins,onIcon){
+ const canvas=document.createElement('canvas');
+ const renderer=new B.WebGLRenderer({canvas,antialias:true,alpha:true,preserveDrawingBuffer:true});
+ renderer.setPixelRatio(1);renderer.setSize(112,128,false);
+ renderer.setClearColor(0,0);
+ const scene=new B.Scene();
+ ensureSkinLights(B,scene);
+ const camera=new B.PerspectiveCamera(35,112/128,.1,1000);
+ const cache=new Map();
+ try{
+  for(const skin of skins){
+   if(!skin.customModel)continue;
+   const key=skin.customModel+':'+skin.hands;
+   if(!cache.has(key)){
+    const mesh=createSapphireMesh(B,skin.customModel,skin.hands);
+    const bounds=mesh.userData.meshInfo.bounds;
+    const width=bounds[0][1]-bounds[0][0],height=bounds[1][1]-bounds[1][0];
+    const depth=bounds[2][1]-bounds[2][0];
+    mesh.position.set(-(bounds[0][0]+bounds[0][1])/2,-(bounds[1][0]+bounds[1][1])/2,-(bounds[2][0]+bounds[2][1])/2);
+    mesh.rotation.y=-.32;
+    scene.add(mesh);
+    const span=Math.max(height,width*1.3,depth*1.4,1);
+    camera.position.set(span*.36,span*.12,span*2.15);
+    camera.lookAt(0,0,0);
+    camera.updateProjectionMatrix();
+    renderer.render(scene,camera);
+    cache.set(key,canvas.toDataURL('image/png'));
+    disposeSapphire(mesh);
+   }
+   onIcon(skin.id,cache.get(key));
+   // Keep the game responsive while preparing the icon atlas.
+   if(cache.size%4===0)await new Promise(resolve=>requestAnimationFrame(resolve));
+  }
+ }finally{
+  renderer.dispose();
+  renderer.forceContextLoss();
+ }
+}
