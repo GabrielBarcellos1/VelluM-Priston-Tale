@@ -6,6 +6,9 @@
 const MAGE = 'https://forum.priston.com.br/forum/guia-do-pristoniano/wiki/2275-skills-magos';
 const SHAMAN = 'https://forum.priston.com.br/forum/guia-do-pristoniano/guia-dos-morions/xam%C3%A3/2042-tutorial-completo-de-xam%C3%A3/page3';
 export const MEASURED_COOLDOWNS = Object.freeze({
+  // User-provided community test (2019): ~2.2s execution, ~5.2s between executions.
+  // No original recording was supplied. Provisional all-rank application.
+  SKILL_DIVINE_PIERCING: Object.freeze({seconds:5.2,animationSeconds:2.2,source:'user-provided-community-2019',rankCoverage:'single-measurement-extrapolated'}),
   SKILL_FLAME_WAVE: Object.freeze({seconds:2.5,source:MAGE,rankCoverage:'all-ranks-explicit',animationSeconds:1.6}),
   SKILL_DEAD_RAY: Object.freeze({seconds:0.5,source:MAGE,rankCoverage:'all-ranks-explicit',animationSeconds:1.15}),
   SKILL_DISTORTION: Object.freeze({seconds:17.5,source:MAGE,rankCoverage:'all-ranks-explicit'}),
