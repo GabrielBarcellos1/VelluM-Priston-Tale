@@ -1875,6 +1875,12 @@ function npcTalk(id, interactive) {
     showRedistribution(npc);
   } else if (npc.services?.includes("shop")) {
     game.keys.clear();
+    // Precious Item Shop is the premium NPC: open the integrated shop directly.
+    // Ordinary town merchants still use their original gold shop.
+    if (/^Precious Item Shop$/i.test(npc.name)) {
+      showShop().catch((error) => notice(error.message));
+      return;
+    }
     const panel=serviceDialog(npc.name,'Escolha como comprar nesta loja da cidade. Itens da loja de coins são adquiridos pelo catálogo premium; skins são apenas cosméticas.');
     panel.button('Itens comuns por ouro',async()=>{
       panel.close();    const stock = (npc.shop ?? []).map((code) => definitions.get(code)).filter(Boolean);
