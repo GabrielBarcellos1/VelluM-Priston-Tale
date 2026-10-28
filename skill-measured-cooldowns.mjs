@@ -6,14 +6,20 @@
 const MAGE = 'https://forum.priston.com.br/forum/guia-do-pristoniano/wiki/2275-skills-magos';
 const SHAMAN = 'https://forum.priston.com.br/forum/guia-do-pristoniano/guia-dos-morions/xam%C3%A3/2042-tutorial-completo-de-xam%C3%A3/page3';
 export const MEASURED_COOLDOWNS = Object.freeze({
-  SKILL_FLAME_WAVE: Object.freeze({seconds:2.5,source:MAGE,rankCoverage:'all-ranks-explicit'}),
-  SKILL_CURSE_LAZY: Object.freeze({seconds:7.5,source:SHAMAN,rankCoverage:'single-measurement-extrapolated'}),
-  SKILL_SOUL_MANACLE: Object.freeze({seconds:17.5,source:SHAMAN,rankCoverage:'single-measurement-extrapolated'}),
-  SKILL_CHASING_HUNT: Object.freeze({seconds:5,source:SHAMAN,rankCoverage:'single-measurement-extrapolated'}),
-  SKILL_JUDGEMENT: Object.freeze({seconds:0.5,source:SHAMAN,rankCoverage:'single-measurement-extrapolated'}),
-  SKILL_MOURNING_OF_PRAY: Object.freeze({seconds:5,source:SHAMAN,rankCoverage:'single-measurement-extrapolated'}),
+  SKILL_FLAME_WAVE: Object.freeze({seconds:2.5,source:MAGE,rankCoverage:'all-ranks-explicit',animationSeconds:1.6}),
+  SKILL_DEAD_RAY: Object.freeze({seconds:0.5,source:MAGE,rankCoverage:'all-ranks-explicit',animationSeconds:1.15}),
+  SKILL_DISTORTION: Object.freeze({seconds:17.5,source:MAGE,rankCoverage:'all-ranks-explicit'}),
+  SKILL_M_METEO: Object.freeze({seconds:6,source:MAGE,rankCoverage:'all-ranks-explicit',animationSeconds:1.4}),
+  SKILL_DIASTROPHISM: Object.freeze({seconds:4,source:MAGE,rankCoverage:'rank-10-only',animationSeconds:1.65,level:10}),
+  SKILL_CURSE_LAZY: Object.freeze({seconds:7.5,source:SHAMAN,rankCoverage:'single-measurement-extrapolated',animationSeconds:1.6}),
+  SKILL_SOUL_MANACLE: Object.freeze({seconds:17.5,source:SHAMAN,rankCoverage:'single-measurement-extrapolated',animationSeconds:1.55}),
+  SKILL_CHASING_HUNT: Object.freeze({seconds:5,source:SHAMAN,rankCoverage:'single-measurement-extrapolated',animationSeconds:1.8}),
+  SKILL_JUDGEMENT: Object.freeze({seconds:0.5,source:SHAMAN,rankCoverage:'single-measurement-extrapolated',animationSeconds:1.25}),
+  SKILL_MOURNING_OF_PRAY: Object.freeze({seconds:5,source:SHAMAN,rankCoverage:'single-measurement-extrapolated',animationSeconds:1.8}),
 });
 export function measuredSkillCooldown(code, level) {
   if (!Number.isInteger(level) || level < 1 || level > 10) return null;
-  return MEASURED_COOLDOWNS[code]?.seconds ?? null;
+  const measurement = MEASURED_COOLDOWNS[code];
+  if (!measurement || (measurement.level && measurement.level !== level)) return null;
+  return measurement.seconds;
 }
