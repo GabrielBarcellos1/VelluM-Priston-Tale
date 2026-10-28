@@ -10,7 +10,8 @@ test('full screen selector uses instant inline SVG with no iframe or 3D model do
  assert.match(js,/rankedCharacters\(\)/);
  assert.doesNotMatch(js,/<iframe|node\("iframe"|rosterPreview=1|previewFrames|api\("\/api\/local\/skills"\)/);
  assert.match(js,/selected=ranked\[/);
- assert.match(js,/previous\.onclick=\(\)=>moveSelection\(-1\)/);\n assert.match(js,/next\.onclick=\(\)=>moveSelection\(1\)/);
+ assert.match(js,/previous\.onclick=\(\)=>moveSelection\(-1\)/);
+ assert.match(js,/next\.onclick=\(\)=>moveSelection\(1\)/);
  assert.match(html,/body\.roster-cinematic \.roster-arrow/);
  assert.match(html,/body\.roster-cinematic \.detail/);
  assert.match(html,/\.character-art-main svg/);
