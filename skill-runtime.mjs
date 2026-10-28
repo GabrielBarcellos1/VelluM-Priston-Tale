@@ -1,3 +1,4 @@
+import { measuredSkillCooldown } from './skill-measured-cooldowns.mjs';
 import { skillActionTiming } from './skill-action-timing.mjs';
 import { emptyEffects, effectFor, effectRows, sumEffects } from './skill-effects.mjs';
 import {initialMastery,afterSkillUse,hitsRemaining,MASTERY_MAX} from './skill-maturity.mjs';
@@ -98,9 +99,9 @@ export function createRuntimeSkillSystem(ctx) {
       mp:passive||ctx.resourceFree?.()?0:Math.ceil(at(p.mp,n)*(1-(ctx.premiumValue?.('manaReduce')??0)/100)),
       mpNext:passive||ctx.resourceFree?.()?0:Math.ceil(at(p.mp,next)*(1-(ctx.premiumValue?.('manaReduce')??0)/100)),
       stamina:passive||ctx.resourceFree?.()?0:Math.ceil(at(p.stamina,n)*(1-(ctx.premiumValue?.('staminaReduce')??0)/100)),
-      recharge:at(p.cooldown,n),cooldown:at(p.cooldown,n),duration:at(p.duration,n),range:at(p.range,n),
+      recharge:measuredSkillCooldown(s.code,n)??at(p.cooldown,n),cooldown:measuredSkillCooldown(s.code,n)??at(p.cooldown,n),duration:at(p.duration,n),range:at(p.range,n),
       target:p.target,slot:passive?undefined:rule(s).slot??'both',mastery:initialMastery(ctx.masteryProgress,s.code,n,passive),
-      ruleSource:p.source,cooldownSource:p.source,desc:s.descriptionPt??s.name,rows:[],
+      ruleSource:p.source,cooldownSource:measuredSkillCooldown(s.code,n)!==null?'community-frame-measurement-2018':p.source,desc:s.descriptionPt??s.name,rows:[],
       area:{radius:at(p.radius,n),targetLimit:at(p.targetLimit,n),shape:p.shape.type}};
     if(p.shape.type === 'line') v.range = Math.min(v.range, at(p.shape.length,n) ?? v.range);
     if(!passive&&v.cooldown){try{v.cooldown=Math.max(v.cooldown,ctx.timing?.(v)?.duration??0);}catch{}}
@@ -129,7 +130,7 @@ export function createRuntimeSkillSystem(ctx) {
     }
     if(v.duration)v.rows.push({label:'Duração',cur:`${v.duration} s`,next:`${at(p.duration,next)} s`});
     if(!passive){
-      v.rows.push({label:'Recarga',cur:`${v.cooldown.toFixed(2)} s`,next:`${at(p.cooldown,next).toFixed(2)} s`});
+      v.rows.push({label:'Recarga',cur:`${v.cooldown.toFixed(2)} s`,next:`${(measuredSkillCooldown(s.code,next)??at(p.cooldown,next)).toFixed(2)} s`});
       if(n && ctx.masteryProgress)v.rows.push({label:'Maturação (estimativa)',cur:`${(v.mastery/100).toFixed(1)}% · ~${hitsRemaining(v.mastery,s.tier)} acertos restantes`});
     }
     return v;
