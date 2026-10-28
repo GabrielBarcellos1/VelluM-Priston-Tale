@@ -278,3 +278,117 @@
 #vellum-ground-loot button{flex-shrink:0;border:1px solid #b69a62;border-radius:5px;background:#3d3426;color:#f7e3ab;cursor:pointer;padding:4px 7px;font:inherit}
 #vellum-ground-loot button:disabled{cursor:default;opacity:.55}
 @media(max-width:650px){#vellum-ground-loot{left:8px;bottom:75px;width:min(220px,calc(100vw - 16px))}}
+
+/* Native inventory shop: engraved metal, leather and grid slots from the
+   classic game UI. Only the original item icons and actual 3D skin meshes
+   are displayed; the former custom SVG illustrations are never used. */
+.ft-native-shop {
+ box-sizing:border-box; width:min(566px,96vw); max-height:min(88dvh,600px);
+ padding:0; overflow:hidden; border:4px ridge #8a8070; border-radius:3px;
+ background:linear-gradient(110deg,#39332c,#161616 13%,#35302a 91%,#82705b);
+ color:#f2e8cf; font:12px/1.3 Georgia,'Times New Roman',serif;
+ box-shadow:0 0 0 2px #171412,inset 0 0 0 2px #a99c85,0 15px 50px #000c;
+}
+.ft-native-shop::backdrop {background:#0006}
+.ft-native-shop button {cursor:pointer;font:inherit;color:inherit}
+.ft-native-heading {
+ height:35px;display:flex;align-items:center;justify-content:center;position:relative;
+ border-bottom:3px ridge #9c8a6c;
+ background:linear-gradient(#64554b 0%,#282522 30%,#171615 50%,#55483c 96%);
+ text-shadow:1px 2px 2px #000;font-size:16px;
+}
+.ft-native-title {font-weight:bold;letter-spacing:.4px}
+.ft-native-close {
+ position:absolute;right:5px;top:3px;width:29px;height:27px;
+ border:2px ridge #a99b7f;background:linear-gradient(#6e6253,#27221d);
+ font-size:21px!important;line-height:16px;
+}
+.ft-native-tabs {display:flex;gap:3px;padding:5px 8px 3px;background:#332a22;border-bottom:2px ridge #8a7a60}
+.ft-native-tab {
+ min-width:108px;padding:6px 12px;border:2px ridge #8d806b;
+ background:linear-gradient(#625342,#282421);font-weight:bold!important;
+}
+.ft-native-tab[aria-selected=true] {
+ color:#ffe6a3;background:linear-gradient(#8d7251,#403126);
+ border-color:#c2a477;box-shadow:inset 0 0 7px #f4d19444;
+}
+.ft-native-body {display:grid;grid-template-columns:minmax(0,1fr) 190px;gap:3px;padding:5px 6px 4px}
+.ft-native-inventory {
+ position:relative;min-height:318px;max-height:324px;overflow-y:auto;
+ border:5px ridge #8b8577;box-shadow:inset 0 0 0 2px #131211;
+ background:linear-gradient(125deg,#171717,#262626);
+ scrollbar-width:thin;scrollbar-color:#71634f #151515;
+}
+.ft-native-grid {
+ display:grid;grid-template-columns:repeat(9,minmax(0,1fr));
+ grid-auto-rows:34px;gap:0;padding:2px;
+}
+.ft-native-slot {
+ position:relative;display:grid;place-items:center;
+ padding:1px!important;min-height:34px;min-width:0;
+ border:1px solid #4a4946!important;border-radius:0!important;
+ background:linear-gradient(135deg,#111,#222)!important;
+ box-shadow:inset 1px 1px 0 #353430;
+}
+.ft-native-slot:hover,.ft-native-slot:focus-visible {
+ outline:1px solid #d9b66c;z-index:1;background:#46391f!important;
+}
+.ft-native-slot.selected {
+ outline:2px solid #e2bd67;z-index:2;box-shadow:inset 0 0 8px #e6ba52aa;
+}
+.ft-native-slot.owned {background:linear-gradient(135deg,#171e17,#2b3020)!important}
+.ft-native-item-art {width:100%;height:100%;max-height:32px;object-fit:contain;image-rendering:auto;filter:drop-shadow(1px 2px 1px #000)}
+.ft-native-equipped {position:absolute;right:0;bottom:0;color:#fff;background:#2d672a;font:bold 9px Arial;padding:0 2px}
+.ft-native-empty {position:absolute;top:45%;left:10%;right:10%;text-align:center;color:#b7a88e}
+.ft-native-details {
+ display:flex;flex-direction:column;align-items:center;gap:5px;
+ min-width:0;max-height:324px;overflow:auto;
+ border:4px ridge #84725e;background:linear-gradient(135deg,#9d784e,#60452e 45%,#2e241e);
+ box-shadow:inset 0 0 0 1px #291c13;
+}
+.ft-native-caption {
+ align-self:stretch;text-align:center;padding:5px 2px;
+ background:linear-gradient(#463d36,#211c1b);border-bottom:3px ridge #a28b6e;
+ font:bold 14px Georgia;color:#f5e6c8;text-shadow:1px 1px 2px #000;
+}
+.ft-native-selected-icon {
+ width:92px;height:93px;display:grid;place-items:center;
+ border:2px ridge #a78b68;background:radial-gradient(#ae8960,#755536);
+}
+.ft-native-selected-icon img {max-width:87px;max-height:88px;width:100%;height:100%;object-fit:contain;filter:drop-shadow(2px 3px 2px #21150e)}
+.ft-native-item-name {text-align:center;font-weight:bold;color:#fff2cf;padding:0 6px}
+.ft-native-description {margin:0 7px;text-align:center;font:11px/1.25 Georgia;color:#e7d5b4;max-height:48px;overflow:auto}
+.ft-native-price-row {
+ display:flex;align-items:center;gap:9px;align-self:stretch;margin:0 8px;
+ padding:4px 5px;border-top:1px solid #c4aa80;border-bottom:1px solid #35271e;
+ font:bold 14px Georgia;color:#fff;
+}
+.ft-native-coin {display:grid;place-items:center;width:18px;height:18px;color:#fce6a4;
+ background:radial-gradient(circle at 30% 20%,#fff0a4,#b78024 60%,#5e3c13);border:1px solid #483315}
+.ft-native-owned {font:11px Georgia;text-align:center;margin:0 6px;color:#d7f1b7}
+.ft-native-buy,.ft-native-view {
+ min-height:26px;padding:3px 10px;margin-bottom:2px;border:2px ridge #b39b73;
+ background:linear-gradient(#8b775c,#43382a);color:#fff5d8;font:bold 12px Georgia;
+}
+.ft-native-buy:disabled {opacity:.5;cursor:default}
+.ft-native-view {margin-bottom:7px}
+.ft-native-footer {
+ display:flex;gap:10px;align-items:center;justify-content:space-between;
+ min-height:32px;padding:5px 10px;border-top:3px ridge #998b72;
+ background:linear-gradient(#514335,#241e1a);
+}
+.ft-native-balance {white-space:nowrap;color:#ffdfa2;font-weight:bold}
+.ft-native-status {text-align:right;color:#e5e5d0;max-width:65%}
+.ft-native-preview {padding:7px;background:#151c23;border-top:2px ridge #958165;max-height:330px;overflow:auto}
+.ft-native-preview .skin-inline-preview {max-height:315px!important}
+.ft-native-preview canvas {max-height:235px!important;width:auto!important;margin:auto}
+@media(max-width:520px){
+ .ft-native-shop {width:96vw;max-height:90dvh;overflow:auto}
+ .ft-native-body {grid-template-columns:minmax(0,1fr) 138px;padding:3px}
+ .ft-native-grid {grid-template-columns:repeat(6,minmax(0,1fr));grid-auto-rows:36px}
+ .ft-native-inventory,.ft-native-details {max-height:305px;min-height:305px}
+ .ft-native-selected-icon {width:75px;height:75px}
+ .ft-native-caption {font-size:12px}
+ .ft-native-description {font-size:10px;max-height:62px}
+ .ft-native-price-row {font-size:12px}
+}
