@@ -99,8 +99,10 @@ function icon(job) {
 // Instant character selection: no iframe, no 3D engine, no asset request.
 // Illustrated portraits are built synchronously in the current document.
 function clearPreviewCache() {}
-function detail(){
+function detail(direction=0){
   const panel=$("#character-detail");
+  const previousStage=direction?panel.querySelector(".character-model-stage"):null;
+  if(previousStage)previousStage.remove();
   panel.replaceChildren();
   if(!selected){
     panel.append(node("h2","Encontre seu herói."),
@@ -118,14 +120,27 @@ function detail(){
       side.type="button";side.title="Selecionar "+other.name;
       side.setAttribute("aria-label","Selecionar "+other.name);
       side.append(rosterPortrait(other.job));
-      side.onclick=()=>{selected=other;detail();updatePosition();};
+      side.onclick=()=>{moveSelection(offset);};
       stage.append(side);
     }
   }
   const hero=node("div",undefined,"roster-center-hero");
   hero.append(rosterPortrait(selected.job));
   stage.append(hero);
+  if(direction){
+    stage.classList.add(direction>0?"roster-enter-next":"roster-enter-previous");
+  }
   panel.append(stage);
+  if(previousStage){
+    previousStage.className="character-model-stage roster-transition-exit "+
+      (direction>0?"roster-exit-next":"roster-exit-previous");
+    previousStage.setAttribute("aria-hidden","true");
+    previousStage.inert=true;
+    panel.append(previousStage);
+    const finish=()=>previousStage.remove();
+    previousStage.addEventListener("animationend",finish,{once:true});
+    setTimeout(finish,680);
+  }
   const info=node('div',undefined,'selected-hero-badge');
   info.append(node('small','PERSONAGEM SELECIONADO'),node('strong',selected.name),node('span',type.name+' · Nível '+selected.level));
   const favorite=node("button",isFavorite(selected.job)?"★ Personagem padrão":"☆ Definir como padrão","roster-favorite");
@@ -192,7 +207,7 @@ function moveSelection(step){
   if(ranked.length<2)return;
   const index=ranked.findIndex(c=>c.job===selected?.job);
   selected=ranked[(Math.max(index,0)+step+ranked.length)%ranked.length];
-  detail();
+  detail(step);
   updatePosition();
 }
 window.addEventListener("keydown",event=>{
