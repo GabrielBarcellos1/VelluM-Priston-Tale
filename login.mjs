@@ -142,6 +142,40 @@ function detail(){
   if(selected.online)panel.append(node("p",
     "Saia deste personagem antes de excluí-lo. Se fechou a aba do jogo, aguarde 12 segundos e atualize.","form-note"));
 }
+// Highest character level wins. Experience breaks ties without altering saves;
+// the original order breaks any remaining ties predictably.
+function rankedCharacters(){
+  return [...(roster?.characters??[])].sort((a,b)=>
+    (Number(b.level)||0)-(Number(a.level)||0) ||
+    (Number(b.experience??b.exp)||0)-(Number(a.experience??a.exp)||0) ||
+    a.job-b.job);
+}
+function updatePosition(){
+  const label=$("#roster-position");
+  if(!label)return;
+  const ranked=rankedCharacters(),index=ranked.findIndex(c=>c.job===selected?.job);
+  label.replaceChildren();
+  label.append(node("span",String(Math.max(0,index)+1).padStart(2,"0")+" / "+String(ranked.length).padStart(2,"0"),"roster-position-count"),
+    node("span",ranked.length>1?"Use as setas para escolher seu personagem":"Seu personagem está pronto","roster-position-hint"));
+  for(const button of document.querySelectorAll(".roster-arrow"))button.disabled=ranked.length<2;
+}
+function moveSelection(step){
+  const ranked=rankedCharacters();
+  if(ranked.length<2)return;
+  const index=ranked.findIndex(c=>c.job===selected?.job);
+  selected=ranked[(Math.max(index,0)+step+ranked.length)%ranked.length];
+  detail();
+  updatePosition();
+}
+window.addEventListener("keydown",event=>{
+  if(document.body.dataset.rosterReady!=="true"||!roster?.characters?.length)return;
+  if(document.querySelector("dialog[open]")||event.altKey||event.ctrlKey||event.metaKey)return;
+  const el=event.target;
+  if(el?.matches?.("input,textarea,select,[contenteditable]"))return;
+  if(event.key==="ArrowLeft"||event.key==="ArrowRight"){
+    event.preventDefault();moveSelection(event.key==="ArrowRight"?1:-1);
+  }
+});
 function render() {
   $("#entry").hidden = true;
   $("#roster").hidden = false;
@@ -155,35 +189,28 @@ function render() {
   const list = $("#character-list");
   list.replaceChildren();
   if (!roster.characters.length) {
-    const empty = node("div", undefined, "empty");
-    empty.append(
-      node("span", "UMA HISTÓRIA AINDA POR ESCREVER", "eyebrow"),
-      node("h2", "Sua aventura espera por você."),
-      node("p", "Escolha uma das 11 classes e crie seu primeiro personagem."),
-    );
+    const empty=node("div",undefined,"empty");
+    empty.append(node("span","UMA HISTÓRIA AINDA POR ESCREVER","eyebrow"),
+      node("h2","Sua aventura espera por você."),
+      node("p","Crie seu primeiro personagem para começar.","muted"));
     list.append(empty);
+  } else {
+    const previous=node("button","‹","roster-arrow roster-arrow-prev");
+    const next=node("button","›","roster-arrow roster-arrow-next");
+    previous.type=next.type="button";
+    previous.setAttribute("aria-label","Personagem anterior");
+    next.setAttribute("aria-label","Próximo personagem");
+    previous.title="Personagem anterior";
+    next.title="Próximo personagem";
+    previous.onclick=()=>moveSelection(-1);
+    next.onclick=()=>moveSelection(1);
+    const position=node("div",undefined,"roster-position");
+    position.id="roster-position";
+    position.setAttribute("aria-live","polite");
+    list.append(previous,position,next);
+    updatePosition();
   }
-  for (const character of roster.characters) {
-    const type = roster.classes.find((c) => c.job === character.job);
-    const card = node("button", undefined, "character-card");
-    card.dataset.job = character.job;
-    card.setAttribute("aria-pressed", String(selected?.job === character.job));
-    const miniature = node("span",undefined,"character-miniature");
-    miniature.append(rosterPortrait(character.job,true));
-    card.append(miniature);
-    card.append(
-      node("small", type.tribe.toUpperCase()),
-      node("strong", character.name),
-      node("span", `${type.name} · Nível ${character.level}`),
-    );
-    if (character.online) card.append(node("span", "● Em jogo", "online"));
-    card.onclick = () => {
-      if (selected?.job === character.job) return;
-      selected = character;
-      for (const other of list.querySelectorAll(".character-card"))
-        other.setAttribute("aria-pressed",String(Number(other.dataset.job)===selected.job));
-      // Do not reconstruct the cards or previously loaded 3D previews.
-      detail();
+  detail();
     };
     list.append(card);
   }
@@ -195,8 +222,7 @@ async function refresh(preferredJob = selected?.job) {
   roster = await api("/api/local/characters");
   selected =
     roster.characters.find((c) => c.job === preferredJob) ??
-    roster.characters.find((c) => c.job === account.preferredClass) ??
-    roster.characters[0];
+    rankedCharacters()[0];
   render();
 }
 async function enterAccount() {
