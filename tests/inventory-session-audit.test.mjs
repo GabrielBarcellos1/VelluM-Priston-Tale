@@ -3,7 +3,7 @@ import assert from 'node:assert/strict';
 import {readFile} from 'node:fs/promises';
 import vm from 'node:vm';
 import * as grid from '../inventory-grid.mjs';
-import {equipmentError} from '../equipment-rules.mjs';
+import {equipmentError,isShamanPhantom} from '../equipment-rules.mjs';
 import {salePrice,saleError,repairPrice} from '../gameplay-rules.mjs';
 import {captureBaseRolls,restoreItemRolls} from '../item-save.mjs';
 import {potionCanUse,registerPotion} from '../balance-rules.mjs';
@@ -19,7 +19,7 @@ function fixture(){
   clone:structuredClone,number:(v,f,min=0,max=1e9)=>typeof v==='number'&&Number.isFinite(v)?Math.max(min,Math.min(max,v)):f,
   instance:(code,count=1)=>({...structuredClone(definitions.get(code)),count,uid:uid++}),
   notice:m=>notices.push(m),deliver:p=>packets.push(p),recalculate(){},save(){},updateQuests(){},emitWarehouse(){},
-  statHistory:[],salePrice,saleError,repairPrice,equipmentError,...grid,potionCanUse,registerPotion,
+  statHistory:[],salePrice,saleError,repairPrice,equipmentError,isShamanPhantom,...grid,potionCanUse,registerPotion,
   economyUncertain:false,economyBusy:false,pendingLoot:0,findSpace:item=>grid.firstSpace(inv.bag,item),
   warehouseSpace:()=>({x:0,y:0}),pendingCommands:new Set(),isAdmin:false,hero:{name:'Fixture'},
  };
