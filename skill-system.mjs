@@ -325,8 +325,12 @@ export function createSkillSystem(ctx) {
       ctx.stats.mp -= v.mp;
       ctx.stats.sp -= v.stamina;
     }
-    const cooldown = v.recharge === 0 ? 0 : Math.max(v.recharge, timing.duration);
-    actionReadyAt = now() + timing.duration;
+    // Keep the action locked until its last scheduled hit has resolved.
+    // A zero *additional* cooldown still requires completion of the cast.
+    const lastHit = hitTimes.length ? Math.max(0, ...hitTimes.filter(Number.isFinite)) : 0;
+    const actionDuration = Math.max(timing.duration, lastHit);
+    const cooldown = v.recharge === 0 ? 0 : Math.max(v.recharge, actionDuration);
+    actionReadyAt = now() + actionDuration;
     if (cooldown) {
       ready.set(id, now() + cooldown);
       cooldownTotals.set(id, cooldown);
