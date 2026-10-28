@@ -60,6 +60,13 @@ function icon(job) {
   };
   return img;
 }
+window.addEventListener("message", event => {
+  if (event.origin !== location.origin || event.data?.type !== "vellum-roster-preview") return;
+  const frame = document.querySelector(".character-model-frame");
+  if (frame?.contentWindow !== event.source || Number(frame.src.split("classe=")[1]?.split("&")[0]) !== Number(event.data.job)) return;
+  const loading = document.querySelector(".model-loading");
+  if (loading) loading.hidden = true;
+});
 function detail() {
   const panel = $("#character-detail");
   panel.replaceChildren();
@@ -76,6 +83,19 @@ function detail() {
     return;
   }
   const type = roster.classes.find((c) => c.job === selected.job);
+  const stage = node("div", undefined, "character-model-stage");
+  const preview = node("iframe", undefined, "character-model-frame");
+  preview.title = "Modelo 3D original de " + selected.name;
+  preview.src = "/jogar?classe=" + encodeURIComponent(selected.job) + "&rosterPreview=1";
+  preview.loading = "eager";
+  preview.setAttribute("aria-label", "Personagem real em 3D; arraste para girar");
+  const loading = node("p", "Carregando personagem original em 3D…", "model-loading muted");
+  stage.append(loading, preview);
+  preview.addEventListener("load", () => {
+    // The model loads asynchronously after the embedded page boots.
+    loading.textContent = "Preparando modelo 3D…";
+  });
+  panel.append(stage);
   panel.append(
     icon(selected.job),
     node("span", type.tribe, "eyebrow"),
