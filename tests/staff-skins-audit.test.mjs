@@ -49,4 +49,5 @@ test('paired Shaman phantoms and Martial Artist fists use animated hand bones',(
  assert.match(skin,/actor\.object\.add\(hand\)/);
  assert.match(skin,/updateHands\(actor,record\)/);
  assert.match(skin,/record\.handModels\?\?/);
+ assert.match(skin,/if\(root!==primary\)/);
 });
