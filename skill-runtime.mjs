@@ -176,8 +176,12 @@ export function createRuntimeSkillSystem(ctx) {
     const timing=ctx.timing?.(v)??{duration:1,hits:[.5]},attack=offensive?attackFor(s,n):null;
     const hits=attack?skillHitTimes(attack,timing):timing.hits??[];
     if(!ctx.freeCast?.()&&!ctx.resourceFree?.()){ctx.stats.mp-=v.mp;ctx.stats.sp-=v.stamina;}
-    const cooldown=v.recharge===0?0:Math.max(v.recharge,timing.duration);
-    actionReady=now()+timing.duration;if(cooldown){ready.set(id,now()+cooldown);totals.set(id,cooldown);}
+    // A new cast must never overlap a hit scheduled after the visual animation.
+    // Zero additional cooldown does not bypass the full attack sequence.
+    const lastHit=hits.length?Math.max(0,...hits.filter(Number.isFinite)):0;
+    const actionDuration=Math.max(timing.duration,lastHit);
+    const cooldown=v.recharge===0?0:Math.max(v.recharge,actionDuration);
+    actionReady=now()+actionDuration;if(cooldown){ready.set(id,now()+cooldown);totals.set(id,cooldown);}
     ctx.emit?.({t:'skillFx',from:ctx.name,skill:id,code:s.code,level:n,x:origin.x,z:origin.z,
       ...(target!==undefined?{target}:{}),targets:targets.map(m=>m.id),dur:timing.duration,hits:targets.length?hits:[]});
     if(p.special==='agony'){
