@@ -111,6 +111,9 @@ function detail(){
   const stage=node("div",undefined,"character-model-stage");
   stage.append(rosterPortrait(selected.job));
   panel.append(stage);
+  const info=node('div',undefined,'selected-hero-badge');
+  info.append(node('small','PERSONAGEM SELECIONADO'),node('strong',selected.name),node('span',type.name+' · Nível '+selected.level));
+  panel.append(info);
   panel.append(node("span",type.tribe,"eyebrow"),
     node("h2",selected.name),
     node("p",descriptions[selected.job-1],"muted"));
