@@ -84,7 +84,24 @@ export function mountOnlineSession({
       deliver({ t: "players", add, update });
       peers = next;
       cursor = result.cursor;
-      for (const chat of result.chats) deliver(chat);
+      for (const chat of result.chats) {
+        deliver(chat);
+        // Server-authorized GM announcements remain visible in pink even when
+        // the original client's chat window is closed.
+        if (chat.staff === true && typeof chat.text === "string") {
+          let panel = document.querySelector("#vellum-gm-chat");
+          if (!panel) {
+            panel = document.createElement("aside");
+            panel.id = "vellum-gm-chat";
+            panel.setAttribute("aria-live", "polite");
+            panel.style.cssText = "position:fixed;left:50%;bottom:14%;transform:translateX(-50%);z-index:150;max-width:min(520px,90vw);padding:12px 18px;border:1px solid #ff83d2;border-radius:8px;background:#24101fe8;color:#ff9bdd;font:bold 15px system-ui;text-align:center;pointer-events:none;white-space:pre-wrap";
+            document.body.append(panel);
+          }
+          panel.textContent = (chat.from || "[GM]") + ": " + chat.text;
+          clearTimeout(panel._gmTimer);
+          panel._gmTimer = setTimeout(() => panel.remove(), 8500);
+        }
+      }
       for (const event of result.support ?? []) onSupport?.(event);
       status.connected = true;
       status.count = result.online;
