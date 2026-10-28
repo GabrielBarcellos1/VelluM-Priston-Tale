@@ -211,10 +211,6 @@ function render() {
     updatePosition();
   }
   detail();
-    };
-    list.append(card);
-  }
-  detail();
   document.body.classList.toggle("roster-cinematic", roster.characters.length > 0);
   document.body.dataset.rosterReady = "true";
 }
