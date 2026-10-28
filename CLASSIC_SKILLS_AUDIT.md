@@ -118,3 +118,31 @@ Essa alteração **não atribui cooldown histórico novo a nenhuma skill**. Corr
 - Medições temporais comunitárias fornecidas no pedido (**não verificadas nesta revisão**).
 
 O arquivo CSV já contém o inventário por habilidade/nível com fonte e grau de correspondência; **não tratar o campo “Confiança: exact” como prova de que o cooldown foi medido**.
+
+## Revisão adicional: fontes de cooldown medidas e testes (28/10/2026)
+
+A investigação encontrou duas medições comunitárias feitas por ChapeleiroLouco em janeiro de 2018 no fórum do Priston Tale Brasil:
+
+- Mago: https://forum.priston.com.br/forum/guia-do-pristoniano/wiki/2275-skills-magos
+- Xamã: https://forum.priston.com.br/forum/guia-do-pristoniano/guia-dos-morions/xam%C3%A3/2042-tutorial-completo-de-xam%C3%A3/page3
+
+O relato define **delay bruto** como o intervalo medido a partir do início da skill. A espera adicional após a animação é `max(0, delay_bruto - duração_animação)`. A implementação aplica `max(delay_bruto, duração_animação, último_hit)` para permitir nova execução; o bloqueio até o último hit é uma proteção do motor, não um número histórico medido.
+
+### Correções de cooldown com fonte
+
+| Classe | Código | Antes | Novo (delay bruto) | Evidência | Cobertura por nível |
+|---|---|---:|---:|---|---|
+| Magician | SKILL_FLAME_WAVE | 8,5 s | **2,5 s** | Medição comunitária jan/2018 | O relato afirma todos os níveis |
+| Shaman | SKILL_CURSE_LAZY | 10 s | **7,5 s** | Medição comunitária jan/2018 | Nível medido não especificado; extrapolação provisória |
+| Shaman | SKILL_SOUL_MANACLE | 10 s | **17,5 s** | Medição comunitária jan/2018 | Nível medido não especificado; extrapolação provisória |
+| Shaman | SKILL_CHASING_HUNT | 8 s | **5 s** | Medição comunitária jan/2018 | Nível medido não especificado; extrapolação provisória |
+| Shaman | SKILL_JUDGEMENT | 1 s | **0,5 s** | Medição comunitária jan/2018 | Nível medido não especificado; extrapolação provisória |
+| Shaman | SKILL_MOURNING_OF_PRAY | 4 s | **5 s** | Medição comunitária jan/2018 | Nível medido não especificado; extrapolação provisória |
+
+Essas seis alterações estão em `skill-measured-cooldowns.mjs`, consumido pelos dois motores `skill-runtime.mjs` e `skill-system.mjs`. **Não são dados recuperados do cliente original**, e a equivalência com a versão clássica específica do VelluM ainda exige ensaios comparativos. O arquivo `data/classic-skill-audit.csv` permanece como **snapshot anterior**: seus campos de cooldown para esses seis códigos foram sobrescritos pelo módulo de medições na execução; o CSV não representa os seis valores atuais.
+
+**Contagem:** 176 habilidades inventariadas; 6 habilidades com correção numérica de cooldown respaldada por medição comunitária; 1 dessas com abrangência de níveis declarada; 5 com extrapolação provisória; 170 sem novo cooldown validado nesta rodada. Nenhum valor de dano foi alterado. A correspondência com as tabelas públicas de dano/MP não deve ser confundida com confirmação dos tempos de recarga.
+
+### Limitações de validação
+
+Os testes automatizados por classe e nível verificam invocação, recursos, resultados e perfis, mas **não comprovam** a precisão de animações e dano quadro a quadro em 1.760 situações de jogo. Para validação histórica integral ainda são necessários: captura de vídeo com frame rate conhecido por nível e classe, comparação com cliente clássico da mesma versão, servidor autoritativo de combate, testes de equipamento e testes PvP. Não declarar os 176 cooldowns historicamente confirmados.
