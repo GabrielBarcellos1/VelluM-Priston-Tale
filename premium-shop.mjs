@@ -1,140 +1,209 @@
+import { renderSapphireItemIcons } from "/custom-skins.mjs";
+
+// A shop window built in the visual language of the original Priston Tale
+// inventory, not the website/card dialog. Purchases remain server-authoritative.
 export function openPremiumShop(ctx) {
   document.querySelector("#freeston-shop")?.dispatchEvent(new Event("dismiss"));
-  const dialog = document.createElement("dialog");
-  dialog.id = "freeston-shop";
-  dialog.className = "ft-dialog ft-shop";
-  dialog.setAttribute("aria-label", "Loja premium FREEston Tale");
-  const header = document.createElement("header"),
-    title = document.createElement("h2"),
-    close = document.createElement("button"),
-    balance = document.createElement("p"),
-    status = document.createElement("p"),
-    note = document.createElement("p"),
-    grid = document.createElement("div"),
-    tabs = document.createElement("nav"),
-    skinsHost = document.createElement("section");
-  title.textContent = "FREEston Tale · Loja premium";
-  close.className = "ft-close";
-  close.textContent = "×";
-  close.setAttribute("aria-label", "Fechar loja premium");
-  const dismiss = () => {
-    dialog.close();
-    dialog.remove();
+  const el=(tag,cls,text)=>{
+    const node=document.createElement(tag);
+    if(cls)node.className=cls;
+    if(text!==undefined)node.textContent=text;
+    return node;
   };
-  close.onclick = dismiss;
-  dialog.addEventListener("dismiss", dismiss);
-  dialog.addEventListener("cancel", (e) => {
-    e.preventDefault();
-    dismiss();
-  });
-  dialog.addEventListener("close", () => dialog.remove());
-  status.className = "ft-message";
-  status.setAttribute("role", "status");
-  balance.className = "ft-skill-summary";
-  note.className = "ft-shop-note";
-  note.textContent =
-    "Compras ficam em Meus premiums nesta conta, em qualquer classe. Ative quando quiser. A duração continua offline. Coins são moeda de teste do servidor.";
-  grid.className = "ft-skill-grid";
-  const premiumTab = document.createElement("button");
-  const skinsTab = document.createElement("button");
-  premiumTab.type = skinsTab.type = "button";
-  premiumTab.textContent = "Itens premium";
-  skinsTab.textContent = "Skins 3D";
-  tabs.className = "ft-shop-tabs";
-  tabs.append(premiumTab, skinsTab);
-  skinsHost.className = "ft-shop-skins";
-  skinsHost.hidden = true;
-  const selectTab = async (skinTab) => {
-    grid.hidden = skinTab;
-    skinsHost.hidden = !skinTab;
-    premiumTab.setAttribute("aria-pressed", String(!skinTab));
-    skinsTab.setAttribute("aria-pressed", String(skinTab));
-    note.hidden = skinTab;
-    if (skinTab) {
-      try { await ctx.openSkins(skinsHost); }
-      catch (e) { status.textContent = e.message; }
-    }
-  };
-  premiumTab.onclick = () => selectTab(false);
-  skinsTab.onclick = () => selectTab(true);
-  header.append(title, close);
-  dialog.append(header, balance, tabs, note, status, grid, skinsHost);
+  const dialog=el("dialog","ft-native-shop");
+  dialog.id="freeston-shop";
+  dialog.setAttribute("aria-label","Loja de itens premium e skins");
+  const heading=el("div","ft-native-heading");
+  const title=el("strong","ft-native-title","Loja de Itens");
+  const close=el("button","ft-native-close","×");
+  close.type="button";close.setAttribute("aria-label","Fechar loja");
+  heading.append(title,close);
+  const tabs=el("nav","ft-native-tabs");
+  const premiumTab=el("button","ft-native-tab","Premiums");
+  const skinsTab=el("button","ft-native-tab","Skins");
+  premiumTab.type=skinsTab.type="button";
+  tabs.append(premiumTab,skinsTab);
+  const body=el("div","ft-native-body");
+  const inventory=el("section","ft-native-inventory");
+  inventory.setAttribute("aria-label","Itens da loja");
+  const grid=el("div","ft-native-grid");
+  const empty=el("p","ft-native-empty","Nenhum item disponível.");
+  inventory.append(grid,empty);
+  const details=el("aside","ft-native-details");
+  const caption=el("div","ft-native-caption","Miscellaneous");
+  const selectedIcon=el("div","ft-native-selected-icon");
+  const itemName=el("div","ft-native-item-name","Selecione um item");
+  const itemDescription=el("p","ft-native-description","");
+  const priceRow=el("div","ft-native-price-row");
+  const coin=el("span","ft-native-coin","✦");
+  const price=el("span","ft-native-price","0");
+  priceRow.append(coin,price);
+  const state=el("p","ft-native-owned","");
+  const buy=el("button","ft-native-buy","Comprar");
+  const preview=el("button","ft-native-view","Ver modelo 3D");
+  preview.type="button";preview.hidden=true;
+  details.append(caption,selectedIcon,itemName,itemDescription,priceRow,state,buy,preview);
+  body.append(inventory,details);
+  const footer=el("footer","ft-native-footer");
+  const balance=el("span","ft-native-balance","");
+  const status=el("span","ft-native-status","");
+  status.setAttribute("role","status");
+  footer.append(balance,status);
+  const previewHost=el("section","ft-native-preview");
+  previewHost.hidden=true;
+  dialog.append(heading,tabs,body,footer,previewHost);
   document.body.append(dialog);
   dialog.showModal();
-  close.focus();
-  let busy = false;
-  async function act(action, code) {
-    if (busy) return;
-    busy = true;
-    draw();
-    try {
-      const result = await ctx.action(action, code);
-      status.textContent = result.message;
-    } catch (e) {
-      status.textContent = e.message;
-    } finally {
-      busy = false;
-      draw();
-    }
+  let tab=ctx.initialTab==="skins"?"skins":"premium";
+  let selectedId=null,busy=false,disposed=false,renderingIcons=false;
+  const skinIcons=new Map();
+  let iconRun=0;
+  const skinShop=()=>ctx.skins?.();
+  const snapshot=()=>skinShop()?.snapshot;
+  const currentItems=()=>tab==="skins"?(snapshot()?.catalog??[]):(ctx.wallet()?.catalog??[]);
+  const itemKey=(item)=>tab==="skins"?item.id:item.code;
+  const formatCoins=(v)=>Number(v??0).toLocaleString("pt-BR");
+  const owned=(skin)=>!!snapshot()?.owned?.includes(skin.id);
+  const equipped=(skin)=>snapshot()?.equip?.[skin.cat]===skin.id;
+  const itemIcon=(item,kind=tab)=>{
+    if(kind==="skins")return skinIcons.get(item.id)||
+      (ctx.itemImage?.(item.look)?"/assets/"+ctx.itemImage(item.look):"");
+    return item.icon?"/assets/"+item.icon:"";
+  };
+  function image(item,kind=tab){
+    const src=itemIcon(item,kind);
+    const img=el("img","ft-native-item-art");
+    if(src)img.src=src;
+    img.alt=item.name;
+    img.loading="lazy";
+    img.onerror=()=>{img.style.visibility="hidden";};
+    return img;
   }
-  function draw() {
-    const wallet = ctx.wallet();
-    balance.textContent = `ID ${wallet.username} · Saldo: ${wallet.coins.toLocaleString("pt-BR")} coins`;
-    grid.replaceChildren();
-    for (const item of wallet.catalog) {
-      const card = document.createElement("article"),
-        icon = document.createElement("img"),
-        name = document.createElement("h3"),
-        desc = document.createElement("p"),
-        stock = document.createElement("p"),
-        actions = document.createElement("div"),
-        buy = document.createElement("button"),
-        use = document.createElement("button");
-      card.dataset.premiumCode = item.code;
-      icon.src = "/assets/" + item.icon;
-      icon.alt = item.name;
-      icon.width = icon.height = 40;
-      name.textContent = `${item.name} · ${item.hours}h`;
-      desc.textContent = item.description;
-      const count = wallet.stock.find((s) => s.code === item.code)?.quantity ?? 0;
-      const active = wallet.active.find(
-        (s) =>
-          s.kind === item.kind ||
-          (["vampiric", "vampiricEx"].includes(item.kind) &&
-            ["vampiric", "vampiricEx"].includes(s.kind)),
-      );
-      const left = active
-        ? Math.max(0, Math.ceil((active.expiresAt * 1000 - ctx.serverNow()) / 60000))
-        : 0;
-      stock.textContent = `Meus premiums: ${count}${left ? ` · Ativo: ${active.name}, ${left} min restantes` : ""}`;
-      buy.textContent = `Comprar · ${item.price} coins`;
-      buy.disabled = busy || wallet.coins < item.price;
-      buy.onclick = () => act("purchase", item.code);
-      use.textContent = "Ativar";
-      use.disabled = busy || count < 1;
-      use.onclick = () => act("activate", item.code);
-      actions.className = "ft-skill-actions";
-      actions.append(buy, use);
-      card.append(icon, name, desc, stock, actions);
-      grid.append(card);
-    }
+  function dismiss(){
+    if(disposed)return;
+    disposed=true;iconRun++;
+    clearInterval(timer);
+    dialog.close();dialog.remove();
   }
-  draw();
-  if (ctx.initialTab === "skins") selectTab(true);
-  const refresh = async () => {
-    if (!dialog.isConnected) {
-      clearInterval(timer);
+  close.onclick=dismiss;
+  dialog.addEventListener("dismiss",dismiss);
+  dialog.addEventListener("cancel",e=>{e.preventDefault();dismiss();});
+  dialog.addEventListener("close",()=>{if(!disposed)dismiss();});
+  const notify=(message)=>{status.textContent=message;};
+  function selectedItem(){return currentItems().find(x=>itemKey(x)===selectedId);}
+  function showDetails(){
+    const item=selectedItem();
+    selectedIcon.replaceChildren();
+    if(!item){
+      itemName.textContent="Selecione um item";
+      itemDescription.textContent="";
+      price.textContent="0";state.textContent="";
+      buy.disabled=true;preview.hidden=true;
       return;
     }
-    if (busy || document.hidden) return;
-    try {
-      await ctx.refresh();
-      if (!busy) draw();
-    } catch (e) {
-      status.textContent = e.message;
+    selectedIcon.append(image(item));
+    itemName.textContent=item.name+(tab==="premium"&&item.hours?" · "+item.hours+"h":"");
+    itemDescription.textContent=item.description||"";
+    price.textContent=formatCoins(item.price);
+    preview.hidden=tab!=="skins"||!item.customModel;
+    if(tab==="skins"){
+      const have=owned(item),wear=equipped(item);
+      state.textContent=wear?"✓ Visual equipado":have?"✓ Skin adquirida":'Visual permanente';
+      buy.textContent=have?(wear?"Remover visual":"Equipar visual"):"Comprar";
+      buy.disabled=busy||(have&&!wear&&!skinShop()?.compatible(item))||(!have&&(snapshot()?.coins??0)<item.price);
+    }else{
+      const wallet=ctx.wallet();
+      const count=wallet.stock?.find(x=>x.code===item.code)?.quantity??0;
+      state.textContent=count?"Na conta: "+count:"Disponível para compra";
+      buy.textContent=count?"Ativar / Comprar":"Comprar";
+      buy.disabled=busy||(wallet.coins<item.price&&count<1);
     }
+  }
+  function draw(){
+    if(disposed)return;
+    const items=currentItems();
+    if(items.length&&!items.some(x=>itemKey(x)===selectedId))selectedId=itemKey(items[0]);
+    if(!items.length)selectedId=null;
+    grid.replaceChildren();
+    for(const item of items){
+      const slot=el("button","ft-native-slot");
+      slot.type="button";slot.dataset.itemId=itemKey(item);
+      slot.title=item.name+" — "+formatCoins(item.price)+" coins";
+      slot.setAttribute("aria-label",slot.title);
+      if(selectedId===itemKey(item))slot.classList.add("selected");
+      if(tab==="skins"&&owned(item))slot.classList.add("owned");
+      slot.append(image(item));
+      if(tab==="skins"&&equipped(item))slot.append(el("span","ft-native-equipped","E"));
+      slot.onclick=()=>{selectedId=itemKey(item);draw();};
+      grid.append(slot);
+    }
+    empty.hidden=items.length>0;
+    premiumTab.setAttribute("aria-selected",String(tab==="premium"));
+    skinsTab.setAttribute("aria-selected",String(tab==="skins"));
+    balance.textContent="Saldo: "+formatCoins(tab==="skins"?(snapshot()?.coins??ctx.wallet().coins):ctx.wallet().coins)+" coins";
+    showDetails();
+  }
+  async function loadSkins(){
+    const run=++iconRun;
+    try{
+      await skinShop()?.refresh();
+      if(disposed||run!==iconRun)return;
+      draw();
+      if(renderingIcons||!ctx.B)return;
+      renderingIcons=true;
+      await renderSapphireItemIcons(ctx.B,snapshot()?.catalog??[],(id,data)=>{
+        if(disposed||run!==iconRun)return;
+        skinIcons.set(id,data);
+        for(const img of dialog.querySelectorAll(".ft-native-slot img")){
+          if(img.parentElement?.dataset.itemId===id)img.src=data;
+        }
+        if(selectedId===id&&tab==="skins")showDetails();
+      });
+    }catch(error){notify("Não foi possível carregar os modelos 3D: "+error.message);}
+    finally{renderingIcons=false;}
+  }
+  async function selectTab(next){
+    tab=next;selectedId=null;
+    previewHost.hidden=true;previewHost.replaceChildren();
+    draw();
+    if(tab==="skins")await loadSkins();
+  }
+  premiumTab.onclick=()=>selectTab("premium");
+  skinsTab.onclick=()=>selectTab("skins");
+  buy.onclick=async()=>{
+    if(busy)return;
+    const item=selectedItem();if(!item)return;
+    busy=true;draw();
+    try{
+      if(tab==="skins"){
+        const action=!owned(item)?"buy":equipped(item)?"remove":"equip";
+        const result=await skinShop().mutate(action,item);
+        notify(result?.message??"Operação concluída.");
+      }else{
+        const count=ctx.wallet().stock?.find(x=>x.code===item.code)?.quantity??0;
+        const action=count?"activate":"purchase";
+        const result=await ctx.action(action,item.code);
+        notify(result?.message??"Operação concluída.");
+      }
+    }catch(error){notify(error.message);}
+    finally{busy=false;draw();}
   };
-  const timer = setInterval(refresh, 5000);
-  dialog.addEventListener("close", () => clearInterval(timer));
+  preview.onclick=()=>{
+    const item=selectedItem();
+    if(!item?.customModel)return;
+    previewHost.replaceChildren();previewHost.hidden=false;
+    try{ctx.preview?.(item,previewHost);}
+    catch(error){notify(error.message);previewHost.hidden=true;}
+  };
+  draw();
+  if(tab==="skins")loadSkins();
+  const timer=setInterval(async()=>{
+    if(disposed||document.hidden||busy)return;
+    try{
+      if(tab==="premium")await ctx.refresh();
+      else await skinShop()?.refresh();
+      if(!disposed)draw();
+    }catch(error){notify(error.message);}
+  },10000);
   return dialog;
 }
