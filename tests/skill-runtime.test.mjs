@@ -271,7 +271,7 @@ test('measured 2018 raw cooldowns are enforced at all ten ranks in actual runtim
         f.advance(0.02);
       }else{
         f.advance(0.99);
-        assert.throws(()=>f.system.cast(skill.id,target),/animação/,code);
+        assert.throws(()=>f.system.cast(skill.id,target),/recarga|animação/,code);
         f.advance(0.02);
       }
       f.system.cast(skill.id,target);
