@@ -3450,6 +3450,19 @@ function mountLocalMenu() {
     location.replace("/personagens");
   }
   charactersButton.onclick = () => leaveCharacter().catch((error) => notice(error.message));
+  // Keep the independent mobile character-selection link safe: save first.
+  const rosterLink = document.querySelector("#vellum-roster-link");
+  if (rosterLink) rosterLink.addEventListener("click", (event) => {
+    event.preventDefault();
+    if (rosterLink.dataset.saving === "true") return;
+    rosterLink.dataset.saving = "true";
+    rosterLink.textContent = "Salvando...";
+    leaveCharacter().catch((error) => {
+      rosterLink.dataset.saving = "false";
+      rosterLink.textContent = "Personagens";
+      alert(error.message);
+    });
+  });
   menu.append(charactersButton);
   for (const [label, key] of [
     ["Bolsa", "inventory"],
