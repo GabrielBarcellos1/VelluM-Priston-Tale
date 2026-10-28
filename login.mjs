@@ -4,6 +4,9 @@ let account, roster, selected, deleting;
 const skills = new Map();
 const fullPortraits=new Map();
 function rosterPortrait(job,mini=false){
+ // These three recovered cutouts are incomplete or badly posed.
+ // Use the complete upright class illustration until corrected assets exist.
+ if([6,10,11].includes(Number(job)))return characterPortrait(job,{mini});
  const src=fullPortraits.get(Number(job));
  if(!src){
   const fallback=characterPortrait(job,{mini});
@@ -229,7 +232,7 @@ function moveSelection(step){
   if(ranked.length<2)return;
   const index=ranked.findIndex(c=>c.job===selected?.job);
   selected=ranked[(Math.max(index,0)+step+ranked.length)%ranked.length];
-  detail(step);
+  detail();
   updatePosition();
 }
 window.addEventListener("keydown",event=>{
