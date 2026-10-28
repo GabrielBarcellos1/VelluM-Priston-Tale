@@ -77,8 +77,9 @@ export function openPremiumShop(ctx) {
   const owned=(skin)=>!!snapshot()?.owned?.includes(skin.id);
   const equipped=(skin)=>snapshot()?.equip?.[skin.cat]===skin.id;
   const itemIcon=(item,kind=tab)=>{
-    if(kind==="skins")return skinIcons.get(item.id)||
-      (ctx.itemImage?.(item.look)?"/assets/"+ctx.itemImage(item.look):"");
+    // Never flash the underlying equipment icon before the actual 3D skin
+    // thumbnail is rendered. These are different visuals for custom skins.
+    if(kind==="skins")return skinIcons.get(item.id)||"";
     if(item.code==="BI900")return kitIcon??"";
     return item.icon?"/assets/"+item.icon:(ctx.itemImage?.(item.code)?"/assets/"+ctx.itemImage(item.code):"");
   };
@@ -86,7 +87,10 @@ export function openPremiumShop(ctx) {
     const src=itemIcon(item,kind);
     const img=el("img","ft-native-item-art");
     if(src)img.src=src;
-    else if(item.code==="BI900") {
+    else if(kind==="skins") {
+      img.classList.add("ft-native-skin-loading");
+      img.hidden=true;
+    } else if(item.code==="BI900") {
       img.alt="Kit Up — conjunto de itens premium";
       img.classList.add("ft-native-kit-loading");
     }
@@ -225,7 +229,7 @@ export function openPremiumShop(ctx) {
         if(disposed)return;
         skinIcons.set(id,data);
         for(const img of dialog.querySelectorAll(".ft-native-slot img")){
-          if(img.parentElement?.dataset.itemId===id)img.src=data;
+          if(img.parentElement?.dataset.itemId===id){img.src=data;img.hidden=false;}
         }
         if(selectedId===id&&tab==="skins")showDetails();
       });
