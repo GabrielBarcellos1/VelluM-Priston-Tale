@@ -34,10 +34,38 @@ export function buildSapphireWeapon(kind='scythe',hands=2){
   for(let y=9;y<=23;y+=3.8){sphere([0,y,0],[.9,.6,.8],3,8,5);curve([[0,y,0],[-2,y+.5,.1],[-5,y+3,.2],[-8,y+6,0]],.27,3);}
   for(const y of [-16,-10]){crystal([0,y,0],1.9,4.5);rod([0,y-1,0],[0,y-.4,0],2,2,10);}scroll(1,32,3,1.2);
  }else if(kind==='axe'){
-  shaft(long?-17:-10,long?27:20,.7);pommel(long?-18:-11);const y=long?25:19;skull(0,y,1.1);crystal([0,y+6,0],2.4,6);
-  for(const side of long?[-1,1]:[1]){const o=[],n=[];for(let i=0;i<=20;i++){const t=i/20*Math.PI;o.push([side*(3+Math.sin(t)*12),y+8*Math.cos(t)]);n.push([side*(2+Math.sin(t)*5),y+5*Math.cos(t)]);}ribbon(o,n,1);scroll(side*7,y+1,2,1.3,side);} 
+  shaft(long?-18:-11,long?27:20,.7);pommel(long?-19:-12);
+  const y=long?26:20;skull(0,y,1.05);crystal([0,y+6,0],2.2,6);
+  for(const side of long?[-1,1]:[1]){
+   // Swept double-crescent axe heads with exposed silver cutting edges.
+   const outer=[],inner=[];for(let i=0;i<=24;i++){const t=i/24*Math.PI;
+    outer.push([side*(3+Math.sin(t)*15),y+10*Math.cos(t)]);
+    inner.push([side*(2+Math.sin(t)*6),y+7*Math.cos(t)]);
+   }
+   ribbon(outer,inner,.8);
+   for(let j=0;j<3;j++){
+    const py=y+(j-1)*5;
+    polygon([[side*3,py-1],[side*7,py+2],[side*10,py],[side*6,py-2]],1,0);
+    crystal([side*5,py,1.1],.8,2,.4);
+   }
+   curve([[side*2,y+6,1],[side*8,y+8,1],[side*15,y+4,1]],.28,2);
+   curve([[side*2,y-5,1],[side*8,y-7,1],[side*15,y-4,1]],.28,2);
+   scroll(side*7,y,2,1.3,side);
+  }
+  for(const y0 of [-8,1,9])crystal([0,y0,0],1.1,3,.65);
  }else if(kind==='hammer'){
-  shaft(long?-18:-10,long?24:18,.8);const y=long?25:19;polygon([[-11,y-4],[-13,y-1],[-13,y+4],[13,y+4],[13,y-4]],3.2,0);for(const x of [-11,11]){crystal([x,y,0],3.2,8,3);rod([x,y-4,0],[x,y+4,0],3.6,2,6);}skull(0,y,1.25);scroll(-6,y,2,3.4);scroll(6,y,2,3.4);pommel(long?-19:-11);
+  shaft(long?-19:-12,long?26:20,.88);const y=long?27:21;
+  // Faceted gothic hammer head, not one solid grey block.
+  polygon([[-12,y-3],[-13,y+2],[-8,y+6],[8,y+6],[13,y+2],[12,y-3],[7,y-5],[-7,y-5]],2.6,0);
+  polygon([[-8,y-2],[-9,y+2],[-5,y+4],[5,y+4],[9,y+2],[8,y-2]],3.05,1);
+  for(const side of [-1,1]){
+   polygon([[side*8,y-5],[side*14,y-4],[side*16,y+2],[side*13,y+6],[side*8,y+5]],2.7,6);
+   curve([[side*9,y-4,3],[side*15,y+1,3],[side*9,y+5,3]],.28,2);
+   crystal([side*11,y,3.3],1.3,5,.4);
+   for(const dy of [-3,3])sphere([side*11,y+dy,2.9],[.55,.55,.5],2,8,5);
+  }
+  skull(0,y,1.05);crystal([0,y+8,0],2,5);scroll(-5,y,2,3.5);scroll(5,y,2,3.5);
+  pommel(long?-20:-13);
  }else if(kind==='bow'){
   shaft(-3,3,.75);for(const side of [-1,1]){const outer=[],inner=[];for(let i=0;i<=20;i++){const t=i/20;outer.push([Math.sin(t*Math.PI)*8,side*(2+26*t)]);inner.push([Math.sin(t*Math.PI)*6,side*(2+26*t)]);}ribbon(outer,inner,.65);crystal([0,side*27,0],1.8,6);scroll(6,side*15,1.8,1);}
   rod([0,-29,0],[0,29,0],.075,5,5);skull(1,0,.72);
