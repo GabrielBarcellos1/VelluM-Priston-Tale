@@ -34,6 +34,8 @@ async function api(path, data) {
       $("#roster").hidden = true;
       $("#account-nav").hidden = true;
       document.body.dataset.rosterReady = "false";
+      document.body.classList.remove("roster-cinematic");
+      clearPreviewCache();
       $("#message").textContent = "Sua sessão expirou. Entre novamente.";
     }
     const error = Error(result.error ?? "Não foi possível concluir. Tente novamente.");
@@ -63,6 +65,13 @@ function icon(job) {
 // Each preview iframe is created once. Switching between visited characters
 // only toggles its visibility; the original WebGL game does not boot again.
 const previewFrames = new Map();
+function clearPreviewCache(){
+  for(const entry of previewFrames.values()){
+    entry.frame.remove();
+    entry.loading.remove();
+  }
+  previewFrames.clear();
+}
 function previewFor(character,stage) {
   let entry=previewFrames.get(character.job);
   if (entry) return entry;
@@ -160,6 +169,13 @@ function render() {
     `${roster.characters.length} de ${roster.limit} personagens · Um de cada classe`;
   $("#new-character").disabled = roster.characters.length >= roster.limit;
   const list = $("#character-list");
+  for(const [job,entry] of previewFrames){
+    if(!roster.characters.some(c=>c.job===job)){
+      entry.frame.remove();
+      entry.loading.remove();
+      previewFrames.delete(job);
+    }
+  }
   list.replaceChildren();
   if (!roster.characters.length) {
     const empty = node("div", undefined, "empty");
@@ -361,6 +377,7 @@ $("#logout").onclick = async () => {
     selected = null;
     document.body.dataset.rosterReady = "false";
     document.body.classList.remove("roster-cinematic");
+    clearPreviewCache();
     $("#login").reset();
     $("#entry").hidden = false;
     $("#roster").hidden = true;
