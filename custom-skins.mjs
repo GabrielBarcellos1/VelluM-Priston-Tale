@@ -11,11 +11,38 @@ export function ensureSkinLights(B,scene){if(scene.userData.sapphireLights)retur
 export function mountCustomSkins({B,game,own,peers,catalog,inventory}){
  const byId=new Map(catalog.map(s=>[s.id,s])),records=new Map();let frame,stopped=false;
  function valid(skin,base){return !!(skin?.customModel&&base&&base.slot===(skin.hands===2?'WEAPON_TWO':'WEAPON_ONE'));}
- function remove(root,record){for(const[n,material]of record.materials){const masks=Array.isArray(n.material)?n.material:[n.material];for(const mask of masks)if(mask!==material)mask?.dispose();n.material=material;}disposeSapphire(record.mesh);records.delete(root);}
+ function remove(root,record){for(const[n,material]of record.materials){const masks=Array.isArray(n.material)?n.material:[n.material];for(const mask of masks)if(mask!==material)mask?.dispose();n.material=material;}if(record.mesh)disposeSapphire(record.mesh);for(const pair of record.handModels??[])disposeSapphire(pair);for(const group of record.handGroups??[])group.removeFromParent();records.delete(root);}
+ // The recovered character skeleton exposes real left/right hand bones.
+ // Attaching to these animated bones avoids oversized, floating fists and
+ // lets the Shaman carry a Phantom in each hand without a shield model.
+ function updateHands(actor,record){
+  const part=actor.parts?.[0];
+  if(!part?.boneMatrix)return;
+  for(const [index,group]of (record.handGroups??[]).entries()){
+   const bone=index===0?15:25;
+   const matrix=part.boneMatrix(bone,group.matrix.clone().identity());
+   if(matrix)group.matrix.copy(matrix);
+  }
+ }
  function apply(actor,skin,live){if(!actor?.tools)return;for(const tool of actor.tools){if(tool.slot!=='weapon')continue;const root=tool.model?.object;if(!root)continue;live.add(root);let record=records.get(root);
   if(record&&record.id!==skin?.id){remove(root,record);record=null;}
-  if(!skin||record)continue;
+  if(!skin){continue;}
+  if(record){updateHands(actor,record);continue;}
   const materials=[];root.traverse(n=>{if(!n.isMesh)return;materials.push([n,n.material]);const hidden=m=>{const mask=m.clone();mask.visible=false;return mask;};n.material=Array.isArray(n.material)?n.material.map(hidden):hidden(n.material);});
+  if(['phantom','vambrace','claw'].includes(skin.customModel)&&actor.object&&actor.parts?.[0]?.boneMatrix){
+   const handGroups=[],handModels=[];
+   for(const bone of [15,25]){
+    const hand=new B.Group();hand.matrixAutoUpdate=false;actor.object.add(hand);
+    const cosmetic=createSapphireMesh(B,skin.customModel,skin.hands);
+    cosmetic.rotation.x=Math.PI/2;
+    cosmetic.scale.setScalar((skin.customScale??.8)*(skin.customModel==='phantom'?.9:.5));
+    cosmetic.position.y=-1.5;
+    hand.add(cosmetic);handGroups.push(hand);handModels.push(cosmetic);
+   }
+   record={id:skin.id,mesh:null,materials,handGroups,handModels};
+   records.set(root,record);updateHands(actor,record);
+   continue;
+  }
   const model=createSapphireMesh(B,skin.customModel,skin.hands);model.rotation.x=Math.PI/2;model.scale.setScalar((skin.customScale??.8)*2);
   // Fists use short, hand-sized attachments; the scythe's large multiplier
   // previously made the Martial Artist's gauntlets float around her arms.
