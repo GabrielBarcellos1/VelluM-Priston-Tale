@@ -751,6 +751,15 @@
         body.roster-cinematic .selected-hero-badge small {font-size:8px}
         body.roster-cinematic .selected-hero-badge span {font-size:10px}
       }
+      body.roster-cinematic .cards {gap:7px;bottom:108px!important;padding:10px;background:linear-gradient(90deg,transparent,#08151066 10%,#08151066 90%,transparent);border-radius:16px}
+      body.roster-cinematic .character-card {height:181px;flex-basis:135px;padding:6px;border:1px solid #c4aa7355;border-bottom:2px solid #e4c58b;background:linear-gradient(180deg,#11251a0a,#0b1815db);border-radius:12px;transition:transform .16s,border-color .16s}
+      body.roster-cinematic .character-card:hover {transform:translateY(-5px);border-color:#edd397}
+      body.roster-cinematic .character-card[aria-pressed="true"] {transform:translateY(-8px);height:190px;border:1px solid #f5d793;box-shadow:0 0 22px #e9bf6244}
+      body.roster-cinematic .character-miniature {height:123px;overflow:visible}
+      body.roster-cinematic .character-art-mini .roster-native-portrait {object-position:center bottom;filter:drop-shadow(0 7px 7px #000b)}
+      body.roster-cinematic .character-art-main .roster-native-portrait {height:min(73vh,660px);filter:drop-shadow(0 20px 24px #0009)}
+      body.roster-cinematic .selected-hero-badge {bottom:313px}
+      @media(max-width:760px){body.roster-cinematic .character-card{flex-basis:102px;height:151px}body.roster-cinematic .character-miniature{height:98px}body.roster-cinematic .selected-hero-badge{bottom:282px}}
       @media (prefers-reduced-motion: reduce) {
         * {
           transition: none !important;
