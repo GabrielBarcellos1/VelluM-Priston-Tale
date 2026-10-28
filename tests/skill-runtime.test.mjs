@@ -278,3 +278,24 @@ test('measured 2018 raw cooldowns are enforced at all ten ranks in actual runtim
     }
   }
 });
+
+test('Divine Piercing plays a 2.2s combo, keeps 3/5/7 hits and cannot be spammed before 5.2s',()=>{
+  const skill=catalog.skills.find(s=>s.code==='SKILL_DIVINE_PIERCING');
+  const alt=catalog.skills.find(s=>s.code==='SKILL_PIERCING');
+  for(const [level,count] of [[1,3],[4,3],[5,5],[8,5],[9,7],[10,7]]){
+    const f=fixture(skill,level,{saved:{[skill.code]:level,[alt.code]:10},timing:()=>({duration:2.2,hits:[.4,1.1,1.8]})});
+    const view=f.system.snapshot().skills.find(s=>s.id===skill.id);
+    assert.equal(view.recharge,5.2,'raw cooldown level '+level);
+    f.system.cast(skill.id,1);
+    assert.equal(f.pending.length,count,'damage strikes level '+level);
+    assert.equal(f.system.exportCooldowns()[skill.code].total,5.2);
+    assert.throws(()=>f.system.cast(alt.id,1),/animação|recarga/,'cannot interrupt combo level '+level);
+    f.advance(2.19);
+    assert.throws(()=>f.system.cast(alt.id,1),/animação|recarga/);
+    f.advance(.02);
+    f.system.cast(alt.id,1);
+    assert.throws(()=>f.system.cast(skill.id,1),/recarga|animação/);
+    f.advance(3.0);
+    f.system.cast(skill.id,1);
+  }
+});
