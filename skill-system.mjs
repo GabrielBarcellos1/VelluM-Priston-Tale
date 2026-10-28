@@ -1,3 +1,4 @@
+import { measuredSkillCooldown } from './skill-measured-cooldowns.mjs';
 import { skillActionTiming } from './skill-action-timing.mjs';
 import { effectFor, sumEffects, effectRows } from "./skill-effects.mjs";
 import { configuredSkillCooldown } from "./skill-cooldowns.mjs";
@@ -101,7 +102,7 @@ export function createSkillSystem(ctx) {
       passive = s.kind === "passive",
       self = ["buff", "party", "heal", "summon"].includes(s.kind);
     const profile = ctx.catalog.rules?.freestonProfile?.[s.code];
-    const classicCooldown = configuredSkillCooldown(rule, level, profile);
+    const classicCooldown = measuredSkillCooldown(s.code,level)??configuredSkillCooldown(rule, level, profile);
     const area = skillAreaProfile(s, rule, Math.max(1, level));
     const baseCooldown = passive
       ? 0
@@ -141,6 +142,8 @@ export function createSkillSystem(ctx) {
       recharge: baseCooldown,
       cooldownSource: passive
         ? "passive"
+        : measuredSkillCooldown(s.code,level)!==null
+          ? "community-frame-measurement-2018"
         : classicCooldown === null
           ? "local-fallback"
           : profile && level >= profile.minimumLevel
