@@ -209,6 +209,8 @@ export function openPremiumShop(ctx) {
       },{once:true});
     }catch(error){notify(error.message);previewHost.hidden=true;}
   };
+  dialog.addEventListener("walletRefresh",draw);
+  dialog.addEventListener("walletRefreshError",e=>notify(e.detail));
   draw();
   if(tab==="skins")loadSkins();
   const timer=setInterval(async()=>{
