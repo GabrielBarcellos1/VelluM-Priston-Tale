@@ -1066,9 +1066,10 @@
       }
       #entry.entry > .panel::before {
         content:'VelluM Priston Tale';display:block;text-align:center;
-        color:#f0d296;font:700 clamp(26px,3vw,38px)/1.15 Georgia,serif;
+        color:#f0d296;font:700 clamp(19px,2.5vw,30px)/1.15 Georgia,serif;
+        white-space:nowrap;letter-spacing:-.045em;
         text-shadow:0 3px 16px #000,0 0 30px #bd894c45;
-        margin-bottom:20px;letter-spacing:.03em;
+        margin-bottom:20px;
       }
       #entry.entry > .panel > .eyebrow,
       #entry.entry > .panel > h2,
@@ -1078,15 +1079,38 @@
       #entry.entry form > .primary {background:linear-gradient(180deg,#f1d59a,#c99a4b);border-color:#ffde9a;min-height:52px;}
       body:has(#entry:not([hidden])) footer {display:none;}
       @media(max-width:760px){
-        #entry.entry {padding:86px 16px 30px;min-height:100svh;
-          background:linear-gradient(180deg,#0a1714e8,#10211df0 54%,#08130ff5),url('/assets/roster-scene.jpg') center/cover no-repeat;
+        #entry.entry {padding:70px 12px 20px;min-height:100svh;
+          background:linear-gradient(180deg,#0a1714e9,#10211ddf 55%,#08130ff2),url('/assets/roster-scene.jpg') center/cover no-repeat;
         }
-        #entry.entry::before,#entry.entry::after {display:none;}
-        #entry.entry > .panel {width:100%;max-width:390px;padding:28px 22px;}
-        #entry.entry > .panel::before {font-size:clamp(25px,7vw,32px);margin-bottom:24px;}
+        #entry.entry::before,#entry.entry::after {display:block;width:42vw;height:43svh;top:auto;bottom:2%;opacity:.88;background-position:center bottom;}
+        #entry.entry::before {left:-10vw;}
+        #entry.entry::after {right:-10vw;}
+        #entry.entry > .panel {width:min(100%,370px);max-width:calc(100vw - 24px);padding:24px 18px;}
+        #entry.entry > .panel::before {font-size:clamp(17px,5.5vw,27px);margin-bottom:20px;}
+        #entry.entry input {min-width:0;}
+        #entry.entry label {margin:12px 0;}
         body:has(#entry:not([hidden])) > header {padding:12px 16px;}
         body:has(#entry:not([hidden])) > header .brand {font-size:16px;}
         body:has(#entry:not([hidden])) > header .brand small {font-size:8px;letter-spacing:2px;}
+      }
+      @media (max-width:760px) and (orientation:landscape), (max-height:530px) and (orientation:landscape) {
+        #entry.entry {min-height:100svh;padding:42px 12px 12px;}
+        #entry.entry > .panel {width:min(440px,55vw);padding:12px 20px;}
+        #entry.entry > .panel::before {font-size:clamp(17px,3vw,25px);margin-bottom:5px;}
+        #entry.entry label {margin:5px 0;font-size:12px;}
+        #entry.entry input {min-height:36px;padding:7px 10px;margin-top:2px;font-size:16px;}
+        #entry.entry form > .primary {min-height:36px;margin-top:8px;padding:6px 12px;}
+        #entry.entry .status {min-height:0;margin-top:4px;}
+        #entry.entry::before,#entry.entry::after {display:block;top:12%;bottom:2%;height:auto;width:35vw;opacity:.95;}
+        #entry.entry::before {left:0;}
+        #entry.entry::after {right:0;}
+        body:has(#entry:not([hidden])) > header .brand {font-size:13px;}
+        body:has(#entry:not([hidden])) > header .brand small {font-size:7px;}
+      }
+      @media (max-width:360px) and (orientation:portrait) {
+        #entry.entry > .panel {padding:20px 13px;}
+        #entry.entry > .panel::before {font-size:17px;}
+        #entry.entry::before,#entry.entry::after {width:42vw;bottom:0;}
       }
       /* Mobile character selection: show only the hero, arrows, Enter and Logout. */
       @media (max-width: 760px) {
