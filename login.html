@@ -1025,6 +1025,28 @@
         }
         body.roster-cinematic .roster-transition-exit {display:none!important}
       }
+      /* Mobile character selection: show only the hero, arrows, Enter and Logout. */
+      @media (max-width: 760px) {
+        body.roster-cinematic header .brand,
+        body.roster-cinematic #account-name,
+        body.roster-cinematic #admin-panel,
+        body.roster-cinematic .title-row,
+        body.roster-cinematic .selected-hero-badge,
+        body.roster-cinematic .roster-position,
+        body.roster-cinematic .detail > #delete-character,
+        body.roster-cinematic #roster-message { display:none!important; }
+        body.roster-cinematic header {padding:10px 12px!important;display:flex;justify-content:flex-end;}
+        body.roster-cinematic #account-nav {display:flex;justify-content:flex-end;margin-left:auto;}
+        body.roster-cinematic #account-nav[hidden] {display:none!important;}
+        body.roster-cinematic #logout {position:relative;z-index:1001;font-size:13px;padding:10px 13px;}
+        body.roster-cinematic .detail > #play-character {
+          display:block!important;position:fixed!important;left:50%!important;
+          bottom:max(20px,env(safe-area-inset-bottom))!important;
+          transform:translateX(-50%)!important;z-index:1001!important;
+          min-width:190px;max-width:calc(100vw - 100px);
+        }
+        body.roster-cinematic .roster-arrow {top:50%;}
+      }
       @media (prefers-reduced-motion: reduce) {
         * {
           transition: none !important;
