@@ -392,3 +392,23 @@
  .ft-native-description {font-size:10px;max-height:62px}
  .ft-native-price-row {font-size:12px}
 }
+
+/* 3D inspection appears above the inventory inside the same shop window,
+   instead of stretching the shop below the viewport. */
+.ft-native-shop {position:relative}
+.ft-native-slot-empty {pointer-events:none;cursor:default;min-height:34px}
+.ft-native-preview:not([hidden]) {
+ position:absolute;z-index:30;top:44px;left:6px;right:6px;bottom:35px;
+ display:block;padding:8px;overflow:auto;
+ border:3px ridge #b49b70;background:#101b23;
+ box-shadow:0 0 0 3px #17120c,0 0 24px #000;
+}
+.ft-native-preview .skin-inline-preview {
+ max-height:none!important;overflow:visible!important;
+ background:transparent!important;
+}
+.ft-native-preview canvas {
+ width:min(100%,420px)!important;height:auto!important;max-height:265px!important;
+}
+.ft-native-preview h2 {font-size:18px;margin:0 0 5px}
+.ft-native-preview p {margin:5px 0;font-size:12px}
