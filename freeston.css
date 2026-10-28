@@ -412,3 +412,10 @@
 }
 .ft-native-preview h2 {font-size:18px;margin:0 0 5px}
 .ft-native-preview p {margin:5px 0;font-size:12px}
+
+.ft-native-preview-close {
+ position:absolute;right:9px;top:8px;z-index:2;
+ width:28px;height:28px;border:2px ridge #b39b73;
+ background:linear-gradient(#8b775c,#43382a);color:#fff5d8;
+ font:bold 22px/20px Georgia;
+}
