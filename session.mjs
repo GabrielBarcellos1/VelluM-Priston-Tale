@@ -3561,6 +3561,9 @@ function mountLocalMenu() {
   placeNativeShortcuts();
 }
 
+// Mount account controls once the local client has finished booting.
+if (document.body.dataset.localReady === "true") mountLocalMenu();
+
 if (gameplayTestMode) setInterval(() => {
   console.debug("[playtest:clock]", JSON.stringify({ real: performance.now()/1000,
     simulation: game?.time, motion: game?.player?.motionState, bot: game?.botSelf?.() }));
