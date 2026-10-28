@@ -249,8 +249,8 @@ $("#new-character").onclick = () => {
     select.append(option);
   }
   const name = form.elements.name;
-  name.readOnly = !!account.displayName;
-  name.value = account.displayName ?? "";
+  name.readOnly = false;
+  name.value = "";
   select.onchange = () => {
     $("#class-description").textContent = descriptions[Number(select.value) - 1];
   };
@@ -309,7 +309,16 @@ for (const dialog of document.querySelectorAll("dialog"))
 $("#logout").onclick = async () => {
   try {
     await api("/api/local/logout", {});
-    location.replace("/");
+    // Keep the mount prefix and display the login form without a hard reload.
+    account = null;
+    roster = null;
+    selected = null;
+    document.body.dataset.rosterReady = "false";
+    $("#login").reset();
+    $("#entry").hidden = false;
+    $("#roster").hidden = true;
+    $("#account-nav").hidden = true;
+    $("#message").textContent = "Sessao encerrada. Entre com outra conta.";
   } catch (error) {
     $("#roster-message").textContent = error.message;
   }

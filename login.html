@@ -230,6 +230,7 @@
         min-height: 165px;
       }
       .character-card[aria-pressed="true"] {
+        background: radial-gradient(circle at 80% 20%, #715a2a55, transparent 58%), linear-gradient(135deg,#2c4537,#15261e);
         border-color: var(--gold);
         box-shadow: 0 0 0 1px var(--gold);
       }
@@ -243,11 +244,12 @@
         color: var(--muted);
       }
       .class-icon {
-        width: 42px;
-        height: 42px;
+        width: 84px;
+        height: 84px;
         image-rendering: auto;
         object-fit: contain;
         float: right;
+        filter: drop-shadow(0 6px 15px #0009);
         border: 1px solid #a68a5144;
         border-radius: 8px;
         background: #0c1714;
