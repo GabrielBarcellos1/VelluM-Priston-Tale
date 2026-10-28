@@ -1,3 +1,4 @@
+import { measuredSkillAnimation } from './skill-measured-cooldowns.mjs';
 // Public client model playback: playSkill defaults to Yn=35 frames/second.
 export function nativeSkillTiming(player, skill, motionName, visual = {}, attackStep = 80) {
   const skeleton = player?.skeleton;
@@ -14,7 +15,14 @@ export function nativeSkillTiming(player, skill, motionName, visual = {}, attack
   const physicalAttack = ![7, 8, 10].includes(skill.job) &&
     ["melee", "shot", "beam", "sky", "aoe", "nova"].includes(skill.kind);
   const step = Number.isFinite(attackStep) ? Math.max(40, Math.min(400, attackStep)) : 80;
-  const fps = physicalAttack ? step * 70 / 160 : 35;
+  // The native client consumes the emitted skillFx.dur as the actual motion
+  // playback duration (player.playSkill(..., dur)). Calibrate both playback
+  // and hit frames together; changing only the cooldown would leave the
+  // visual animation out of sync with the classic reference.
+  const measuredDuration = measuredSkillAnimation(skill.code, skill.level);
+  const fps = measuredDuration !== null
+    ? frames * loops / measuredDuration
+    : physicalAttack ? step * 70 / 160 : 35;
   const seconds = frames / fps;
   const events = skeleton.motions.find((m) => m.clip === clipName)?.events ?? [];
   const baseHits = events.length ? events.map((f) => f / fps) : [seconds * 0.5];
