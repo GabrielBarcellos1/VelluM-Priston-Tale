@@ -23,3 +23,10 @@ export function measuredSkillCooldown(code, level) {
   if (!measurement || (measurement.level && measurement.level !== level)) return null;
   return measurement.seconds;
 }
+
+export function measuredSkillAnimation(code, level) {
+  if (!Number.isInteger(level) || level < 1 || level > 10) return null;
+  const measurement = MEASURED_COOLDOWNS[code];
+  if (!measurement || (measurement.level && measurement.level !== level)) return null;
+  return measurement.animationSeconds ?? null;
+}
