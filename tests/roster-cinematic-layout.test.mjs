@@ -29,3 +29,16 @@ test('read-only preview loads original game model without logging in or changing
  assert.match(session,/conn\.sendGame = \(\) => \{\}/);
  assert.match(session,/await mountRosterCharacterPreview/);
 });
+
+test('switching characters preserves preview frames and never rerenders all roster cards',()=>{
+ const script=source('login.mjs');
+ assert.match(script,/const previewFrames = new Map\(\)/);
+ assert.match(script,/if \(entry\) return entry/);
+ assert.match(script,/entry\.frame\.hidden=!active/);
+ assert.match(script,/entry\.loading\.hidden=!active\|\|entry\.ready/);
+ assert.match(script,/for\(const child of \[\.\.\.panel\.children\]\)if\(child!==stage\)child\.remove\(\)/);
+ assert.match(script,/selected = character;\s*for \(const other of list\.querySelectorAll/);
+ assert.match(script,/detail\(\);\s*\};\s*list\.append\(card\)/);
+ assert.match(script,/card\.addEventListener\("pointerenter"/);
+ assert.match(script,/clearPreviewCache\(\)/);
+});
