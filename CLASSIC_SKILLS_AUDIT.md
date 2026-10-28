@@ -63,3 +63,58 @@ O arquivo data/classic-skill-audit.csv contém 1.760 linhas, incluindo dano/base
 ## Limites de comparação
 
 As tabelas de PristonWorld são comunitárias e podem representar versões diferentes. Os relatos de delay indicam frequentemente apenas presença/ausência, sem duração mensurada. A maturação de habilidades foi descrita por jogadores com taxas aproximadas por tier; sua exatidão para todas as classes não está confirmada. Não extrapolar valores de Tier 5.
+
+## Revisão de segurança de execução — 28/10/2026
+
+### O que foi auditado no código atual
+
+- Catálogo: **176 habilidades**, 11 classes, 16 habilidades por classe, 10 níveis por habilidade, exclusivamente Tiers 1–4.
+- Matriz por nível: `data/classic-skill-audit.csv`, **1.760 registros**. Os campos `Cooldown VelluM (seg)` e `Duração (seg)` descrevem a configuração do projeto, **não medições históricas verificadas**.
+- `data/classic-skill-reference.json` e `data/classic-skill-changes.json`: referências e mudanças anteriores; **151 correspondências de nome/tabela não equivalem a 151 cooldowns confirmados**.
+- Cliente/combate: `skill-system.mjs`, `skill-runtime.mjs`, `skill-damage.mjs`, `skill-effects.mjs`, `skill-cooldowns.mjs`, `skill-maturity.mjs`, `skill-book.mjs`, `session.mjs`.
+- Motor de execução: os dois sistemas de skills verificam nível, recursos, cooldown individual, bloqueio de animação e emitem golpes com timestamps. Os cooldowns salvos podem ser restaurados após nova sessão.
+- Maturação: `skill-maturity.mjs` usa taxas **provisórias** por Tier; não considerar essas taxas historicamente confirmadas.
+
+### Correção de combate verificável
+
+Antes, o bloqueio de uma nova execução terminava no final de `timing.duration`, mesmo se `hitTimes` ainda contivesse golpes futuros. Isso podia permitir sobreposição de casts e golpes. Agora, ambos os motores utilizam `skill-action-timing.mjs`, com:
+
+- `action_duration = max(animation_duration, último hit_timestamps)`;
+- `cooldown_duration = 0` preserva ausência de recarga **adicional**, mas o bloqueio global continua até `action_duration`;
+- cooldowns não nulos respeitam `max(cooldown configurado, action_duration)`;
+- timestamps negativos, infinitos ou duração inválida são rejeitados.
+
+Essa alteração **não atribui cooldown histórico novo a nenhuma skill**. Corrige a aplicação consistente dos tempos que já existem e evita hits sobrepostos após o fim visual da ação.
+
+### Estado de confirmação — não confundir parâmetros com evidência
+
+| Métrica | Quantidade | Critério |
+|---|---:|---|
+| Habilidades inventariadas | 176 | IDs e níveis presentes em `data/skills.json` |
+| Progressões inventariadas | 1.760 | 10 níveis por habilidade |
+| Correspondências públicas exatas de tabelas | 151 | Nomes/tabelas, não cooldowns |
+| Correspondências pendentes de tradução/versão | 25 | Listadas acima |
+| Cooldowns históricos individualmente confirmados nesta revisão | **0** | Nenhuma nova fonte temporal foi validada em condições reproduzíveis |
+| Cooldowns numéricos individuais alterados nesta revisão | **0** | Não inventar tempos |
+| Dano numérico individual alterado nesta revisão | **0** | Fórmulas originais requerem validação de versão |
+| Motores de execução protegidos contra sobreposição pós-hit | **2** | `skill-system.mjs` e `skill-runtime.mjs` |
+
+**Atenção:** valores históricos mencionados na solicitação (Mago, Xamã, Piercing Divino, Avalanche, Mestre das Sombras) são *hipóteses de pesquisa* até confirmar se “delay” significa intervalo entre inícios, recarga após animação ou janela adicional. Não substituir automaticamente as tabelas existentes por esses números.
+
+### Pendências explícitas
+
+1. Comparar a duração real de animação e os momentos de dano de cada habilidade com o cliente clássico da **mesma versão**.
+2. Obter cooldown por nível de fonte histórica verificável para as 176 habilidades; os tempos comunitários isolados não fornecem 1.760 valores.
+3. Validar progressões de hits/dano em todas as classes contra a fórmula e os arquivos originais, incluindo resistências e multiplicadores.
+4. Verificar maturação histórica e seu impacto real sobre recarga/dano, antes de substituir a aproximação atual.
+5. Realizar ensaio de combate real por classe/nível/arma contra monstros e jogadores, além dos testes automatizados de lógica.
+6. Verificar o lado servidor e a persistência de cooldown durante troca de personagem e reinício; o motor local não constitui prova de autoridade completa do servidor.
+
+### Fontes e graus de certeza
+
+- Fonte primária de implementação: `data/skills.json`, `skill-system.mjs`, `skill-runtime.mjs`, `skill-damage.mjs`, `skill-action-timing.mjs` (**confirmado no código**).
+- Guia oficial brasileiro: https://wiki.priston.com.br/index.php/Guia_Iniciante (**descrição e classificação das habilidades**, não tabela temporal completa).
+- Fontes comunitárias já mapeadas neste documento (**parâmetros históricos candidatos; compatibilidade de versão ainda pendente**).
+- Medições temporais comunitárias fornecidas no pedido (**não verificadas nesta revisão**).
+
+O arquivo CSV já contém o inventário por habilidade/nível com fonte e grau de correspondência; **não tratar o campo “Confiança: exact” como prova de que o cooldown foi medido**.
