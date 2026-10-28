@@ -167,6 +167,19 @@ function render() {
     const card = node("button", undefined, "character-card");
     card.dataset.job = character.job;
     card.setAttribute("aria-pressed", String(selected?.job === character.job));
+    // Background characters use the same real 3D preview, scaled down.
+    // Reuse the selected hero's large scene without changing account state.
+    if (selected?.job !== character.job) {
+      const miniature = node("span", undefined, "character-miniature");
+      const miniFrame = node("iframe", undefined, "character-miniature-frame");
+      miniFrame.title = "Modelo de " + character.name;
+      miniFrame.loading = "lazy";
+      miniFrame.tabIndex = -1;
+      miniFrame.setAttribute("aria-hidden", "true");
+      miniFrame.src = "/jogar?classe=" + encodeURIComponent(character.job) + "&rosterPreview=1";
+      miniature.append(miniFrame);
+      card.append(miniature);
+    }
     card.append(
       icon(character.job),
       node("small", type.tribe.toUpperCase()),
@@ -181,6 +194,7 @@ function render() {
     list.append(card);
   }
   detail();
+  document.body.classList.toggle("roster-cinematic", roster.characters.length > 0);
   document.body.dataset.rosterReady = "true";
 }
 async function refresh(preferredJob = selected?.job) {
@@ -334,6 +348,7 @@ $("#logout").onclick = async () => {
     roster = null;
     selected = null;
     document.body.dataset.rosterReady = "false";
+    document.body.classList.remove("roster-cinematic");
     $("#login").reset();
     $("#entry").hidden = false;
     $("#roster").hidden = true;
