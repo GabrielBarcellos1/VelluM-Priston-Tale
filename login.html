@@ -845,6 +845,83 @@
         body.roster-cinematic .roster-position {bottom:124px;min-width:190px}
         body.roster-cinematic .selected-hero-badge {bottom:218px}
       }
+      /* Three depth planes, with character names kept entirely below the models. */
+      body.roster-cinematic .character-model-stage{overflow:hidden}
+      body.roster-cinematic .roster-center-hero{
+        position:absolute;inset:0;z-index:3;display:flex;align-items:center;
+        justify-content:center;pointer-events:none;
+      }
+      body.roster-cinematic .roster-center-hero .character-art-main{
+        position:relative;inset:auto;width:100%;height:100%;
+        display:flex;align-items:center;justify-content:center;
+      }
+      body.roster-cinematic .roster-center-hero .roster-native-portrait{
+        height:min(70vh,640px);max-width:min(53vw,460px);object-fit:contain;
+        transform:translateY(-7%);
+        filter:drop-shadow(0 14px 22px #000c) drop-shadow(0 0 25px #eec67924);
+      }
+      body.roster-cinematic .roster-side-hero{
+        position:absolute;z-index:2;top:23%;width:24%;height:53%;
+        border:0;background:none;padding:0;cursor:pointer;
+        filter:brightness(.48) saturate(.68);
+        opacity:.75;transition:filter .16s,opacity .16s,transform .16s;
+      }
+      body.roster-cinematic .roster-side-hero:hover,
+      body.roster-cinematic .roster-side-hero:focus-visible{
+        filter:brightness(.83) saturate(.9);
+        opacity:.95;outline:none;
+      }
+      body.roster-cinematic .roster-side-hero .character-art-main{
+        position:relative;inset:auto;width:100%;height:100%;
+        display:flex;justify-content:center;align-items:center;
+      }
+      body.roster-cinematic .roster-side-hero .roster-native-portrait{
+        height:100%;width:100%;object-fit:contain;
+        filter:drop-shadow(0 12px 15px #000d);
+      }
+      body.roster-cinematic .roster-side-hero.roster-side-previous{
+        left:17%;transform:scale(.82) perspective(800px) rotateY(12deg);
+      }
+      body.roster-cinematic .roster-side-hero.roster-side-next{
+        right:17%;transform:scale(.82) perspective(800px) rotateY(-12deg);
+      }
+      body.roster-cinematic .roster-side-hero.roster-side-previous:hover{
+        transform:scale(.86) perspective(800px) rotateY(8deg);
+      }
+      body.roster-cinematic .roster-side-hero.roster-side-next:hover{
+        transform:scale(.86) perspective(800px) rotateY(-8deg);
+      }
+      body.roster-cinematic .selected-hero-badge{
+        bottom:117px;left:50%;transform:translateX(-50%);z-index:12!important;
+        min-width:230px;max-width:340px;padding:10px 20px;
+        background:linear-gradient(145deg,#091714ef,#15241ef0);
+      }
+      body.roster-cinematic .roster-position{
+        bottom:75px;min-width:160px;padding:5px 13px;gap:1px;
+        background:#071210af;border-color:#b89b6740;
+      }
+      body.roster-cinematic .roster-position-hint{display:none}
+      body.roster-cinematic .roster-position-count{font-size:12px}
+      body.roster-cinematic .detail > #play-character{
+        bottom:16px;min-width:225px;padding:10px 23px;font-size:15px;
+      }
+      body.roster-cinematic .roster-favorite{
+        display:block;position:relative;z-index:1;margin-top:4px;
+        border:0;background:transparent;color:#d3bc88;
+        font:11px Arial,sans-serif;cursor:pointer;opacity:.75;
+      }
+      body.roster-cinematic .roster-favorite:hover,
+      body.roster-cinematic .roster-favorite:focus-visible{color:#ffe6a6;opacity:1}
+      @media(max-width:760px){
+        body.roster-cinematic .roster-side-hero{width:29%;height:42%;top:30%}
+        body.roster-cinematic .roster-side-hero.roster-side-previous{left:4%}
+        body.roster-cinematic .roster-side-hero.roster-side-next{right:4%}
+        body.roster-cinematic .roster-center-hero .roster-native-portrait{
+          max-width:61vw;height:56vh;transform:translateY(-6%);
+        }
+        body.roster-cinematic .selected-hero-badge{bottom:115px;min-width:200px}
+        body.roster-cinematic .roster-position{bottom:77px}
+      }
       @media (prefers-reduced-motion: reduce) {
         * {
           transition: none !important;
