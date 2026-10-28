@@ -10,8 +10,8 @@ test('selection preview uses original game renderer and keeps gameplay path sepa
  assert.match(session,/if \(rosterPreviewMode\) \{/);
  assert.match(session,/conn\.sendGame = \(\) => \{\};/);
  assert.match(session,/await mountRosterCharacterPreview\(B,game,hero\)/);
- assert.match(markup,/character-model-frame/);
- assert.match(markup,/rosterPreview=1/);
+ assert.match(markup,/characterPortrait/);
+ assert.doesNotMatch(markup,/rosterPreview=1/);
  assert.match(server,/frame-src 'self'/);
  assert.match(server,/roster-3d\.mjs/);
 });
