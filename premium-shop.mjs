@@ -111,6 +111,20 @@ export function openPremiumShop(ctx) {
   dialog.addEventListener("close",()=>{if(!disposed)dismiss();});
   const notify=(message)=>{status.textContent=message;};
   function selectedItem(){return currentItems().find(x=>itemKey(x)===selectedId);}
+  // Concise premium effects; values follow the actual game catalog.
+  // Full product descriptions remain in the source data for reference.
+  const premiumSummaries={
+    BI133:"Fênix - Acompanha você e dá 25% de chance de drop extra.",
+    BI901:"XP - Aumenta em 100% a EXP recebida dos monstros.",
+    BI902:"Drena - Recupera mana ao atacar monstros.",
+    BI903:"Presa - Recupera vida ao atacar monstros.",
+    BI904:"RES - Reduz em 30% o gasto de resistência das skills.",
+    BI905:"Mana - Reduz em 30% o gasto de mana das skills.",
+    BI906:"Olho Mágico - 50% de chance de drop extra.",
+    FO110:"Mirage Force - Aumenta o dano conforme o nível permitido.",
+    FO130:"Magic Mirage - Aumenta o dano mágico conforme o nível permitido.",
+    BI900:"Kit Up - Reúne os bônus premium por 7 dias e 10 Forças Mirage."
+  };
   function showDetails(){
     const item=selectedItem();
     selectedIcon.replaceChildren();
@@ -123,7 +137,9 @@ export function openPremiumShop(ctx) {
     }
     selectedIcon.append(image(item));
     itemName.textContent=item.name+(tab==="premium"&&item.hours?" · "+item.hours+"h":"");
-    itemDescription.textContent=item.description||"";
+    itemDescription.textContent=tab==="premium"
+      ? (premiumSummaries[item.code]??item.description??"")
+      : (item.description||"");
     price.textContent=formatCoins(item.price);
     preview.hidden=tab!=="skins"||!item.customModel;
     if(tab==="skins"){
