@@ -7,11 +7,11 @@ test('full screen selector uses instant inline SVG with no iframe or 3D model do
  const js=source('login.mjs'),html=source('login.html');
  assert.match(js,/import \{characterPortrait\}/);
  assert.match(js,/rosterPortrait\(selected\.job\)/);
- assert.match(js,/rosterPortrait\(character\.job,true\)/);
+ assert.match(js,/rankedCharacters\(\)/);
  assert.doesNotMatch(js,/<iframe|node\("iframe"|rosterPreview=1|previewFrames|api\("\/api\/local\/skills"\)/);
- assert.match(js,/selected = character;\s*for \(const other of list\.querySelectorAll/);
- assert.match(js,/detail\(\);\s*\};\s*list\.append\(card\)/);
- assert.match(html,/body\.roster-cinematic \.cards/);
+ assert.match(js,/selected=ranked\[/);
+ assert.match(js,/previous\.onclick=\(\)=>moveSelection\(-1\)/);\n assert.match(js,/next\.onclick=\(\)=>moveSelection\(1\)/);
+ assert.match(html,/body\.roster-cinematic \.roster-arrow/);
  assert.match(html,/body\.roster-cinematic \.detail/);
  assert.match(html,/\.character-art-main svg/);
  assert.match(html,/#play-character/);
@@ -40,4 +40,17 @@ test('real level 150 portraits are loaded once in a compressed transparent image
  assert.match(script,/fullPortraits\.set/);
  assert.match(script,/old\.replaceWith\(rosterPortrait/);
  assert.match(server,/\/assets\/roster-full-portraits\.json/);
+});
+
+test('strongest character first; only one hero with accessible left/right controls',()=>{
+ const js=source('login.mjs'),html=source('login.html');
+ assert.match(js,/Number\(b\.level\).*Number\(a\.level\)/);
+ assert.match(js,/rankedCharacters\(\)\[0\]/);
+ assert.match(js,/aria-label","Personagem anterior"/);
+ assert.match(js,/aria-label","Próximo personagem"/);
+ assert.match(js,/keydown/);
+ assert.match(js,/event\.key==="ArrowLeft"/);
+ assert.doesNotMatch(js,/character-miniature/);
+ assert.match(html,/\.roster-position-count/);
+ assert.match(html,/\.roster-arrow-next/);
 });
