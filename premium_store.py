@@ -25,7 +25,7 @@ def catalog(db=None, include_hidden=False):
             return catalog(connection,include_hidden)
     query='SELECT data FROM shop_products'
     if not include_hidden:query+=' WHERE enabled=1 AND archived=0'
-    return [json.loads(row['data']) for row in db.execute(query+' ORDER BY rowid')]
+    return [p for row in db.execute(query+' ORDER BY rowid') if __import__('class_availability').active_product(p:=json.loads(row['data'])) or include_hidden]
 
 def activate_effect(db,target,item):
     group='vampiric' if item['kind']=='vampiricEx' else item['kind']
@@ -112,7 +112,7 @@ def transact(user,action,data):
             reason='GM grant'
         else:
             item=next((p for p in catalog(db,action!='purchase') if p['code']==data.get('code')),None)
-            if not item:raise ValueError('Premium desconhecido.')
+            if not item or not __import__('class_availability').active_product(item):raise ValueError('Produto temporariamente indisponível.')
             if action=='purchase':
                 count=data.get('count',1)
                 if type(count) is not int or not 1<=count<=99:raise ValueError('Quantidade inválida (1 a 99).')
@@ -135,7 +135,7 @@ def transact(user,action,data):
                 if item.get('permanent') or item['kind']=='item':raise ValueError('Trajes são equipamentos permanentes. Equipe na bolsa.')
                 if item['kind']=='bundle':
                     job=data.get('job');generation=data.get('generation')
-                    if type(job) is not int or not 1<=job<=11:raise ValueError('Escolha a classe que receberá as Forças Mirage.')
+                    if type(job) is not int or not __import__('class_availability').active_job(job):raise ValueError('Escolha uma classe ativa para receber as Forças Mirage.')
                     row=db.execute('SELECT generation FROM character_versions WHERE username=? AND job=? AND deleted=0',(target,job)).fetchone()
                     if not row or row['generation']!=generation:raise ValueError('Atualize a página e selecione o personagem novamente.')
                     parts={p['code']:p for p in catalog(db,True)}

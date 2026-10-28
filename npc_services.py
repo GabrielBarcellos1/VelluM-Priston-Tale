@@ -42,7 +42,7 @@ def quotes(saved,service):
         for p in bag:
             item=p['item'];d=game.ITEMS.get(item['code'])
             if not d or item.get('premiumManaged') or item.get('questWeapon') or item.get('aging',0) or item.get('mixed') or d['slot'] not in ('WEAPON_ONE','WEAPON_TWO','ARMOR','BOOTS','GLOVES','ARMLET','SHIELDS'):continue
-            candidates=[i for i in game.ITEMS.values() if i.get('family')==d.get('family') and i.get('req',{}).get('level',0)>d.get('req',{}).get('level',0) and i.get('price',0)>d.get('price',0) and i.get('price',0)>0 and not re.search(r'\(|costume|event|halloween|christmas',i['name'],re.I)]
+            candidates=[i for i in game.ITEMS.values() if __import__('class_availability').active_item(i) and i.get('family')==d.get('family') and i.get('req',{}).get('level',0)>d.get('req',{}).get('level',0) and i.get('price',0)>d.get('price',0) and i.get('price',0)>0 and not re.search(r'\(|costume|event|halloween|christmas',i['name'],re.I)]
             if not candidates:continue
             target=min(candidates,key=lambda i:(i.get('req',{}).get('level',0),i['price']))
             if target.get('req',{}).get('level',0)>saved.get('stats',{}).get('level',1):continue

@@ -33,7 +33,7 @@ def admin_data(user,data=None):
 def allowed(code):
     import game_control as g
     i=g.ITEMS.get(code)
-    return bool(i and code not in g.BOSS_CODES and i.get('family')!='OR2' and i.get('slot') in ('WEAPON_ONE','WEAPON_TWO','ARMOR','BOOTS','GLOVES','ARMLET','SHIELDS','AMULET','RING','SHELTOM','POTION','FORCEORB') and i.get('price',0)>0 and not __import__('re').search(r'\(|costume|event|halloween|christmas',i['name'],__import__('re').I))
+    return bool(i and __import__('class_availability').active_item(i) and code not in g.BOSS_CODES and i.get('family')!='OR2' and i.get('slot') in ('WEAPON_ONE','WEAPON_TWO','ARMOR','BOOTS','GLOVES','ARMLET','SHIELDS','AMULET','RING','SHELTOM','POTION','FORCEORB') and i.get('price',0)>0 and not __import__('re').search(r'\(|costume|event|halloween|christmas',i['name'],__import__('re').I))
 
 def chance(value,label='Chance'):
     import game_control as g
@@ -189,7 +189,7 @@ def roll(db,monster,field,premium_extra=0,rng=None,preview=False,job=None,player
         if wins(stone['chance']):items.append((f"OS1{rng.randint(stone['min'],stone['max']):02}",1,'sheltom'))
     if p['custom']:
         for row in p['extras']:
-            if wins(row['chance']):items.append((row['code'],row['count'],'configured'))
+            if allowed(row['code']) and wins(row['chance']):items.append((row['code'],row['count'],'configured'))
     return {'gold':gold,'items':items,'effects':e,'policyVersion':p['version']}
 
 def preview(user,data):

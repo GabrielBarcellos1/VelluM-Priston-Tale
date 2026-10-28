@@ -70,18 +70,21 @@ def logout(token):
 
 
 def load_state(username, job):
+    if job in (9,10,11):return None
     with connection() as db:
         row = db.execute('SELECT state FROM characters WHERE username=? AND job=?',(username,job)).fetchone()
         return json.loads(row['state']) if row else None
 
 
 def character_record(username,job):
+    if job in (9,10,11):return {'state':None,'generation':None}
     with connection() as db:
         row=db.execute('SELECT c.state,v.generation FROM characters c JOIN character_versions v USING(username,job) WHERE c.username=? AND c.job=? AND v.deleted=0',(username,job)).fetchone()
         return {'state':json.loads(row['state']),'generation':row['generation']} if row else {'state':None,'generation':None}
 
 
 def save_state(user, job, state, generation=None, require_generation=False):
+    if job in (9,10,11):raise ValueError('Esta classe está temporariamente desativada.')
     if job not in range(1,12) or not isinstance(state,dict):
         raise ValueError('Personagem inválido')
     if user['role'] not in ('admin','gm'):
@@ -186,6 +189,7 @@ def character_generation(username,job):
 
 
 def roster(user):
+    import class_availability as classes
     import online_world
     with online_world.LOCK:
         online_world.prune(time.monotonic())
@@ -194,11 +198,12 @@ def roster(user):
     with connection() as db:
         characters=[]
         for row in db.execute('SELECT c.job,c.state,v.generation FROM characters c JOIN character_versions v USING(username,job) WHERE c.username=? AND v.deleted=0 ORDER BY c.job',(user['username'],)):
+            if not classes.active_job(row['job']):continue
             state=json.loads(row['state'])
             characters.append({'job':row['job'],'name':state.get('name') or user['username'],
                                'level':state.get('stats',{}).get('level',1),'field':state.get('field'),
                                'generation':row['generation'],'online':active_job==row['job']})
-    return {'characters':characters,'classes':[{'job':i+1,'name':name,'tribe':'Morion' if i+1 in (5,6,7,8,10) else 'Tempskron'} for i,name in enumerate(CLASS_NAMES)],'limit':11}
+    return {'characters':characters,'classes':[{'job':i+1,'name':name,'tribe':'Morion' if i+1 in (5,6,7,8,10) else 'Tempskron'} for i,name in enumerate(CLASS_NAMES) if classes.active_job(i+1)],'limit':8}
 
 
 def manage_character(user,data):
@@ -206,6 +211,7 @@ def manage_character(user,data):
     job=data.get('job');action=data.get('action')
     if type(job) is not int or job not in range(1,12):raise ValueError('Escolha uma classe válida.')
     if action not in ('create','delete'):raise ValueError('Ação inválida.')
+    if job in (9,10,11):raise ValueError('Esta classe está temporariamente desativada; os dados foram preservados.')
     with online_world.LOCK,connection() as db:
         db.execute('BEGIN IMMEDIATE')
         previous=db.execute('SELECT state FROM characters WHERE username=? AND job=?',(user['username'],job)).fetchone()

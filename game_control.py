@@ -111,6 +111,8 @@ def save_rules(user,data):
 
 
 def context(user,data,db=None):
+    import class_availability as classes
+    if data.get('job') in classes.DISABLED_JOBS:raise ValueError('Esta classe está temporariamente desativada.')
     job=int_value(data.get('job'),1,11,'Classe')
     if db is None:
         with accounts.connection() as connection:
@@ -229,7 +231,7 @@ def aging(user,data):
 
 
 def eligible(monster,low,high):
-    return [i for i in ITEMS.values() if i['slot'] in ('WEAPON_ONE','WEAPON_TWO','ARMOR','BOOTS','GLOVES','ARMLET','SHIELDS','AMULET','RING','SHELTOM') and i['code'] not in BOSS_CODES and i.get('family')!='OR2' and low<=i.get('req',{}).get('level',0)<=high and i.get('price',0)>0 and not re.search(r'\(|costume|event|halloween|christmas',i['name'],re.I)]
+    return [i for i in ITEMS.values() if __import__('class_availability').active_item(i) and i['slot'] in ('WEAPON_ONE','WEAPON_TWO','ARMOR','BOOTS','GLOVES','ARMLET','SHIELDS','AMULET','RING','SHELTOM') and i['code'] not in BOSS_CODES and i.get('family')!='OR2' and low<=i.get('req',{}).get('level',0)<=high and i.get('price',0)>0 and not re.search(r'\(|costume|event|halloween|christmas',i['name'],re.I)]
 
 def common_potion(level,roll):
     prefix='PL' if roll<.45 else 'PM' if roll<.8 else 'PS'
@@ -364,11 +366,11 @@ def report(user,data):
 def skin_library():
     result=[]
     for i in ITEMS.values():
-        if i['slot'] not in ('WEAPON_ONE','WEAPON_TWO','ARMOR','SHIELDS') or not i.get('image') or i.get('price',0)<=0:continue
+        if not __import__('class_availability').active_item(i) or i['slot'] not in ('WEAPON_ONE','WEAPON_TWO','ARMOR','SHIELDS') or not i.get('image') or i.get('price',0)<=0:continue
         cat='arma' if i['slot'].startswith('WEAPON') else 'escudo' if i['slot']=='SHIELDS' else 'traje'
         result.append({'id':'look-'+i['code'],'name':i['name'],'look':i['code'],'cat':cat,'hands':2 if i['slot']=='WEAPON_TWO' else 1 if i['slot']=='WEAPON_ONE' else None,'image':i['image'],'price':1000,'description':'Visual cosmético. Preserva os atributos do equipamento.'})
     import custom_skins
-    return result+custom_skins.catalog()
+    return result+[skin for skin in custom_skins.catalog() if skin.get('look') in ITEMS and __import__('class_availability').active_item(ITEMS[skin['look']])]
 
 
 def skin_admin(user):
@@ -400,6 +402,7 @@ def skin_snapshot(db,username,job):
     owned=[r['id'] for r in db.execute('SELECT id FROM skin_owned WHERE username=?',(username,))]
     equip={r['cat']:r['id'] for r in db.execute('SELECT * FROM skin_equipped WHERE username=? AND job=?',(username,job))}
     balance=db.execute('SELECT coins FROM wallets WHERE username=?',(username,)).fetchone()
+    catalog=[skin for skin in catalog if skin.get('look') in ITEMS and __import__('class_availability').active_item(ITEMS[skin['look']])]
     return {'catalog':catalog,'owned':owned,'equip':equip,'coins':balance['coins'] if balance else 0,'worn':[i for i in catalog if i['id'] in equip.values()]}
 
 
@@ -418,6 +421,7 @@ def skin_action(user,data):
         offer=db.execute('SELECT * FROM skin_offers WHERE id=?',(data.get('id'),)).fetchone()
         if not offer:raise ValueError('Skin desconhecida.')
         skin=json.loads(offer['data'])
+        if skin.get('look') not in ITEMS or not __import__('class_availability').active_item(ITEMS[skin['look']]):raise ValueError('Skin temporariamente desativada.')
         if action=='buy':
             if not offer['enabled']:raise ValueError('Esta skin não está à venda.')
             if data.get('price')!=skin['price']:raise ValueError('Preço mudou. Atualize a loja.')

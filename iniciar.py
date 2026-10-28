@@ -201,7 +201,7 @@ class Handler(SimpleHTTPRequestHandler):
                         elif resource=='rules':result=game_control.rules(user)
                         elif resource=='rule-defaults':result=game_control.DEFAULTS
                         elif resource=='skins':result=game_control.skin_admin(user)
-                        elif resource=='item-library':result=[{'code':i['code'],'name':i['name'],'level':i.get('req',{}).get('level',0)} for i in game_control.ITEMS.values()]
+                        elif resource=='item-library':result=[{'code':i['code'],'name':i['name'],'level':i.get('req',{}).get('level',0)} for i in game_control.ITEMS.values() if __import__('class_availability').active_item(i)]
                         else:
                             kind=query.get('kind',['drop'])[0]
                             if kind not in ('drop','security','craft','kill','shop'):raise ValueError('Tipo de histórico inválido.')
@@ -266,6 +266,8 @@ class Handler(SimpleHTTPRequestHandler):
             elif path in ('/','/personagens','/jogar'):
                 user=self.user();query=parse_qs(urlsplit(self.path).query)
                 playing=user and path!='/personagens' and (path=='/jogar' or 'classe' in query or 'mapa' in query)
+                if playing and int(query.get('classe',[user['preferredClass']])[0]) in (9,10,11):
+                    self.send_response(302);self.send_header('Location','/personagens');self.end_headers();return
                 if playing and not accounts.load_state(user['username'],int(query.get('classe',[user['preferredClass']])[0])):
                     self.send_response(302);self.send_header('Location','/personagens');self.end_headers();return
                 self.reply(HTML.encode() if playing else (ROOT / 'login.html').read_bytes(), 'text/html; charset=utf-8')
@@ -275,7 +277,7 @@ class Handler(SimpleHTTPRequestHandler):
                 scene=json.loads((ROOT / 'data' / 'roster-scene.json').read_text(encoding='utf-8'))
                 self.reply(base64.b64decode(scene['base64'], validate=True), 'image/jpeg')
             elif path == '/assets/items.json':
-                items=json.loads((ROOT/'data/loot-items.json').read_text(encoding='utf-8'))['items']
+                items=[i for i in json.loads((ROOT/'data/loot-items.json').read_text(encoding='utf-8'))['items'] if __import__('class_availability').active_item(i)]
                 prices=json.loads((ROOT/'data/balance.json').read_text(encoding='utf-8')).get('potionPrices',{})
                 for item in items:
                     if item['code'] in prices:item['price']=prices[item['code']]

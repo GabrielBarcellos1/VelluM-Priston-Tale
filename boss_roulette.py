@@ -34,7 +34,7 @@ def configs(user,data=None):
     with accounts.connection() as db:
         setup(db)
         return {'bosses':[{'id':m['id'],'name':m['name'],**configuration(db,m)} for m in game.MONSTERS.values() if m.get('boss')],
-                'items':[{'code':i['code'],'name':i['name']} for i in game.ITEMS.values() if i.get('price',0)>0 or i['code'] in game.BOSS_CODES]}
+                'items':[{'code':i['code'],'name':i['name']} for i in game.ITEMS.values() if __import__('class_availability').active_item(i) and (i.get('price',0)>0 or i['code'] in game.BOSS_CODES)]}
 
 def save_config(user,data):
     admin.require_admin(user);m=game.MONSTERS.get(data.get('monster'))
@@ -47,7 +47,7 @@ def save_config(user,data):
         clean[group]=[];seen=set()
         for row in rows:
             code=row.get('code')
-            if code not in game.ITEMS or code in seen:raise ValueError('Código inexistente ou repetido na lista.')
+            if code not in game.ITEMS or not __import__('class_availability').active_item(game.ITEMS[code]) or code in seen:raise ValueError('Código inexistente ou repetido na lista.')
             if game.ITEMS[code].get('gmOnly'):raise ValueError('Itens exclusivos de GM não podem entrar nos drops.')
             if group=='common' and code in game.BOSS_CODES:raise ValueError('Item exclusivo deve ficar na lista de exclusivos.')
             game.number(row.get('weight'),.001,100000,'Peso');seen.add(code);clean[group].append({'code':code,'weight':row['weight']})
@@ -69,9 +69,13 @@ def finish(db,encounter):
         if current and not current['deleted'] and current['generation']==p['generation']:participants.append(dict(p))
     if not participants:return
     cfg=configuration(db,game.MONSTERS[encounter['monster']]);count=RNG.randint(3,5)
+    cfg['common']=[r for r in cfg['common'] if r['code'] in game.ITEMS and __import__('class_availability').active_item(game.ITEMS[r['code']])]
+    cfg['rare']=[r for r in cfg['rare'] if r['code'] in game.ITEMS and __import__('class_availability').active_item(game.ITEMS[r['code']])]
+    if not cfg['common']:cfg['common']=[{'code':'OS108','weight':1}]
     import server_economy
     multiplier=server_economy.effects(db,encounter['field'])['boss']
-    rare=encounter['forced'] or (choose(cfg['rare']) if cfg['rare'] and RNG.random()*100<min(100,cfg['rareChance']*multiplier) else None)
+    forced=encounter['forced'] if encounter['forced'] in game.ITEMS and __import__('class_availability').active_item(game.ITEMS[encounter['forced']]) else None
+    rare=forced or (choose(cfg['rare']) if cfg['rare'] and RNG.random()*100<min(100,cfg['rareChance']*multiplier) else None)
     rare_round=RNG.randrange(count) if rare else -1
     for index in range(count):
         code=rare if index==rare_round else choose(cfg['common']);rolls=[{'name':p['name'],'job':p['job'],'number':RNG.randint(0,1000),'ticket':secrets.token_hex(6)} for p in participants]
@@ -130,6 +134,7 @@ def action(user,data):
             result=json.loads(db.execute('SELECT data FROM boss_rounds WHERE encounter=? AND round=?',(award['encounter'],award['round'])).fetchone()[0])
             if now<result['revealAt']:raise ValueError('A rodada ainda não terminou.')
             if saved.get('savedAt')!=data.get('savedAt'):raise ValueError('O inventário mudou. Tente novamente.')
+            if not __import__('class_availability').active_item(game.ITEMS[award['code']]):raise ValueError('Recompensa temporariamente desativada.')
             npc.add_bag(saved,npc.item_instance(award['code'],npc.all_items(saved)))
             saved['savedAt']=max(int(now*1000),saved.get('savedAt',0)+1)
             db.execute('UPDATE characters SET state=? WHERE username=? AND job=?',(json.dumps(saved),user['username'],job));db.execute('UPDATE boss_awards SET claimed=1 WHERE id=?',(award['id'],))

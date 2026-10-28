@@ -19,7 +19,7 @@ def prune(now):
 def heartbeat(user,data):
     global NEXT_ID
     job=data.get('job');field=data.get('field');client=data.get('clientId')
-    if type(job) is not int or job not in MODELS or type(field) is not int or field not in FIELDS:raise ValueError('Classe ou mapa inválido.')
+    if type(job) is not int or job not in MODELS or job in (9,10,11) or type(field) is not int or field not in FIELDS:raise ValueError('Classe ou mapa inválido.')
     if not isinstance(client,str) or not re.fullmatch(r'[a-f0-9]{32}',client):raise ValueError('Identificador inválido.')
     pos={k:finite(data.get(k),-200000,200000) for k in ('x','z','y')}
     angle=finite(data.get('angle',0),-10000,10000)
