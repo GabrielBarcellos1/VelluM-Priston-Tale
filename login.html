@@ -444,8 +444,16 @@
       /* Full-screen classic character-selection stage. The foreground hero is
          the authentic model, others remain visible as selectable miniatures. */
       body.roster-cinematic {
-        background: radial-gradient(ellipse at center 35%, #263d39 0%, #0d1617 74%);
+        background: #10251c url('/assets/roster-scene.jpg') center 42% / cover no-repeat fixed;
         overflow-x: hidden;
+      }
+      body.roster-cinematic::before {
+        content: '';
+        position: fixed;
+        inset: 0;
+        pointer-events: none;
+        background: linear-gradient(180deg, #07100c70, #0000000c 25%, #09100b42 75%, #080a08be);
+        z-index: 0;
       }
       body.roster-cinematic header {
         position: absolute;
@@ -499,7 +507,7 @@
         margin: 0;
         border: 0;
         border-radius: 0;
-        background: radial-gradient(circle at 50% 43%, #314440 0%, #0f1c1d 80%);
+        background: radial-gradient(ellipse at 50% 48%, #18251c08 0%, #09170b48 82%);
         pointer-events: auto;
       }
       body.roster-cinematic .character-model-frame {
@@ -566,8 +574,8 @@
         padding: 6px 7px 10px;
         overflow: hidden;
         border-radius: 10px 10px 4px 4px;
-        background: linear-gradient(0deg,#111b19ee,#1e332683 72%,#12232366);
-        border-color: #8b785e77;
+        background: linear-gradient(0deg,#131b14d9,transparent 70%);
+        border-color: #b29b664a;
         box-shadow: 0 8px 18px #0007;
         text-align: center;
         pointer-events: auto;
@@ -583,7 +591,7 @@
         height: 104px;
         overflow: hidden;
         border-radius: 5px;
-        background: #162825;
+        background: transparent;
         pointer-events: none;
       }
       body.roster-cinematic .character-card .class-icon { display: none; }
