@@ -98,6 +98,22 @@ function icon(job) {
 }
 // The selection screen only renders portraits; it never starts a game session.
 function clearPreviewCache() {}
+// Use the actual dressed portrait as three articulated layers.  No gameplay
+// scene or login is started while the player chooses a character.
+function articulateWalk(hero){
+  if(!hero || hero.querySelector('.roster-walk-rig'))return;
+  const portrait=hero.querySelector('.roster-native-portrait');
+  if(!portrait)return;
+  const rig=node('div',undefined,'roster-walk-rig');
+  for(const part of ['torso','left-leg','right-leg']){
+    const img=portrait.cloneNode(false);
+    img.className='roster-walk-part roster-walk-'+part;
+    img.setAttribute('aria-hidden','true');
+    rig.append(img);
+  }
+  hero.append(rig);
+  hero.classList.add('roster-is-walking');
+}
 function detail(direction=0){
   const panel=$("#character-detail");
   // Preserve only the currently visible stage when switching rapidly.
@@ -132,7 +148,12 @@ function detail(direction=0){
     stage.classList.add(direction>0?"roster-enter-next":"roster-enter-previous");
   }
   panel.append(stage);
+  if(direction){
+    articulateWalk(hero);
+    setTimeout(()=>{if(hero.isConnected)hero.classList.remove('roster-is-walking');},530);
+  }
   if(previousStage){
+    articulateWalk(previousStage.querySelector('.roster-center-hero'));
     previousStage.className="character-model-stage roster-transition-exit "+
       (direction>0?"roster-exit-next":"roster-exit-previous");
     previousStage.setAttribute("aria-hidden","true");

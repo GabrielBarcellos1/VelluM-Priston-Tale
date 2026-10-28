@@ -953,6 +953,32 @@
       body.roster-cinematic .roster-enter-previous .roster-side-hero {
         animation:rosterSideReveal .46s ease-out both;
       }
+      /* Articulated preview: torso stays upright while both legs swing in opposition. */
+      body.roster-cinematic .roster-walk-rig{
+        position:absolute;inset:0;z-index:5;display:none;pointer-events:none;
+      }
+      body.roster-cinematic .roster-is-walking .roster-walk-rig{display:block}
+      body.roster-cinematic .roster-is-walking > .character-art-main{opacity:0}
+      body.roster-cinematic .roster-walk-part{
+        position:absolute;left:50%;top:50%;height:min(70vh,640px);
+        width:auto;max-width:min(53vw,460px);object-fit:contain;
+        translate:-50% -57%;filter:drop-shadow(0 14px 22px #000a);
+      }
+      body.roster-cinematic .roster-walk-torso{clip-path:inset(0 0 39% 0)}
+      body.roster-cinematic .roster-walk-left-leg{
+        clip-path:polygon(0 58%,50% 58%,50% 100%,0 100%);
+        transform-origin:37% 58%;animation:rosterLeftStep .32s ease-in-out infinite alternate;
+      }
+      body.roster-cinematic .roster-walk-right-leg{
+        clip-path:polygon(50% 58%,100% 58%,100% 100%,50% 100%);
+        transform-origin:63% 58%;animation:rosterRightStep .32s ease-in-out infinite alternate;
+      }
+      @keyframes rosterLeftStep{from{transform:rotate(-9deg)}to{transform:rotate(12deg)}}
+      @keyframes rosterRightStep{from{transform:rotate(12deg)}to{transform:rotate(-9deg)}}
+      @media(prefers-reduced-motion:reduce){
+        body.roster-cinematic .roster-walk-rig{display:none!important}
+        body.roster-cinematic .roster-is-walking > .character-art-main{opacity:1!important}
+      }
       /* Character select is a self-contained 2D stage: no in-game scene is opened. */
       @keyframes rosterWalkToLeft {
         0% {transform:translate(0,0) scale(1);opacity:1}

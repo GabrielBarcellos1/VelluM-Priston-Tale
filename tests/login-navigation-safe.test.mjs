@@ -15,6 +15,14 @@ test('logout and switch account are separate actions',()=>{
  assert.match(session,/switchAccount\.onclick = \(\) => leaveCharacter\(true\)/);
  assert.match(login,/\$\("#entry"\)\.hidden = false/);
 });
+test('roster walking uses articulated leg layers without loading gameplay',()=>{
+ assert.match(login,/function articulateWalk\(hero\)/);
+ assert.match(login,/\['torso','left-leg','right-leg'\]/);
+ assert.match(html,/@keyframes rosterLeftStep/);
+ assert.match(html,/@keyframes rosterRightStep/);
+ assert.doesNotMatch(login,/rosterPreview=1/);
+});
+
 test('rapid character switching discards stale outgoing stages',()=>{
  assert.match(login,/querySelector\("\.character-model-stage:not\(\.roster-transition-exit\)"\)/);
  assert.match(login,/panel\.replaceChildren\(\)/);
