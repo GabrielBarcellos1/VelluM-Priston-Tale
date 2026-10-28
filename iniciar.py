@@ -268,6 +268,8 @@ class Handler(SimpleHTTPRequestHandler):
                 if playing and not accounts.load_state(user['username'],int(query.get('classe',[user['preferredClass']])[0])):
                     self.send_response(302);self.send_header('Location','/personagens');self.end_headers();return
                 self.reply(HTML.encode() if playing else (ROOT / 'login.html').read_bytes(), 'text/html; charset=utf-8')
+            elif path == '/assets/roster-scene.jpg':
+                self.reply((ROOT / 'assets' / 'roster-scene.jpg').read_bytes(), 'image/jpeg')
             elif path == '/assets/items.json':
                 items=json.loads((ROOT/'data/loot-items.json').read_text(encoding='utf-8'))['items']
                 prices=json.loads((ROOT/'data/balance.json').read_text(encoding='utf-8')).get('potionPrices',{})
