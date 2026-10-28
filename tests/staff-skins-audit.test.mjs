@@ -42,3 +42,11 @@ test('premium store exposes integrated 3D skin catalog',async()=>{
  assert.match(shop,/preview\(skin, card\)/);
  assert.match(skin,/skin\.customModel==='vambrace'/);
 });
+
+test('paired Shaman phantoms and Martial Artist fists use animated hand bones',()=>{
+ assert.match(skin,/\['phantom','vambrace','claw'\]/);
+ assert.match(skin,/const bone=index===0\?15:25/);
+ assert.match(skin,/actor\.object\.add\(hand\)/);
+ assert.match(skin,/updateHands\(actor,record\)/);
+ assert.match(skin,/record\.handModels\?\?/);
+});
