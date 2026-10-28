@@ -2,6 +2,33 @@ import {characterPortrait} from './login-portrait.mjs';
 const $ = (selector) => document.querySelector(selector);
 let account, roster, selected, deleting;
 const skills = new Map();
+const fullPortraits=new Map();
+function rosterPortrait(job,mini=false){
+ const src=fullPortraits.get(Number(job));
+ if(!src){
+  const fallback=characterPortrait(job,{mini});
+  fallback.dataset.portraitJob=String(job);
+  return fallback;
+ }
+ const holder=node("span",undefined,mini?"character-art character-art-mini":"character-art character-art-main");
+ const img=node("img",undefined,"roster-native-portrait");
+ img.alt="Visualização da classe equipada com itens avançados";
+ img.decoding="async";
+ img.src=src;
+ holder.append(img);
+ holder.dataset.portraitJob=String(job);
+ return holder;
+}
+fetch("/assets/roster-full-portraits.json",{cache:"force-cache"})
+ .then(r=>{if(!r.ok)throw Error("retratos indisponíveis");return r.json();})
+ .then(data=>{
+  for(const [job,src] of Object.entries(data.portraits??{}))
+   if(/^data:image\/webp;base64,/.test(src))fullPortraits.set(Number(job),src);
+  for(const old of document.querySelectorAll("[data-portrait-job]")){
+   const job=Number(old.dataset.portraitJob);
+   if(fullPortraits.has(job))old.replaceWith(rosterPortrait(job,old.classList.contains("character-art-mini")));
+  }
+ }).catch(()=>{}); // SVG remains as an immediate, safe fallback.
 const descriptions = [
   "Combate corpo a corpo com machados e golpes de força.",
   "Versatilidade, proteção e domínio das máquinas.",
@@ -76,7 +103,7 @@ function detail(){
   }
   const type=roster.classes.find(c=>c.job===selected.job);
   const stage=node("div",undefined,"character-model-stage");
-  stage.append(characterPortrait(selected.job));
+  stage.append(rosterPortrait(selected.job));
   panel.append(stage);
   panel.append(node("span",type.tribe,"eyebrow"),
     node("h2",selected.name),
@@ -133,7 +160,7 @@ function render() {
     card.dataset.job = character.job;
     card.setAttribute("aria-pressed", String(selected?.job === character.job));
     const miniature = node("span",undefined,"character-miniature");
-    miniature.append(characterPortrait(character.job,{mini:true}));
+    miniature.append(rosterPortrait(character.job,true));
     card.append(miniature);
     card.append(
       node("small", type.tribe.toUpperCase()),
