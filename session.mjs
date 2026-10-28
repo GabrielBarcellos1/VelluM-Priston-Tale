@@ -43,6 +43,7 @@ import { createSkillSystem } from "/skill-system.mjs";
 
 import { mountCustomSkins, openSapphirePreview } from "/custom-skins.mjs";
 import { mountSkinShop } from "/skins-shop.mjs";
+import { openPremiumShop } from "/premium-shop.mjs";
 import { resolveName } from "/admin-names.mjs";
 // Browser-local service adapter for the pinned public client. No production login.
 const B = globalThis.__localGameBridge;
@@ -135,10 +136,26 @@ function applyWallet(value) {
 async function refreshWallet() {
   applyWallet(await get("/api/local/wallet"));
 }
-async function showShop() {
+async function showShop(initialTab = "premium") {
   game?.keys.clear();
   await refreshWallet();
-  game.events.emit("npcOpen", { npcId: 0, name: "Item Shop", windowKind: "itemshop", data: {} });
+  openPremiumShop({
+    wallet: () => wallet,
+    serverNow,
+    refresh: refreshWallet,
+    initialTab,
+    openSkins: (host) => globalThis.__localSession.skinShop?.open(host),
+    action: async (action, code) => {
+      const result = await postLocal("/api/local/premium/" + action, {
+        code,
+        ...(action === "purchase" ? { count: 1 } : { job: characterClass.job, generation: characterGeneration }),
+        requestId: requestId(),
+      });
+      applyWallet(result.wallet);
+      save();
+      return result;
+    },
+  });
 }
 const [fieldData, wikiData, itemData, questData, spawnData, dropRules, skillData,npcStageData,mapLinks] =
   await Promise.all([
@@ -769,7 +786,7 @@ function adminCommand(input) {
       }
       return gmRoute();
     case "skins":
-      return globalThis.__localSession.skinShop?.open().then(() => "Loja de Skins aberta.");
+      return showShop("skins").then(() => "Skins abertas na loja premium.");
     case "drops":
       return postLocal('/api/local/game/economy',{field:field.id}).then(r=>{
        const p=r.policy,d=r.globalDrops;return `Drops de ${field.name}: ${p.paused?'SUSPENSOS':p.custom?`ouro ${p.gold.chance}% entre ${p.gold.min} e ${p.gold.max}; equipamentos: ${p.equipment.map(g=>g.label+' '+Math.min(100,g.chance*r.effects.drops)+'%').join(', ')||'nenhum grupo'}`:`padrão global — ouro ${d.goldChance}%; equipamentos ${d.equipmentChance}% / ${d.highLevelChance}%`}. Evento XP ×${r.effects.xp}, ouro ×${r.effects.gold}. Bosses usam roleta e tabela própria.`;
@@ -1872,7 +1889,7 @@ function npcTalk(id, interactive) {
       });
     });
     panel.button('Item Shop - itens por coins',async()=>{panel.close();await showShop();});
-    panel.button('Skins por coins',async()=>{panel.close();await globalThis.__localSession.skinShop?.open();});
+    panel.button('Skins por coins',async()=>{panel.close();await showShop("skins");});
   } else if (npc.services?.includes("skill")) {
     skills.publish();
     gameFeatures.openNpc(npc).catch(e=>notice(e.message));
@@ -2065,7 +2082,7 @@ async function handle(message) {
   if (messages.length > 100) messages.shift();
   switch (message.t) {
     case "skinsOpen":
-      await globalThis.__localSession.skinShop?.open();
+      await showShop("skins");
       break;
     case "itemShopOpen":
       await refreshWallet();
@@ -3151,7 +3168,7 @@ try {
   globalThis.__localSession.customSkins=mountCustomSkins({B,game,own:()=>customSkinState,inventory:()=>inv.equip,catalog:customCatalog.skins,peers:()=>globalThis.__localSession.online?.peers()??[]});
   globalThis.__localSession.skinShop = mountSkinShop({
     onApply:value=>{customSkinState=value;},
-    preview:skin=>openSapphirePreview(B,skin),
+    preview:(skin,host)=>openSapphirePreview(B,skin,host),
     generation: characterGeneration,
     game,
     hero,
