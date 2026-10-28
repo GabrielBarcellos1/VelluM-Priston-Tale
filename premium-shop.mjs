@@ -197,8 +197,12 @@ export function openPremiumShop(ctx) {
     const item=selectedItem();
     if(!item?.customModel)return;
     previewHost.replaceChildren();previewHost.hidden=false;
-    try{ctx.preview?.(item,previewHost);}
-    catch(error){notify(error.message);previewHost.hidden=true;}
+    try{
+      ctx.preview?.(item,previewHost);
+      previewHost.querySelector(".skin-inline-preview button")?.addEventListener("click",()=>{
+        previewHost.hidden=true;
+      },{once:true});
+    }catch(error){notify(error.message);previewHost.hidden=true;}
   };
   draw();
   if(tab==="skins")loadSkins();
