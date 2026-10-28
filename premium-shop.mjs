@@ -130,8 +130,8 @@ export function openPremiumShop(ctx) {
       const wallet=ctx.wallet();
       const count=wallet.stock?.find(x=>x.code===item.code)?.quantity??0;
       state.textContent=count?"Na conta: "+count:"Disponível para compra";
-      buy.textContent=count?"Ativar / Comprar":"Comprar";
-      buy.disabled=busy||(wallet.coins<item.price&&count<1);
+      buy.textContent=tab==="costume"&&count?"Adquirido — equipe na bolsa":count?"Ativar":"Comprar";
+      buy.disabled=busy||(tab==="costume"&&count>0)||(wallet.coins<item.price&&count<1);
     }
   }
   function draw(){
@@ -245,7 +245,7 @@ export function openPremiumShop(ctx) {
         notify(result?.message??"Operação concluída.");
       }else{
         const count=ctx.wallet().stock?.find(x=>x.code===item.code)?.quantity??0;
-        const action=count?"activate":"purchase";
+        const action=tab==="costume"?"purchase":count?"activate":"purchase";
         const result=await ctx.action(action,item.code);
         notify(result?.message??"Operação concluída.");
       }
