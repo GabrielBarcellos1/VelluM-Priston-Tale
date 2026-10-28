@@ -146,3 +146,12 @@ Essas seis alterações estão em `skill-measured-cooldowns.mjs`, consumido pelo
 ### Limitações de validação
 
 Os testes automatizados por classe e nível verificam invocação, recursos, resultados e perfis, mas **não comprovam** a precisão de animações e dano quadro a quadro em 1.760 situações de jogo. Para validação histórica integral ainda são necessários: captura de vídeo com frame rate conhecido por nível e classe, comparação com cliente clássico da mesma versão, servidor autoritativo de combate, testes de equipamento e testes PvP. Não declarar os 176 cooldowns historicamente confirmados.
+
+### Verificação automatizada e navegador da revisão de 28/10/2026
+
+- **227/227 testes Node.js aprovados** (`node --test tests/*.test.mjs`), incluindo 60 verificações de níveis dos seis cooldowns medidos e bloqueio de recast.
+- **179/179 testes Python aprovados** (`python -m unittest discover -s tests -p test_*.py`).
+- **11/11 classes abriram em Edge headless** com usuário QA isolado, cada uma expondo exatamente 16 habilidades dos Tiers 1, 2, 3 e 4; **nenhum erro JavaScript** capturado nos testes de inicialização.
+- QA criado exclusivamente para o teste e removido ao final. Nenhum dado real de jogadores foi alterado.
+- O servidor público respondeu `deployment.status=current`, commit `a9f34534007e7ef3dc42c6337837b315411c5ed8`, e retornou HTTP 200 para `/jogar?classe=10` e `/skill-measured-cooldowns.mjs`.
+- Testes de navegador validam **abertura e catálogo**, não demonstram combate real 1.760 vezes nem precisão histórica de animação.
