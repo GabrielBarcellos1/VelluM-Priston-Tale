@@ -3579,6 +3579,31 @@ function mountLocalMenu() {
   compactMedia.addEventListener("change", () => {
     compact.open = !compactMedia.matches;
   });
+  // On phones consolidate the chat shortcut beside Bolsa in the bottom bar.
+  // Move (do not clone) its native button to keep the original click handler.
+  const arrangeMobileChat = () => {
+    if (!matchMedia('(pointer:coarse), (max-width:700px)').matches) return;
+    const bar = document.querySelector('.m-qbar');
+    if (!bar) return;
+    const buttons = [...document.querySelectorAll('button,[role="button"]')];
+    const title = element => [element.textContent,element.getAttribute('aria-label'),element.getAttribute('title')].filter(Boolean).join(' ').trim().toLowerCase();
+    const bag = [...bar.querySelectorAll('button,[role="button"]')].find(element => /bolsa|invent[aá]rio/.test(title(element)));
+    const chat = buttons.find(element => /(^|\s)chat(\s|$)/.test(title(element)) && !element.closest('.local-controls'));
+    if (bag && chat && chat !== bag && chat.parentElement !== bar) {
+      bag.insertAdjacentElement('afterend', chat);
+      chat.classList.add('vellum-mobile-chat');
+    }
+    // Only hide duplicate top-left utility buttons. Keep the account menu.
+    for (const element of buttons) {
+      if (element.closest('.local-mobile-menu') || element.closest('.m-qbar')) continue;
+      const box=element.getBoundingClientRect();
+      if (box.top>110 || box.left>Math.max(185,innerWidth*.35)) continue;
+      if (/voz|voice|microfone|informa[cç][aã]o do personagem/.test(title(element))) element.classList.add('vellum-mobile-top-duplicate');
+    }
+  };
+  arrangeMobileChat();
+  const mobileChatObserver = new MutationObserver(() => arrangeMobileChat());
+  mobileChatObserver.observe(document.body,{childList:true,subtree:true});
   const nativeQuick = document.querySelector(".m-qbar");
   if (nativeQuick) {
     compact.classList.add("has-native-trigger");

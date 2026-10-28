@@ -149,17 +149,17 @@ summary {
   .hud-body:has(> .hud-buff.hud-keep-glow) {
     position: fixed !important;
     top: calc(env(safe-area-inset-top, 0px) + 6px) !important;
-    left: 50% !important;
+    left: calc(env(safe-area-inset-left, 0px) + 64px) !important;
     right: auto !important;
     bottom: auto !important;
-    transform: translateX(-50%) !important;
+    transform: none !important;
     display: flex !important;
     flex-direction: row !important;
     flex-wrap: nowrap !important;
     justify-content: flex-start !important;
     align-items: center !important;
     gap: 5px !important;
-    max-width: min(72vw, 460px) !important;
+    max-width: min(66vw, 440px) !important;
     width: max-content !important;
     padding: 5px 8px !important;
     background: #0b1519d9 !important;
@@ -178,4 +178,18 @@ summary {
 @media (max-width: 740px) and (orientation: landscape) {
   .hud-body:has(> .hud-buff.hud-keep-glow) { max-width: 48vw !important; }
   .local-mobile-menu > .local-controls { max-height: 70dvh; }
+}
+/* Landscape uses the complete viewport without stretching the 3D image. */
+@media (pointer:coarse) and (orientation:landscape) {
+  html,body,#gl,#ui {margin:0!important;max-width:none!important;}
+  html,body {width:100%!important;min-height:100dvh!important;overflow:hidden!important;}
+  #gl {display:block; width:100vw!important;height:100dvh!important;}
+  .hud-body:has(> .hud-buff.hud-keep-glow) {
+    left:calc(env(safe-area-inset-left, 0px) + 62px)!important;
+    max-width:min(48vw,440px)!important;
+  }
+}
+@media (pointer:coarse), (max-width:700px) {
+  .vellum-mobile-top-duplicate {display:none!important;}
+  .m-qbar .vellum-mobile-chat {display:flex!important;position:relative!important;min-width:44px;min-height:44px;flex-shrink:0;}
 }
