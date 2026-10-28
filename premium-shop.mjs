@@ -57,6 +57,7 @@ export function openPremiumShop(ctx) {
   dialog.showModal();
   let tab=["premium","skins","costume"].includes(ctx.initialTab)?ctx.initialTab:"premium";
   let selectedId=null,busy=false,disposed=false,renderingIcons=false;
+  let skinsLoading=false;
   const skinIcons=new Map();
   let kitIcon=null;
   let iconRun=0;
@@ -65,7 +66,7 @@ export function openPremiumShop(ctx) {
   // Legacy 3/24/48/72h effects are retained server-side for existing owners,
   // but the storefront only shows the individually purchasable Item Shop range.
   const currentItems=()=>{
-    if(tab==="skins")return snapshot()?.catalog??[];
+    if(tab==="skins")return skinsLoading?[]:(snapshot()?.catalog??[]);
     const products=ctx.wallet()?.catalog??[];
     return products.filter(item=>tab==="costume"
       ? item.category==="costume"||item.kind==="costume"
@@ -162,7 +163,10 @@ export function openPremiumShop(ctx) {
       const blank=el("div","ft-native-slot ft-native-slot-empty"+(tab==="skins"?" ft-native-skin-slot":""));
       blank.setAttribute("aria-hidden","true");grid.append(blank);
     }
-    empty.hidden=items.length>0;
+    empty.hidden=items.length>0||skinsLoading;
+    inventory.setAttribute("aria-busy",String(skinsLoading));
+    if(skinsLoading)status.textContent="Carregando skins disponíveis…";
+    else if(status.textContent==="Carregando skins disponíveis…")status.textContent="";
     grid.classList.toggle("ft-native-skins-grid",tab==="skins");
     grid.classList.toggle("ft-native-costumes-grid",tab==="costume");
     premiumTab.setAttribute("aria-selected",String(tab==="premium"));
@@ -208,9 +212,12 @@ export function openPremiumShop(ctx) {
   }
   async function loadSkins(){
     const run=++iconRun;
+    skinsLoading=true;
+    draw();
     try{
       await skinShop()?.refresh();
       if(disposed||run!==iconRun)return;
+      skinsLoading=false;
       draw();
       if(renderingIcons||!ctx.B)return;
       renderingIcons=true;
@@ -222,14 +229,23 @@ export function openPremiumShop(ctx) {
         }
         if(selectedId===id&&tab==="skins")showDetails();
       });
-    }catch(error){notify("Não foi possível carregar os modelos 3D: "+error.message);}
+    }catch(error){
+      if(!disposed&&run===iconRun){
+        skinsLoading=false;
+        draw();
+        notify("Não foi possível carregar as skins: "+error.message);
+      }
+    }
     finally{renderingIcons=false;}
   }
   async function selectTab(next){
+    if(tab===next)return;
+    ++iconRun;
+    skinsLoading=next==="skins";
     tab=next;selectedId=null;
     previewHost.hidden=true;previewHost.replaceChildren();
-    draw();
     if(tab==="skins")await loadSkins();
+    else draw();
   }
   premiumTab.onclick=()=>selectTab("premium");
   skinsTab.onclick=()=>selectTab("skins");
@@ -278,7 +294,7 @@ export function openPremiumShop(ctx) {
     try{
       if(tab==="premium")await ctx.refresh();
       else await skinShop()?.refresh();
-      if(!disposed)draw();
+      if(!disposed&&!skinsLoading)draw();
     }catch(error){notify(error.message);}
   },10000);
   return dialog;
