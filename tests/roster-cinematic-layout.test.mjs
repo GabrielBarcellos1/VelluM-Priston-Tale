@@ -6,8 +6,8 @@ const source=name=>readFileSync(new URL('../'+name,import.meta.url),'utf8');
 test('full screen selector uses instant inline SVG with no iframe or 3D model downloads',()=>{
  const js=source('login.mjs'),html=source('login.html');
  assert.match(js,/import \{characterPortrait\}/);
- assert.match(js,/characterPortrait\(selected\.job\)/);
- assert.match(js,/characterPortrait\(character\.job,\{mini:true\}\)/);
+ assert.match(js,/rosterPortrait\(selected\.job\)/);
+ assert.match(js,/rosterPortrait\(character\.job,true\)/);
  assert.doesNotMatch(js,/<iframe|node\("iframe"|rosterPreview=1|previewFrames|api\("\/api\/local\/skills"\)/);
  assert.match(js,/selected = character;\s*for \(const other of list\.querySelectorAll/);
  assert.match(js,/detail\(\);\s*\};\s*list\.append\(card\)/);
@@ -29,4 +29,15 @@ test('all 11 class portraits are built synchronously without fetching assets',()
    assert.equal(characterPortrait(job,{mini:true}).className,'character-art character-art-mini');
   }
  }finally{if(old===undefined)delete globalThis.document;else globalThis.document=old;}
+});
+
+test('real level 150 portraits are loaded once in a compressed transparent image atlas',()=>{
+ const script=source('login.mjs'),server=source('iniciar.py');
+ const atlas=JSON.parse(source('data/roster-full-portraits.json'));
+ assert.equal(Object.keys(atlas.portraits).length,11);
+ for(let i=1;i<=11;i++)assert.match(atlas.portraits[String(i)],/^data:image\/webp;base64,/);
+ assert.match(script,/fetch\("\/assets\/roster-full-portraits\.json"/);
+ assert.match(script,/fullPortraits\.set/);
+ assert.match(script,/old\.replaceWith\(rosterPortrait/);
+ assert.match(server,/\/assets\/roster-full-portraits\.json/);
 });
