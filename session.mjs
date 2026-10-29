@@ -2,6 +2,7 @@ import { questTarget } from "/quest-targets.mjs";
 import { serviceDialog } from "/npc-panels.mjs";
 import { walkingStages, createMapTravel, forestSeamArrival } from "/map-travel.mjs";
 import { nextUpMap, showUpMapNotice } from "/up-map-notice.mjs";
+import { nextAutomaticMap } from "/auto-map-progression.mjs";
 import {
   repairPrice,
   salePrice,
@@ -1648,6 +1649,31 @@ function mapKillExperience(monster) {
   return base?capKillExperience(eventExperience(base,economyEffects),stats,field.id,balanceRules):0;
 }
 let lastMapProgressionNotice = '';
+const autoMapKey = 'vellum-auto-map-' + account.username + '-' + characterClass.job;
+let autoMapEnabled = localStorage.getItem(autoMapKey) !== 'off';
+let autoMapChanging = false;
+let autoMapRetryAfter = 0;
+async function autoProgressMap() {
+  if (!autoMapEnabled || autoMapChanging || !game || game.dead ||
+      economyBusy || economyUncertain || pendingLoot || mapTravel?.busy ||
+      performance.now() < autoMapRetryAfter) return;
+  const destination = nextAutomaticMap(stats.level, field.id, balanceRules);
+  if (!destination) return;
+  autoMapChanging = true;
+  try {
+    if (stateWrite) await stateWrite;
+    if (lootQueue) await lootQueue;
+    if (economyBusy || pendingLoot || economyUncertain) return;
+    notice('Auto mapa: próximo local de evolução — ' + destination.name + '.');
+    await gameFeatures.travel(destination.id);
+  } catch (error) {
+    notice('Auto mapa: não foi possível mudar. ' + error.message);
+  } finally {
+    autoMapChanging = false;
+    autoMapRetryAfter = performance.now() + 10000;
+  }
+}
+setInterval(() => { autoProgressMap().catch(error => recordDiagnostic(error.message)); }, 2500);
 function noticeMapProgression() {
   const info=nextUpMap(stats.level,field.id,balanceRules,mapExperienceAllowed);
   showUpMapNotice(info);
@@ -3546,6 +3572,20 @@ function mountLocalMenu() {
     }
   };
   menu.append(saveButton);
+  const autoMapButton = document.createElement('button');
+  autoMapButton.className = 'vellum-auto-map-toggle';
+  const updateAutoMap = () => {
+    autoMapButton.textContent = 'Mapa auto: ' + (autoMapEnabled ? 'ON' : 'OFF');
+    autoMapButton.setAttribute('aria-pressed', String(autoMapEnabled));
+    autoMapButton.title = 'Troca para o próximo mapa de EXP ao ultrapassar o limite do mapa atual';
+  };
+  autoMapButton.onclick = () => {
+    autoMapEnabled = !autoMapEnabled;
+    localStorage.setItem(autoMapKey, autoMapEnabled ? 'on' : 'off');
+    updateAutoMap();
+  };
+  updateAutoMap();
+  menu.append(autoMapButton);
   if (isAdmin) {
     const panel = document.createElement("button");
     panel.textContent = "Link do jogo";
@@ -3604,6 +3644,10 @@ function mountLocalMenu() {
   const mobileChatObserver = new MutationObserver(() => arrangeMobileChat());
   mobileChatObserver.observe(document.body,{childList:true,subtree:true});
   const nativeQuick = document.querySelector(".m-qbar");
+  if (compactMedia.matches) {
+    autoMapButton.classList.add('vellum-auto-map-mobile');
+    (nativeQuick ?? document.body).append(autoMapButton);
+  }
   if (nativeQuick) {
     compact.classList.add("has-native-trigger");
     const trigger = document.createElement("button");

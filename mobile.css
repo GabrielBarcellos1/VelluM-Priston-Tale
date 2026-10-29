@@ -200,3 +200,7 @@ summary {
 }
 
 @media (pointer:coarse), (max-width:700px) { .vellum-mobile-hide-shortcut {display:none!important;} }
+@media (pointer:coarse), (max-width:700px) {
+  .vellum-auto-map-mobile {min-height:38px;min-width:72px;padding:4px 7px;font:600 11px system-ui;color:#f2d79b;background:#121d1bdc;border:1px solid #b69b5b;border-radius:7px;touch-action:manipulation;}
+  body > .vellum-auto-map-mobile {position:fixed;right:max(9px,env(safe-area-inset-right));top:calc(env(safe-area-inset-top) + 90px);z-index:54;}
+}
