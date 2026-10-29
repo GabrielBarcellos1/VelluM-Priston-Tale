@@ -3586,10 +3586,10 @@ function mountLocalMenu() {
     const bar = document.querySelector('.m-qbar');
     if (!bar) return;
     const buttons = [...document.querySelectorAll('button,[role="button"]')];
-    const title = element => [element.textContent,element.getAttribute('aria-label'),element.getAttribute('title')].filter(Boolean).join(' ').trim().toLowerCase();
-    const bag = [...bar.querySelectorAll('button,[role="button"]')].find(element => /bolsa|invent[aá]rio/.test(title(element)));
+    const title = element => [element.textContent,element.getAttribute('aria-label'),element.getAttribute('title'),element.getAttribute('data-mbtn')].filter(Boolean).join(' ').trim().toLowerCase();
+    const bag = [...bar.querySelectorAll('button,[role="button"]')].find(element => /bolsa|bag|invent/.test(title(element)));
     const chat = buttons.find(element => /(^|\s)chat(\s|$)/.test(title(element)) && !element.closest('.local-controls'));
-    if (bag && chat && chat !== bag && chat.parentElement !== bar) {
+    if (bag && chat && chat !== bag && chat.previousElementSibling !== bag) {
       bag.insertAdjacentElement('afterend', chat);
       chat.classList.add('vellum-mobile-chat');
     }
@@ -3620,7 +3620,7 @@ function mountLocalMenu() {
     trigger.onclick = () => {
       compact.open = !compact.open;
     };
-    nativeQuick.append(trigger);
+    if (!compactMedia.matches) nativeQuick.append(trigger);
     const close = document.createElement("button");
     close.className = "local-account-close";
     close.textContent = "Fechar conta";
@@ -3630,7 +3630,8 @@ function mountLocalMenu() {
     menu.prepend(close);
   }
   compact.append(menu);
-  document.body.append(compact);
+  // Account panel is desktop-only; on touch devices never mount the duplicate UI.
+  if (!compactMedia.matches) document.body.append(compact);
   const placeNativeShortcuts = () => {
     const box=menu.getBoundingClientRect(), small=summary.getBoundingClientRect();
     const bottom=Math.max(box.width ? box.bottom : 0, small.width ? small.bottom : 0);

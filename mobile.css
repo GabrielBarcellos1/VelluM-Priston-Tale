@@ -193,3 +193,8 @@ summary {
   .vellum-mobile-top-duplicate {display:none!important;}
   .m-qbar .vellum-mobile-chat {display:flex!important;position:relative!important;min-width:44px;min-height:44px;flex-shrink:0;}
 }
+/* The duplicate account sheet and its bottom Conta/X shortcut are removed on phones. */
+@media (pointer:coarse), (max-width:700px) {
+  .local-mobile-menu, .local-account-trigger, .local-account-close {display:none!important;}
+  .m-qbar .vellum-mobile-chat {display:flex!important;align-items:center;justify-content:center;min-width:44px;min-height:44px;flex:none;}
+}
