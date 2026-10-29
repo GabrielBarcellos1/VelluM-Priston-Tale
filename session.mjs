@@ -1882,28 +1882,19 @@ function npcTalk(id, interactive) {
       showShop().catch((error) => notice(error.message));
       return;
     }
-    const panel=serviceDialog(npc.name,'Escolha como comprar nesta loja da cidade. Itens da loja de coins são adquiridos pelo catálogo premium; skins são apenas cosméticas.');
-    panel.button('Itens comuns por ouro',async()=>{
-      panel.close();    const stock = (npc.shop ?? []).map((code) => definitions.get(code)).filter(Boolean);
-    // The native shop hides misc whenever an equipment tab is populated.
-    const supplies = stock.some(i => i.slot === "POTION");
+    // Normal merchants open their actual gold inventory immediately.
+    // Premium coins/skins remain available through the dedicated premium shop.
+    const stock = (npc.shop ?? []).map(code => definitions.get(code)).filter(Boolean);
+    const supplies = stock.some(item => item.slot === "POTION");
     game.events.emit("npcOpen", {
-      npcId: id,
-      name: npc.name,
-      windowKind: "shop",
-      data: {
-        weapons: stock.filter((i) => i.slot.startsWith("WEAPON")).map((i) => i.code),
-        armors: (supplies ? [] : stock)
-          .filter((i) => !i.slot.startsWith("WEAPON") && i.slot !== "POTION")
-          .map((i) => i.code),
-        misc: (supplies ? stock.filter(i => !i.slot.startsWith("WEAPON")) : []).map((i) => i.code),
-        vipPct: 0,
-        taxPct: 0,
-      },
-      });
+      npcId:id, name:npc.name, windowKind:"shop",
+      data:{
+        weapons:stock.filter(item => item.slot.startsWith("WEAPON")).map(item=>item.code),
+        armors:(supplies ? [] : stock).filter(item => !item.slot.startsWith("WEAPON") && item.slot !== "POTION").map(item=>item.code),
+        misc:(supplies ? stock.filter(item => !item.slot.startsWith("WEAPON")) : []).map(item=>item.code),
+        vipPct:0,taxPct:0
+      }
     });
-    panel.button('Item Shop - itens por coins',async()=>{panel.close();await showShop();});
-    panel.button('Skins por coins',async()=>{panel.close();await showShop("skins");});
   } else if (npc.services?.includes("skill")) {
     skills.publish();
     gameFeatures.openNpc(npc).catch(e=>notice(e.message));
