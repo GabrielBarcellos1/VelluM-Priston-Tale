@@ -198,3 +198,5 @@ summary {
   .local-mobile-menu, .local-account-trigger, .local-account-close {display:none!important;}
   .m-qbar .vellum-mobile-chat {display:flex!important;align-items:center;justify-content:center;min-width:44px;min-height:44px;flex:none;}
 }
+
+@media (pointer:coarse), (max-width:700px) { .vellum-mobile-hide-shortcut {display:none!important;} }

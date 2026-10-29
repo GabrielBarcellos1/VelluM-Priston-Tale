@@ -3587,8 +3587,16 @@ function mountLocalMenu() {
     if (!bar) return;
     const buttons = [...document.querySelectorAll('button,[role="button"]')];
     const title = element => [element.textContent,element.getAttribute('aria-label'),element.getAttribute('title'),element.getAttribute('data-mbtn')].filter(Boolean).join(' ').trim().toLowerCase();
-    const bag = [...bar.querySelectorAll('button,[role="button"]')].find(element => /bolsa|bag|invent/.test(title(element)));
-    const chat = buttons.find(element => /(^|\s)chat(\s|$)/.test(title(element)) && !element.closest('.local-controls'));
+    const quickButtons = [...bar.querySelectorAll('button,[role="button"],.m-qbtn')];
+    const bag = quickButtons.find(element => /bolsa|bag|invent/.test(title(element)));
+    for (const button of buttons) {
+      const name = title(button);
+      const bounds = button.getBoundingClientRect();
+      if (bounds.top > innerHeight * 0.60 && /^(status|skills|pk)$/i.test(name)) {
+        button.classList.add('vellum-mobile-hide-shortcut');
+      }
+    }
+    const chat = buttons.find(element => /chat|convers/.test(title(element)) && !element.closest('.local-controls'));
     if (bag && chat && chat !== bag && chat.previousElementSibling !== bag) {
       bag.insertAdjacentElement('afterend', chat);
       chat.classList.add('vellum-mobile-chat');
