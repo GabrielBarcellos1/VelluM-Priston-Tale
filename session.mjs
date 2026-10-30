@@ -3627,7 +3627,7 @@ function mountLocalMenu() {
         button.classList.add('vellum-mobile-hide-shortcut');
       }
     }
-    const chat = buttons.find(element => /chat|convers/.test(title(element)) && !/fechar|close|ocultar/.test(title(element)) && !element.closest('.local-controls'));
+    const chat = buttons.find(element => /^(chat|conversa|conversas|abrir chat)$/.test(title(element)) && !element.closest('.local-controls'));
     if (bag && chat && chat !== bag && chat.previousElementSibling !== bag) {
       bag.insertAdjacentElement('afterend', chat);
       chat.classList.add('vellum-mobile-chat');
