@@ -1,5 +1,11 @@
 # Progresso Codex — VelluM
 
+## Conferência pelo Desktop Commander — 09/11/2026
+
+- Acesso em leitura à pasta de instalação indicada pelo proprietário no Windows conectado: 74 arquivos, 385.330.407 bytes; executável com versão de produto 1.2.0.0.
+- SHA-256 do `resources/app.asar` instalado é idêntico ao anexo analisado com REA. Não há outro pacote de recursos do jogo na listagem; `resources` contém ASAR e elevador do instalador.
+- Não foram executados o jogo/instalador, alterados arquivos ou inspecionados perfil/cookies. Resultado não comprova a execução do VelluM dentro do launcher. Detalhes acrescentados a `REA_DESKTOP.md`.
+
 ## Análise do ASAR enviado — 09/11/2026
 
 - Arquivo recebido e inspecionado com REA, sem executar Electron. Cinco arquivos, três JS, hashes de integridade conferidos. Evidência `ev_a445d1289966a86c8b2a08f211fbae7e18e3052dcae65c8989512d47520a4583`.

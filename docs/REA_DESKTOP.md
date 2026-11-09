@@ -17,6 +17,14 @@ A versão 1.2.0 identifica o launcher; o jogo remoto pode mudar independentement
 
 ## Conteúdo
 
+### Conferência da instalação via Desktop Commander — 09/11/2026
+
+A pasta de instalação indicada pelo proprietário foi listada recursivamente no dispositivo Windows conectado, em leitura. Foram encontrados **74 arquivos, 385.330.407 bytes**. `resources` contém somente `app.asar` e `elevate.exe`; a outra subpasta é `locales`, com pacotes de idioma. A versão de produto do executável é `1.2.0.0`.
+
+O hash SHA-256 do ASAR instalado é idêntico ao anexo já analisado, com 117.268 bytes. Assim, a investigação REA acima corresponde ao pacote dessa instalação. Não foram encontrados arquivos adicionais de mapas, modelos ou regras do jogo na listagem. Os demais arquivos listados são os componentes do runtime/distribuição Electron/Chromium; não inferir tabelas de gameplay a partir deles.
+
+Operações executadas: `list_directory` e PowerShell para listar metadados, somar tamanhos e calcular o hash do ASAR. O aplicativo não foi iniciado. Arquivos da instalação, perfil, cookies, credenciais e configuração não foram modificados; o perfil do usuário não foi inspecionado. A execução desktop com `PWEB_URL` continua pendente.
+
 | Arquivo | Bytes | Função observada |
 |---|---:|---|
 | `main.js` | 8.268 | Janela, carregamento remoto, navegação, permissões, fechamento |
