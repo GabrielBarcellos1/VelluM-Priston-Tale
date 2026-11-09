@@ -1,0 +1,52 @@
+{
+  "artifact": "app.asar",
+  "bytes": 117268,
+  "sha256": "fdffc8870195703ea4ea2bf7b8afc4b1231eb72df0c7da3e2e6597e6c48332a4",
+  "reaEvidence": "ev_a445d1289966a86c8b2a08f211fbae7e18e3052dcae65c8989512d47520a4583",
+  "analysis": "Static ASAR/Electron; no bootstrap execution",
+  "files": [
+    {
+      "path": "build/icon.png",
+      "bytes": 97496,
+      "sha256": "2d3f1a50412e8af036fb68cdbb4eddbea09dd5c9821f86e99f0b8c21092fc541",
+      "declaredHashVerified": true
+    },
+    {
+      "path": "main.js",
+      "bytes": 8268,
+      "sha256": "f7596ded7d5d60e0c247a816c04990683d7858c092ea2096165014c781ff8750",
+      "declaredHashVerified": true
+    },
+    {
+      "path": "package.json",
+      "bytes": 320,
+      "sha256": "2fd289d377e789183ca5f50edc506b893d165bd637ebfd49ca2eb3b045cf3207",
+      "declaredHashVerified": true
+    },
+    {
+      "path": "preload.js",
+      "bytes": 1876,
+      "sha256": "e77bef9cf80128ebf2e7c734e53a96671ee4cb4bdbd9e1b49da29f8ecd641965",
+      "declaredHashVerified": true
+    },
+    {
+      "path": "taskbar.js",
+      "bytes": 8008,
+      "sha256": "c7d437000aab11cdb1374047a6ba6a23774902494c61dbaf9bfd9b1d3e8f245f",
+      "declaredHashVerified": true
+    }
+  ],
+  "packageVersion": "1.2.0",
+  "licenseMetadata": "UNLICENSED; private=true",
+  "defaultRemote": "https://pweb.world/",
+  "remoteOverrideEnvironment": "PWEB_URL",
+  "desktopBridgeVersion": 3,
+  "gameAssetsIncluded": false,
+  "serverRulesIncluded": false,
+  "runtimeTestsPerformed": false,
+  "limits": [
+    "Desktop launcher version does not identify remote game version",
+    "No original code or icon redistributed",
+    "No live gameplay or taskbar-mode validation from this package"
+  ]
+}

@@ -1,5 +1,9 @@
 # Auditoria REA — VelluM Priston Tale
 
+## Artefato desktop enviado pelo proprietário
+
+Analisado `app.asar`, 117.268 bytes, com REA 6.8.0. Evidência `ev_a445d1289966a86c8b2a08f211fbae7e18e3052dcae65c8989512d47520a4583`. É o launcher Electron 1.2.0, que carrega o jogo remoto; não contém recursos gráficos ou regras do servidor. Cinco hashes ASAR conferidos, sem executar o aplicativo. A opção `PWEB_URL` permite investigar compatibilidade com o servidor VelluM em teste privado. Inventário, limites e roteiro ainda não executado em [REA_DESKTOP.md](REA_DESKTOP.md). Não incorporar o código/ícone do pacote privado ao repositório.
+
 ## Escopo e base
 
 VelluM é o projeto do proprietário nesta missão. Fonte principal: `GabrielBarcellos1/VelluM-Priston-Tale`, branch `main`, base `ec7e2e01e0773ab30b223b915a4328757b8efe28`. A auditoria anterior de outro protótipo não valida este repositório.

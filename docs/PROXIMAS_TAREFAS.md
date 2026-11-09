@@ -23,6 +23,7 @@ Na sequência:
 
 ## P2
 
+- Usar os achados do ASAR em `REA_DESKTOP.md`: comparar F1–F8/F5/Ctrl+R/F11 e guarda de fechamento. Teste Electron via `PWEB_URL` ainda pendente; não substituir o cliente fixado nem redistribuir o pacote privado.
 - Auditar HUD e arte da seleção contra a versão de referência, preservando personalizações aprovadas.
 - Revisar áreas/limites e cancelamento de multigolpes por classe, Tiers 1–4, níveis 1–10.
 - Completar matrizes de parâmetros com fonte e grau de certeza, separando alternativas locais.

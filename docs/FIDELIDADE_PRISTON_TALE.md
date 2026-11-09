@@ -31,6 +31,7 @@ Estados permitidos: **Não investigado**, **Investigado**, **Implementação par
 | Efeitos/iluminação/morte | Motor e recursos públicos | Efeitos nativos com pacotes locais | Temporização e dados de entrada podem divergir mesmo com arte correta | P1 | Implementação parcial |
 | HUD/minimapa/inventário/skills | UI nativa e versão específica | UI nativa com alterações locais/responsivas | Preservar mudanças intencionais, testar escalas e estados | P2 | Implementação parcial |
 | Mobile/comandos | Motor e defaults existentes | Adaptações recentes de HUD/chat | Histórico indica mudanças deliberadas; testes de toque reais pendentes | P1 | Investigado |
+| Launcher desktop/AFK | ASAR 1.2.0 enviado: janela, ponte versão 3, faixa e guarda de fechamento | Sessão web com cliente fixado; ponte no launcher depende de teste | Roteiro via PWEB_URL documentado; execução Electron e faixa AFK ainda não testadas | P2 | Investigado |
 | Eventos/dungeons/PvP | Sem autoridade privada completa | Sistemas locais parciais | Não declarar equivalência nem lançamento público completo | P2 | Implementação parcial |
 
 Nenhum sistema recebeu nesta auditoria o estado “Validado contra referência”. A matriz será atualizada por evidência verificável, não por quantidade de commits.

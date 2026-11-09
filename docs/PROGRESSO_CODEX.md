@@ -1,5 +1,13 @@
 # Progresso Codex — VelluM
 
+## Análise do ASAR enviado — 09/11/2026
+
+- Arquivo recebido e inspecionado com REA, sem executar Electron. Cinco arquivos, três JS, hashes de integridade conferidos. Evidência `ev_a445d1289966a86c8b2a08f211fbae7e18e3052dcae65c8989512d47520a4583`.
+- Identificado launcher 1.2.0; jogo e recursos carregam do site. Não há novas tabelas de drop, modelos ou animações neste pacote.
+- Confirmados ponte desktop versão 3, guarda de fechamento, faixa AFK e endereço configurável por `PWEB_URL`. Registrado roteiro para uso privado com o VelluM, sem modificar/distribuir o aplicativo.
+- Arquivos alterados neste conjunto: quatro documentos obrigatórios, `docs/REA_DESKTOP.md` e inventário sanitizado `docs/evidencias/desktop-asar.json`.
+- Validação deste conjunto: REA/parse estático e integridade do ASAR; conferência JSON e diff. Não houve teste desktop, mudança de jogabilidade, nova execução da suíte ou publicação do aplicativo. Resultados anteriores de testes permanecem históricos, não uma validação deste launcher.
+
 ## Missão ativa
 
 Reconstrução fiel do Priston Tale clássico no repositório VelluM, com REA e preservação das personalizações. Branch: `main`. Base auditada: `ec7e2e01e0773ab30b223b915a4328757b8efe28`.
