@@ -17,11 +17,13 @@ test('class promotion refreshes skills and crown without reloading',()=>{
   assert.match(f,/c\.openSkills\(\)/);
   assert.match(crest,/ConeGeometry/);
 });
-test('physical merchant exposes gold, item shop coins and skins',()=>{
+test('ordinary merchant opens its native gold stock directly and the premium NPC stays separate',()=>{
   const section=session.slice(session.indexOf('function npcTalk('),session.indexOf('  } else if (npc.services?.includes("skill"))',session.indexOf('function npcTalk(')));
-  assert.match(section,/Itens comuns por ouro/);
-  assert.match(section,/Item Shop - itens por coins/);
-  assert.match(section,/Skins por coins/);
+  assert.match(section,/Precious Item Shop/);
+  assert.match(section,/showShop\(\)/);
+  assert.match(section,/windowKind:"shop"/);
+  assert.match(section,/npc\.shop \?\? \[\]/);
+  assert.doesNotMatch(section,/Itens comuns por ouro|Item Shop - itens por coins|Skins por coins/);
 });
 test('exp event shortcut remains opt-in',()=>{
   assert.match(admin,/Preparar evento EXP 2x \(24 horas\)/);

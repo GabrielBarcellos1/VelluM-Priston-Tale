@@ -1,4 +1,5 @@
 import copy,json,random,uuid
+import class_availability as policy
 from unittest.mock import patch
 from test_server_audit import ServerAudit
 import local_accounts as accounts
@@ -15,7 +16,7 @@ class LevelRewards(ServerAudit):
         with accounts.connection() as db:db.execute('UPDATE characters SET state=? WHERE username=? AND job=1',(json.dumps(s),self.user['username']))
         return s
     def test_all_classes_and_milestones_receive_eight_legal_level_appropriate_pieces(self):
-        for job in range(1,12):
+        for job in filter(policy.active_job,range(1,12)):
             cumulative={'str':25,'spi':15,'tal':20,'dex':19,'health':24}
             for level in rewards.rules()['kitLevels']:
                 codes=rewards.kit_codes(level,job)

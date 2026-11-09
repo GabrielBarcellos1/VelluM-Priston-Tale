@@ -4,6 +4,7 @@ import local_accounts as accounts
 import game_control as game
 import premium_store as store
 import custom_skins as custom
+import class_availability as policy
 import npc_services as npc
 import online_world as world
 
@@ -11,7 +12,7 @@ class CustomSkins(ServerAudit):
     def fund(self):store.transact(self.admin,'grant',{'username':'audituser','amount':100000,'requestId':uuid.uuid4().hex})
     def buy(self,skin):return game.skin_action(self.user,{'job':1,'generation':self.generation,'action':'buy','id':skin['id'],'price':skin['price'],'requestId':uuid.uuid4().hex})
     def test_catalogue_published_once_and_admin_edits_are_preserved(self):
-        snapshot=game.skins(self.user,1);published=[s for s in snapshot['catalog'] if s.get('customModel')];self.assertEqual(len(published),17)
+        snapshot=game.skins(self.user,1);published=[s for s in snapshot['catalog'] if s.get('customModel')];expected=[s for s in custom.catalog() if policy.active_item({'code':s.get('look','')})];self.assertEqual({s['id'] for s in published},{s['id'] for s in expected})
         skin=next(s for s in game.skin_admin(self.admin) if s.get('customModel'))
         game.save_skin(self.admin,{'id':skin['id'],'name':'Edited','description':'Synthetic','price':1234,'enabled':False,'version':skin['version']})
         self.assertFalse(any(s['id']==skin['id'] for s in game.skins(self.user,1)['catalog']))

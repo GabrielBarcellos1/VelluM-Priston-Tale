@@ -1,5 +1,5 @@
 import { measuredSkillCooldown } from './skill-measured-cooldowns.mjs';
-import { skillActionTiming } from './skill-action-timing.mjs';
+import { skillActionTiming, restoreSkillCooldown } from './skill-action-timing.mjs';
 import { emptyEffects, effectFor, effectRows, sumEffects } from './skill-effects.mjs';
 import {initialMastery,afterSkillUse,hitsRemaining,MASTERY_MAX} from './skill-maturity.mjs';
 import { skillAttackProfile, skillAttackRows, skillHitTimes, skillHealingRange } from './skill-damage.mjs';
@@ -177,8 +177,8 @@ export function createRuntimeSkillSystem(ctx) {
     if(v.target==='enemy'&&!targets.length)throw Error('O alvo está fora da área da habilidade.');
     const timing=ctx.timing?.(v)??{duration:1,hits:[.5]},attack=offensive?attackFor(s,n):null;
     const hits=attack?skillHitTimes(attack,timing):timing.hits??[];
-    if(!ctx.freeCast?.()&&!ctx.resourceFree?.()){ctx.stats.mp-=v.mp;ctx.stats.sp-=v.stamina;}
     const { actionDuration, cooldown } = skillActionTiming(timing, hits, v.recharge);
+    if(!ctx.freeCast?.()&&!ctx.resourceFree?.()){ctx.stats.mp-=v.mp;ctx.stats.sp-=v.stamina;}
     actionReady=now()+actionDuration;if(cooldown){ready.set(id,now()+cooldown);totals.set(id,cooldown);}
     ctx.emit?.({t:'skillFx',from:ctx.name,skill:id,code:s.code,level:n,x:origin.x,z:origin.z,
       ...(target!==undefined?{target}:{}),targets:targets.map(m=>m.id),dur:timing.duration,hits:targets.length?hits:[]});
@@ -241,7 +241,7 @@ export function createRuntimeSkillSystem(ctx) {
     if(ctx.masteryProgress)ctx.masteryProgress[s.code]=s.kind==='passive'?MASTERY_MAX:0;
     publish();ctx.recalculate?.();ctx.save?.();return `${s.name} aprendida no nível ${v.level+1}.`;}
   const exportBuffs=()=>liveBuffs().map(b=>({code:b.code,level:b.level,party:!!b.party,expiresAt:wall()+b.until-now()}));
-  for(const s of list){const p=profile(s),saved=ctx.savedCooldowns?.[s.code];if(saved&&at(p.cooldown,learned(s))!==0){const left=Math.min(3600,saved.expiresAt-wall());if(left>0){ready.set(s.id,now()+left);totals.set(s.id,saved.total);}}}
+  for(const s of list){const n=learned(s);if(!n||(measuredSkillCooldown(s.code,n)??at(profile(s).cooldown,n))===0)continue;const restored=restoreSkillCooldown(ctx.savedCooldowns?.[s.code],wall());if(restored){ready.set(s.id,now()+restored.remaining);totals.set(s.id,restored.total);}}
   for(const saved of ctx.savedBuffs??[]){const s=definitions.find(s=>s.code===saved.code);if(!s||!saved.party&&!learned(s))continue;
     const n=saved.party?Math.max(1,Math.min(10,saved.level??1)):learned(s),left=Math.min(at(profile(s).duration,n),saved.expiresAt-wall());
     if(left>0)active.set((saved.party?'party:':'')+s.code,{...s,kind:profile(s).kind,level:n,until:now()+left,party:!!saved.party});}

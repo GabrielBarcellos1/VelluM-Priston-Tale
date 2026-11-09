@@ -17,8 +17,8 @@ Estados permitidos: **Não investigado**, **Investigado**, **Implementação par
 | IA dos monstros | Atributos e clipes públicos | IA/dano locais com relógio de animação para ataques | Combate de monstros é individual por navegador | P1 | Implementação parcial |
 | Ataque comum | Clipes/eventos e tabelas públicas | Impacto/dano adaptados | Sincronização visual real e autoridade incompletas | P1 | Implementação parcial |
 | Habilidades T1–T4/L1–10 | 176 definições; fontes de diferentes versões | Runtime por habilidade e fallback | Parâmetros parciais, relógios, cancelamentos e validação precisam auditoria | P1 | Implementação parcial |
-| Cooldown | Tabelas clássicas + medições comunitárias | Perfis/overrides e persistência | Não equivale a 1.760 medições; sanitização runtime é desigual | P1 | Investigado |
-| Hits/áreas/recursos | Clipes e geometrias públicas | Hits agendados por timeout, áreas e custos locais | Possível dano fora do ritmo visual e débito antes da validação | P1 | Investigado |
+| Cooldown | Tabelas clássicas + medições comunitárias | Perfis/overrides e persistência | Não equivale a 1.760 medições; sanitização unificada e testada; identidade histórica não comprovada | P1 | Testado |
+| Hits/áreas/recursos | Clipes e geometrias públicas | Hits agendados por timeout, áreas e custos locais | Débito antes da validação corrigido e testado; relógio dos impactos ainda em investigação | P1 | Implementação parcial |
 | Atributos/EXP/nível | Fórmulas clássicas e dados parciais | Curvas e perfil VelluM | Personalizações intencionais; fórmulas privadas não recuperadas | P1 | Implementação parcial |
 | Inventário/equipamento | Slots e grade nativos | Duas bolsas, conjuntos e persistência parcial | Testes existentes não certificam todos os itens/visuais | P1 | Implementação parcial |
 | Consumíveis/premiums | Intervalos públicos e catálogo local | Poções, buffs e loja próprios | Regras de economia e alguns efeitos são personalizados | P1 | Implementação parcial |

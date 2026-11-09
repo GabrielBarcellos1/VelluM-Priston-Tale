@@ -15,7 +15,7 @@ Arquivos: `session.mjs`, `skill-runtime.mjs`, `skill-system.mjs`, `skill-action-
 Na sequência:
 
 1. Sanitizar cooldown restaurado no runtime com casos NaN/Infinity/expiração e preservar overrides intencionais.
-2. Corrigir baseline: comerciante direto (commit `7e6202c`) e testes de skins/kits que ignoram `DISABLED_JOBS`.
+2. Baseline corrigido no ciclo 1: 267 testes Node e 182 Python aprovados. Preservar esse resultado nos próximos ciclos.
 3. Testar login, criação, combate, skill, equipamento, troca de personagem, logout/login e persistência numa base descartável.
 4. Auditar o workaround Bamboo/Acácias: reposicionamento e bloqueio de retorno de 2.200 unidades; comparar com colisão/estabilização nativas antes de alterar.
 

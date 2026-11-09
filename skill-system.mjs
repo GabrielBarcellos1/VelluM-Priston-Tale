@@ -1,5 +1,5 @@
 import { measuredSkillCooldown } from './skill-measured-cooldowns.mjs';
-import { skillActionTiming } from './skill-action-timing.mjs';
+import { skillActionTiming, restoreSkillCooldown } from './skill-action-timing.mjs';
 import { effectFor, sumEffects, effectRows } from "./skill-effects.mjs";
 import { configuredSkillCooldown } from "./skill-cooldowns.mjs";
 import { initialMastery, afterSkillUse, hitsRemaining, MASTERY_MAX } from "./skill-maturity.mjs";
@@ -49,18 +49,11 @@ export function createSkillSystem(ctx) {
   for (const s of list) {
     const profile = ctx.catalog.rules?.freestonProfile?.[s.code];
     if (profile?.cooldownSeconds === 0 && levels.get(s.id) >= profile.minimumLevel) continue;
-    const saved = ctx.savedCooldowns?.[s.code];
-    if (
-      !Number.isFinite(saved?.expiresAt) ||
-      !Number.isFinite(saved?.total) ||
-      saved.total <= 0 ||
-      saved.total > 3600
-    )
-      continue;
-    const left = Math.min(saved.total, saved.expiresAt - wallNow());
-    if (left > 0) {
-      ready.set(s.id, now() + left);
-      cooldownTotals.set(s.id, saved.total);
+    if (!levels.get(s.id)) continue;
+    const restored = restoreSkillCooldown(ctx.savedCooldowns?.[s.code], wallNow());
+    if (restored) {
+      ready.set(s.id, now() + restored.remaining);
+      cooldownTotals.set(s.id, restored.total);
     }
   }
   let actionReadyAt = 0, generation = 0;
@@ -325,11 +318,11 @@ export function createSkillSystem(ctx) {
       ? attackFor(s, v.level)
       : null;
     const hitTimes = attack ? skillHitTimes(attack, timing) : timing.hits;
+    const { actionDuration, cooldown } = skillActionTiming(timing, hitTimes, v.recharge);
     if (!ctx.freeCast?.()) {
       ctx.stats.mp -= v.mp;
       ctx.stats.sp -= v.stamina;
     }
-    const { actionDuration, cooldown } = skillActionTiming(timing, hitTimes, v.recharge);
     actionReadyAt = now() + actionDuration;
     if (cooldown) {
       ready.set(id, now() + cooldown);

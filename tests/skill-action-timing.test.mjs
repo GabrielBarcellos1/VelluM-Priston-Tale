@@ -19,3 +19,4 @@ test('invalid hit timestamps are rejected',()=>{
   assert.throws(()=>skillActionTiming({duration:1},[Infinity],0),/inválida/);
   assert.throws(()=>skillActionTiming({duration:-1},[0.5],0),/inválida/);
 });
+test('invalid cooldown values cannot create NaN, infinite or negative action state',()=>{for(const recharge of [NaN,Infinity,-1,undefined,null,'0'])assert.throws(()=>skillActionTiming({duration:1},[.5],recharge),/recarga/i);});

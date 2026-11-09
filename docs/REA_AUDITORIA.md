@@ -36,3 +36,12 @@ Não habilitar jobs 9/10/11, Tier 5 ou desafios de promoção removidos. Não al
 ## Evidências novas
 
 A preencher por ciclo: operação REA, artefato/hash, membros selecionados, evidência canônica, resultado e limites. Uma análise pendente não recebe o estado “Validado contra referência”.
+
+### Evidência focada do relógio de combate
+
+- Artefato público baixado e SHA-256 conferido com o pin, sem executar o bootstrap durante a análise.
+- REA 6.8.0, operação `analyze-javascript-application`, dez arquivos selecionados de membros/constantes do cliente.
+- Evidência canônica: `ev_eb98c6eef291ac837c0be4c71f7c0396ea97af271be55e475d2dcb682b3bfcca`.
+- `eA.tick` incrementa o relógio do jogo em `Yd = 1/70`; `eA.onSkillFx` relaciona animação/travas à duração e ao relógio do jogo. `frameStep` limita vários avanços visuais a 0,1 s.
+- Essa evidência fundamenta investigar a agenda de impactos. Não revela dano privado nem valida todas as skills. O relógio e seus consumidores ainda requerem teste de integração.
+- Correção do ciclo 1 validada por testes locais: nenhuma alteração numérica das tabelas, apenas atomicidade e validação do estado restaurado.

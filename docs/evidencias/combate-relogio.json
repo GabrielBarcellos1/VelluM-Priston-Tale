@@ -1,0 +1,60 @@
+{
+  "sha256": "309822294b926934160b35d034a4b15e0985d539520a04dc2a684b06b9a155ac",
+  "bootstrapExecuted": false,
+  "offsetUnits": "UTF-16 string offsets",
+  "members": [
+    {
+      "name": "eA.skillMotionEnd",
+      "start": 3396802,
+      "end": 3396819
+    },
+    {
+      "name": "eA.sendSkill",
+      "start": 3432514,
+      "end": 3433565
+    },
+    {
+      "name": "eA.onSkillFx",
+      "start": 3439797,
+      "end": 3442230
+    },
+    {
+      "name": "eA.tick",
+      "start": 3443762,
+      "end": 3448351
+    },
+    {
+      "name": "eA.animTick",
+      "start": 3476238,
+      "end": 3476458
+    },
+    {
+      "name": "eA.frame",
+      "start": 3476845,
+      "end": 3476886
+    },
+    {
+      "name": "eA.hiddenFrame",
+      "start": 3476886,
+      "end": 3476975
+    },
+    {
+      "name": "eA.frameStep",
+      "start": 3476975,
+      "end": 3481453
+    }
+  ],
+  "evidenceId": "ev_eb98c6eef291ac837c0be4c71f7c0396ea97af271be55e475d2dcb682b3bfcca",
+  "additionalConstants": {
+    "Yd": "1/70",
+    "Jw": "new va0(...)"
+  },
+  "facts": [
+    "game time advances in fixed ticks",
+    "own skill motion end is game.time + packet duration"
+  ],
+  "limitations": [
+    "Static analysis, not a private server timing table",
+    "Focused members do not certify all classes or levels"
+  ]
+}
