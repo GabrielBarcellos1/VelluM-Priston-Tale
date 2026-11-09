@@ -8,13 +8,13 @@
 
 ## P1 — próxima tarefa exata
 
-**Corrigir avisos repetidos da sondagem nativa de NPC `gmNpcInfo`.**
+**Completar o teste real de equipamento, troca de personagem e logout/login.**
 
-Reprodução: aproximar-se de um NPC com conta de teste Staff; o cliente consulta metadados e o handler genérico gera avisos repetidos. Criar regressão do handler, tratar a consulta passiva sem inventar resposta/funcionalidade GM e confirmar no navegador. Arquivo principal: `session.mjs`.
+Usar exclusivamente SQLite/cache descartáveis. Confirmar retirar/recolocar arma e persistência do UID; criar um segundo personagem ativo; voltar ao primeiro; sair e entrar na conta. Registrar ações realmente executadas, diferenças encontradas e próximos passos. A sondagem `gmNpcInfo` já foi corrigida e testada no ciclo 3.
 
 Na sequência:
 
-1. Ciclos 1 e 2 corrigiram validação atômica, restauração de cooldown e agenda no relógio nativo. Preservar overrides e os 276 testes Node aprovados.
+1. Ciclos 1–3 corrigiram validação atômica, restauração de cooldown, agenda no relógio nativo e spam de NPC. Preservar overrides e os 278 testes Node aprovados.
 2. Login, criação, caminhada, NPC, aprendizado/recarga da página e impacto de skill executados em Chromium descartável; não confundir com comparação de dano oficial.
 3. Completar equipamento, troca de personagem, logout/login e persistência numa base descartável; repetir Python e registrar resultado.
 4. Auditar o workaround Bamboo/Acácias: reposicionamento e bloqueio de retorno de 2.200 unidades; comparar com colisão/estabilização nativas antes de alterar.

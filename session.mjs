@@ -2121,6 +2121,10 @@ async function handle(message) {
   messages.push(clone(message));
   if (messages.length > 100) messages.shift();
   switch (message.t) {
+    case "gmNpcInfo":
+      // The native Staff HUD polls this optional metadata while hovering NPCs.
+      // No local inspector is implemented; polling must not notify or save.
+      return;
     case "skinsOpen":
       await showShop("skins");
       break;

@@ -23,7 +23,7 @@ Estados permitidos: **Não investigado**, **Investigado**, **Implementação par
 | Inventário/equipamento | Slots e grade nativos | Duas bolsas, conjuntos e persistência parcial | Testes existentes não certificam todos os itens/visuais | P1 | Implementação parcial |
 | Consumíveis/premiums | Intervalos públicos e catálogo local | Poções, buffs e loja próprios | Regras de economia e alguns efeitos são personalizados | P1 | Implementação parcial |
 | Drop/ouro | Não há tabela oficial completa autorizada | Sorteio Python, abates relatados pelo cliente | Perfil próprio; não afirmar taxas oficiais | P1 | Implementação parcial |
-| Lojas/NPCs | Listas públicas e janela nativa | Lojas comuns diretas, premium separado | Preservar a abertura direta recém-aprovada | P1 | Investigado |
+| Lojas/NPCs | Listas públicas e janela nativa | Lojas comuns diretas, premium separado | Aprendizado no Raymon testado; sondagem Staff sem spam; metadados GM ausentes; catálogo completo não validado | P1 | Implementação parcial |
 | Mix/Force/Aging/skins | Interfaces e parte das fórmulas públicas | Serviços nativos + transações Python | Receitas de Aging locais e catálogo desativado por classe | P2 | Implementação parcial |
 | Quests clássicas | Definições e fontes heterogêneas | Interpretador, endgame e promoções simplificadas | Não reintroduzir cadeias removidas; cobrir transações e persistência | P1 | Implementação parcial |
 | Party/chat/interações | Comportamentos conhecidos, servidor privado ausente | Presença/chat compartilhados e suporte local | Combate/monstros/drops não são um MMO compartilhado | P1 | Implementação parcial |

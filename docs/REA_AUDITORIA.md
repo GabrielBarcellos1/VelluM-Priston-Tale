@@ -53,3 +53,7 @@ A preencher por ciclo: operação REA, artefato/hash, membros selecionados, evid
 - Sete testes da agenda cobrem ordenação, uma única execução, troca de contexto, morte durante callback, cleanup do wrapper, montagem apenas no jogo e isolamento de erros. Dois testes dos motores cobrem relógios separados e cancelamento sem perda de estado.
 - Integração real observada em Chromium com a habilidade 601, Cavaleiro, alvo Cão Abelha no mapa 17. Login, criação, caminhada e aprendizado também executados. Evidência resumida em `docs/evidencias/combate-integracao-local.json`.
 - Não foi verificado o dano numérico contra um servidor clássico nem o conjunto de animações/habilidades. O resultado é **Testado** para a integração local do relógio, sem certificação geral de fidelidade.
+
+### Correção de integração do HUD Staff — ciclo 3
+
+Consulta nativa `gmNpcInfo` observada em execução ao aproximar NPC. O adaptador não oferece os metadados desse serviço; a correção elimina apenas os avisos de sondagem e gravações inúteis. Regressão com o handler real e navegador confirmaram 15 consultas sem avisos. Não classificar o serviço GM como implementado nem atribuir ao REA uma recuperação de metadados privados.

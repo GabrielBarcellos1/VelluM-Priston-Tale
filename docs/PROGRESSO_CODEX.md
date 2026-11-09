@@ -57,3 +57,13 @@ REA analisou estaticamente o cliente fixado e confirmou `eA.tick`: avanço de `t
 - Sem `pageerror` ou conexão ao servidor original. Algumas requisições foram abortadas durante recarregamentos; não equivale a ausência global de falhas de rede. Capturas locais: `roster-before-clock.png`, `pillai-walking.png`, `skill-impact-native-clock.png` no diretório de pesquisa externo ao repositório.
 - Observado durante aproximação de NPC: sondagem nativa `gmNpcInfo` cai no aviso genérico e polui o chat. Próxima correção independente: suprimir o aviso de sondagem sem simular resposta ou ativar ferramenta GM inexistente.
 - Ainda pendentes: interação de equipamento, outro personagem, logout/login, toque mobile e comparação visual sistemática com referência.
+
+## Ciclo 3 — sondagem de NPC sem avisos repetidos
+
+- Defeito reproduzido no navegador durante aproximação de NPC: `gmNpcInfo`, consulta passiva do HUD Staff, chegava ao fallback de serviços ausentes e notificava o jogador repetidamente.
+- Regressão do handler real confirmou 15 avisos antes da alteração. `session.mjs` agora encerra somente essa consulta sem notificação, resposta fictícia ou gravação de estado inalterado. Histórico diagnóstico de pacotes preservado; ações desconhecidas do usuário continuam notificadas.
+- Resultado: **278/278 testes Node** aprovados; sintaxe de `session.mjs` e diff conferidos. Python permanece no resultado do ciclo 2 (182 aprovados; sem alteração Python neste ciclo).
+- Chromium após recarregar: 15 consultas recebidas, nenhum aviso de serviço ausente, habilidade 601 nível 1 preservada. Isso não implementa um inspetor GM; seus metadados continuam indisponíveis.
+
+- Equipamento testado via adaptador nativo: bolsa A estava sem espaço para a arma (aviso correto). Após `swapBag`, retirar e recolocar a Dagger WS201 funcionou, mantendo UID 101. Não foi um arraste de UI; a validação visual detalhada do equipamento continua pendente.
+- Segundo personagem Mago nível 1 criado pela interface da seleção; entrada e alternância ainda em teste.
