@@ -67,3 +67,18 @@ REA analisou estaticamente o cliente fixado e confirmou `eA.tick`: avanço de `t
 
 - Equipamento testado via adaptador nativo: bolsa A estava sem espaço para a arma (aviso correto). Após `swapBag`, retirar e recolocar a Dagger WS201 funcionou, mantendo UID 101. Não foi um arraste de UI; a validação visual detalhada do equipamento continua pendente.
 - Segundo personagem Mago nível 1 criado pela interface da seleção; entrada e alternância ainda em teste.
+
+## Verificação de persistência após o ciclo 3
+
+- Mago AuditoriaMago entrou em Pillai, nível 1, arma WM101 e nenhuma skill aprendida. Cavaleiro manteve estado separado.
+- Retorno ao Cavaleiro pela seleção: nível 30, Dagger WS201 UID 101, bolsa 1 e Sword Blast nível 1 preservados.
+- Logout pela interface exibiu o login. Novo login com a mesma conta mostrou os dois personagens; entrada no Cavaleiro preservou nível 30, ouro 99.900, UID da arma, bolsa e habilidade.
+- Zero `pageerror` e nenhuma conexão ao servidor original durante o teste. Credenciais, cookies e SQLite não integram estes documentos/commits.
+- O roteiro precisou corrigir o nome acessível da seta e aguardar a seleção estabilizar antes de entrar; falhas de espera do driver não foram atribuídas ao jogo.
+- Evidência resumida: `docs/evidencias/persistencia-local.json`. Arraste de equipamento, toque mobile, reconexão por perda de rede e comparação visual de todos os personagens continuam pendentes.
+
+## Investigação iniciada — passagem entre florestas
+
+- REA executado novamente no artefato original fixado; 14 trechos focados, evidência `ev_67dfd39d686a70ccec4b572af143ea82a133aeb596d34085055920adefa17340`.
+- Confirmada diferença: estabilizador nativo (seis observações ou 96 unidades, verificações a cada 0,5 s do jogo) versus retorno bloqueado em raio local de 2.200 unidades após reposicionamento no spawn.
+- Nenhuma alteração de geometria/viagem nesta investigação. Falta reproduzir o comportamento da fronteira, coletar `currentStage`, posição/altura e candidatos antes/depois de atravessar e avaliar recuperação. Detalhes em `REA_AUDITORIA.md` e resumo em `docs/evidencias/transicao-mapas.json`.

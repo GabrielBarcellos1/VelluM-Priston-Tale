@@ -1,0 +1,11 @@
+{
+  "scope": "Local disposable SQLite and synthetic account; no production data",
+  "browser": "Chromium headless, native client adapter",
+  "operations": ["UI login", "UI create Knight", "UI create Magician", "UI enter Magician", "UI return to Knight", "UI logout", "UI login again", "UI enter Knight again"],
+  "equipmentOperations": {"path": "native adapter packets, not UI drag", "fullBagRejected": true, "swapBag": true, "unequip": true, "reequip": true, "uidPreserved": true},
+  "secondCharacter": {"job": 7, "level": 1, "weapon": "WM101", "skills": {}},
+  "afterRelogin": {"job": 6, "level": 30, "gold": 99900, "weapon": "WS201", "weaponUid": 101, "bagPage": 1, "skills": {"SKILL_SWORD_BLAST": 1}},
+  "pageErrors": [],
+  "originalServerConnections": [],
+  "limits": ["No network-loss reconnection test", "No mobile touch test", "Not a complete equipment visual comparison"]
+}

@@ -1,0 +1,12 @@
+{
+  "sourceSha256": "309822294b926934160b35d034a4b15e0985d539520a04dc2a684b06b9a155ac",
+  "reaEvidence": "ev_67dfd39d686a70ccec4b572af143ea82a133aeb596d34085055920adefa17340",
+  "focusedFiles": 14,
+  "bootstrapExecutedDuringAnalysis": false,
+  "observedStaticMembers": ["eA.checkField", "eA.emitField", "eA.watchWarpPlacement", "al0", "ol0"],
+  "nativeStageChoice": {"intervalGameSeconds": 0.5, "candidateObservations": 6, "candidateDisplacement": 96, "tiePrefersCurrentStage": true},
+  "localWorkaround": {"fields": [0,1], "arrival": "nearest destination start", "returnBlockRadius": 2200},
+  "status": "Investigado",
+  "runtimeBoundaryCrossingTested": false,
+  "next": "Reproduce boundary and inspect height/stage candidates before changing local recovery"
+}

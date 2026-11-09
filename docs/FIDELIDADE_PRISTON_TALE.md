@@ -6,7 +6,7 @@ Estados permitidos: **Não investigado**, **Investigado**, **Implementação par
 |---|---|---|---|---|---|
 | Execução/publicação | Não determina o host independente | Python/SQLite, supervisor Windows acompanha main | Preservar infraestrutura; documentação tem caminhos históricos | P0 | Investigado |
 | Dados e contas | Dados privados não são referência autorizada | SQLite, geração de personagem, sessões e auditoria | Autoridade de combate/inventário comum ainda depende do cliente | P0 | Implementação parcial |
-| Login/logout/reconexão | Cliente público e UI; contas originais não usadas | Contas locais e UI própria | Teste visual e reconexão real pendentes | P1 | Investigado |
+| Login/logout/reconexão | Cliente público e UI; contas originais não usadas | Contas locais e UI própria | Login, logout e novo login testados localmente; falhas de rede/reconexão automática ainda pendentes | P1 | Implementação parcial |
 | Criação/seleção | Recursos fixados e layouts documentados | Retratos/cena 3D e seleção local | Histórico contém substituições e animação desativada deliberadamente | P1 | Implementação parcial |
 | Classes | Tiers 1–4 de classes clássicas | Jobs 9/10/11 desativados por decisão do projeto | Não reativar; saves antigos devem permanecer intactos | P0 | Testado |
 | Promoção | Clássico tem provas; VelluM tem decisão própria | Promoção simplificada pelo mestre | Diferença intencional, não reintroduzir provas removidas | P0 | Testado |
@@ -20,7 +20,7 @@ Estados permitidos: **Não investigado**, **Investigado**, **Implementação par
 | Cooldown | Tabelas clássicas + medições comunitárias | Perfis/overrides e persistência | Não equivale a 1.760 medições; sanitização unificada e testada; identidade histórica não comprovada | P1 | Testado |
 | Hits/áreas/recursos | Clipes e geometrias públicas | Impactos no tick nativo, áreas e custos locais | Relógio/cancelamento testados; dano e geometrias de todas as skills ainda sem comparação completa | P1 | Implementação parcial |
 | Atributos/EXP/nível | Fórmulas clássicas e dados parciais | Curvas e perfil VelluM | Personalizações intencionais; fórmulas privadas não recuperadas | P1 | Implementação parcial |
-| Inventário/equipamento | Slots e grade nativos | Duas bolsas, conjuntos e persistência parcial | Testes existentes não certificam todos os itens/visuais | P1 | Implementação parcial |
+| Inventário/equipamento | Slots e grade nativos | Duas bolsas, conjuntos e persistência parcial | Troca de bolsa e retirar/reequipar arma pelo adaptador testados; conjunto completo e arraste visual pendentes | P1 | Implementação parcial |
 | Consumíveis/premiums | Intervalos públicos e catálogo local | Poções, buffs e loja próprios | Regras de economia e alguns efeitos são personalizados | P1 | Implementação parcial |
 | Drop/ouro | Não há tabela oficial completa autorizada | Sorteio Python, abates relatados pelo cliente | Perfil próprio; não afirmar taxas oficiais | P1 | Implementação parcial |
 | Lojas/NPCs | Listas públicas e janela nativa | Lojas comuns diretas, premium separado | Aprendizado no Raymon testado; sondagem Staff sem spam; metadados GM ausentes; catálogo completo não validado | P1 | Implementação parcial |

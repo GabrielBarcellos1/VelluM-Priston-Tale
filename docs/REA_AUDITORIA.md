@@ -27,7 +27,7 @@ A implementação corrente é Python padrão + SQLite + módulos ESM. `iniciar.p
 - `node --test tests/*.test.mjs`: 264 testes, 263 aprovados e 1 falha. A falha exige o antigo menu de três opções no comerciante, removido intencionalmente no commit `7e6202c`; não restaurar essa interface para satisfazer um teste obsoleto.
 - `python -m unittest discover -s tests -p 'test_*.py'`: 182 testes, 1 falha e 1 erro. A política atual desativa jobs 9, 10 e 11, mas dois testes ainda pressupõem todas as classes/17 skins publicadas.
 - Os testes Python usaram fixtures temporárias com contas sintéticas; nenhuma conta de produção foi utilizada.
-- Navegador, login e combate visual ainda não foram executados nesta missão. Não confundir esses resultados com validação visual do jogo.
+- No baseline, navegador, login e combate visual ainda não haviam sido executados. A cobertura posterior está registrada nos ciclos abaixo; não confundir esses resultados com validação de fidelidade do jogo.
 
 ## Restrições preservadas
 
@@ -57,3 +57,12 @@ A preencher por ciclo: operação REA, artefato/hash, membros selecionados, evid
 ### Correção de integração do HUD Staff — ciclo 3
 
 Consulta nativa `gmNpcInfo` observada em execução ao aproximar NPC. O adaptador não oferece os metadados desse serviço; a correção elimina apenas os avisos de sondagem e gravações inúteis. Regressão com o handler real e navegador confirmaram 15 consultas sem avisos. Não classificar o serviço GM como implementado nem atribuir ao REA uma recuperação de metadados privados.
+
+### Investigação seguinte — transição de mapas
+
+- Mesmo cliente público fixado; extraídos estaticamente 11 membros de `eA` sobre mapas/warp, mais `al0`, `ol0` e constantes `il0=96`, `nl0=6`. REA analisou 14 arquivos focados, sem bootstrap.
+- Evidência canônica: `ev_67dfd39d686a70ccec4b572af143ea82a133aeb596d34085055920adefa17340`; bundle completo externo `map-travel-evidence-v2.json`.
+- `checkField` verifica terrenos a cada 0,5 s do jogo, dentro dos bounds, usando diferença entre altura do chão e personagem. A decisão passa pelo estabilizador `stagePicker.next`, depois emite pacote `field`.
+- O estabilizador mantém candidato, posição e contagem; confirma após seis observações do candidato ou deslocamento de 96 unidades desde sua seleção. Em empate de altura, `ol0` prefere o estágio atual.
+- O VelluM adiciona reposicionamento no spawn Bamboo/Acácias e bloqueia o retorno enquanto estiver a menos de 2.200 unidades da chegada. É um desvio local confirmado, não regra clássica recuperada.
+- Não removido nesta etapa: a fronteira ainda exige reprodução real, comparação de alturas/estágios e verificação de rollback. Constantes do cliente não provam que o adaptador pode dispensar o workaround sem causar bounce.
