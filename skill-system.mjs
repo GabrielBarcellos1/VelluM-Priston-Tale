@@ -56,6 +56,7 @@ export function createSkillSystem(ctx) {
       cooldownTotals.set(s.id, restored.total);
     }
   }
+  const actionNow = ctx.actionNow ?? now;
   let actionReadyAt = 0, generation = 0;
   const rank = () => ctx.rank();
   const learned = (id) => levels.get(id) ?? 0;
@@ -295,7 +296,7 @@ export function createSkillSystem(ctx) {
     if (s.code === "SKILL_SWIFT_AXE" && !ctx.equipment?.()?.weapon?.code?.startsWith("WA1"))
       throw Error("Equipe um machado para usar Machado Veloz.");
     if ((ready.get(id) ?? 0) > now()) throw Error("Aguarde a recarga da habilidade.");
-    if (actionReadyAt > now()) throw Error("Aguarde a animação do golpe terminar.");
+    if (actionReadyAt > actionNow()) throw Error("Aguarde a animação do golpe terminar.");
     if (!ctx.freeCast?.() && (ctx.stats.mp < v.mp || ctx.stats.sp < v.stamina))
       throw Error("MP ou resistência insuficiente. Use uma poção.");
     let enemies = [];
@@ -323,7 +324,7 @@ export function createSkillSystem(ctx) {
       ctx.stats.mp -= v.mp;
       ctx.stats.sp -= v.stamina;
     }
-    actionReadyAt = now() + actionDuration;
+    actionReadyAt = actionNow() + actionDuration;
     if (cooldown) {
       ready.set(id, now() + cooldown);
       cooldownTotals.set(id, cooldown);
@@ -383,7 +384,7 @@ export function createSkillSystem(ctx) {
         ctx.schedule?.(() => {
           if (ctx.game()?.dead || castGeneration !== generation) return;
           for (const m of enemies)
-            if (m.hp > 0)
+            if (m.hp > 0 && ctx.monsters.get(m.id) === m)
               ctx.damage(
                 m.id,
                 attack.power,
@@ -422,6 +423,7 @@ export function createSkillSystem(ctx) {
       active.set(s.id, { ...v, enchantElement: saved.enchantElement, until: now() + left });
   }
   return {
+    cancelActions() { generation++; actionReadyAt = actionNow(); },
     reset: () => {
       generation++;
       for (const s of list) {

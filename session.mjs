@@ -1,3 +1,4 @@
+import {createSkillActionTimeline,mountSkillActionTimeline} from '/skill-action-timing.mjs';
 import { questTarget } from "/quest-targets.mjs";
 import { serviceDialog } from "/npc-panels.mjs";
 import { walkingStages, createMapTravel, forestSeamArrival } from "/map-travel.mjs";
@@ -1164,7 +1165,15 @@ function publishBuffs() {
     ],
   });
 }
+const skillTimeline = createSkillActionTimeline({
+  game: () => game,
+  scope: () => characterGeneration + ':' + field.id + ':' + (game?.currentStage ?? ''),
+  paused: () => !game || game.dead || stats.hp <= 0 || !!mapTravel?.busy,
+  onCancel: () => skills.cancelActions(),
+  onError: error => recordDiagnostic("Impacto de habilidade: " + error.message),
+});
 const skills = createSkillSystem({
+  actionNow: () => game?.time ?? performance.now() / 1000,
   catalog: skillData,
   job: characterClass.job,
   extraSkillPoints:()=>completed.has('classic.fury')?2:0,
@@ -1194,7 +1203,7 @@ const skills = createSkillSystem({
   recalculate,
   save,
   damage: damageMonster,
-  schedule: (callback, ms) => setTimeout(callback, ms),
+  schedule: (callback, ms) => skillTimeline.schedule(callback, ms),
   isTrainer: (id) => npcs.some((n) => n.id === id && n.services?.includes("skill")),
   buffsChanged: publishBuffs,
   summon: summonCompanion,
@@ -3080,6 +3089,7 @@ mapTravel = createMapTravel({
   position: () => game?.playerPosition() ?? enter,
   ready: () => !economyBusy && !pendingLoot && !economyUncertain,
   prepare: async landing => {
+    skillTimeline.clear();
     mapBackup = { field: { ...field }, enter: { ...enter }, position: game.playerPosition(),
       npcs: [...npcs], monsters: [...monsters], drops: [...groundDrops] };
     await bossRoulette.pauseMap();
@@ -3194,6 +3204,7 @@ try {
   globalThis.__localSession.ui = B.ui(game, conn, hero);
   disableLegacyMissions();
   setInterval(() => { if (groundDrops.size) renderGroundLoot(); }, 1500);
+  mountSkillActionTimeline(game,skillTimeline);
   B.Runtime.set(game);
   mountLocalSkillCasting(game,()=>!!field.village);
   mountGmMovement();

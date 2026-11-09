@@ -85,6 +85,7 @@ export function createRuntimeSkillSystem(ctx) {
   const now=ctx.now??(()=>performance.now()/1000),wall=ctx.wallNow??(()=>Date.now()/1000);
   const levels=new Map(list.map(s=>[s.id,Math.max(0,Math.min(10,Math.trunc(ctx.saved?.[s.code]??0)))]));
   const ready=new Map(),totals=new Map(),active=new Map(),dots=new Map();
+  const actionNow=ctx.actionNow??now;
   let actionReady=0,generation=0;
   const learned=s=>levels.get(typeof s==='number'?s:s.id)??0;
   const rank=()=>ctx.rank?ctx.rank():ctx.stats.level>=60?3:ctx.stats.level>=40?2:ctx.stats.level>=20?1:0;
@@ -164,7 +165,7 @@ export function createRuntimeSkillSystem(ctx) {
     if(['SKILL_DIVINE_INHALATION','SKILL_GODLY_SHIELD'].includes(s.code)&&!ctx.equipment?.()?.shield)throw Error('Equipe um escudo para usar esta habilidade.');
     if(s.code==='SKILL_SWIFT_AXE'&&!ctx.equipment?.()?.weapon?.code?.startsWith('WA1'))throw Error('Equipe um machado para usar Machado Veloz.');
     if((ready.get(id)??0)>now())throw Error('Aguarde a recarga da habilidade.');
-    if(actionReady>now())throw Error('Aguarde a animação do golpe terminar.');
+    if(actionReady>actionNow())throw Error('Aguarde a animação do golpe terminar.');
     if(!ctx.freeCast?.()&&!ctx.resourceFree?.()&&(ctx.stats.mp<v.mp||ctx.stats.sp<v.stamina))throw Error('MP ou resistência insuficiente. Use uma poção.');
     if(p.special==='resurrection'&&!ctx.canSupport?.('resurrection',target))throw Error('Aproxime-se de um aliado morto para ressuscitar.');
     const origin={x:game.pos.x,z:-game.pos.z},primary=ctx.monsters.get(target);
@@ -179,7 +180,7 @@ export function createRuntimeSkillSystem(ctx) {
     const hits=attack?skillHitTimes(attack,timing):timing.hits??[];
     const { actionDuration, cooldown } = skillActionTiming(timing, hits, v.recharge);
     if(!ctx.freeCast?.()&&!ctx.resourceFree?.()){ctx.stats.mp-=v.mp;ctx.stats.sp-=v.stamina;}
-    actionReady=now()+actionDuration;if(cooldown){ready.set(id,now()+cooldown);totals.set(id,cooldown);}
+    actionReady=actionNow()+actionDuration;if(cooldown){ready.set(id,now()+cooldown);totals.set(id,cooldown);}
     ctx.emit?.({t:'skillFx',from:ctx.name,skill:id,code:s.code,level:n,x:origin.x,z:origin.z,
       ...(target!==undefined?{target}:{}),targets:targets.map(m=>m.id),dur:timing.duration,hits:targets.length?hits:[]});
     if(p.special==='agony'){
@@ -211,7 +212,7 @@ export function createRuntimeSkillSystem(ctx) {
       if(attack.hpCostPercent&&!ctx.freeCast?.()&&!ctx.resourceFree?.())ctx.stats.hp=Math.max(1,ctx.stats.hp-Math.floor(ctx.stats.hpMax*attack.hpCostPercent/100));
       const token=generation;
       for(const time of hits)ctx.schedule?.(()=>{if(token!==generation||ctx.game()?.dead)return;
-        for(const m of targets)if(alive(m)){
+        for(const m of targets)if(alive(m)&&ctx.monsters.get(m.id)===m){
           const dealt=ctx.damage(m.id,attack.power,Math.max(v.range,at(p.shape.length,n)??0)+1000,{...attack,skillCode:s.code,area:targets.length>1});
           if(dealt===0)continue;
           if(attack.control)control(s,n,[m],attack.control);
@@ -228,7 +229,7 @@ export function createRuntimeSkillSystem(ctx) {
     ctx.recalculate?.();ctx.buffsChanged?.();publish();ctx.save?.();return v;
   }
   function expire(){let changed=false;for(const [key,b]of active)if(b.until<=now()){active.delete(key);changed=true;}
-    for(const [key,d]of dots){if(d.until<now()||d.token!==generation||!alive(d.m)){dots.delete(key);continue;}
+    for(const [key,d]of dots){if(d.until<now()||d.token!==generation||!alive(d.m)||ctx.monsters.get(d.m.id)!==d.m){dots.delete(key);continue;}
       if(now()>=d.next){d.next=now()+1;ctx.damage(d.m.id,d.attack.dot.percent/100,100000,{magic:true,element:d.attack.dot.element,noLeech:true,area:true});}}
     if(changed){ctx.recalculate?.();ctx.buffsChanged?.();}return changed;}
   function learn(id,npcId){if(!ctx.isTrainer?.(npcId))throw Error('Procure o mestre de habilidades da sua cidade.');
@@ -248,6 +249,7 @@ export function createRuntimeSkillSystem(ctx) {
   return {snapshot,publish,tickCooldowns,learn,cast,bonuses,buffs,expire,points,reveal,
     maximize(){for(const s of list)levels.set(s.id,10);ctx.recalculate?.();publish();},
     cancel(code){let changed=false;for(const [key,b]of active)if('skill:'+b.code===code){active.delete(key);changed=true;}if(changed){ctx.recalculate?.();ctx.buffsChanged?.();ctx.save?.();}return changed;},
+    cancelActions(){generation++;dots.clear();actionReady=actionNow();},
     reset(){generation++;levels.forEach((_,id)=>{levels.set(id,0);ctx.emit?.({t:'skillCooldown',id,seconds:0,total:0});});ready.clear();totals.clear();active.clear();dots.clear();actionReady=0;ctx.recalculate?.();ctx.buffsChanged?.();publish();return points();},
     exportState:()=>Object.fromEntries(list.filter(s=>learned(s)).map(s=>[s.code,learned(s)])),
     exportCooldowns:()=>Object.fromEntries(list.filter(s=>ready.get(s.id)>now()).map(s=>[s.code,{expiresAt:wall()+ready.get(s.id)-now(),total:totals.get(s.id)}])),

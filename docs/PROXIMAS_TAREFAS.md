@@ -8,15 +8,15 @@
 
 ## P1 — próxima tarefa exata
 
-**Investigar e corrigir o ciclo de execução das habilidades.**
+**Corrigir avisos repetidos da sondagem nativa de NPC `gmNpcInfo`.**
 
-Arquivos: `session.mjs`, `skill-runtime.mjs`, `skill-system.mjs`, `skill-action-timing.mjs`, `native-rules.mjs`, testes de skills. Primeiro criar regressões para tempo inválido que consome recursos e impactos pendentes que sobrevivem a pausas, morte ou troca de contexto. Conferir o cliente público fixado por hash usando análise estática REA. Não trocar o bundle, não mudar cooldown/dano por suposição.
+Reprodução: aproximar-se de um NPC com conta de teste Staff; o cliente consulta metadados e o handler genérico gera avisos repetidos. Criar regressão do handler, tratar a consulta passiva sem inventar resposta/funcionalidade GM e confirmar no navegador. Arquivo principal: `session.mjs`.
 
 Na sequência:
 
-1. Sanitizar cooldown restaurado no runtime com casos NaN/Infinity/expiração e preservar overrides intencionais.
-2. Baseline corrigido no ciclo 1: 267 testes Node e 182 Python aprovados. Preservar esse resultado nos próximos ciclos.
-3. Testar login, criação, combate, skill, equipamento, troca de personagem, logout/login e persistência numa base descartável.
+1. Ciclos 1 e 2 corrigiram validação atômica, restauração de cooldown e agenda no relógio nativo. Preservar overrides e os 276 testes Node aprovados.
+2. Login, criação, caminhada, NPC, aprendizado/recarga da página e impacto de skill executados em Chromium descartável; não confundir com comparação de dano oficial.
+3. Completar equipamento, troca de personagem, logout/login e persistência numa base descartável; repetir Python e registrar resultado.
 4. Auditar o workaround Bamboo/Acácias: reposicionamento e bloqueio de retorno de 2.200 unidades; comparar com colisão/estabilização nativas antes de alterar.
 
 ## P2

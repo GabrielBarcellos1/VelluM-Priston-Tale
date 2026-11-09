@@ -1,0 +1,17 @@
+{
+  "scope": "VelluM local disposable fixture; not original server validation",
+  "referenceEvidence": "ev_eb98c6eef291ac837c0be4c71f7c0396ea97af271be55e475d2dcb682b3bfcca",
+  "browser": "Chromium headless software rendering, 1365x860",
+  "class": 6,
+  "skill": 601,
+  "field": 17,
+  "target": "Cao Abelha",
+  "observations": [
+    {"gameTime": 26.685714285715523, "targetHp": 400},
+    {"gameTime": 27.028571428572707, "targetHp": 400, "realSecondsAfterCast": 3},
+    {"gameTime": 30.57142857143028, "targetHp": 383}
+  ],
+  "pageErrors": [],
+  "originalServerConnections": [],
+  "limits": ["No official numeric damage comparison", "Reloads aborted some in-flight requests", "Not a complete skill or visual audit"]
+}

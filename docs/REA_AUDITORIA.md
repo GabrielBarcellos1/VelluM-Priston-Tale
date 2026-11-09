@@ -45,3 +45,11 @@ A preencher por ciclo: operação REA, artefato/hash, membros selecionados, evid
 - `eA.tick` incrementa o relógio do jogo em `Yd = 1/70`; `eA.onSkillFx` relaciona animação/travas à duração e ao relógio do jogo. `frameStep` limita vários avanços visuais a 0,1 s.
 - Essa evidência fundamenta investigar a agenda de impactos. Não revela dano privado nem valida todas as skills. O relógio e seus consumidores ainda requerem teste de integração.
 - Correção do ciclo 1 validada por testes locais: nenhuma alteração numérica das tabelas, apenas atomicidade e validação do estado restaurado.
+
+### Aplicação e limites — ciclo 2
+
+- A agenda de impactos agora acompanha o tick nativo, não `setTimeout`. A trava da ação também usa esse relógio; cooldown salvo mantém sua semântica anterior.
+- Inspeção adicional de `va0.hiddenStep` mostrou que o cliente também executa ticks no caminho de página oculta. Não foi inventada uma regra de cancelamento por `document.hidden`.
+- Sete testes da agenda cobrem ordenação, uma única execução, troca de contexto, morte durante callback, cleanup do wrapper, montagem apenas no jogo e isolamento de erros. Dois testes dos motores cobrem relógios separados e cancelamento sem perda de estado.
+- Integração real observada em Chromium com a habilidade 601, Cavaleiro, alvo Cão Abelha no mapa 17. Login, criação, caminhada e aprendizado também executados. Evidência resumida em `docs/evidencias/combate-integracao-local.json`.
+- Não foi verificado o dano numérico contra um servidor clássico nem o conjunto de animações/habilidades. O resultado é **Testado** para a integração local do relógio, sem certificação geral de fidelidade.

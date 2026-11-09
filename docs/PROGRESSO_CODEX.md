@@ -30,7 +30,7 @@ O supervisor documentado busca `main` periodicamente. Alterações só em ESM n�
 
 ## Limites registrados
 
-Não houve login/jogo em navegador nesta missão até este registro. Baseline de testes não comprova fidelidade visual ou tabelas privadas. Nenhuma credencial ou dado real deve ser acrescentado ao repositório público.
+O ciclo 0 não incluiu navegador; a cobertura real posterior está registrada por ciclo abaixo. Testes locais não comprovam fidelidade visual ou tabelas privadas. Nenhuma credencial ou dado real deve ser acrescentado ao repositório público.
 
 ## Ciclo 1 — execução atômica e restauração de cooldown
 
@@ -45,3 +45,15 @@ Não houve login/jogo em navegador nesta missão até este registro. Baseline de
 ## Próximo ciclo em execução
 
 REA analisou estaticamente o cliente fixado e confirmou `eA.tick`: avanço de `time` em 1/70 s, e `onSkillFx`: travas/efeitos relativos ao tempo do jogo. Evidência `ev_eb98c6eef291ac837c0be4c71f7c0396ea97af271be55e475d2dcb682b3bfcca`. Investigar e testar o agendamento dos impactos nesse relógio, incluindo pausa, morte, troca de mapa/contexto e recarga persistida.
+
+## Ciclo 2 — impactos sincronizados com a animação
+
+- `skill-action-timing.mjs`: agenda de impactos baseada em `game.time`, instalada no tick nativo da sessão jogável. A prévia da seleção fica isolada. Cancelamento por morte, troca de personagem/mapa, substituição do jogo e recuo do relógio; erros de callback são registrados sem interromper os próximos ticks.
+- `session.mjs`: substitui o timeout dos impactos pela agenda; limpa ações ao preparar viagem. Não altera números de dano, cooldown, classes ou progressão.
+- Os dois motores separam trava da ação (relógio nativo) e recarga persistida (relógio existente). `cancelActions` preserva habilidades aprendidas, buffs e cooldowns. Referências antigas de monstros deixam de receber impactos/DOT depois de substituídas.
+- Regressões novas reproduziram a trava liberada pelo relógio errado antes da correção. Total Node: **276/276 aprovados**; Python: **182/182 aprovados**. Sintaxe ESM, AST Python com leitura UTF-8 BOM e JSON conferidos.
+- Teste Chromium real, conta e SQLite descartáveis, localhost:4188: login; criação do Cavaleiro AuditoriaCodex; seleção/entrada em Pillai; caminhada por mouse; aproximação do Mestre Raymon; aprendizado da habilidade 601; salvamento/recarregamento com habilidade preservada; progressão personalizada ao mapa 17; uso da habilidade no Cão Abelha.
+- Observação do impacto: tempo do jogo 26,6857, HP 400; após 3 s reais, tempo 27,0286 e HP ainda 400; posteriormente tempo 30,5714 e HP 383. O renderizador de software avança lentamente. Isso verifica a integração local, não o valor oficial do dano.
+- Sem `pageerror` ou conexão ao servidor original. Algumas requisições foram abortadas durante recarregamentos; não equivale a ausência global de falhas de rede. Capturas locais: `roster-before-clock.png`, `pillai-walking.png`, `skill-impact-native-clock.png` no diretório de pesquisa externo ao repositório.
+- Observado durante aproximação de NPC: sondagem nativa `gmNpcInfo` cai no aviso genérico e polui o chat. Próxima correção independente: suprimir o aviso de sondagem sem simular resposta ou ativar ferramenta GM inexistente.
+- Ainda pendentes: interação de equipamento, outro personagem, logout/login, toque mobile e comparação visual sistemática com referência.
