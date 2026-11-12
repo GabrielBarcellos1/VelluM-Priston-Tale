@@ -30,7 +30,7 @@ index 3e93ada1..781b7221 100644
  END
  
 diff --git a/[project]/src/SrcServer/OnSever.cpp b/[project]/src/SrcServer/OnSever.cpp
-index 78567914..26ae7916 100644
+index 78567914..9b55be8e 100644
 --- a/[project]/src/SrcServer/OnSever.cpp
 +++ b/[project]/src/SrcServer/OnSever.cpp
 @@ -1,4 +1,4 @@
@@ -73,16 +73,34 @@ index 78567914..26ae7916 100644
  			for ( i=0; i<TriedCount; i++ ) if ( Tried[i]==cnt ) break;
  			if ( i<TriedCount ) continue;
  			if ( best<0 || lpDef->Level>DefaultItems[best].Item.Level ||
-@@ -18662,7 +18666,7 @@ static int DeckPickItem( rsPLAYINFO *lpPlayInfo , DWORD dwFamily , int Aging , s
+@@ -18662,7 +18666,25 @@ static int DeckPickItem( rsPLAYINFO *lpPlayInfo , DWORD dwFamily , int Aging , s
  	return FALSE;
  }
  
 -static int GmDeckOut( rsPLAYINFO *lpPlayInfo , int Aging )
++// Create a specific item from the authoritative server catalog, with perfect roll.
++static int DeckPickExactBoss( rsPLAYINFO *lpPlayInfo , DWORD Code , sITEMINFO *lpItem , int Murky64 )
++{
++    for ( int i=0; i<DefaultItemCount; ++i ) {
++        if ( DefaultItems[i].Item.CODE!=Code ) continue;
++        if ( DefaultItems[i].Item.Level>lpPlayInfo->smCharInfo.Level ) return FALSE;
++        Random_MaxMode = 1;
++        CreateDefItem( lpItem , &DefaultItems[i], lpPlayInfo->smCharInfo.JOB_CODE&0xFFFF );
++        Random_MaxMode = 0;
++        if ( Murky64 ) {
++            lpItem->Spirit = 64; // Spirit = intelligence prerequisite in Classic PT.
++            ReformItem( lpItem );
++        }
++        return TRUE;
++    }
++    return FALSE;
++}
++
 +static int GmDeckOut( rsPLAYINFO *lpPlayInfo , int Aging , int BossMode=FALSE )
  {
  	smCHAR_INFO *lpChar = &lpPlayInfo->smCharInfo;
  	int JobCode = lpChar->JOB_CODE&0xFFFF;
-@@ -18681,22 +18685,22 @@ static int GmDeckOut( rsPLAYINFO *lpPlayInfo , int Aging )
+@@ -18681,22 +18703,22 @@ static int GmDeckOut( rsPLAYINFO *lpPlayInfo , int Aging )
  		{ sinOA2 , INVENTORY_POS_ARMLET },
  		{ sinOA1 , INVENTORY_POS_AMULET },
  		{ sinOS1 , INVENTORY_POS_SHELTOM },
@@ -109,16 +127,38 @@ index 78567914..26ae7916 100644
  				Count++;
  				dwMask |= INVENTORY_POS_LHAND;
  			}
-@@ -18704,7 +18708,7 @@ static int GmDeckOut( rsPLAYINFO *lpPlayInfo , int Aging )
+@@ -18704,11 +18726,25 @@ static int GmDeckOut( rsPLAYINFO *lpPlayInfo , int Aging )
  	}
  
  	for ( cnt=0; cnt<(int)(sizeof(Slots)/sizeof(Slots[0])); cnt++ ) {
 -		if ( DeckPickItem( lpPlayInfo , Slots[cnt].dwFamily , Aging , &Items[Count] ) ) {
-+		if ( DeckPickItem( lpPlayInfo , Slots[cnt].dwFamily , Aging , &Items[Count] , BossMode ) ) {
- 			Count++;
- 			dwMask |= Slots[cnt].dwSlots;
- 		}
-@@ -18736,6 +18740,7 @@ static int GmDeckOut( rsPLAYINFO *lpPlayInfo , int Aging )
+-			Count++;
+-			dwMask |= Slots[cnt].dwSlots;
+-		}
+-	}
++        DWORD Exact = 0;
++        if ( BossMode ) {
++            if ( Slots[cnt].dwSlots==INVENTORY_POS_LRING || Slots[cnt].dwSlots==INVENTORY_POS_RRING )
++                Exact = sinOR2|sin05; // OR205: Valento Ring (two).
++            else if ( Slots[cnt].dwSlots==INVENTORY_POS_AMULET )
++                Exact = sinOA1|sin30; // OA130: Kelvezu Amulet.
++            else if ( Slots[cnt].dwSlots==INVENTORY_POS_SHELTOM )
++                Exact = sinOS1|sin07; // OS107: Murky (Dark Sheldon absent).
++        }
++        int picked = Exact ? DeckPickExactBoss( lpPlayInfo , Exact , &Items[Count],
++                         Exact==(sinOS1|sin07) ) :
++                         DeckPickItem( lpPlayInfo , Slots[cnt].dwFamily , Aging , &Items[Count], BossMode );
++        if ( !picked && Exact ) // Never silently leave the slot empty.
++            picked = DeckPickItem( lpPlayInfo , Slots[cnt].dwFamily , Aging , &Items[Count], BossMode );
++        if ( picked ) {
++            Count++;
++            dwMask |= Slots[cnt].dwSlots;
++        }
++    }
+ 
+ 	if ( !Count ) {
+ 		GmCheats_Whisper( lpPlayInfo , "> Nothing to wear was found for your level." );
+@@ -18736,6 +18772,7 @@ static int GmDeckOut( rsPLAYINFO *lpPlayInfo , int Aging )
  
  int RecvCommand( rsPLAYINFO *lpPlayInfo , char *szChatCommand )
  {
@@ -126,7 +166,7 @@ index 78567914..26ae7916 100644
  	int len,cnt;
  	char *lpBuff,*lpBuff2, *lpBuff3;
  	//DWORD dwTimer;
-@@ -19545,6 +19550,7 @@ int RecvCommand( rsPLAYINFO *lpPlayInfo , char *szChatCommand )
+@@ -19545,6 +19582,7 @@ int RecvCommand( rsPLAYINFO *lpPlayInfo , char *szChatCommand )
  
  	//아이템 생기는 치트
  	len = rsCompString( "/@get" , szChatCommand );
@@ -134,7 +174,7 @@ index 78567914..26ae7916 100644
  	if ( len && ( lpPlayInfo->AdminMode>=3 || ( lpPlayInfo->AdminMode && rsServerConfig.GmCheats ) ) ) {
  		lpBuff = szChatCommand + len;
  
-@@ -20257,6 +20263,7 @@ int RecvCommand( rsPLAYINFO *lpPlayInfo , char *szChatCommand )
+@@ -20257,6 +20295,7 @@ int RecvCommand( rsPLAYINFO *lpPlayInfo , char *szChatCommand )
  	//len = rsCompString( "/내경험치내놔!" , szChatCommand );
  //해외
  	len = rsCompString( "/GiveMeExp!" , szChatCommand );
@@ -142,7 +182,7 @@ index 78567914..26ae7916 100644
  	if ( !len )
  		len = rsCompString( "/ShowMeTheExp!" , szChatCommand );		// the name in the old GM notes
  	if ( len && lpPlayInfo->AdminMode && ( DebugServerMode || rsServerConfig.TestSeverMode || rsServerConfig.GmCheats || lpPlayInfo->AdminMode>=4 ) )
-@@ -20288,6 +20295,7 @@ int RecvCommand( rsPLAYINFO *lpPlayInfo , char *szChatCommand )
+@@ -20288,6 +20327,7 @@ int RecvCommand( rsPLAYINFO *lpPlayInfo , char *szChatCommand )
  	// client's next save passes the level-jump (-12) and exp-gain (-9) checks, then tells
  	// the client to apply the same level (smTRANSCODE_GM_SETLEVEL).
  	len = rsCompString( "/MakeMeLevel" , szChatCommand );
@@ -150,10 +190,61 @@ index 78567914..26ae7916 100644
  	if ( len && lpPlayInfo->AdminMode && ( DebugServerMode || rsServerConfig.TestSeverMode || rsServerConfig.GmCheats || lpPlayInfo->AdminMode>=4 ) )
  	{
  		lpBuff = szChatCommand + len;
-@@ -20322,6 +20330,53 @@ int RecvCommand( rsPLAYINFO *lpPlayInfo , char *szChatCommand )
+@@ -20322,6 +20362,104 @@ int RecvCommand( rsPLAYINFO *lpPlayInfo , char *szChatCommand )
  		return TRUE;
  	}
  
++    // /premium [page] delivers genuine registered premium consumables in safe
++    // pages (10 per command), rather than throwing hundreds into a full bag.
++    len = rsCompString( "/premium" , szChatCommand );
++    if ( len && lpPlayInfo->AdminMode>=4 &&
++         (lstrcmpi(lpPlayInfo->szID,"ADM")==0 || lstrcmpi(lpPlayInfo->szID,"admin")==0) ) {
++        lpBuff = szChatCommand+len;
++        lpBuff = rsGetWord( szCmdBuff,lpBuff );
++        int page = szCmdBuff[0] ? atoi(szCmdBuff) : 1;
++        if ( page<1 || page>100 ) {
++            GmCheats_Whisper(lpPlayInfo,"> ADM: use /premium 1, /premium 2 ... (10 itens por pagina).");
++            return TRUE;
++        }
++        int index = 0;
++        int delivered = 0;
++        for ( int i=0; i<DefaultItemCount; ++i ) {
++            DWORD fam = DefaultItems[i].Item.CODE&sinITEM_MASK2;
++            if ( fam!=sinBI1 && fam!=sinBI2 ) continue;
++            if ( index++ < (page-1)*10 ) continue;
++            if ( delivered>=10 ) break;
++            sITEMINFO Premium;
++            Random_MaxMode = 1;
++            CreateDefItem( &Premium, &DefaultItems[i], lpPlayInfo->smCharInfo.JOB_CODE&0xFFFF );
++            Random_MaxMode = 0;
++            if ( Premium.CODE ) {
++                rsPutItem2( lpPlayInfo, &Premium );
++                delivered++;
++            }
++        }
++        char feedback[180];
++        wsprintf(feedback,"> ADM: %d itens premium da pagina %d enviados. Proxima: /premium %d. Verifique o inventario.",delivered,page,page+1);
++        GmCheats_Whisper(lpPlayInfo,feedback);
++        rsRecordAdminCommand(lpPlayInfo,szChatCommand,1);
++        return TRUE;
++    }
++
++    // Explicit saving: queue a save on the authorized client.
++    len = rsCompString( "/salvar" , szChatCommand );
++    if ( len && lpPlayInfo->AdminMode>=4 &&
++         (lstrcmpi(lpPlayInfo->szID,"ADM")==0 || lstrcmpi(lpPlayInfo->szID,"admin")==0) ) {
++        smTransCommand.size = sizeof(smTRANS_COMMAND);
++        smTransCommand.code = smTRANSCODE_SAVECLIENT;
++        smTransCommand.WParam = 0;
++        smTransCommand.LParam = 0;
++        smTransCommand.SParam = 0;
++        smTransCommand.EParam = 0;
++        lpPlayInfo->lpsmSock->Send((char *)&smTransCommand,smTransCommand.size,TRUE);
++        GmCheats_Whisper(lpPlayInfo,"> ADM: solicitacao de salvamento enviada. Espere alguns segundos antes de sair.");
++        rsRecordAdminCommand(lpPlayInfo,szChatCommand,1);
++        return TRUE;
++    }
++
 +	// Explicit GM advancement for skill masters: unlock tiers 1-4 without quests.
 +	// The character's job is still preserved; tier 5 (ChangeJob=4) is forbidden.
 +	len = rsCompString( "/habilidades" , szChatCommand );
@@ -204,7 +295,7 @@ index 78567914..26ae7916 100644
  	// GM: /DeckMeOut! [aging] - the best gear for the player's level and class (GmDeckOut)
  	len = rsCompString( "/DeckMeOut!" , szChatCommand );
  	if ( len && lpPlayInfo->AdminMode && ( DebugServerMode || rsServerConfig.TestSeverMode || rsServerConfig.GmCheats || lpPlayInfo->AdminMode>=4 ) )
-@@ -20356,6 +20411,7 @@ int RecvCommand( rsPLAYINFO *lpPlayInfo , char *szChatCommand )
+@@ -20356,6 +20494,7 @@ int RecvCommand( rsPLAYINFO *lpPlayInfo , char *szChatCommand )
  //	len = rsCompString( "/내돈다내놔!" , szChatCommand );
  //해외
  	len = rsCompString( "/GiveMeMoney!" , szChatCommand );
@@ -212,30 +303,64 @@ index 78567914..26ae7916 100644
  	if ( len && lpPlayInfo->AdminMode && ( DebugServerMode || rsServerConfig.TestSeverMode || rsServerConfig.GmCheats || lpPlayInfo->AdminMode>=4 ) ) {
  		lpBuff = szChatCommand + len;
  
-@@ -20554,14 +20610,22 @@ int RecvCommand( rsPLAYINFO *lpPlayInfo , char *szChatCommand )
+@@ -20372,15 +20511,19 @@ int RecvCommand( rsPLAYINFO *lpPlayInfo , char *szChatCommand )
+ 			lpsItem->ItemInfo.CODE = sinGG1|sin01;			//돈이다
+ 			ReformItem( &lpsItem->ItemInfo );						//아이템 인증
+ 
+-			lpStgArea = FindStageField( lpPlayInfo->Position.x, lpPlayInfo->Position.z );
+-			if ( lpStgArea ) {
+-				lpsItem->state = TRUE;
+-				lpStgArea->AddItem( lpsItem , lpPlayInfo->Position.x>>FLOATNS, lpPlayInfo->Position.y>>FLOATNS, lpPlayInfo->Position.z>>FLOATNS );
+-			}
+-			delete lpsItem;
++            if ( lpPlayInfo->AdminMode>=4 ) {
++                rsPutItem2( lpPlayInfo , &lpsItem->ItemInfo );
++            } else {
++                lpStgArea = FindStageField( lpPlayInfo->Position.x, lpPlayInfo->Position.z );
++                if ( lpStgArea ) {
++                    lpsItem->state = TRUE;
++                    lpStgArea->AddItem( lpsItem , lpPlayInfo->Position.x>>FLOATNS, lpPlayInfo->Position.y>>FLOATNS, lpPlayInfo->Position.z>>FLOATNS );
++                }
++            }
++            delete lpsItem;
+ 
+ 
+-			wsprintf( TransChatMessage.szMessage , ">What the hell~!!( %d )" , cnt );
++			wsprintf( TransChatMessage.szMessage , "> ADM: %d moedas enviadas ao personagem." , cnt );
+ 
+ 			TransChatMessage.code = smTRANSCODE_WHISPERMESSAGE;
+ 			TransChatMessage.size = 32+lstrlen(TransChatMessage.szMessage);
+@@ -20554,14 +20697,28 @@ int RecvCommand( rsPLAYINFO *lpPlayInfo , char *szChatCommand )
  	}
  
  	//몬스터 생성
 +	len = rsCompString( "/comandos" , szChatCommand );
 +	if ( len && lpPlayInfo->AdminMode>=4 ) {
-+		GmCheats_Whisper( lpPlayInfo, "> /equipar /habilidades /nivel <1-200> /monstro <nome> <1-20> /meumonstro <nome> /ouro <valor> /item <codigo>" );
++		GmCheats_Whisper( lpPlayInfo, "> /equipar /habilidades /premium [pagina] /salvar /nivel <1-200> /monstro <nome> <1-20> /meumonstro <nome> /ouro <valor> /item <codigo>" );
 +		return TRUE;
 +	}
  	len = rsCompString( "/monster" , szChatCommand );
+-	if ( len && lpPlayInfo->AdminMode && AutoPlayServer ) {
 +	if ( !len ) len = rsCompString( "/monstro" , szChatCommand );
- 	if ( len && lpPlayInfo->AdminMode && AutoPlayServer ) {
++	if ( len && lpPlayInfo->AdminMode && (AutoPlayServer || lpPlayInfo->AdminMode>=4) ) {
 +		int spawned = 0;
  		//pb=p;p=GetWord(strBuff,p);if(strBuff[0]==34)p=GetString(strBuff,pb);	//단어 찾기
  		lpBuff = szChatCommand + len;
  		lpBuff2 = rsGetWord( szCmdBuff , lpBuff );	//ID 읽어옴
  		if ( szCmdBuff[0]==34 ) lpBuff2 = GetString( szCmdBuff , lpBuff );
++        for ( int mi=0; mi<chrMonsterCnt; ++mi ) {
++            if ( lstrcmpi(chrMonsterList[mi].szName,szCmdBuff)==0 ) {
++                lstrcpy(szCmdBuff,chrMonsterList[mi].szName);
++                break;
++            }
++        }
  		if ( szCmdBuff[0] ) {
  			lpChar = OpenMonsterFromName( szCmdBuff , lpPlayInfo->Position.x , lpPlayInfo->Position.y , lpPlayInfo->Position.z );
 +			if ( lpChar ) spawned++;
  			if ( lpChar && lpPlayInfo->AdminMode<4 ) {
  				lpChar->smMonsterInfo.FallItemCount = 0;			//소환 몬스터 아이템 드롭 금지
  			}
-@@ -20571,31 +20635,40 @@ int RecvCommand( rsPLAYINFO *lpPlayInfo , char *szChatCommand )
+@@ -20571,31 +20728,46 @@ int RecvCommand( rsPLAYINFO *lpPlayInfo , char *szChatCommand )
  		if  ( szTempBuff[0]>='0' && szTempBuff[0]<='9' ) {
  			len = atoi( szTempBuff );
  			if ( len<=20 ) {
@@ -264,20 +389,27 @@ index 78567914..26ae7916 100644
  
  	//몬스터 생성
  	len = rsCompString( "/mymonster" , szChatCommand );
+-	if ( len && lpPlayInfo->AdminMode && AutoPlayServer ) {
 +	if ( !len ) len = rsCompString( "/meumonstro" , szChatCommand );
- 	if ( len && lpPlayInfo->AdminMode && AutoPlayServer ) {
++	if ( len && lpPlayInfo->AdminMode && (AutoPlayServer || lpPlayInfo->AdminMode>=4) ) {
 +		int spawned = 0;
  		//pb=p;p=GetWord(strBuff,p);if(strBuff[0]==34)p=GetString(strBuff,pb);	//단어 찾기
  		lpBuff = szChatCommand + len;
  		lpBuff2 = rsGetWord( szCmdBuff , lpBuff );	//ID 읽어옴
  		if ( szCmdBuff[0]==34 ) lpBuff2 = GetString( szCmdBuff , lpBuff );
++        for ( int mi=0; mi<chrMonsterCnt; ++mi ) {
++            if ( lstrcmpi(chrMonsterList[mi].szName,szCmdBuff)==0 ) {
++                lstrcpy(szCmdBuff,chrMonsterList[mi].szName);
++                break;
++            }
++        }
  		if ( szCmdBuff[0] ) {
  			lpChar = OpenMonsterFromName( szCmdBuff , lpPlayInfo->Position.x , lpPlayInfo->Position.y , lpPlayInfo->Position.z , lpPlayInfo );
 +			if ( lpChar ) spawned++;
  			if ( lpChar && lpPlayInfo->AdminMode<4 ) {
  				lpChar->smMonsterInfo.FallItemCount = 0;			//소환 몬스터 아이템 드롭 금지
  			}
-@@ -20605,18 +20678,24 @@ int RecvCommand( rsPLAYINFO *lpPlayInfo , char *szChatCommand )
+@@ -20605,18 +20777,24 @@ int RecvCommand( rsPLAYINFO *lpPlayInfo , char *szChatCommand )
  		if  ( szTempBuff[0]>='0' && szTempBuff[0]<='9' ) {
  			len = atoi( szTempBuff );
  			if ( len<=20 ) {
@@ -303,7 +435,7 @@ index 78567914..26ae7916 100644
  		rsRecordAdminCommand( lpPlayInfo , szChatCommand , 2 );		//운영자 명령 사용기록
  		return TRUE;
  	}
-@@ -21119,6 +21198,7 @@ int	SendFindCrack( smWINSOCK *lpsmSock )
+@@ -21119,6 +21297,7 @@ int	SendFindCrack( smWINSOCK *lpsmSock )
  
  int RecvCommand( rsPLAYINFO *lpPlayInfo , char *szChatCommand )
  {
@@ -311,7 +443,7 @@ index 78567914..26ae7916 100644
  	return TRUE;
  }
  
-@@ -24634,7 +24714,8 @@ pRetry:
+@@ -24634,7 +24813,8 @@ pRetry:
  		lpTransCommand = (smTRANS_COMMAND *)SockInfo->Buff;
  
  		if ( !lpTransCommand->LParam ) {
@@ -321,7 +453,7 @@ index 78567914..26ae7916 100644
  			lpPlayInfo->HideMode = lpTransCommand->SParam;
  		}
  
-@@ -26008,7 +26089,7 @@ pRetry:
+@@ -26008,7 +26188,7 @@ pRetry:
  		// 장별 - 에이징 치트 서버로 전송
  		case smTRANSCODE_AGING_DATA: 
  			lpTransCommand = (smTRANS_COMMAND *)SockInfo->Buff;
@@ -330,7 +462,7 @@ index 78567914..26ae7916 100644
  		break;
  
  		// 장별 - 스킬 딜레이
-@@ -33152,6 +33233,12 @@ int	rsCheckAdminPlayer( rsPLAYINFO *lpPlayInfo )
+@@ -33152,6 +33332,12 @@ int	rsCheckAdminPlayer( rsPLAYINFO *lpPlayInfo )
  	int cnt;
  	smWINSOCK *lpsmSock = lpPlayInfo->lpsmSock;
  
@@ -360,7 +492,7 @@ index b19cfe3b..113b0da5 100644
  		GetMoveLocation( 0 , 0, 0*fONE , 0, Angle.y , 0 );
  
 diff --git a/[project]/src/netplay.cpp b/[project]/src/netplay.cpp
-index 0fffcb19..6015cc7e 100644
+index 0fffcb19..c1305006 100644
 --- a/[project]/src/netplay.cpp
 +++ b/[project]/src/netplay.cpp
 @@ -2565,6 +2565,18 @@ int rsTRANS_SERVER::RecvMessage( smTHREADSOCK *pData )
@@ -382,6 +514,14 @@ index 0fffcb19..6015cc7e 100644
  		case smTRANSCODE_GM_GODMODE:
  			// GM /IDDQD (the server checked the GM may)
  			lpTransCommand = (smTRANS_COMMAND *)pData->Buff;
+@@ -3590,6 +3602,7 @@ int rsTRANS_SERVER::RecvMessage( smTHREADSOCK *pData )
+ 		case smTRANSCODE_SAVECLIENT:
+ 			//클라이언트 데이타 저장 요구 받음
+ 			SaveGameData();
++			{ extern int SetSaveSoon(int); SetSaveSoon(3000); }
+ 			break;
+ 
+ 		case smTRANSCODE_DEAD_PLAYER:
 diff --git a/[project]/src/playmain.cpp b/[project]/src/playmain.cpp
 index af5057f8..95a81bbf 100644
 --- a/[project]/src/playmain.cpp
