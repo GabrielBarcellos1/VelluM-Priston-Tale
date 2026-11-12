@@ -263,7 +263,7 @@ def community(user,job):
                 staff.append({**record,'position':'leader' if row['role']=='admin' else 'member','online':row['username']==user['username'],'offlineMs':0 if row['username']==user['username'] else None})
             else:
                 exp=stats.get('exp',0)
-                if type(exp) not in (int,float) or not 0<=exp<=10**12:exp=0
+                if type(exp) not in (int,float) or not 0<=exp<=2**53-1:exp=0
                 key=(-int(level),-exp,row['username'])
                 if row['job'] not in tops or key<tops[row['job']][0]:tops[row['job']]=(key,record)
         known={m['username'] for m in staff}
