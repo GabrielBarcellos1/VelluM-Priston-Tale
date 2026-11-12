@@ -1,29 +1,35 @@
-# Priston Classic: fullscreen e ADM (12/11/2026)
+# VelluM Priston Classic — publicação de ADM, /equipar, coroa e aura
+Atualização: 12/11/2026
 
-## Estado publicado
-- URL: https://acesso.gbtechnology.com.br/priston-classic/
-- Interface de jogo ocupa toda a altura do navegador, centralizada na proporção nativa 4:3, sem barras de rolagem. A barra de ações fica discreta na parte inferior.
-- Botão discreto no canto superior direito ativa/desativa fullscreen real com `requestFullscreen()` (Esc para sair).
-- CSS/JS em `ops/priston-fullscreen.css` e `ops/priston-fullscreen.js`, instalados por `ops/integrate-priston-web.ps1`.
-- Testes automatizados: 1440x900 produziu canvas 1200x900, jogo Running, botão ativou document.fullscreenElement.
-- O VelluM anterior `/priston/` e o Guacamole não foram modificados.
+## Confirmado em execução
+- Jogo clássico: https://acesso.gbtechnology.com.br/priston-classic/
+- Servidor nativo novo compilado com MSBuild VS2022, ReleaseGL x86; servidor.exe instalado em C:\\inetpub\\priston\\[project]\\dist\\server\\server.exe, ouvindo na porta 10007.
+- Cliente WebAssembly compilado com Emscripten e publicado em C:\\VelluM\\integration-priston\\game.wasm (6.073.502 bytes; SHA-256 começa em 39a406ded938).
+- Priston clássico abre em aproximadamente 4,9 segundos no teste automatizado, renderiza e alcança status Running, usando o pacote de startup comprimido e cache.
+- WebSocket HTTPS conectado em /priston-classic/ws.ashx?port=10007.
+- Tela cheia real e layout 4:3 testados com Puppeteer.
+- VelluM legado (/priston/ e /priston/jogar) retorna GET 200; seu servidor 19065 permaneceu ativo.
+- Guacamole (/guacamole/) retorna GET 200.
+- Servidor separado de testes em 10008 compilado e iniciado com sucesso, depois desligado para liberar recursos.
 
-## ADM: alteracoes preparadas no código-fonte, NÃO ATIVAS no executável
-A conta de servidor que existe atualmente tem ID `adm` (equivalente a `ADM`, sem diferenciar maiúsculas/minúsculas), e há personagem `ADM`.
+## Autorização ADM e comandos integrados ao executável
+Fonte C++ disponível no arquivo `ops/priston-classic-live-20261112.patch`, com base no commit upstream `4eff7285cba97aa8fe41c36205f1e185a2169d0c`.
+- `src/SrcServer/OnSever.cpp`: modo GM 4 somente para ID autenticado `ADM` (sem diferenciar maiúsculas/minúsculas); requisições de debug de outros IDs não concedem privilégios, inclusive o pacote de aging.
+- `/equipar`: restrito a `ADM`, aplica nível nativo máximo `CHAR_LEVEL_MAX`, ajusta XP, envia protocolo de atualização de nível e utiliza `GmDeckOut` com aging +25 e seleção de melhores itens por classe.
+- BossMode seleciona acessórios da família especial `sinOR2` (anéis de chefes) e permite itens especiais compatíveis; não significa entregar literalmente todos os drops de todos os chefes.
+- Aliases em português: `/monstro`, `/meumonstro`, `/nivel`, `/ouro`, `/xp`, `/item`.
+- `src/playmain.cpp`: coroa carregada a partir do modelo existente `weapons/Crown.smd`.
+- `src/character.cpp`: renderização da coroa para o personagem de nome `ADM`, com aura pela função `sinEffect_Ratoo_Aura2`.
+- O cliente WebAssembly recompilado contém essas alterações; o arquivo `admin.js` informa que a permissão GM é verificada no servidor e inclui `/equipar` na ajuda.
+- O botão de atalhos locais do cliente **não** altera a autorização no servidor.
 
-Foram aplicados no código-fonte local do Priston Tale Web, com backups timestamped:
-1. `ops/patch-classic-adm-auth-and-equip.py`: no servidor C++, reconhecimento de ID autenticado ADM para AdminMode 4 e recusa de nível administrativo concedido por um botão de debug do navegador a outras contas; comando `/equipar` com nível máximo `CHAR_LEVEL_MAX`, protocolo de ajuste de nível e equipamento.
-2. `ops/patch-classic-boss-gear.py`: modifica `GmDeckOut` apenas quando usado pelo `/equipar`, para envelhecimento +25, escolher as últimas armas/armaduras equipáveis disponíveis e família `sinOR2` de anéis especiais, incluindo itens de boss quando registrados e compatíveis. Não representa garantia de todos os boss drops específicos do Priston original.
-3. `ops/patch-classic-adm-crown-aura.py`: usa a coroa 3D clássica `PatCrown` e aura `sinEffect_Ratoo_Aura2` no personagem de nome `ADM`. Coroa/aura visuais dependem de assets e recompilação do cliente.
-4. Aliases previamente preparados em `ops/patch-classic-gm-aliases.py`: `/monstro`, `/meumonstro`, `/nivel`, `/ouro`, `/xp`, `/item`.
+## Backups e reinstalação
+- Backup anterior do cliente: `C:\\VelluM\\backups\\classic-adm-binaries-20261112-163707`.
+- Backup anterior do servidor e dos dados de contas/personagens: `C:\\VelluM\\backups\\classic-live-swap-20261112-165415`.
+- Instalador em `ops/integrate-priston-web.ps1` passa a copiar os artefatos recompilados de `[project]\\src\\web\\out`, atualizar o cache busting do JS e aplicar UI ADM, fullscreen e os pacotes compactados.
+- Código-fonte alterado foi preservado também localmente em `C:\\inetpub\\priston\\[project]\\src`; copiar ou recompilar o EXE só depois de fazer backup.
 
-Os patches locais foram aplicados em:
-- `C:\inetpub\priston\[project]\src\SrcServer\OnSever.cpp`
-- `C:\inetpub\priston\[project]\src\character.cpp`
-
-**O executável `server.exe` e o cliente `game.wasm` foram mantidos intactos**. Não foi encontrado toolchain Visual Studio/MSBuild nem Emscripten no host. Os comandos em português, o auto-GM, `/equipar`, a coroa e a aura **ainda não funcionam na versão hospedada**; requerem uma compilação Windows e WebAssembly e testes de conta/GM, itens, savedata, animação e multiplayer.
-
-Segurança: a configuração atual de testes `*GM_CHEATS` e o controle de AdminMode por navegador **não constituem autorização confiável por conta** até o novo binário de servidor ser testado e publicado. Não divulgar o servidor como produção multiusuário com GM restrito antes disso. Não substituir o `server.exe` por binário improvisado. A opção de ADM deve ser autorizada pelo ID autenticado no servidor, nunca por localStorage ou querystring.
-
-## Alternativa já suportada pelo servidor atual
-Com o GM legitimamente ativado, `/MakeMeLevel 200` e `/DeckMeOut! 25` existem no binário atual; o segundo equipa os melhores itens padrão que satisfazem requisitos de nível e classe, mas não garante todos os itens especiais dos chefes. Não alterar dados binários de personagens externamente.
+## Limitações da validação
+- **Não foi concluído um teste end-to-end de login ADM + envio de /equipar + salvamento de itens, nem confirmado visualmente o aspecto da coroa e da aura dentro de uma sessão autenticada.** Build e teste de porta/WebSocket não substituem isso.
+- Na primeira validação automatizada de login, o foco do formulário estava incorreto; o preenchimento correto com Tab foi comprovado, mas o teste de login autenticado ainda não foi completado.
+- O motor clássico continua sendo um projeto de testes, não se deve proclamar que todos os NPCs, mapas ou funções estão 100% livres de erros.
