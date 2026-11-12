@@ -4,11 +4,15 @@ Format PTPB + u32 entries; each: u16 pathBytes, UTF8 path, u16 hashBytes, hash,
 u32 contentBytes, original file bytes. Pack entire stream is gzip compressed.
 """
 from pathlib import Path
-import gzip,struct,io,sys,json
+import gzip,struct,io,sys,json,hashlib
 root=Path(sys.argv[1]) if len(sys.argv)>1 else Path(r'C:\VelluM\integration-priston')
 source=Path(r'C:\inetpub\priston\data')
 manifest=root/'data_manifest.txt'
 out=root/'packs';out.mkdir(exist_ok=True)
+manifest_digest=hashlib.sha256(manifest.read_bytes()).hexdigest()
+stamp=out/'.source-manifest-sha256'
+if stamp.is_file() and stamp.read_text('ascii').strip()==manifest_digest and all((out/(name+'.ptpb.gz')).is_file() for name in ('ricarten','forest','npc-core')):
+ print('PACKS_UNCHANGED',manifest_digest);sys.exit(0)
 entries=[]
 for line in manifest.read_text('utf8').splitlines():
  f=line.split('\t')
@@ -38,3 +42,5 @@ for tag,(prefix,budget,extensions) in groups.items():
     with file.open('rb') as inp:
      while (part:=inp.read(512*1024)):gz.write(part)
  print(tag,'files',len(picked),'raw MB',round(used/1e6,2),'compressed MB',round(target.stat().st_size/1e6,2),'out',target)
+
+stamp.write_text(manifest_digest,encoding='ascii')
