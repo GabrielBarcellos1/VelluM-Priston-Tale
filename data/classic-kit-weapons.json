@@ -1,0 +1,118 @@
+{
+  "source": "sungam3d/priston-tale-web/[project]/src/SrcServer/AutoDropItem.h, rsPresentItem_LevelType_2",
+  "description": "Original class-specific item gifts, only usable if VelluM item requirements permit.",
+  "classes": {
+    "1": [
+      {
+        "recommendedAt": 8,
+        "code": "WA104"
+      },
+      {
+        "recommendedAt": 20,
+        "code": "WA106"
+      },
+      {
+        "recommendedAt": 35,
+        "code": "WA108"
+      }
+    ],
+    "2": [
+      {
+        "recommendedAt": 8,
+        "code": "WC104"
+      },
+      {
+        "recommendedAt": 20,
+        "code": "WC106"
+      },
+      {
+        "recommendedAt": 35,
+        "code": "WC108"
+      }
+    ],
+    "3": [
+      {
+        "recommendedAt": 8,
+        "code": "WS105"
+      },
+      {
+        "recommendedAt": 20,
+        "code": "WS106"
+      },
+      {
+        "recommendedAt": 35,
+        "code": "WS110"
+      }
+    ],
+    "4": [
+      {
+        "recommendedAt": 8,
+        "code": "WP104"
+      },
+      {
+        "recommendedAt": 20,
+        "code": "WP107"
+      },
+      {
+        "recommendedAt": 35,
+        "code": "WP109"
+      }
+    ],
+    "5": [
+      {
+        "recommendedAt": 8,
+        "code": "WT105"
+      },
+      {
+        "recommendedAt": 20,
+        "code": "WT107"
+      },
+      {
+        "recommendedAt": 35,
+        "code": "WT109"
+      }
+    ],
+    "6": [
+      {
+        "recommendedAt": 8,
+        "code": "WS205"
+      },
+      {
+        "recommendedAt": 20,
+        "code": "WS208"
+      },
+      {
+        "recommendedAt": 35,
+        "code": "WS210"
+      }
+    ],
+    "7": [
+      {
+        "recommendedAt": 8,
+        "code": "WM105"
+      },
+      {
+        "recommendedAt": 20,
+        "code": "WM107"
+      },
+      {
+        "recommendedAt": 35,
+        "code": "WM109"
+      }
+    ],
+    "8": [
+      {
+        "recommendedAt": 8,
+        "code": "WM105"
+      },
+      {
+        "recommendedAt": 20,
+        "code": "WM107"
+      },
+      {
+        "recommendedAt": 35,
+        "code": "WM109"
+      }
+    ]
+  }
+}
