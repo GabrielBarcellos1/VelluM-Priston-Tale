@@ -98,6 +98,49 @@ def main() -> int:
     ]:
         okay, description = verify_http(url)
         check(label, okay, description)
+    # Public-launch security gates (do not print or inspect password values).
+    config_text = (SERVER / "server.ini").read_text("latin-1", errors="replace")
+    flags = [line.strip().split()[0].upper() for line in config_text.splitlines()
+             if line.strip().startswith("*")]
+    check("Public users must enter password", "*OFFLINE_PASSWORDS" in flags)
+    check("Global GM cheat test mode disabled", "*GM_CHEATS" not in flags)
+    check("Shared secret admin command disabled", "*ADMIN_COMMAND" not in flags)
+    check("Staff accounts have existing password records",
+          all((data / "password" / (name + ".pw")).is_file()
+              for name in ("adm", "admin")))
+    check("Account record format recognized",
+          all(p.stat().st_size in (16, 100)
+              for p in (data / "password").glob("*.pw")), critical=False)
+    check("Strong password upgrade built",
+          b"BCryptDeriveKeyPBKDF2" in cmd_source
+          and b"PasswordRecordCreate" in cmd_source)
+    check("Staff names are reserved against new registration",
+          b"lstrcmpi(szID,\"adm\")==0" in cmd_source
+          and b"lstrcmpi(szID,\"admin\")==0" in cmd_source)
+    bridge_config = (SITE / "web.config").read_text("utf-8", errors="replace")
+    bridge_code = (SITE / "ws.ashx").read_text("utf-8", errors="replace")
+    check("WebSocket bridge port whitelist limited to Classic",
+          'key="PristonGamePorts" value="10007"' in bridge_config
+          and "PortAllowed( port )" in bridge_code)
+    check("Account database not under public site directory",
+          not (SITE / "DataServer").exists())
+    local_snapshots = sorted((p for p in backups.glob("scheduled-classic-*")
+                              if p.is_dir()), reverse=True)
+    check("Scheduled character snapshot exists",
+          bool(local_snapshots) and (local_snapshots[0] / "manifest.json").is_file())
+    if local_snapshots:
+        manifest = json.loads((local_snapshots[0] / "manifest.json").read_text("utf-8"))
+        passed = not manifest["errors"] and all(
+            (local_snapshots[0] / rel).is_file()
+            and sha256(local_snapshots[0] / rel) == item["sha256"]
+            for rel, item in manifest["files"].items()
+        )
+        check("Latest backup manifest hashes verify", passed,
+              f"{len(manifest['files'])} files; {len(manifest['errors'])} errors")
+    check("Initial concurrency cap above historical 10",
+          any(line.startswith("*MAX_USERS") and int(line.split()[-1]) >= 20
+              for line in config_text.splitlines() if line.strip().startswith("*MAX_USERS")),
+          critical=False)
     for row in RESULTS:
         print(("PASS" if row["ok"] else "FAIL"), row["check"], row["detail"])
     fail = [r for r in RESULTS if not r["ok"] and r["critical"]]
