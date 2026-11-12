@@ -22,11 +22,31 @@ test('migration preserves level, attributes and within-level progress, is idempo
  }
 });
 test('level-appropriate kills pay normally, low-level farming is penalized and quest percentages use the same XP curve',()=>{
- assert.equal(killExperience({level:100},100,rules),800);
- assert.ok(killExperience({level:10},100,rules)<8);
- assert.equal(killExperience({level:100,boss:true},100,rules),800*rules.bossExperienceMultiplier);
+ const scaled=Math.floor(800*experienceSpan(100,rules)/(rules.previousExperience[100]-rules.previousExperience[99]));
+ assert.equal(killExperience({level:100},100,rules),scaled);
+ assert.ok(killExperience({level:10},100,rules)<scaled*.01);
+ assert.equal(killExperience({level:100,boss:true},100,rules),Math.floor(800*rules.bossExperienceMultiplier*experienceSpan(100,rules)/(rules.previousExperience[100]-rules.previousExperience[99])));
  assert.equal(questExperienceReward({expPct:20,expCapLevel:40},100,rules),Math.floor(experienceSpan(40,rules)*.2));
  assert.equal(questExperienceReward({exp:1000},100,rules),1000);
+});
+test('classic source thresholds are imported exactly and v1 character progress migrates without changing level',()=>{
+ assert.equal(rules.version,2);
+ for(const [level,expected] of [[1,0],[10,140001],[80,1878851311],[100,38712241890],[150,8524113065780]])
+   assert.equal(experienceFloor(level,rules),expected);
+ for(const level of [1,10,50,80,100,120,149]){
+   for(const fraction of [0,.17,.5,.99]){
+     const before=rules.previousExperience[level-1];
+     const oldSpan=rules.previousExperience[level]-before;
+     const stats={level,exp:before+Math.floor(oldSpan*fraction),progressionVersion:1,statPoints:7};
+     const oldProgress=(stats.exp-before)/oldSpan;
+     assert.equal(migrateExperience(stats,rules),true);
+     assert.equal(stats.level,level);
+     assert.equal(stats.statPoints,7);
+     assert.equal(stats.progressionVersion,2);
+     assert.ok(Math.abs((stats.exp-experienceFloor(level,rules))/experienceSpan(level,rules)-oldProgress)<=1/experienceSpan(level,rules)+1e-8);
+     assert.equal(migrateExperience(stats,rules),false);
+   }
+ }
 });
 test('PvE profiles preserve original definitions and give bosses greater durability than comparable normal monsters',()=>{
  for(const original of monsters){const before=structuredClone(original),tuned=balanceMonster(original,rules);
