@@ -9,7 +9,13 @@ export function experienceSpan(level,rules){return experienceFloor(level+1,rules
 export function migrateExperience(stats,rules){
  if(stats.progressionVersion===rules.version)return false;
  const level=Math.max(1,Math.min(150,Math.trunc(stats.level)||1));
- const previousFloor=(level-1)**2*100,span=(2*level-1)*100;
+ // Version 1 already used VelluM's authored curve; older saves used the
+ // quadratic prototype. Preserve each character's within-level percentage.
+ const previous=stats.progressionVersion===1 && Array.isArray(rules.previousExperience)
+   ? rules.previousExperience : null;
+ const previousFloor=previous?previous[level-1]:(level-1)**2*100;
+ const previousNext=previous?previous[Math.min(previous.length-1,level)]:(level**2)*100;
+ const span=Math.max(1,previousNext-previousFloor);
  const fraction=Math.max(0,Math.min(.999999,((stats.exp??previousFloor)-previousFloor)/span));
  stats.exp=experienceFloor(level,rules)+Math.floor(experienceSpan(level,rules)*fraction);
  stats.progressionVersion=rules.version;return true;
@@ -18,7 +24,12 @@ export function killExperience(monster,playerLevel,rules,bonus=0,mapId=null){
  if(mapId!==null&&!mapExperienceAllowed(playerLevel,mapId,rules))return 0;
  if(monster.attack?.every(n=>n===0)&&!monster.boss)return 0;
  const excess=Math.max(0,playerLevel-monster.level-5),penalty=Math.max(.03,.86**excess);
- return Math.max(1,Math.floor(monster.level*8*penalty*(monster.boss?rules.bossExperienceMultiplier:1)*(1+Math.max(0,bonus)/100)));
+ // Original level thresholds use much larger numbers. Scale rewards by
+ // the span ratio so familiar monster kill pacing remains playable.
+ const source=Array.isArray(rules.previousExperience)?rules.previousExperience:null;
+ const oldSpan=source?Math.max(1,source[Math.min(150,playerLevel)]-source[Math.max(0,Math.min(149,playerLevel-1))]):1;
+ const ratio=source?experienceSpan(Math.max(1,Math.min(150,playerLevel)),rules)/oldSpan:1;
+ return Math.max(1,Math.floor(monster.level*8*penalty*(monster.boss?rules.bossExperienceMultiplier:1)*(1+Math.max(0,bonus)/100)*ratio));
 }
 export function classDamageScale(job,level,rules){return interpolate(rules.classes[String(job)].damageCurve,level);}
 export function balanceMonster(original,rules){
