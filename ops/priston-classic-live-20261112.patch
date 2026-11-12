@@ -865,3 +865,42 @@ index ba2f90b6..85399c21 100644
      emxx = os.path.join(EMSDK, 'upstream', 'emscripten', 'em++.exe')
      flags = open(os.path.join(HERE, 'emflags.txt')).read().split()
      # extra defines for a test build, e.g. PT_DEFINES=PT_SERVER_PORT=10008 (a server beside the live one);
+diff --git a/[project]/src/web/site/ws.ashx b/[project]/src/web/site/ws.ashx
+index 6042d549..6b3cf080 100644
+--- a/[project]/src/web/site/ws.ashx
++++ b/[project]/src/web/site/ws.ashx
+@@ -19,6 +19,9 @@ using System.Web.WebSockets;
+ 
+ public class PristonBridge : IHttpHandler
+ {
++    private static int ActiveClassicSockets = 0;
++    private const int MaxClassicSockets = 64;
++
+ 	public bool IsReusable { get { return true; } }
+ 
+ 	public void ProcessRequest( HttpContext context )
+@@ -33,7 +36,23 @@ public class PristonBridge : IHttpHandler
+ 			context.Response.StatusCode = 403;
+ 			return;
+ 		}
+-		context.AcceptWebSocketRequest( ws => Bridge( ws.WebSocket, port ) );
++		// Bound concurrent upgraded sockets so unauthenticated requests cannot
++        // consume unbounded IIS/network resources.
++        if ( Interlocked.Increment(ref ActiveClassicSockets)>MaxClassicSockets ) {
++            Interlocked.Decrement(ref ActiveClassicSockets);
++            context.Response.StatusCode = 503;
++            return;
++        }
++        try {
++            context.AcceptWebSocketRequest( async ws => {
++                try { await Bridge( ws.WebSocket, port ); }
++                finally { Interlocked.Decrement(ref ActiveClassicSockets); }
++            } );
++        }
++        catch {
++            Interlocked.Decrement(ref ActiveClassicSockets);
++            throw;
++        }
+ 	}
+ 
+ 	static bool PortAllowed( int port )
