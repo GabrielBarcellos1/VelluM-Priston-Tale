@@ -30,7 +30,7 @@ index 3e93ada1..781b7221 100644
  END
  
 diff --git a/[project]/src/SrcServer/OnSever.cpp b/[project]/src/SrcServer/OnSever.cpp
-index 78567914..35e0a706 100644
+index 78567914..26ae7916 100644
 --- a/[project]/src/SrcServer/OnSever.cpp
 +++ b/[project]/src/SrcServer/OnSever.cpp
 @@ -1,4 +1,4 @@
@@ -150,10 +150,30 @@ index 78567914..35e0a706 100644
  	if ( len && lpPlayInfo->AdminMode && ( DebugServerMode || rsServerConfig.TestSeverMode || rsServerConfig.GmCheats || lpPlayInfo->AdminMode>=4 ) )
  	{
  		lpBuff = szChatCommand + len;
-@@ -20322,6 +20330,26 @@ int RecvCommand( rsPLAYINFO *lpPlayInfo , char *szChatCommand )
+@@ -20322,6 +20330,53 @@ int RecvCommand( rsPLAYINFO *lpPlayInfo , char *szChatCommand )
  		return TRUE;
  	}
  
++	// Explicit GM advancement for skill masters: unlock tiers 1-4 without quests.
++	// The character's job is still preserved; tier 5 (ChangeJob=4) is forbidden.
++	len = rsCompString( "/habilidades" , szChatCommand );
++	if ( !len ) len = rsCompString( "/tiers" , szChatCommand );
++	if ( len && lpPlayInfo->AdminMode>=4 &&
++	     (lstrcmpi(lpPlayInfo->szID,"ADM")==0 || lstrcmpi(lpPlayInfo->szID,"admin")==0) ) {
++		if ( lpPlayInfo->smCharInfo.ChangeJob<3 )
++			lpPlayInfo->smCharInfo.ChangeJob = 3;
++		smTransCommand.size = sizeof( smTRANS_COMMAND );
++		smTransCommand.code = smTRANSCODE_GM_SETTIER;
++		smTransCommand.WParam = 3;
++		smTransCommand.LParam = 0;
++		smTransCommand.SParam = 0;
++		smTransCommand.EParam = 0;
++		lpPlayInfo->lpsmSock->Send( (char *)&smTransCommand , smTransCommand.size , TRUE );
++		GmCheats_Whisper( lpPlayInfo, "> ADM: tiers 1-4 liberados; consulte o mestre de habilidades." );
++		rsRecordAdminCommand( lpPlayInfo , szChatCommand , 1 );
++		return TRUE;
++	}
++
 +	// ADM-only /equipar: advance to the server's maximum supported level and
 +	// use the existing authoritative GM gear creation/equip protocol (+25 aging).
 +	len = rsCompString( "/equipar" , szChatCommand );
@@ -169,7 +189,14 @@ index 78567914..35e0a706 100644
 +		smTransCommand.SParam = 0;
 +		smTransCommand.EParam = 0;
 +		lpPlayInfo->lpsmSock->Send( (char *)&smTransCommand , smTransCommand.size , TRUE );
++		// /equipar grants tiers 1-4 as well as gear and max level.
++		if ( lpPlayInfo->smCharInfo.ChangeJob<3 )
++			lpPlayInfo->smCharInfo.ChangeJob = 3;
++		smTransCommand.code = smTRANSCODE_GM_SETTIER;
++		smTransCommand.WParam = 3;
++		lpPlayInfo->lpsmSock->Send( (char *)&smTransCommand , smTransCommand.size , TRUE );
 +		GmDeckOut( lpPlayInfo , 25 , TRUE );
++		GmCheats_Whisper( lpPlayInfo, "> ADM: equipamentos e tiers 1-4 prontos. Aprenda skills no mestre." );
 +		rsRecordAdminCommand( lpPlayInfo , szChatCommand , 1 );
 +		return TRUE;
 +	}
@@ -177,7 +204,7 @@ index 78567914..35e0a706 100644
  	// GM: /DeckMeOut! [aging] - the best gear for the player's level and class (GmDeckOut)
  	len = rsCompString( "/DeckMeOut!" , szChatCommand );
  	if ( len && lpPlayInfo->AdminMode && ( DebugServerMode || rsServerConfig.TestSeverMode || rsServerConfig.GmCheats || lpPlayInfo->AdminMode>=4 ) )
-@@ -20356,6 +20384,7 @@ int RecvCommand( rsPLAYINFO *lpPlayInfo , char *szChatCommand )
+@@ -20356,6 +20411,7 @@ int RecvCommand( rsPLAYINFO *lpPlayInfo , char *szChatCommand )
  //	len = rsCompString( "/내돈다내놔!" , szChatCommand );
  //해외
  	len = rsCompString( "/GiveMeMoney!" , szChatCommand );
@@ -185,23 +212,98 @@ index 78567914..35e0a706 100644
  	if ( len && lpPlayInfo->AdminMode && ( DebugServerMode || rsServerConfig.TestSeverMode || rsServerConfig.GmCheats || lpPlayInfo->AdminMode>=4 ) ) {
  		lpBuff = szChatCommand + len;
  
-@@ -20555,6 +20584,7 @@ int RecvCommand( rsPLAYINFO *lpPlayInfo , char *szChatCommand )
+@@ -20554,14 +20610,22 @@ int RecvCommand( rsPLAYINFO *lpPlayInfo , char *szChatCommand )
+ 	}
  
  	//몬스터 생성
++	len = rsCompString( "/comandos" , szChatCommand );
++	if ( len && lpPlayInfo->AdminMode>=4 ) {
++		GmCheats_Whisper( lpPlayInfo, "> /equipar /habilidades /nivel <1-200> /monstro <nome> <1-20> /meumonstro <nome> /ouro <valor> /item <codigo>" );
++		return TRUE;
++	}
  	len = rsCompString( "/monster" , szChatCommand );
 +	if ( !len ) len = rsCompString( "/monstro" , szChatCommand );
  	if ( len && lpPlayInfo->AdminMode && AutoPlayServer ) {
++		int spawned = 0;
  		//pb=p;p=GetWord(strBuff,p);if(strBuff[0]==34)p=GetString(strBuff,pb);	//단어 찾기
  		lpBuff = szChatCommand + len;
-@@ -20589,6 +20619,7 @@ int RecvCommand( rsPLAYINFO *lpPlayInfo , char *szChatCommand )
+ 		lpBuff2 = rsGetWord( szCmdBuff , lpBuff );	//ID 읽어옴
+ 		if ( szCmdBuff[0]==34 ) lpBuff2 = GetString( szCmdBuff , lpBuff );
+ 		if ( szCmdBuff[0] ) {
+ 			lpChar = OpenMonsterFromName( szCmdBuff , lpPlayInfo->Position.x , lpPlayInfo->Position.y , lpPlayInfo->Position.z );
++			if ( lpChar ) spawned++;
+ 			if ( lpChar && lpPlayInfo->AdminMode<4 ) {
+ 				lpChar->smMonsterInfo.FallItemCount = 0;			//소환 몬스터 아이템 드롭 금지
+ 			}
+@@ -20571,31 +20635,40 @@ int RecvCommand( rsPLAYINFO *lpPlayInfo , char *szChatCommand )
+ 		if  ( szTempBuff[0]>='0' && szTempBuff[0]<='9' ) {
+ 			len = atoi( szTempBuff );
+ 			if ( len<=20 ) {
+-				for( cnt=0;cnt<len;cnt++ ) {
++				for( cnt=1;cnt<len;cnt++ ) {
+ 					x = rand()%(128*fONE);
+ 					z = rand()%(128*fONE);
+ 					x -= 64*fONE;
+ 					z -= 64*fONE;
+ 					lpChar = OpenMonsterFromName( szCmdBuff , lpPlayInfo->Position.x+x , lpPlayInfo->Position.y , lpPlayInfo->Position.z+z );
++					if ( lpChar ) spawned++;
+ 					if ( lpChar && lpPlayInfo->AdminMode<4 ) {
+ 						lpChar->smMonsterInfo.FallItemCount = 0;			//소환 몬스터 아이템 드롭 금지
+ 					}
+ 				}
+ 			}
+ 		}
++		if ( spawned>0 ) {
++			char reply[180];
++			wsprintf( reply, "> GM: %d monstro(s) invocado(s): %s", spawned, szCmdBuff );
++			GmCheats_Whisper( lpPlayInfo, reply );
++		} else GmCheats_Whisper( lpPlayInfo, "> GM: monstro nao encontrado ou sem espaco no mapa." );
+ 		rsRecordAdminCommand( lpPlayInfo , szChatCommand , 2 );		//운영자 명령 사용기록
+ 		return TRUE;
+ 	}
  
  	//몬스터 생성
  	len = rsCompString( "/mymonster" , szChatCommand );
 +	if ( !len ) len = rsCompString( "/meumonstro" , szChatCommand );
  	if ( len && lpPlayInfo->AdminMode && AutoPlayServer ) {
++		int spawned = 0;
  		//pb=p;p=GetWord(strBuff,p);if(strBuff[0]==34)p=GetString(strBuff,pb);	//단어 찾기
  		lpBuff = szChatCommand + len;
-@@ -21119,6 +21150,7 @@ int	SendFindCrack( smWINSOCK *lpsmSock )
+ 		lpBuff2 = rsGetWord( szCmdBuff , lpBuff );	//ID 읽어옴
+ 		if ( szCmdBuff[0]==34 ) lpBuff2 = GetString( szCmdBuff , lpBuff );
+ 		if ( szCmdBuff[0] ) {
+ 			lpChar = OpenMonsterFromName( szCmdBuff , lpPlayInfo->Position.x , lpPlayInfo->Position.y , lpPlayInfo->Position.z , lpPlayInfo );
++			if ( lpChar ) spawned++;
+ 			if ( lpChar && lpPlayInfo->AdminMode<4 ) {
+ 				lpChar->smMonsterInfo.FallItemCount = 0;			//소환 몬스터 아이템 드롭 금지
+ 			}
+@@ -20605,18 +20678,24 @@ int RecvCommand( rsPLAYINFO *lpPlayInfo , char *szChatCommand )
+ 		if  ( szTempBuff[0]>='0' && szTempBuff[0]<='9' ) {
+ 			len = atoi( szTempBuff );
+ 			if ( len<=20 ) {
+-				for( cnt=0;cnt<len;cnt++ ) {
++				for( cnt=1;cnt<len;cnt++ ) {
+ 					x = rand()%(128*fONE);
+ 					z = rand()%(128*fONE);
+ 					x -= 64*fONE;
+ 					z -= 64*fONE;
+ 					lpChar = OpenMonsterFromName( szCmdBuff , lpPlayInfo->Position.x+x , lpPlayInfo->Position.y , lpPlayInfo->Position.z+z , lpPlayInfo );
++					if ( lpChar ) spawned++;
+ 					if ( lpChar && lpPlayInfo->AdminMode<4 ) {
+ 						lpChar->smMonsterInfo.FallItemCount = 0;			//소환 몬스터 아이템 드롭 금지
+ 					}
+ 				}
+ 			}
+ 		}
++		if ( spawned>0 ) {
++			char reply[180];
++			wsprintf( reply, "> GM: %d monstro(s) invocado(s): %s", spawned, szCmdBuff );
++			GmCheats_Whisper( lpPlayInfo, reply );
++		} else GmCheats_Whisper( lpPlayInfo, "> GM: monstro nao encontrado ou sem espaco no mapa." );
+ 		rsRecordAdminCommand( lpPlayInfo , szChatCommand , 2 );		//운영자 명령 사용기록
+ 		return TRUE;
+ 	}
+@@ -21119,6 +21198,7 @@ int	SendFindCrack( smWINSOCK *lpsmSock )
  
  int RecvCommand( rsPLAYINFO *lpPlayInfo , char *szChatCommand )
  {
@@ -209,7 +311,7 @@ index 78567914..35e0a706 100644
  	return TRUE;
  }
  
-@@ -24634,7 +24666,8 @@ pRetry:
+@@ -24634,7 +24714,8 @@ pRetry:
  		lpTransCommand = (smTRANS_COMMAND *)SockInfo->Buff;
  
  		if ( !lpTransCommand->LParam ) {
@@ -219,7 +321,7 @@ index 78567914..35e0a706 100644
  			lpPlayInfo->HideMode = lpTransCommand->SParam;
  		}
  
-@@ -26008,7 +26041,7 @@ pRetry:
+@@ -26008,7 +26089,7 @@ pRetry:
  		// 장별 - 에이징 치트 서버로 전송
  		case smTRANSCODE_AGING_DATA: 
  			lpTransCommand = (smTRANS_COMMAND *)SockInfo->Buff;
@@ -228,7 +330,7 @@ index 78567914..35e0a706 100644
  		break;
  
  		// 장별 - 스킬 딜레이
-@@ -33152,6 +33185,12 @@ int	rsCheckAdminPlayer( rsPLAYINFO *lpPlayInfo )
+@@ -33152,6 +33233,12 @@ int	rsCheckAdminPlayer( rsPLAYINFO *lpPlayInfo )
  	int cnt;
  	smWINSOCK *lpsmSock = lpPlayInfo->lpsmSock;
  
@@ -257,6 +359,29 @@ index b19cfe3b..113b0da5 100644
  
  		GetMoveLocation( 0 , 0, 0*fONE , 0, Angle.y , 0 );
  
+diff --git a/[project]/src/netplay.cpp b/[project]/src/netplay.cpp
+index 0fffcb19..6015cc7e 100644
+--- a/[project]/src/netplay.cpp
++++ b/[project]/src/netplay.cpp
+@@ -2565,6 +2565,18 @@ int rsTRANS_SERVER::RecvMessage( smTHREADSOCK *pData )
+ 			}
+ 			break;
+ 
++		case smTRANSCODE_GM_SETTIER:
++			// Server-authorized tier promotion. ChangeJob 3 grants tiers 1-4.
++			lpTransCommand = (smTRANS_COMMAND *)pData->Buff;
++			if ( lpCurPlayer && sinChar && lpTransCommand->WParam==3 ) {
++				sinChar->ChangeJob = 3;
++				lpCurPlayer->smCharInfo.ChangeJob = 3;
++				ReformCharForm();
++				SaveGameData();
++				AddChatBuff( (char *)"> ADM: tiers 1-4 liberados. Abra o mestre para aprender as skills." , 0 );
++			}
++			break;
++
+ 		case smTRANSCODE_GM_GODMODE:
+ 			// GM /IDDQD (the server checked the GM may)
+ 			lpTransCommand = (smTRANS_COMMAND *)pData->Buff;
 diff --git a/[project]/src/playmain.cpp b/[project]/src/playmain.cpp
 index af5057f8..95a81bbf 100644
 --- a/[project]/src/playmain.cpp
@@ -308,7 +433,7 @@ index 9cdbca1a..b163522c 100644
  //######################################################################################
  //작 성 자 : 오 영 석
 diff --git a/[project]/src/smPacket.h b/[project]/src/smPacket.h
-index 0749f132..48decfc1 100644
+index 0749f132..09dd4217 100644
 --- a/[project]/src/smPacket.h
 +++ b/[project]/src/smPacket.h
 @@ -1,9 +1,11 @@
@@ -324,6 +449,15 @@ index 0749f132..48decfc1 100644
  
  //게임가드 보안 Lib
  #ifdef	_npGAME_GUARD_AUTH
+@@ -501,6 +503,8 @@
+ // GM /DeckMeOut!: server -> client before the items, WParam = the equipment slots
+ // (INVENTORY_POS_* bits) to empty, LParam = how many items follow (smTRANSCODE_PUTITEM)
+ #define smTRANSCODE_GM_DECKOUT		0x50326012
++// Authenticated GM rank-up: WParam=3 unlocks tiers 1-4 only, never tier 5.
++#define smTRANSCODE_GM_SETTIER		0x50326013
+ 
+ 
+ #define TRANS_BUFF_SIZE		4096
 diff --git a/[project]/src/web/build_web.py b/[project]/src/web/build_web.py
 index ba2f90b6..85399c21 100644
 --- a/[project]/src/web/build_web.py
