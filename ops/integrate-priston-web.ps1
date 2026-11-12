@@ -6,7 +6,11 @@ $files = @('index.html','game.html','game.js','game.wasm','data_startup.pack','d
 foreach ($name in $files) {
   $f = Join-Path $source $name
   if (!(Test-Path -LiteralPath $f)) { throw "missing $name" }
-  Copy-Item -LiteralPath $f -Destination (Join-Path $dest $name) -Force
+  $target = Join-Path $dest $name
+  # Preserve timestamps/ETags for unchanged packs: clients should not re-download 84MB after a re-deploy.
+  if ((Test-Path -LiteralPath $target) -and
+      (Get-FileHash -LiteralPath $f -Algorithm SHA256).Hash -eq (Get-FileHash -LiteralPath $target -Algorithm SHA256).Hash) { continue }
+  Copy-Item -LiteralPath $f -Destination $target -Force
 }
 # The start-up pack can be served from Cache Storage on repeat visits.
 # Avoid telling the player it is downloading when the client is only unpacking cached data.
