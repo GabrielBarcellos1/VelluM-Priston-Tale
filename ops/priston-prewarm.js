@@ -14,15 +14,19 @@
       if (!navigator.serviceWorker.controller) return;
       var response = await fetch('data_manifest.txt');
       if (!response.ok) return;
-      var data = await response.text(), names = [], bytes = 0;
-      var prefixes = ['cSelect/', 'Field/Ricarten/'];
+      var data = await response.text(), names = [];
+      var prefixes = ['Field/Ricarten/', 'Field/forest/', 'char/npc/'];
       for (var k = 0; k < prefixes.length; k++) {
-        var prefix = prefixes[k];
+        var prefix = prefixes[k], bytes = 0;
         for (var line of data.split('\n')) {
           var fields = line.split('\t');
           if (fields.length < 3 || !fields[0].startsWith(prefix)) continue;
           var size = Number(fields[1]) || 0;
-          if (bytes + size > 52 * 1024 * 1024) break;
+          // Keep background loading bounded; the player remains responsive.
+          var groupLimit = prefix==='char/npc/'? 20*1048576 :
+            prefix==='Field/forest/'? 22*1048576 : 29*1048576;
+          if (bytes + size > groupLimit) break;
+          if (prefix==='char/npc/' && !/\.(?:smd|inx|bmp|tga)$/i.test(fields[0])) continue;
           names.push(fields[0]);
           bytes += size;
         }
