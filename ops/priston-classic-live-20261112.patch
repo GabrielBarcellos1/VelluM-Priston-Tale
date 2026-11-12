@@ -30,7 +30,7 @@ index 3e93ada1..781b7221 100644
  END
  
 diff --git a/[project]/src/SrcServer/OnSever.cpp b/[project]/src/SrcServer/OnSever.cpp
-index 78567914..9b55be8e 100644
+index 78567914..ca502add 100644
 --- a/[project]/src/SrcServer/OnSever.cpp
 +++ b/[project]/src/SrcServer/OnSever.cpp
 @@ -1,4 +1,4 @@
@@ -174,7 +174,23 @@ index 78567914..9b55be8e 100644
  	if ( len && ( lpPlayInfo->AdminMode>=3 || ( lpPlayInfo->AdminMode && rsServerConfig.GmCheats ) ) ) {
  		lpBuff = szChatCommand + len;
  
-@@ -20257,6 +20295,7 @@ int RecvCommand( rsPLAYINFO *lpPlayInfo , char *szChatCommand )
+@@ -20170,6 +20208,7 @@ int RecvCommand( rsPLAYINFO *lpPlayInfo , char *szChatCommand )
+ 	len = rsCompString( "/\301\242\261\331" , szChatCommand );
+ 	if ( !len ) 
+ 		len = rsCompString( "/near" , szChatCommand );
++	if ( !len ) len = rsCompString( "/ir" , szChatCommand );
+ 
+ 	if ( len && lpPlayInfo->AdminMode>=2 ) {
+ 		lpBuff = szChatCommand + len;
+@@ -20198,6 +20237,7 @@ int RecvCommand( rsPLAYINFO *lpPlayInfo , char *szChatCommand )
+ 	len = rsCompString( "/\310\243\303\342" , szChatCommand );
+ 	if ( !len ) 
+ 		len = rsCompString( "/call" , szChatCommand );
++	if ( !len ) len = rsCompString( "/trazer" , szChatCommand );
+ 
+ 	if ( len && lpPlayInfo->AdminMode>=2 ) {
+ 		lpBuff = szChatCommand + len;
+@@ -20257,6 +20297,7 @@ int RecvCommand( rsPLAYINFO *lpPlayInfo , char *szChatCommand )
  	//len = rsCompString( "/내경험치내놔!" , szChatCommand );
  //해외
  	len = rsCompString( "/GiveMeExp!" , szChatCommand );
@@ -182,7 +198,7 @@ index 78567914..9b55be8e 100644
  	if ( !len )
  		len = rsCompString( "/ShowMeTheExp!" , szChatCommand );		// the name in the old GM notes
  	if ( len && lpPlayInfo->AdminMode && ( DebugServerMode || rsServerConfig.TestSeverMode || rsServerConfig.GmCheats || lpPlayInfo->AdminMode>=4 ) )
-@@ -20288,6 +20327,7 @@ int RecvCommand( rsPLAYINFO *lpPlayInfo , char *szChatCommand )
+@@ -20288,6 +20329,7 @@ int RecvCommand( rsPLAYINFO *lpPlayInfo , char *szChatCommand )
  	// client's next save passes the level-jump (-12) and exp-gain (-9) checks, then tells
  	// the client to apply the same level (smTRANSCODE_GM_SETLEVEL).
  	len = rsCompString( "/MakeMeLevel" , szChatCommand );
@@ -190,7 +206,7 @@ index 78567914..9b55be8e 100644
  	if ( len && lpPlayInfo->AdminMode && ( DebugServerMode || rsServerConfig.TestSeverMode || rsServerConfig.GmCheats || lpPlayInfo->AdminMode>=4 ) )
  	{
  		lpBuff = szChatCommand + len;
-@@ -20322,6 +20362,104 @@ int RecvCommand( rsPLAYINFO *lpPlayInfo , char *szChatCommand )
+@@ -20322,6 +20364,154 @@ int RecvCommand( rsPLAYINFO *lpPlayInfo , char *szChatCommand )
  		return TRUE;
  	}
  
@@ -245,6 +261,56 @@ index 78567914..9b55be8e 100644
 +        return TRUE;
 +    }
 +
++    // Validated map transport using existing WARPFIELD protocol and known map
++    // centers. Never send a field index that is not present on this server.
++    len = rsCompString( "/mapa" , szChatCommand );
++    if ( !len ) len = rsCompString( "/field" , szChatCommand );
++    if ( len && lpPlayInfo->AdminMode>=4 &&
++         (lstrcmpi(lpPlayInfo->szID,"ADM")==0 || lstrcmpi(lpPlayInfo->szID,"admin")==0) ) {
++        lpBuff = rsGetWord(szCmdBuff,szChatCommand+len);
++        int dest = -1;
++        if ( !lstrcmpi(szCmdBuff,"ricarten") || !lstrcmpi(szCmdBuff,"ric") ) dest=3;
++        else if ( !lstrcmpi(szCmdBuff,"pillai") || !lstrcmpi(szCmdBuff,"pil") ) dest=21;
++        else if ( !lstrcmpi(szCmdBuff,"nevisco") || !lstrcmpi(szCmdBuff,"navisko") ) dest=9;
++        else if ( szCmdBuff[0]>='0' && szCmdBuff[0]<='9' ) {
++            int valid = 1;
++            for ( char *q=szCmdBuff; *q; ++q )
++                if ( *q<'0' || *q>'9' ) { valid=0; break; }
++            if ( valid && lstrlen(szCmdBuff)<=3 ) dest=atoi(szCmdBuff);
++        }
++        if ( dest<0 || dest>=STAGE_AREA_MAX || !StageArea[dest].lpStage || !StageArea[dest].lpField ||
++             StageArea[dest].lpField->FieldCode!=dest ) {
++            GmCheats_Whisper(lpPlayInfo,"> ADM: mapa invalido/inativo. Use /mapa 3, /mapa 21, /mapa ricarten ou /mapa pillai.");
++            return TRUE;
++        }
++        sFIELD *map = StageArea[dest].lpField;
++        int tx = map->cX*fONE, tz = map->cZ*fONE;
++        if ( map->StartPointCnt>0 ) {
++            tx = map->StartPoint[0].x<<FLOATNS;
++            tz = map->StartPoint[0].y<<FLOATNS;
++        }
++        smTransCommand.size=sizeof(smTRANS_COMMAND);
++        smTransCommand.code=smTRANSCODE_WARPFIELD;
++        smTransCommand.WParam=dest;
++        smTransCommand.SParam=tx;
++        smTransCommand.LParam=tz;
++        smTransCommand.EParam=0;
++        lpPlayInfo->lpsmSock->Send((char*)&smTransCommand,smTransCommand.size,TRUE);
++        char feedback[120];
++        wsprintf(feedback,"> ADM: teleportando ao mapa %d.",dest);
++        GmCheats_Whisper(lpPlayInfo,feedback);
++        rsRecordAdminCommand(lpPlayInfo,szChatCommand,1);
++        return TRUE;
++    }
++
++    // GM status returns the authenticated login ID's actual permission level.
++    len = rsCompString( "/adm", szChatCommand );
++    if ( len && lpPlayInfo->AdminMode>=4 &&
++         (lstrcmpi(lpPlayInfo->szID,"ADM")==0 || lstrcmpi(lpPlayInfo->szID,"admin")==0) ) {
++        GmCheats_Whisper(lpPlayInfo,"> ADM ativo: nivel GM 4. /comandos mostra a lista.");
++        return TRUE;
++    }
++
 +	// Explicit GM advancement for skill masters: unlock tiers 1-4 without quests.
 +	// The character's job is still preserved; tier 5 (ChangeJob=4) is forbidden.
 +	len = rsCompString( "/habilidades" , szChatCommand );
@@ -295,7 +361,15 @@ index 78567914..9b55be8e 100644
  	// GM: /DeckMeOut! [aging] - the best gear for the player's level and class (GmDeckOut)
  	len = rsCompString( "/DeckMeOut!" , szChatCommand );
  	if ( len && lpPlayInfo->AdminMode && ( DebugServerMode || rsServerConfig.TestSeverMode || rsServerConfig.GmCheats || lpPlayInfo->AdminMode>=4 ) )
-@@ -20356,6 +20494,7 @@ int RecvCommand( rsPLAYINFO *lpPlayInfo , char *szChatCommand )
+@@ -20338,6 +20528,7 @@ int RecvCommand( rsPLAYINFO *lpPlayInfo , char *szChatCommand )
+ 
+ 	// GM: /IDDQD - god mode on or off (the client keeps life, mana and stamina full)
+ 	len = rsCompString( "/IDDQD" , szChatCommand );
++	if ( !len ) len = rsCompString( "/invencivel" , szChatCommand );
+ 	if ( len && lpPlayInfo->AdminMode && ( DebugServerMode || rsServerConfig.TestSeverMode || rsServerConfig.GmCheats || lpPlayInfo->AdminMode>=4 ) )
+ 	{
+ 		lpPlayInfo->GmGodMode = !lpPlayInfo->GmGodMode;
+@@ -20356,6 +20547,7 @@ int RecvCommand( rsPLAYINFO *lpPlayInfo , char *szChatCommand )
  //	len = rsCompString( "/내돈다내놔!" , szChatCommand );
  //해외
  	len = rsCompString( "/GiveMeMoney!" , szChatCommand );
@@ -303,7 +377,7 @@ index 78567914..9b55be8e 100644
  	if ( len && lpPlayInfo->AdminMode && ( DebugServerMode || rsServerConfig.TestSeverMode || rsServerConfig.GmCheats || lpPlayInfo->AdminMode>=4 ) ) {
  		lpBuff = szChatCommand + len;
  
-@@ -20372,15 +20511,19 @@ int RecvCommand( rsPLAYINFO *lpPlayInfo , char *szChatCommand )
+@@ -20372,15 +20564,19 @@ int RecvCommand( rsPLAYINFO *lpPlayInfo , char *szChatCommand )
  			lpsItem->ItemInfo.CODE = sinGG1|sin01;			//돈이다
  			ReformItem( &lpsItem->ItemInfo );						//아이템 인증
  
@@ -330,13 +404,13 @@ index 78567914..9b55be8e 100644
  
  			TransChatMessage.code = smTRANSCODE_WHISPERMESSAGE;
  			TransChatMessage.size = 32+lstrlen(TransChatMessage.szMessage);
-@@ -20554,14 +20697,28 @@ int RecvCommand( rsPLAYINFO *lpPlayInfo , char *szChatCommand )
+@@ -20554,14 +20750,28 @@ int RecvCommand( rsPLAYINFO *lpPlayInfo , char *szChatCommand )
  	}
  
  	//몬스터 생성
 +	len = rsCompString( "/comandos" , szChatCommand );
 +	if ( len && lpPlayInfo->AdminMode>=4 ) {
-+		GmCheats_Whisper( lpPlayInfo, "> /equipar /habilidades /premium [pagina] /salvar /nivel <1-200> /monstro <nome> <1-20> /meumonstro <nome> /ouro <valor> /item <codigo>" );
++		GmCheats_Whisper( lpPlayInfo, "> /adm /equipar /habilidades /mapa /field /premium /salvar /nivel /monstro /meumonstro /ouro /item /ir /trazer /invencivel" );
 +		return TRUE;
 +	}
  	len = rsCompString( "/monster" , szChatCommand );
@@ -360,7 +434,7 @@ index 78567914..9b55be8e 100644
  			if ( lpChar && lpPlayInfo->AdminMode<4 ) {
  				lpChar->smMonsterInfo.FallItemCount = 0;			//소환 몬스터 아이템 드롭 금지
  			}
-@@ -20571,31 +20728,46 @@ int RecvCommand( rsPLAYINFO *lpPlayInfo , char *szChatCommand )
+@@ -20571,31 +20781,47 @@ int RecvCommand( rsPLAYINFO *lpPlayInfo , char *szChatCommand )
  		if  ( szTempBuff[0]>='0' && szTempBuff[0]<='9' ) {
  			len = atoi( szTempBuff );
  			if ( len<=20 ) {
@@ -391,6 +465,7 @@ index 78567914..9b55be8e 100644
  	len = rsCompString( "/mymonster" , szChatCommand );
 -	if ( len && lpPlayInfo->AdminMode && AutoPlayServer ) {
 +	if ( !len ) len = rsCompString( "/meumonstro" , szChatCommand );
++	if ( !len ) len = rsCompString( "/meumonster" , szChatCommand );
 +	if ( len && lpPlayInfo->AdminMode && (AutoPlayServer || lpPlayInfo->AdminMode>=4) ) {
 +		int spawned = 0;
  		//pb=p;p=GetWord(strBuff,p);if(strBuff[0]==34)p=GetString(strBuff,pb);	//단어 찾기
@@ -409,7 +484,7 @@ index 78567914..9b55be8e 100644
  			if ( lpChar && lpPlayInfo->AdminMode<4 ) {
  				lpChar->smMonsterInfo.FallItemCount = 0;			//소환 몬스터 아이템 드롭 금지
  			}
-@@ -20605,18 +20777,24 @@ int RecvCommand( rsPLAYINFO *lpPlayInfo , char *szChatCommand )
+@@ -20605,18 +20831,24 @@ int RecvCommand( rsPLAYINFO *lpPlayInfo , char *szChatCommand )
  		if  ( szTempBuff[0]>='0' && szTempBuff[0]<='9' ) {
  			len = atoi( szTempBuff );
  			if ( len<=20 ) {
@@ -435,7 +510,7 @@ index 78567914..9b55be8e 100644
  		rsRecordAdminCommand( lpPlayInfo , szChatCommand , 2 );		//운영자 명령 사용기록
  		return TRUE;
  	}
-@@ -21119,6 +21297,7 @@ int	SendFindCrack( smWINSOCK *lpsmSock )
+@@ -21119,6 +21351,7 @@ int	SendFindCrack( smWINSOCK *lpsmSock )
  
  int RecvCommand( rsPLAYINFO *lpPlayInfo , char *szChatCommand )
  {
@@ -443,7 +518,7 @@ index 78567914..9b55be8e 100644
  	return TRUE;
  }
  
-@@ -24634,7 +24813,8 @@ pRetry:
+@@ -24634,7 +24867,8 @@ pRetry:
  		lpTransCommand = (smTRANS_COMMAND *)SockInfo->Buff;
  
  		if ( !lpTransCommand->LParam ) {
@@ -453,7 +528,7 @@ index 78567914..9b55be8e 100644
  			lpPlayInfo->HideMode = lpTransCommand->SParam;
  		}
  
-@@ -26008,7 +26188,7 @@ pRetry:
+@@ -26008,7 +26242,7 @@ pRetry:
  		// 장별 - 에이징 치트 서버로 전송
  		case smTRANSCODE_AGING_DATA: 
  			lpTransCommand = (smTRANS_COMMAND *)SockInfo->Buff;
@@ -462,7 +537,7 @@ index 78567914..9b55be8e 100644
  		break;
  
  		// 장별 - 스킬 딜레이
-@@ -33152,6 +33332,12 @@ int	rsCheckAdminPlayer( rsPLAYINFO *lpPlayInfo )
+@@ -33152,6 +33386,12 @@ int	rsCheckAdminPlayer( rsPLAYINFO *lpPlayInfo )
  	int cnt;
  	smWINSOCK *lpsmSock = lpPlayInfo->lpsmSock;
  
