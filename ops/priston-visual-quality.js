@@ -3,9 +3,9 @@
  'use strict';
  var canvas=document.getElementById('canvas');
  if(!canvas)return;
- var key='vellum-classic-visual';
- var mode='vellum';
- try{mode=localStorage.getItem(key)||'vellum';}catch(e){}
+ var key='vellum-classic-visual-safe-v2';
+ var mode='classic';
+ try{mode=localStorage.getItem(key)||'classic';}catch(e){}
  if(mode!=='classic'&&mode!=='vellum')mode='vellum';
  var style=document.createElement('style');
  style.textContent='#canvas.vellum-visual{filter:contrast(1.075) saturate(1.105) brightness(1.015)}'+
