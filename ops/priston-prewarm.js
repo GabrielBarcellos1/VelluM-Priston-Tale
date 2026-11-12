@@ -1,51 +1,27 @@
-// VelluM Classic: prepare the most common first-run assets in the background.
-// This is capped to the character selection and Ricarten assets (about 45MB).
-// No blocking of login: files arrive in Cache Storage as the game is running.
-(function () {
+// Idle/background installation of compressed map and NPC packs.
+// Does not block rendering or login; only downloads once per browser profile.
+(function(){
   'use strict';
-  if (!('serviceWorker' in navigator)) return;
-  var connection = navigator.connection || navigator.mozConnection || navigator.webkitConnection;
-  if (connection && (connection.saveData || /(^|-)2g/.test(connection.effectiveType || ''))) return;
-  var started = false;
-  function begin() {
-    if (started) return;
-    started = true;
-    navigator.serviceWorker.ready.then(async function () {
-      if (!navigator.serviceWorker.controller) return;
-      var response = await fetch('data_manifest.txt');
-      if (!response.ok) return;
-      var data = await response.text(), names = [];
-      var prefixes = ['Field/Ricarten/', 'Field/forest/', 'char/npc/'];
-      for (var k = 0; k < prefixes.length; k++) {
-        var prefix = prefixes[k], bytes = 0;
-        for (var line of data.split('\n')) {
-          var fields = line.split('\t');
-          if (fields.length < 3 || !fields[0].startsWith(prefix)) continue;
-          var size = Number(fields[1]) || 0;
-          // Keep background loading bounded; the player remains responsive.
-          var groupLimit = prefix==='char/npc/'? 20*1048576 :
-            prefix==='Field/forest/'? 22*1048576 : 29*1048576;
-          if (bytes + size > groupLimit) break;
-          if (prefix==='char/npc/' && !/\.(?:smd|inx|bmp|tga)$/i.test(fields[0])) continue;
-          names.push(fields[0]);
-          bytes += size;
-        }
-      }
-      if (!names.length) return;
-      await fetch('__pt_prefetch', {
-        method: 'POST',
-        body: names.join('\n'),
-        headers: { 'Content-Type': 'text/plain' }
-      });
-      console.info('[VelluM] Preparing first areas in the background:', names.length, 'files');
-    }).catch(function (e) { console.warn('[VelluM] Prefetch skipped:', String(e)); });
+  if(!('Worker' in window)||!('caches' in window)||!('DecompressionStream' in window))return;
+  const conn=navigator.connection || navigator.mozConnection || navigator.webkitConnection;
+  if(conn && (conn.saveData||/(^|-)2g/.test(conn.effectiveType||'')))return;
+  let started=false;
+  function prepare(){
+    if(started)return;started=true;
+    const worker=new Worker('prewarm-worker.js');
+    worker.onmessage=e=>{
+      const d=e.data||{};
+      if(d.type==='done')console.info('[VelluM Classic] Pack',d.name,':',d.installed,'/',d.count,'assets stored');
+      if(d.type==='error')console.warn('[VelluM Classic] Pack',d.name,d.error);
+      if(d.type==='complete'){console.info('[VelluM Classic] Background packs finished');worker.terminate();}
+    };
+    worker.onerror=e=>{console.warn('[VelluM Classic] Prefetch error',e.message);worker.terminate();};
+    worker.postMessage({type:'start'});
   }
-  // Avoid competing with the 84 MB start-up pack on the first visit.
-  var watch = setInterval(function () {
-    var status = document.getElementById('status');
-    if (!status || status.textContent.trim() !== 'Running') return;
-    clearInterval(watch);
-    setTimeout(begin, 3000);
-  }, 1200);
-  setTimeout(function () { clearInterval(watch); }, 180000);
+  const watcher=setInterval(()=>{
+    if(document.getElementById('status')?.textContent?.trim()!=='Running')return;
+    clearInterval(watcher);
+    setTimeout(prepare,4000);
+  },1000);
+  setTimeout(()=>clearInterval(watcher),180000);
 })();
