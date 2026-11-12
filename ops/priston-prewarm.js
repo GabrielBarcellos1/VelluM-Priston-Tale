@@ -11,6 +11,7 @@
     const worker=new Worker('prewarm-worker.js');
     worker.onmessage=e=>{
       const d=e.data||{};
+      if(d.type==='skipped')console.info('[VelluM Classic] Pack reused:',d.name);
       if(d.type==='done')console.info('[VelluM Classic] Pack',d.name,':',d.installed,'/',d.count,'assets stored');
       if(d.type==='error')console.warn('[VelluM Classic] Pack',d.name,d.error);
       if(d.type==='complete'){console.info('[VelluM Classic] Background packs finished');worker.terminate();}
