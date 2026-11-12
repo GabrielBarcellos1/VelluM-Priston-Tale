@@ -125,6 +125,10 @@ function download(url, rel, entry, batch) {
 }
 
 async function dataFile(e, rel) {
+	// Start fetching likely adjacent NPC/map resources without delaying this file.
+	// No extra privileges or server-side data are exposed.
+	if (rel.indexOf('char/npc/') == 0 || rel.indexOf('Field/') == 0)
+		e.waitUntil(warmNearby(rel).catch(function () {}));
 	var entry = (await getVersions()).get(rel);
 	if (!entry) return fetch(e.request);			// not listed (or old manifest without hashes)
 	var cache = await caches.open(CACHE);
@@ -154,8 +158,35 @@ async function dataFile(e, rel) {
 	return new Response(counted(res, rel, entry.size, false), { status: 200, headers: res.headers });
 }
 
+// One-time background lookahead for the folder currently being used by the game.
+var nearWarm = new Set();
+async function warmNearby(rel) {
+	var bits = rel.split('/');
+	if (bits.length < 3) return;
+	var prefix;
+	var budget;
+	if (bits[0] == 'char' && bits[1].toLowerCase() == 'npc') {
+		prefix = bits.slice(0, 3).join('/') + '/';
+		budget = 12 * 1048576;
+	} else if (bits[0].toLowerCase() == 'field') {
+		prefix = bits.slice(0, Math.min(3, bits.length - 1)).join('/') + '/';
+		budget = 14 * 1048576;
+	} else return;
+	if (nearWarm.has(prefix)) return;
+	nearWarm.add(prefix);
+	var list = [], bytes = 0;
+	for (var entry of (await getVersions()).values()) {
+		if (!entry.rel.startsWith(prefix) || list.includes(entry.rel)) continue;
+		if (bytes + entry.size > budget) continue;
+		list.push(entry.rel);
+		bytes += entry.size;
+		if (list.length >= 100) break;
+	}
+	if (list.length) await prefetch(list);
+}
+
 // ---- batches (see the top) ----
-var BATCH_PARALLEL = 10;
+var BATCH_PARALLEL = 4;
 var queue = [], running = 0;
 function pump() {
 	while (running < BATCH_PARALLEL && queue.length) {
