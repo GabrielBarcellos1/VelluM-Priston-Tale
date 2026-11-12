@@ -6,12 +6,23 @@ const dec = new TextDecoder();
 const readU16 = (view,o) => view.getUint16(o,true);
 const readU32 = (view,o) => view.getUint32(o,true);
 async function unpack(name) {
-  const response = await fetch('packs/'+name+'.ptpb.gz');
+  const packPath='packs/'+name+'.ptpb.gz';
+  const cache=await caches.open('pt-data-1');
+  const marker=new URL('packs/.cached-'+name,BASE).href;
+  let info=null;
+  try{info=await fetch(packPath,{method:'HEAD',cache:'no-store',signal:AbortSignal.timeout(7000)});}catch(e){/* proceed with regular download */ }
+  const signature=info?.ok?[info.headers.get('ETag')||'',info.headers.get('Last-Modified')||'',info.headers.get('Content-Length')||''].join('|'):'||';
+  const prior=await cache.match(marker);
+  if(signature!=='||' && prior?.headers.get('X-PT-Version')===signature){
+    postMessage({type:'skipped',name});
+    return;
+  }
+  const response = await fetch(packPath);
   if (!response.ok || !response.body) throw new Error(name+' HTTP '+response.status);
   const bytes = await new Response(response.body.pipeThrough(new DecompressionStream('gzip'))).arrayBuffer();
   const view = new DataView(bytes), values = new Uint8Array(bytes);
   if (dec.decode(values.subarray(0,4))!=='PTPB') throw new Error('Invalid asset pack '+name);
-  const count=readU32(view,4), cache=await caches.open('pt-data-1');
+  const count=readU32(view,4);
   let cursor=8, installed=0, pending=[];
   for(let i=0;i<count;i++){
     if(cursor+2>bytes.byteLength)throw Error('Truncated path');
@@ -31,6 +42,7 @@ async function unpack(name) {
     cursor+=size;
   }
   if(pending.length)await Promise.allSettled(pending);
+  if(signature!=='||')await cache.put(marker,new Response('complete',{headers:{'X-PT-Version':signature}}));
   postMessage({type:'done',name,installed,count});
 }
 self.onmessage=async e=>{
