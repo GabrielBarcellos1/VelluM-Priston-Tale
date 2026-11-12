@@ -453,7 +453,7 @@ def inspect_state(db,user,job,state,previous):
     if not isinstance(stats,dict):raise ValueError('Atributos inválidos.')
     for field in ('level','gold','exp','str','spi','tal','dex','health'):
         if field not in stats:continue
-        number(stats[field],0,10**12,field)
+        number(stats[field],0,(2**53-1) if field=='exp' else 10**12,field)
     inv=state.get('inv',{});items=[]
     if not isinstance(inv,dict):raise ValueError('Inventário inválido.')
     for group in ('equip','equipB'):
@@ -494,6 +494,14 @@ def inspect_state(db,user,job,state,previous):
                 raise ValueError('Aging aumentado fora da operação confirmada pelo servidor.')
     before=(previous or {}).get('stats',{})
     for key,threshold in [('gold',100000),('level',5),('exp',10000000)]:
+        if key=='exp' and stats.get('progressionVersion')==2:
+            import progression
+            table=progression.rules()['experience']
+            current_level=max(1,min(150,int(stats.get('level',1))))
+            threshold=max(threshold,int((table[current_level]-table[current_level-1])*0.1))
+            # Version-1 values are converted proportionally by the client.
+            if before.get('progressionVersion')==1 and current_level==before.get('level'):
+                continue
         if key in stats and key in before and stats[key]-before[key]>threshold:flags.append('Salto de '+key)
     if flags:
         last=db.execute("SELECT 1 FROM game_events WHERE username=? AND action='state.anomaly' AND created>?",(user['username'],time.time()-60)).fetchone()
