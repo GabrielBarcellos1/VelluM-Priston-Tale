@@ -46,12 +46,24 @@ Copy-Item -LiteralPath $warmWorker -Destination (Join-Path $dest 'prewarm-worker
 if ($LASTEXITCODE -ne 0) { throw 'Classic area pack preparation failed' }
 & node --check (Join-Path $dest 'prewarm-worker.js')
 if ($LASTEXITCODE -ne 0) { throw 'Classic background worker syntax error' }
+# Full-browser viewport, preserving the native 4:3 playfield, plus real fullscreen toggle.
+$fullCss = Join-Path $PSScriptRoot 'priston-fullscreen.css'
+$fullJs = Join-Path $PSScriptRoot 'priston-fullscreen.js'
+if (!(Test-Path -LiteralPath $fullCss) -or !(Test-Path -LiteralPath $fullJs)) {
+  throw 'Fullscreen UI assets are missing.'
+}
+Copy-Item -LiteralPath $fullCss -Destination (Join-Path $dest 'fullscreen.css') -Force
+Copy-Item -LiteralPath $fullJs -Destination (Join-Path $dest 'fullscreen.js') -Force
+& node --check (Join-Path $dest 'fullscreen.js')
+if ($LASTEXITCODE -ne 0) { throw 'Fullscreen UI script is invalid' }
 $data = Join-Path $dest 'data'
 if (!(Test-Path -LiteralPath $data)) {
   New-Item -ItemType Junction -Path $data -Target (Join-Path $source 'data') | Out-Null
 }
 $base = [IO.File]::ReadAllText((Join-Path $dest 'index.html'))
 $base = $base.Replace('<title>Priston Tale</title>', '<title>VelluM Priston Tale | Classic Engine</title>')
+$base = $base.Replace('</head>', '<link rel="stylesheet" href="fullscreen.css"></head>')
+$base = $base.Replace('</body>', '<script src="fullscreen.js"></script></body>')
 $base = $base.Replace('</head><body>', '<style>body{--bg:#091411;--fg:#f4e5c6;--panel:#142521}#wrap::before{content:"VelluM PRISTON TALE | CLASSIC ENGINE";display:block;width:min(1024px,100%);color:#dfbd77;font:700 18px/1.5 system-ui;text-align:center;letter-spacing:2px;padding:4px}#bar button{border-color:#625135}#canvas{border:1px solid #564629}#vellum-tools{width:min(1024px,100%);display:flex;align-items:center;gap:12px;flex-wrap:wrap;color:#e1c991;font:12px system-ui;margin-bottom:5px}#vellum-tools a{color:#f1d58b}#vellum-tools small{color:#aaa}</style></head><body>')
 $base = $base.Replace('<div id=wrap>', '<div id=wrap><div id=vellum-tools><span>VelluM Lab - Novo Motor</span><a href="https://acesso.gbtechnology.com.br/priston/" target="_blank" rel="noopener noreferrer">Abrir VelluM anterior</a><small>Personagens antigos ainda nao migrados</small></div>')
 $base = $base.Replace('<script src=progress.js></script>', '<script src=progress.js></script><script src=prewarm.js></script>')
