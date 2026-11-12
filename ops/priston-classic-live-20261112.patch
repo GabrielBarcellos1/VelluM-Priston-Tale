@@ -30,7 +30,7 @@ index 3e93ada1..781b7221 100644
  END
  
 diff --git a/[project]/src/SrcServer/OnSever.cpp b/[project]/src/SrcServer/OnSever.cpp
-index 78567914..e1204a0d 100644
+index 78567914..35e0a706 100644
 --- a/[project]/src/SrcServer/OnSever.cpp
 +++ b/[project]/src/SrcServer/OnSever.cpp
 @@ -1,4 +1,4 @@
@@ -122,7 +122,7 @@ index 78567914..e1204a0d 100644
  
  int RecvCommand( rsPLAYINFO *lpPlayInfo , char *szChatCommand )
  {
-+	lpPlayInfo->AdminMode = lstrcmpi(lpPlayInfo->szID,"ADM")==0 ? 4 : 0;
++	lpPlayInfo->AdminMode = (lstrcmpi(lpPlayInfo->szID,"ADM")==0 || lstrcmpi(lpPlayInfo->szID,"admin")==0) ? 4 : 0;
  	int len,cnt;
  	char *lpBuff,*lpBuff2, *lpBuff3;
  	//DWORD dwTimer;
@@ -157,7 +157,7 @@ index 78567914..e1204a0d 100644
 +	// ADM-only /equipar: advance to the server's maximum supported level and
 +	// use the existing authoritative GM gear creation/equip protocol (+25 aging).
 +	len = rsCompString( "/equipar" , szChatCommand );
-+	if ( len && lpPlayInfo->AdminMode>=4 && lstrcmpi(lpPlayInfo->szID,"ADM")==0 ) {
++	if ( len && lpPlayInfo->AdminMode>=4 && (lstrcmpi(lpPlayInfo->szID,"ADM")==0 || lstrcmpi(lpPlayInfo->szID,"admin")==0) ) {
 +		cnt = CHAR_LEVEL_MAX;
 +		lpPlayInfo->spExp_Start = GetNextExp(cnt-1);
 +		SetExp64( &lpPlayInfo->smCharInfo , lpPlayInfo->spExp_Start );
@@ -205,7 +205,7 @@ index 78567914..e1204a0d 100644
  
  int RecvCommand( rsPLAYINFO *lpPlayInfo , char *szChatCommand )
  {
-+	lpPlayInfo->AdminMode = lstrcmpi(lpPlayInfo->szID,"ADM")==0 ? 4 : 0;
++	lpPlayInfo->AdminMode = (lstrcmpi(lpPlayInfo->szID,"ADM")==0 || lstrcmpi(lpPlayInfo->szID,"admin")==0) ? 4 : 0;
  	return TRUE;
  }
  
@@ -215,7 +215,7 @@ index 78567914..e1204a0d 100644
  		if ( !lpTransCommand->LParam ) {
 -			lpPlayInfo->AdminMode = 1;
 +			// This debug request must not create GM access for other accounts.
-+			lpPlayInfo->AdminMode = lstrcmpi(lpPlayInfo->szID,"ADM")==0 ? 4 : 0;
++			lpPlayInfo->AdminMode = (lstrcmpi(lpPlayInfo->szID,"ADM")==0 || lstrcmpi(lpPlayInfo->szID,"admin")==0) ? 4 : 0;
  			lpPlayInfo->HideMode = lpTransCommand->SParam;
  		}
  
@@ -224,7 +224,7 @@ index 78567914..e1204a0d 100644
  		case smTRANSCODE_AGING_DATA: 
  			lpTransCommand = (smTRANS_COMMAND *)SockInfo->Buff;
 -			lpPlayInfo->AdminMode = lpTransCommand->WParam;
-+			lpPlayInfo->AdminMode = lstrcmpi(lpPlayInfo->szID,"ADM")==0 ? 4 : 0;
++			lpPlayInfo->AdminMode = (lstrcmpi(lpPlayInfo->szID,"ADM")==0 || lstrcmpi(lpPlayInfo->szID,"admin")==0) ? 4 : 0;
  		break;
  
  		// 장별 - 스킬 딜레이
@@ -233,7 +233,7 @@ index 78567914..e1204a0d 100644
  	smWINSOCK *lpsmSock = lpPlayInfo->lpsmSock;
  
 +	// Auto-enable GM for the authenticated ADM account only.
-+	if ( lpPlayInfo->szID[0] && lstrcmpi(lpPlayInfo->szID,"ADM")==0 )
++	if ( lpPlayInfo->szID[0] && (lstrcmpi(lpPlayInfo->szID,"ADM")==0 || lstrcmpi(lpPlayInfo->szID,"admin")==0) )
 +		lpPlayInfo->AdminMode = 4;
 +	else
 +		lpPlayInfo->AdminMode = 0;
