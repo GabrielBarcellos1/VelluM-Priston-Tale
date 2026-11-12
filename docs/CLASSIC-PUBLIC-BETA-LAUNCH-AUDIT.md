@@ -49,3 +49,11 @@
 5. Monitoramento, documentação de suporte e segurança mínima do serviço colocados em operação.
 
 **Nota:** os 32/32 verificam a infraestrutura/configuração e não são 32 casos reais de gameplay. Não usar esse placar como alegação de jogo completo ou seguro para promoção massiva.
+
+## Proteção adicional do gateway (12/11/2026, 20h19)
+- Aplicado limite de 64 sessões WebSocket ativas por aplicação IIS, com `Interlocked.Increment/Decrement` e limpeza em `finally`.
+- Proteção homologada no handler da página local e aplicada ao site público, também persistida no código original `src/web/site/ws.ashx` dentro do patch reproduzível.
+- Teste público após alteração: 8/8 conexões WebSocket de diagnóstico abertas com sucesso; página HTTP 200; Priston clássico 10007 e VelluM antigo 19065 ativos.
+- O limite de 64 **não** corresponde a 64 jogadores suportados e não elimina abuso distribuído; falta controle de taxa por usuário autenticado e teste de carga real.
+- Script de aplicação: `ops/patch-classic-ws-quotas.py`. Backup do handler público: `C:\\VelluM\\integration-priston\\ws.ashx.before-quota-20261112-201905.bak`.
+- Os testes unitários de senha cobriram 15/15 casos e a versão live passou no checklist automatizado. A tentativa de testar um registro no cliente 3D da homologação foi inconclusiva; **não considerar login/registro/persistência end-to-end aprovados**.
