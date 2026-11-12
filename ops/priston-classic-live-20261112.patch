@@ -395,20 +395,6 @@ index af5057f8..95a81bbf 100644
  
  
  	//PatEffectShield = smASE_Read( "weapons\\arrow.ase" );
-diff --git a/[project]/src/ptplatform/ptplatform.cpp b/[project]/src/ptplatform/ptplatform.cpp
-index 0b7b8cb2..df663410 100644
---- a/[project]/src/ptplatform/ptplatform.cpp
-+++ b/[project]/src/ptplatform/ptplatform.cpp
-@@ -119,6 +119,9 @@ BOOL PtPlat_Attach( HWND hWnd, WNDPROC pfnGameProc )
- 	SDL_GL_SetAttribute( SDL_GL_DOUBLEBUFFER, 1 );
- 	SDL_GL_SetAttribute( SDL_GL_DEPTH_SIZE, 24 );
- 	SDL_GL_SetAttribute( SDL_GL_STENCIL_SIZE, 8 );
-+	// Request 4x MSAA for cleaner 3D silhouettes in WebGL; browser may fall back.
-+	SDL_GL_SetAttribute( SDL_GL_MULTISAMPLEBUFFERS, 1 );
-+	SDL_GL_SetAttribute( SDL_GL_MULTISAMPLESAMPLES, 4 );
- 	RECT r;
- 	GetClientRect( hWnd, &r );
- 	s_hWnd = hWnd;
 diff --git a/[project]/src/sinbaram/sinAssaParticle.cpp b/[project]/src/sinbaram/sinAssaParticle.cpp
 index fc7524b3..db07fc22 100644
 --- a/[project]/src/sinbaram/sinAssaParticle.cpp
