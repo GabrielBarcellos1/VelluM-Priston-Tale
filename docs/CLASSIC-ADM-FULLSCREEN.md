@@ -44,3 +44,16 @@ Fonte C++ disponível no arquivo `ops/priston-classic-live-20261112.patch`, com 
 - O arquivo `ops/priston-classic-live-20261112.patch` foi atualizado com a alteração C++ para reproduzir o build.
 - **Pendente**: teste end-to-end de execução e persistência de `/equipar`, `/monstro` ou outros comandos após novo login do jogador em `admin` ou `adm`. Os logs coletados no momento da publicação continham somente comandos anteriores a ela.
 - O log `LogDebug/Commands.log` mostra `smCharInfo.szName` (nome do personagem), não necessariamente o ID de conta; o valor GM exibido é registrado antes da chamada a `RecvCommand`. Portanto uma linha `own (GM 0)` por si só não prova que o comando foi recusado; conferir o efeito dentro do jogo.
+
+## Atualização 12/11/2026 — tiers de skills e feedback GM
+
+- A conta administrativa pode executar `/habilidades` (ou `/tiers`) para definir `ChangeJob=3`, equivalente a acesso às skills dos tiers 1–4, sem realizar as quests de evolução. **Não** concede Tier 5.
+- `/equipar` agora concede esse mesmo estágio de tiers junto com nível máximo e equipamentos.
+- O servidor mantém `smCharInfo.ChangeJob=3` para a sessão autenticada e envia o opcode novo `smTRANSCODE_GM_SETTIER=0x50326013`; o cliente WebAssembly correspondente atualiza `sinChar->ChangeJob` e o estado do jogador, e solicita gravação via `SaveGameData()`. É necessário **reentrar no jogo após o deploy** e testar no mestre de habilidades. A quantidade de pontos disponíveis corresponde ao nível adquirido, não concede automaticamente skills nível 10.
+- `/monstro` e `/meumonstro` agora respondem no chat com a quantidade de invocações concluídas ou informam que o monstro não foi encontrado/que não há espaço; limite 20. Corrigida a quantidade: `/monstro hopi 10` agora tenta invocar exatamente 10 em vez de 11.
+- Comando `/comandos` lista as opções oficialmente implementadas. Não anuncia `/mapa` ou `/field` como disponíveis, pois não são comandos existentes nesse servidor.
+- A compilação do servidor MSBuild ReleaseGL terminou com exit 0. Instalado pela tarefa agendada `PristonServer` (porta 10007), backup `C:\\VelluM\\backups\\classic-admin-authfix-20261112-180637`.
+- A compilação WebAssembly Emscripten terminou com exit 0, `game.wasm` 6074835 bytes, SHA256 prefixo `511428392586987a`; publicado pelo instalador `ops/integrate-priston-web.ps1`. Backup cliente em `C:\\VelluM\\backups\\classic-skill-client-20261112-180706`.
+- Teste automatizado da página pública: status Running após ~5.8s, startup pack 1587 arquivos comprimidos, WebSocket WSS conectado, /priston/ (legado), /priston-classic/ e /guacamole/ GET 200.
+- Reprodutibilidade: `ops/priston-classic-live-20261112.patch` atualizado com o source C++ das duas partes, `ops/priston-admin-help.js` com ajuda de comandos e skill tiers; cliente e servidor devem ser compilados juntos sempre que opcode for alterado.
+- **Limitação**: testes de compilação/abertura não comprovam que a compra das skills e a persistência após relogin foram concluídas. Isso exige teste no mestre com uma sessão ADM autenticada, além de verificar o retorno do comando de monstros no jogo.
