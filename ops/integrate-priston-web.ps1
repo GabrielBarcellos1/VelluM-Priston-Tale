@@ -8,6 +8,13 @@ foreach ($name in $files) {
   if (!(Test-Path -LiteralPath $f)) { throw "missing $name" }
   Copy-Item -LiteralPath $f -Destination (Join-Path $dest $name) -Force
 }
+# The start-up pack can be served from Cache Storage on repeat visits.
+# Avoid telling the player it is downloading when the client is only unpacking cached data.
+$progressFile = Join-Path $dest 'progress.js'
+$progressText = [IO.File]::ReadAllText($progressFile)
+$progressText = $progressText.Replace("show('big', 'Downloading game data', frac, detail,", "show('big', 'Preparando dados do jogo', frac, detail,")
+$progressText = $progressText.Replace("pack ? 'Only the first visit (and updates) download this. Later visits load it from your browser.' : ''", "pack ? 'Arquivos ja salvos sao reutilizados. Areas novas podem exigir downloads.' : ''")
+[IO.File]::WriteAllText($progressFile, $progressText, [Text.UTF8Encoding]::new($false))
 $data = Join-Path $dest 'data'
 if (!(Test-Path -LiteralPath $data)) {
   New-Item -ItemType Junction -Path $data -Target (Join-Path $source 'data') | Out-Null
