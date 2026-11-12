@@ -551,21 +551,41 @@ index 78567914..ca502add 100644
  	if ( !lpPlayInfo->AdminIP ) {
  
 diff --git a/[project]/src/character.cpp b/[project]/src/character.cpp
-index b19cfe3b..113b0da5 100644
+index b19cfe3b..002a11f2 100644
 --- a/[project]/src/character.cpp
 +++ b/[project]/src/character.cpp
-@@ -8307,7 +8307,10 @@ int smCHAR::DrawShadow()
+@@ -8307,7 +8307,13 @@ int smCHAR::DrawShadow()
  	}
  
  	//블레스 캐슬 왕관
 -	if ( Clan_CastleMasterFlag && smCharInfo.ClassClan && PatCrown && RendSucess && RendPoint.z<12*64*fONE && PlayVanish<=0 ) {
 +	const int vellumAdmCrown = lstrcmpi(smCharInfo.szName, "ADM")==0;
++	// Persistent tier rank badges: 1=Tier 2, 2=Tier 3, 3=Tier 4.
++	// Reuse the existing crown mesh with distinct material tints; no Tier 5.
++	const int vellumTierBadge = !vellumAdmCrown && smCharInfo.ChangeJob>=1 && smCharInfo.ChangeJob<=3;
 +	if ( vellumAdmCrown && RendSucess && PlayVanish<=0 )
 +		sinEffect_Ratoo_Aura2(this);
-+	if ( ( (Clan_CastleMasterFlag && smCharInfo.ClassClan) || vellumAdmCrown ) && PatCrown && RendSucess && RendPoint.z<12*64*fONE && PlayVanish<=0 ) {
++	if ( ( (Clan_CastleMasterFlag && smCharInfo.ClassClan) || vellumAdmCrown || vellumTierBadge ) && PatCrown && RendSucess && RendPoint.z<12*64*fONE && PlayVanish<=0 ) {
  
  		GetMoveLocation( 0 , 0, 0*fONE , 0, Angle.y , 0 );
  
+@@ -8332,8 +8338,16 @@ int smCHAR::DrawShadow()
+ 
+ 	    lpD3DDevice->SetRenderState( D3DRENDERSTATE_ZWRITEENABLE, FALSE );
+ 		smRender.SetMaterialGroup( smMaterialGroup );
++		int oldR=smRender.Color_R,oldG=smRender.Color_G,oldB=smRender.Color_B;
++		if ( vellumTierBadge ) {
++			// Bronze, silver and gold distinguish tiers 2, 3 and 4.
++			if ( smCharInfo.ChangeJob==1 ) { smRender.Color_R+=85; smRender.Color_G+=15; smRender.Color_B-=45; }
++			if ( smCharInfo.ChangeJob==2 ) { smRender.Color_R+=55; smRender.Color_G+=65; smRender.Color_B+=80; }
++			if ( smCharInfo.ChangeJob==3 ) { smRender.Color_R+=90; smRender.Color_G+=70; smRender.Color_B-=20; }
++		}
+ 		PatCrown->SetPosi( &pos, &angle );
+ 		PatCrown->RenderD3D( &CameraPosi, &CameraAngle );
++		smRender.Color_R=oldR; smRender.Color_G=oldG; smRender.Color_B=oldB;
+ 	    lpD3DDevice->SetRenderState( D3DRENDERSTATE_ZWRITEENABLE, TRUE );
+ 
+ 		//smRender.Color_A = a;
 diff --git a/[project]/src/netplay.cpp b/[project]/src/netplay.cpp
 index 0fffcb19..c1305006 100644
 --- a/[project]/src/netplay.cpp
