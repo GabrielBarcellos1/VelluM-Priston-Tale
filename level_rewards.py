@@ -4,16 +4,20 @@ from functools import lru_cache
 from pathlib import Path
 import local_accounts as accounts
 
-WEAPONS={1:'WA1',2:'WH1',3:'WS1',4:'WP1',5:'WT1',6:'WS2',7:'WM1',8:'WM1',9:'WD1',10:'WN1',11:'WV1'}
+WEAPONS={1:'WA1',2:'WC1',3:'WS1',4:'WP1',5:'WT1',6:'WS2',7:'WM1',8:'WM1',9:'WD1',10:'WN1',11:'WV1'}
 CASTERS=(7,8,10)
 
 @lru_cache(maxsize=1)
 def rules():
     return json.loads((Path(__file__).parent/'data/progression-loot.json').read_text(encoding='utf-8'))
 
+@lru_cache(maxsize=1)
+def classic_weapons():
+    return json.loads((Path(__file__).parent/'data/classic-kit-weapons.json').read_text(encoding='utf-8'))['classes']
+
 def preferred(item,job):
     family=item.get('family',item['code'][:3])
-    if item.get('slot') in ('WEAPON_ONE','WEAPON_TWO'):return family==WEAPONS.get(job)
+    if item.get('slot') in ('WEAPON_ONE','WEAPON_TWO'):return family==WEAPONS.get(job) or (job==2 and family=='WH1')
     if item.get('slot')=='ARMOR':return family==('DA2' if job in CASTERS else 'DA1')
     return True
 
@@ -32,6 +36,16 @@ def kit_codes(level,job):
                   and i.get('req',{}).get('level',0)<=milestone and fits(i)]
             if not pool:raise ValueError('Catálogo sem equipamento para o kit de evolução.')
             selected=max(pool,key=lambda i:(i.get('req',{}).get('level',0),i.get('price',0),i['code']))
+            if slot=='weapon':
+                # Honor the source game's class weapon table when the item is
+                # actually equipable with the points earned by this milestone.
+                gift_codes=[row['code'] for row in classic_weapons().get(str(job),[])
+                            if row['recommendedAt']<=milestone]
+                eligible={item['code']:item for item in pool}
+                for code in reversed(gift_codes):
+                    if code in eligible and eligible[code].get('req',{}).get('level',0)>=selected.get('req',{}).get('level',0)-3:
+                        selected=eligible[code]
+                        break
             result.append(selected['code'])
             for key in required:required[key]=max(required[key],selected.get('req',{}).get(key,0))
     return result
