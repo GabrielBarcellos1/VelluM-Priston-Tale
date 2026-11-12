@@ -15,6 +15,14 @@ $progressText = [IO.File]::ReadAllText($progressFile)
 $progressText = $progressText.Replace("show('big', 'Downloading game data', frac, detail,", "show('big', 'Preparando dados do jogo', frac, detail,")
 $progressText = $progressText.Replace("pack ? 'Only the first visit (and updates) download this. Later visits load it from your browser.' : ''", "pack ? 'Arquivos ja salvos sao reutilizados. Areas novas podem exigir downloads.' : ''")
 [IO.File]::WriteAllText($progressFile, $progressText, [Text.UTF8Encoding]::new($false))
+# Use the tested streaming Service Worker and background warmup from this repository.
+$optimizedSw = Join-Path $PSScriptRoot 'priston-classic-sw.js'
+$warmup = Join-Path $PSScriptRoot 'priston-prewarm.js'
+if (!(Test-Path -LiteralPath $optimizedSw) -or !(Test-Path -LiteralPath $warmup)) {
+  throw 'Missing optimized VelluM Classic assets in the ops directory.'
+}
+Copy-Item -LiteralPath $optimizedSw -Destination (Join-Path $dest 'sw.js') -Force
+Copy-Item -LiteralPath $warmup -Destination (Join-Path $dest 'prewarm.js') -Force
 $data = Join-Path $dest 'data'
 if (!(Test-Path -LiteralPath $data)) {
   New-Item -ItemType Junction -Path $data -Target (Join-Path $source 'data') | Out-Null
@@ -23,6 +31,7 @@ $base = [IO.File]::ReadAllText((Join-Path $dest 'index.html'))
 $base = $base.Replace('<title>Priston Tale</title>', '<title>VelluM Priston Tale | Classic Engine</title>')
 $base = $base.Replace('</head><body>', '<style>body{--bg:#091411;--fg:#f4e5c6;--panel:#142521}#wrap::before{content:"VelluM PRISTON TALE | CLASSIC ENGINE";display:block;width:min(1024px,100%);color:#dfbd77;font:700 18px/1.5 system-ui;text-align:center;letter-spacing:2px;padding:4px}#bar button{border-color:#625135}#canvas{border:1px solid #564629}#vellum-tools{width:min(1024px,100%);display:flex;align-items:center;gap:12px;flex-wrap:wrap;color:#e1c991;font:12px system-ui;margin-bottom:5px}#vellum-tools a{color:#f1d58b}#vellum-tools small{color:#aaa}</style></head><body>')
 $base = $base.Replace('<div id=wrap>', '<div id=wrap><div id=vellum-tools><span>VelluM Lab - Novo Motor</span><a href="https://acesso.gbtechnology.com.br/priston/" target="_blank" rel="noopener noreferrer">Abrir VelluM anterior</a><small>Personagens antigos ainda nao migrados</small></div>')
+$base = $base.Replace('<script src=progress.js></script>', '<script src=progress.js></script><script src=prewarm.js></script>')
 [IO.File]::WriteAllText((Join-Path $dest 'index.html'),$base,[Text.UTF8Encoding]::new($false))
 Copy-Item -LiteralPath (Join-Path $dest 'index.html') -Destination (Join-Path $dest 'game.html') -Force
 Import-Module WebAdministration
