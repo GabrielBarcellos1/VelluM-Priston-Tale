@@ -67,3 +67,23 @@ Fonte C++ disponível no arquivo `ops/priston-classic-live-20261112.patch`, com 
 - Backup: `C:\\VelluM\\backups\\classic-graphics-before-20261112-182135`.
 - O patch de C++ foi atualizado no `ops/priston-classic-live-20261112.patch`.
 - A nova aparência não altera os modelos e texturas originais e não é equivalente a remasterização, high resolution nativa ou o desenho de interface do VelluM antigo.
+
+## Atualização integrada — 12/11/2026, 18h53
+Implementado e publicado:
+- HD como filtro CSS permanente: contraste 1.075, saturação 1.105, brilho 1.015. Removido o botão de alternância e a aplicação de antisserrilhamento WebGL instável, preservando o motor clássico de 1024x768.
+- Canvas em largura/altura integrais `100vw / 100dvh`, validado em viewport 1600x900. **A imagem 4:3 fica esticada horizontalmente**, não é uma nova câmera 16:9 nem renderização widescreen nativa.
+- Barra de Settings / Atalhos / Commands ocultada por CSS; botão de maximizar mantido. Salvamentos do navegador continuam no sistema, apenas a barra não aparece.
+- Em `ops/priston-settings-ptbr.js`, `Module.ptOpts.lang=7` (PT_LANG_BRAZIL), inclusive em perfis com idioma antigo salvo; controle de idioma não permite troca. `ops/priston-progress-ptbr.js` traduziu indicadores de carregamento. **Não é 100% português em todo conteúdo**: imagens/textos estáticos originais e eventuais cadeias do cliente não foram totalmente traduzidos.
+- `/equipar` em C++ seleciona código `OR205` para os dois anéis Valento, `OA130` Kelvezu Amulet e `OS107` Murky (não existe Dark Shelton no catálogo local), com `Spirit=64` e `Random_MaxMode=1`. Os outros equipamentos continuam priorizando os melhores itens compatíveis com classe/nível e envelhecimento +25.
+- `/monstro` e `/meumonstro` executam com GM 4 também quando `AutoPlayServer` é falso (produção) e reconhecem os nomes sem diferença de maiúsculas/minúsculas; respondem com quantidade efetivamente invocada.
+- `/ouro` entrega o valor (até um milhão por comando) ao personagem via `rsPutItem2` em vez de deixar ouro no chão para GM4.
+- `/premium [pagina]` entrega até dez itens reais dos grupos `sinBI1/sinBI2` por chamada, para não perder centenas de itens por inventário lotado; `/premium` equivale a página 1, `/premium 2` página 2 etc. **Não entrega os 167 itens em uma execução**.
+- `/salvar` solicita uma gravação pelo protocolo existente `smTRANSCODE_SAVECLIENT`; o cliente recebeu um `SetSaveSoon(3000)` adicional para repetir se havia gravação pendente. O sistema já tinha `SaveGameData` em fluxos de logout, agora com esta proteção adicional quando solicitada.
+- Fonte C++ reproduzível em `ops/priston-classic-live-20261112.patch` (commit 0b72b14), scripts front-end e instalador também versionados no GitHub.
+- Backup antes da substituição de executável: `C:\\VelluM\\backups\\classic-admin-authfix-20261112-185310`; backup cliente: `C:\\VelluM\\backups\\classic-fullwidth-client-20261112-185359`; backup UI antes da alteração: `C:\\VelluM\\backups\\classic-fullwidth-ptbr-20261112-184015`.
+- Builds: servidor MSBuild ReleaseGL exit 0; cliente WebAssembly Emscripten exit 0; servidor clássico 10007 e VelluM antigo 19065 estão em execução. Frontend novo `game.wasm` 6076521 bytes. Instalador aplica querystring por hash em `fullscreen.css`, `settings.js`, `progress.js` e `game.js` para não reutilizar layout antigo.
+Pendências que não devem ser declaradas concluídas:
+- Emblemas visuais distintos dos tiers 2, 3 e 4 **não foram implementados**. O sistema de rank 1–4 já é liberado via `/habilidades` e `/equipar`.
+- `/mapa` e `/field` ainda não foram implementados de forma segura. Permanecem os comandos nativos de teleporte, como `/near` e `/call`.
+- Testar no jogo com login ADM: confirmação dos dois anéis OR205 e amuleto OA130 + Murky, quantidade e recepção de itens premium, ganhos de ouro e monstros invocados, salvamento após logout/login. Builds, HTTP e WebSocket **não validam esse ciclo de personagem**.
+- Validar quantidade de pontos e compra de skills de tiers 1–4 no mestre.
