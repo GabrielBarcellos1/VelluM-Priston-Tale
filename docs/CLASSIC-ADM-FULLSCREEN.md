@@ -57,3 +57,13 @@ Fonte C++ disponível no arquivo `ops/priston-classic-live-20261112.patch`, com 
 - Teste automatizado da página pública: status Running após ~5.8s, startup pack 1587 arquivos comprimidos, WebSocket WSS conectado, /priston/ (legado), /priston-classic/ e /guacamole/ GET 200.
 - Reprodutibilidade: `ops/priston-classic-live-20261112.patch` atualizado com o source C++ das duas partes, `ops/priston-admin-help.js` com ajuda de comandos e skill tiers; cliente e servidor devem ser compilados juntos sempre que opcode for alterado.
 - **Limitação**: testes de compilação/abertura não comprovam que a compra das skills e a persistência após relogin foram concluídas. Isso exige teste no mestre com uma sessão ADM autenticada, além de verificar o retorno do comando de monstros no jogo.
+
+## Atualização visual 12/11/2026
+- Novo addon `ops/priston-visual-quality.js`: modo padrão `Visual: HD` com contraste 1.075, saturação 1.105, brilho 1.015; botão discreto para voltar ao visual original `Visual: clássico`, persistido em localStorage.
+- Implementação original com proporção nativa 4:3, mantendo o canvas interno 1024x768. Alterar a resolução lógica sem alterar hit testing pode causar erro de entrada, portanto não foi feito.
+- `ptplatform/ptplatform.cpp` solicita buffer com 4 amostras MSAA; navegador WebGL2 no teste retornou `getContextAttributes().antialias=true`, `MAX_SAMPLES=4`, `SAMPLES=0` no framebuffer consultado. O navegador pode usar um caminho de antisserrilhamento diferente, e não se afirma que efetivamente usa MSAA 4x em todos os dispositivos.
+- Build Emscripten release passou; website público instalou `game.wasm` 6,074,897 bytes e `game.js` com cache busting; instalador preserva addon nas próximas publicações.
+- Puppeteer: tela 1440x900, render 1200x900, canvas lógico 1024x768, botão alternou filtro e persistiu após recarregar, jogo `Running` em ~5.2s.
+- Backup: `C:\\VelluM\\backups\\classic-graphics-before-20261112-182135`.
+- O patch de C++ foi atualizado no `ops/priston-classic-live-20261112.patch`.
+- A nova aparência não altera os modelos e texturas originais e não é equivalente a remasterização, high resolution nativa ou o desenho de interface do VelluM antigo.
