@@ -33,3 +33,14 @@ Fonte C++ disponível no arquivo `ops/priston-classic-live-20261112.patch`, com 
 - **Não foi concluído um teste end-to-end de login ADM + envio de /equipar + salvamento de itens, nem confirmado visualmente o aspecto da coroa e da aura dentro de uma sessão autenticada.** Build e teste de porta/WebSocket não substituem isso.
 - Na primeira validação automatizada de login, o foco do formulário estava incorreto; o preenchimento correto com Tab foi comprovado, mas o teste de login autenticado ainda não foi completado.
 - O motor clássico continua sendo um projeto de testes, não se deve proclamar que todos os NPCs, mapas ou funções estão 100% livres de erros.
+
+## Correção de autenticação GM — 12/11/2026, 17h54 (America/Sao_Paulo)
+- Encontrado em DataServer: duas contas administrativas já existentes, `adm` (personagem ADM) e `admin` (personagem own).
+- A compilação anterior verificava somente `ADM` em seis pontos de `OnSever.cpp`, deixando o personagem `own` com comandos bloqueados sob a conta `admin`.
+- Corrigidas as seis verificações para aceitar exclusivamente os IDs autenticados `adm` ou `admin` (case-insensitive), sem usar nome de personagem como credencial.
+- Executável recompilado com MSBuild ReleaseGL, compilação concluída; deploy efetuado pela tarefa agendada `PristonServer` com backup e reinicialização controlada.
+- SHA256 do executável ativo e do compilado coincidem, prefixo `ea5ce60b4fa7fef4`. Porta 10007 aberta, WSS público conectado, VelluM antigo 19065 e Guacamole HTTP 200.
+- Backup dessa atualização: `C:\\VelluM\\backups\\classic-admin-authfix-20261112-175424`.
+- O arquivo `ops/priston-classic-live-20261112.patch` foi atualizado com a alteração C++ para reproduzir o build.
+- **Pendente**: teste end-to-end de execução e persistência de `/equipar`, `/monstro` ou outros comandos após novo login do jogador em `admin` ou `adm`. Os logs coletados no momento da publicação continham somente comandos anteriores a ela.
+- O log `LogDebug/Commands.log` mostra `smCharInfo.szName` (nome do personagem), não necessariamente o ID de conta; o valor GM exibido é registrado antes da chamada a `RecvCommand`. Portanto uma linha `own (GM 0)` por si só não prova que o comando foi recusado; conferir o efeito dentro do jogo.
