@@ -36,6 +36,16 @@ if (!(Test-Path -LiteralPath $optimizedSw) -or !(Test-Path -LiteralPath $warmup)
 }
 Copy-Item -LiteralPath $optimizedSw -Destination (Join-Path $dest 'sw.js') -Force
 Copy-Item -LiteralPath $warmup -Destination (Join-Path $dest 'prewarm.js') -Force
+$warmWorker = Join-Path $PSScriptRoot 'priston-prewarm-worker.js'
+$areaBuilder = Join-Path $PSScriptRoot 'build-classic-area-packs.py'
+if (!(Test-Path -LiteralPath $warmWorker) -or !(Test-Path -LiteralPath $areaBuilder)) {
+  throw 'Background area pack tools are missing from the repository.'
+}
+Copy-Item -LiteralPath $warmWorker -Destination (Join-Path $dest 'prewarm-worker.js') -Force
+& python $areaBuilder $dest
+if ($LASTEXITCODE -ne 0) { throw 'Classic area pack preparation failed' }
+& node --check (Join-Path $dest 'prewarm-worker.js')
+if ($LASTEXITCODE -ne 0) { throw 'Classic background worker syntax error' }
 $data = Join-Path $dest 'data'
 if (!(Test-Path -LiteralPath $data)) {
   New-Item -ItemType Junction -Path $data -Target (Join-Path $source 'data') | Out-Null
