@@ -30,16 +30,21 @@ index 3e93ada1..781b7221 100644
  END
  
 diff --git a/[project]/src/SrcServer/OnSever.cpp b/[project]/src/SrcServer/OnSever.cpp
-index 78567914..ca502add 100644
+index 78567914..42b94723 100644
 --- a/[project]/src/SrcServer/OnSever.cpp
 +++ b/[project]/src/SrcServer/OnSever.cpp
-@@ -1,4 +1,4 @@
+@@ -1,7 +1,9 @@
 -﻿#define _WIN32_WINNT    0x0601  /* Get new material from the headers */
 +#define _WIN32_WINNT    0x0601  /* Get new material from the headers */
  #define _WIN32_WINDOWS  0x040a
  
  #include <windows.h>
-@@ -635,6 +635,10 @@ SetWindowText( hwnd , "Hotuk GameServer [ PT_THAILAND ]" );
++#include <bcrypt.h>
++#pragma comment(lib, "bcrypt.lib")
+ #include <io.h>
+ #include <stdio.h>         /* for sprintf                           */
+ #include <string.h>        /* for strlen                            */
+@@ -635,6 +637,10 @@ SetWindowText( hwnd , "Hotuk GameServer [ PT_THAILAND ]" );
  
  	InitAll();
  
@@ -50,7 +55,7 @@ index 78567914..ca502add 100644
  	if ( smConfig.dwServerPort )
  		InitBindSock(smConfig.dwServerPort);
  	else
-@@ -18613,7 +18617,7 @@ static DWORD DeckWeaponFamily( int JobCode )
+@@ -18613,7 +18619,7 @@ static DWORD DeckWeaponFamily( int JobCode )
  }
  
  // the best item of a family the player can wear, made into *lpItem
@@ -59,7 +64,7 @@ index 78567914..ca502add 100644
  {
  	smCHAR_INFO *lpChar = &lpPlayInfo->smCharInfo;
  	int JobCode = lpChar->JOB_CODE&0xFFFF;
-@@ -18625,11 +18629,11 @@ static int DeckPickItem( rsPLAYINFO *lpPlayInfo , DWORD dwFamily , int Aging , s
+@@ -18625,11 +18631,11 @@ static int DeckPickItem( rsPLAYINFO *lpPlayInfo , DWORD dwFamily , int Aging , s
  		best = -1;
  		for ( cnt=0; cnt<DefaultItemCount; cnt++ ) {
  			sITEMINFO *lpDef = &DefaultItems[cnt].Item;
@@ -73,7 +78,7 @@ index 78567914..ca502add 100644
  			for ( i=0; i<TriedCount; i++ ) if ( Tried[i]==cnt ) break;
  			if ( i<TriedCount ) continue;
  			if ( best<0 || lpDef->Level>DefaultItems[best].Item.Level ||
-@@ -18662,7 +18666,25 @@ static int DeckPickItem( rsPLAYINFO *lpPlayInfo , DWORD dwFamily , int Aging , s
+@@ -18662,7 +18668,25 @@ static int DeckPickItem( rsPLAYINFO *lpPlayInfo , DWORD dwFamily , int Aging , s
  	return FALSE;
  }
  
@@ -100,7 +105,7 @@ index 78567914..ca502add 100644
  {
  	smCHAR_INFO *lpChar = &lpPlayInfo->smCharInfo;
  	int JobCode = lpChar->JOB_CODE&0xFFFF;
-@@ -18681,22 +18703,22 @@ static int GmDeckOut( rsPLAYINFO *lpPlayInfo , int Aging )
+@@ -18681,22 +18705,22 @@ static int GmDeckOut( rsPLAYINFO *lpPlayInfo , int Aging )
  		{ sinOA2 , INVENTORY_POS_ARMLET },
  		{ sinOA1 , INVENTORY_POS_AMULET },
  		{ sinOS1 , INVENTORY_POS_SHELTOM },
@@ -127,7 +132,7 @@ index 78567914..ca502add 100644
  				Count++;
  				dwMask |= INVENTORY_POS_LHAND;
  			}
-@@ -18704,11 +18726,25 @@ static int GmDeckOut( rsPLAYINFO *lpPlayInfo , int Aging )
+@@ -18704,11 +18728,25 @@ static int GmDeckOut( rsPLAYINFO *lpPlayInfo , int Aging )
  	}
  
  	for ( cnt=0; cnt<(int)(sizeof(Slots)/sizeof(Slots[0])); cnt++ ) {
@@ -158,7 +163,7 @@ index 78567914..ca502add 100644
  
  	if ( !Count ) {
  		GmCheats_Whisper( lpPlayInfo , "> Nothing to wear was found for your level." );
-@@ -18736,6 +18772,7 @@ static int GmDeckOut( rsPLAYINFO *lpPlayInfo , int Aging )
+@@ -18736,6 +18774,7 @@ static int GmDeckOut( rsPLAYINFO *lpPlayInfo , int Aging )
  
  int RecvCommand( rsPLAYINFO *lpPlayInfo , char *szChatCommand )
  {
@@ -166,7 +171,7 @@ index 78567914..ca502add 100644
  	int len,cnt;
  	char *lpBuff,*lpBuff2, *lpBuff3;
  	//DWORD dwTimer;
-@@ -19545,6 +19582,7 @@ int RecvCommand( rsPLAYINFO *lpPlayInfo , char *szChatCommand )
+@@ -19545,6 +19584,7 @@ int RecvCommand( rsPLAYINFO *lpPlayInfo , char *szChatCommand )
  
  	//아이템 생기는 치트
  	len = rsCompString( "/@get" , szChatCommand );
@@ -174,7 +179,7 @@ index 78567914..ca502add 100644
  	if ( len && ( lpPlayInfo->AdminMode>=3 || ( lpPlayInfo->AdminMode && rsServerConfig.GmCheats ) ) ) {
  		lpBuff = szChatCommand + len;
  
-@@ -20170,6 +20208,7 @@ int RecvCommand( rsPLAYINFO *lpPlayInfo , char *szChatCommand )
+@@ -20170,6 +20210,7 @@ int RecvCommand( rsPLAYINFO *lpPlayInfo , char *szChatCommand )
  	len = rsCompString( "/\301\242\261\331" , szChatCommand );
  	if ( !len ) 
  		len = rsCompString( "/near" , szChatCommand );
@@ -182,7 +187,7 @@ index 78567914..ca502add 100644
  
  	if ( len && lpPlayInfo->AdminMode>=2 ) {
  		lpBuff = szChatCommand + len;
-@@ -20198,6 +20237,7 @@ int RecvCommand( rsPLAYINFO *lpPlayInfo , char *szChatCommand )
+@@ -20198,6 +20239,7 @@ int RecvCommand( rsPLAYINFO *lpPlayInfo , char *szChatCommand )
  	len = rsCompString( "/\310\243\303\342" , szChatCommand );
  	if ( !len ) 
  		len = rsCompString( "/call" , szChatCommand );
@@ -190,7 +195,7 @@ index 78567914..ca502add 100644
  
  	if ( len && lpPlayInfo->AdminMode>=2 ) {
  		lpBuff = szChatCommand + len;
-@@ -20257,6 +20297,7 @@ int RecvCommand( rsPLAYINFO *lpPlayInfo , char *szChatCommand )
+@@ -20257,6 +20299,7 @@ int RecvCommand( rsPLAYINFO *lpPlayInfo , char *szChatCommand )
  	//len = rsCompString( "/내경험치내놔!" , szChatCommand );
  //해외
  	len = rsCompString( "/GiveMeExp!" , szChatCommand );
@@ -198,7 +203,7 @@ index 78567914..ca502add 100644
  	if ( !len )
  		len = rsCompString( "/ShowMeTheExp!" , szChatCommand );		// the name in the old GM notes
  	if ( len && lpPlayInfo->AdminMode && ( DebugServerMode || rsServerConfig.TestSeverMode || rsServerConfig.GmCheats || lpPlayInfo->AdminMode>=4 ) )
-@@ -20288,6 +20329,7 @@ int RecvCommand( rsPLAYINFO *lpPlayInfo , char *szChatCommand )
+@@ -20288,6 +20331,7 @@ int RecvCommand( rsPLAYINFO *lpPlayInfo , char *szChatCommand )
  	// client's next save passes the level-jump (-12) and exp-gain (-9) checks, then tells
  	// the client to apply the same level (smTRANSCODE_GM_SETLEVEL).
  	len = rsCompString( "/MakeMeLevel" , szChatCommand );
@@ -206,7 +211,7 @@ index 78567914..ca502add 100644
  	if ( len && lpPlayInfo->AdminMode && ( DebugServerMode || rsServerConfig.TestSeverMode || rsServerConfig.GmCheats || lpPlayInfo->AdminMode>=4 ) )
  	{
  		lpBuff = szChatCommand + len;
-@@ -20322,6 +20364,154 @@ int RecvCommand( rsPLAYINFO *lpPlayInfo , char *szChatCommand )
+@@ -20322,6 +20366,154 @@ int RecvCommand( rsPLAYINFO *lpPlayInfo , char *szChatCommand )
  		return TRUE;
  	}
  
@@ -361,7 +366,7 @@ index 78567914..ca502add 100644
  	// GM: /DeckMeOut! [aging] - the best gear for the player's level and class (GmDeckOut)
  	len = rsCompString( "/DeckMeOut!" , szChatCommand );
  	if ( len && lpPlayInfo->AdminMode && ( DebugServerMode || rsServerConfig.TestSeverMode || rsServerConfig.GmCheats || lpPlayInfo->AdminMode>=4 ) )
-@@ -20338,6 +20528,7 @@ int RecvCommand( rsPLAYINFO *lpPlayInfo , char *szChatCommand )
+@@ -20338,6 +20530,7 @@ int RecvCommand( rsPLAYINFO *lpPlayInfo , char *szChatCommand )
  
  	// GM: /IDDQD - god mode on or off (the client keeps life, mana and stamina full)
  	len = rsCompString( "/IDDQD" , szChatCommand );
@@ -369,7 +374,7 @@ index 78567914..ca502add 100644
  	if ( len && lpPlayInfo->AdminMode && ( DebugServerMode || rsServerConfig.TestSeverMode || rsServerConfig.GmCheats || lpPlayInfo->AdminMode>=4 ) )
  	{
  		lpPlayInfo->GmGodMode = !lpPlayInfo->GmGodMode;
-@@ -20356,6 +20547,7 @@ int RecvCommand( rsPLAYINFO *lpPlayInfo , char *szChatCommand )
+@@ -20356,6 +20549,7 @@ int RecvCommand( rsPLAYINFO *lpPlayInfo , char *szChatCommand )
  //	len = rsCompString( "/내돈다내놔!" , szChatCommand );
  //해외
  	len = rsCompString( "/GiveMeMoney!" , szChatCommand );
@@ -377,7 +382,7 @@ index 78567914..ca502add 100644
  	if ( len && lpPlayInfo->AdminMode && ( DebugServerMode || rsServerConfig.TestSeverMode || rsServerConfig.GmCheats || lpPlayInfo->AdminMode>=4 ) ) {
  		lpBuff = szChatCommand + len;
  
-@@ -20372,15 +20564,19 @@ int RecvCommand( rsPLAYINFO *lpPlayInfo , char *szChatCommand )
+@@ -20372,15 +20566,19 @@ int RecvCommand( rsPLAYINFO *lpPlayInfo , char *szChatCommand )
  			lpsItem->ItemInfo.CODE = sinGG1|sin01;			//돈이다
  			ReformItem( &lpsItem->ItemInfo );						//아이템 인증
  
@@ -404,7 +409,7 @@ index 78567914..ca502add 100644
  
  			TransChatMessage.code = smTRANSCODE_WHISPERMESSAGE;
  			TransChatMessage.size = 32+lstrlen(TransChatMessage.szMessage);
-@@ -20554,14 +20750,28 @@ int RecvCommand( rsPLAYINFO *lpPlayInfo , char *szChatCommand )
+@@ -20554,14 +20752,28 @@ int RecvCommand( rsPLAYINFO *lpPlayInfo , char *szChatCommand )
  	}
  
  	//몬스터 생성
@@ -434,7 +439,7 @@ index 78567914..ca502add 100644
  			if ( lpChar && lpPlayInfo->AdminMode<4 ) {
  				lpChar->smMonsterInfo.FallItemCount = 0;			//소환 몬스터 아이템 드롭 금지
  			}
-@@ -20571,31 +20781,47 @@ int RecvCommand( rsPLAYINFO *lpPlayInfo , char *szChatCommand )
+@@ -20571,31 +20783,47 @@ int RecvCommand( rsPLAYINFO *lpPlayInfo , char *szChatCommand )
  		if  ( szTempBuff[0]>='0' && szTempBuff[0]<='9' ) {
  			len = atoi( szTempBuff );
  			if ( len<=20 ) {
@@ -484,7 +489,7 @@ index 78567914..ca502add 100644
  			if ( lpChar && lpPlayInfo->AdminMode<4 ) {
  				lpChar->smMonsterInfo.FallItemCount = 0;			//소환 몬스터 아이템 드롭 금지
  			}
-@@ -20605,18 +20831,24 @@ int RecvCommand( rsPLAYINFO *lpPlayInfo , char *szChatCommand )
+@@ -20605,18 +20833,24 @@ int RecvCommand( rsPLAYINFO *lpPlayInfo , char *szChatCommand )
  		if  ( szTempBuff[0]>='0' && szTempBuff[0]<='9' ) {
  			len = atoi( szTempBuff );
  			if ( len<=20 ) {
@@ -510,7 +515,7 @@ index 78567914..ca502add 100644
  		rsRecordAdminCommand( lpPlayInfo , szChatCommand , 2 );		//운영자 명령 사용기록
  		return TRUE;
  	}
-@@ -21119,6 +21351,7 @@ int	SendFindCrack( smWINSOCK *lpsmSock )
+@@ -21119,6 +21353,7 @@ int	SendFindCrack( smWINSOCK *lpsmSock )
  
  int RecvCommand( rsPLAYINFO *lpPlayInfo , char *szChatCommand )
  {
@@ -518,7 +523,7 @@ index 78567914..ca502add 100644
  	return TRUE;
  }
  
-@@ -24634,7 +24867,8 @@ pRetry:
+@@ -24634,7 +24869,8 @@ pRetry:
  		lpTransCommand = (smTRANS_COMMAND *)SockInfo->Buff;
  
  		if ( !lpTransCommand->LParam ) {
@@ -528,7 +533,7 @@ index 78567914..ca502add 100644
  			lpPlayInfo->HideMode = lpTransCommand->SParam;
  		}
  
-@@ -26008,7 +26242,7 @@ pRetry:
+@@ -26008,7 +26244,7 @@ pRetry:
  		// 장별 - 에이징 치트 서버로 전송
  		case smTRANSCODE_AGING_DATA: 
  			lpTransCommand = (smTRANS_COMMAND *)SockInfo->Buff;
@@ -537,7 +542,161 @@ index 78567914..ca502add 100644
  		break;
  
  		// 장별 - 스킬 딜레이
-@@ -33152,6 +33386,12 @@ int	rsCheckAdminPlayer( rsPLAYINFO *lpPlayInfo )
+@@ -27550,26 +27786,135 @@ static void OfflinePasswordHash( const char *szID , const char *szPassword , cha
+ 	wsprintf( szOut , "%08X%08X" , (DWORD)(h>>32) , (DWORD)h );
+ }
+ 
++// Hash upgrades are isolated from the character database. Existing accounts
++// authenticate with their original password once and then migrate to PBKDF2.
++static int HexValue( char c )
++{
++    if ( c>='0' && c<='9' ) return c-'0';
++    if ( c>='a' && c<='f' ) return c-'a'+10;
++    if ( c>='A' && c<='F' ) return c-'A'+10;
++    return -1;
++}
++static int HexDecode( const char *s , unsigned char *out , int size )
++{
++    for ( int i=0; i<size; i++ ) {
++        int h=HexValue(s[i*2]), l=HexValue(s[i*2+1]);
++        if ( h<0 || l<0 ) return FALSE;
++        out[i]=(unsigned char)((h<<4)|l);
++    }
++    return TRUE;
++}
++static void HexEncode( const unsigned char *in , int n , char *out )
++{
++    const char *hex="0123456789abcdef";
++    for ( int i=0; i<n; i++ ) {
++        out[i*2]=hex[in[i]>>4]; out[i*2+1]=hex[in[i]&15];
++    }
++    out[n*2]=0;
++}
++static int PasswordDerive( const char *password , unsigned char *salt , unsigned char *derived )
++{
++    BCRYPT_ALG_HANDLE algorithm=0;
++    NTSTATUS st=BCryptOpenAlgorithmProvider(&algorithm,BCRYPT_SHA256_ALGORITHM,NULL,BCRYPT_ALG_HANDLE_HMAC_FLAG);
++    if ( st<0 ) return FALSE;
++    st=BCryptDeriveKeyPBKDF2(algorithm,(PUCHAR)password,(ULONG)lstrlen(password),salt,16,150000,derived,32,0);
++    BCryptCloseAlgorithmProvider(algorithm,0);
++    return st>=0;
++}
++static int PasswordRecordCreate( const char *password , char *result )
++{
++    unsigned char salt[16], digest[32];
++    if ( BCryptGenRandom(NULL,salt,sizeof(salt),BCRYPT_USE_SYSTEM_PREFERRED_RNG)<0 ) return FALSE;
++    if ( !PasswordDerive(password,salt,digest) ) return FALSE;
++    lstrcpy(result,"P2$");
++    HexEncode(salt,16,result+3);
++    result[35]='$';
++    HexEncode(digest,32,result+36);
++    SecureZeroMemory(digest,sizeof(digest));
++    return TRUE;
++}
++static int PasswordConstantMatch( const unsigned char *a , const unsigned char *b , int n )
++{
++    unsigned int diff=0;
++    for(int i=0;i<n;i++) diff |= (unsigned int)(a[i]^b[i]);
++    return diff==0;
++}
++static int PasswordRecordCheck( const char *password , const char *stored )
++{
++    if ( lstrlen(stored)!=100 || stored[0]!='P' || stored[1]!='2' ||
++         stored[2]!='$' || stored[35]!='$' ) return FALSE;
++    unsigned char salt[16], digest[32], actual[32];
++    if ( !HexDecode(stored+3,salt,16) || !HexDecode(stored+36,digest,32) ) return FALSE;
++    if ( !PasswordDerive(password,salt,actual) ) return FALSE;
++    int ok=PasswordConstantMatch(digest,actual,32);
++    SecureZeroMemory(actual,sizeof(actual));
++    return ok;
++}
++static int PasswordRecordWrite( const char *path , const char *record , int newAccount )
++{
++    char temp[192];
++    // Existing-account upgrades use atomic replacement; new IDs use CREATE_NEW
++    // to avoid racing registrations overwriting one another's passwords.
++    if ( newAccount ) {
++        HANDLE file=CreateFileA(path,GENERIC_WRITE,0,NULL,CREATE_NEW,FILE_ATTRIBUTE_NORMAL,NULL);
++        if ( file==INVALID_HANDLE_VALUE ) return FALSE;
++        DWORD wrote=0, n=lstrlen(record);
++        BOOL ok=WriteFile(file,record,n,&wrote,NULL) && wrote==n;
++        FlushFileBuffers(file);CloseHandle(file);
++        if(!ok)DeleteFileA(path);
++        return ok;
++    }
++    wsprintf(temp,"%s.tmp",path);
++    HANDLE file=CreateFileA(temp,GENERIC_WRITE,0,NULL,CREATE_ALWAYS,FILE_ATTRIBUTE_NORMAL,NULL);
++    if ( file==INVALID_HANDLE_VALUE ) return FALSE;
++    DWORD wrote=0,n=lstrlen(record);
++    BOOL ok=WriteFile(file,record,n,&wrote,NULL) && wrote==n;
++    FlushFileBuffers(file);CloseHandle(file);
++    if ( !ok || !MoveFileExA(temp,path,MOVEFILE_REPLACE_EXISTING|MOVEFILE_WRITE_THROUGH) ) {
++        DeleteFileA(temp);
++        return FALSE;
++    }
++    return TRUE;
++}
+ static BOOL OfflinePasswordOk( const char *szID , const char *szPassword )
+ {
+-	char szFile[128], szHash[32], szStored[32];
+-	if ( !szID[0] || strpbrk( szID , "\\/:*?\"<>|." ) ) return FALSE;
+-	CreateDirectory( "DataServer" , NULL );
+-	CreateDirectory( "DataServer\\password" , NULL );
+-	wsprintf( szFile , "DataServer\\password\\%s.pw" , szID );
+-	OfflinePasswordHash( szID , szPassword , szHash );
+-	FILE *fp = fopen( szFile , "rb" );
+-	if ( !fp ) {									// new ID: this password is its password
+-		fp = fopen( szFile , "wb" );
+-		if ( !fp ) return FALSE;
+-		fwrite( szHash , lstrlen( szHash ) , 1 , fp );
+-		fclose( fp );
+-		return TRUE;
+-	}
+-	ZeroMemory( szStored , sizeof(szStored) );
+-	fread( szStored , 1 , sizeof(szStored)-1 , fp );
+-	fclose( fp );
+-	return lstrcmp( szStored , szHash )==0;
++    if ( !szID || !szPassword ) return FALSE;
++    int idLen=lstrlen(szID), passwordLen=lstrlen(szPassword);
++    if ( idLen<3 || idLen>30 || passwordLen<1 || passwordLen>63 ) return FALSE;
++    for ( int i=0; i<idLen; ++i ) {
++        char c=szID[i];
++        if ( !(c>='a'&&c<='z') && !(c>='A'&&c<='Z') &&
++             !(c>='0'&&c<='9') && c!='_' && c!='-' ) return FALSE;
++    }
++    CreateDirectoryA("DataServer",NULL);
++    CreateDirectoryA("DataServer\\password",NULL);
++    char filename[160],stored[160]={0};
++    wsprintf(filename,"DataServer\\password\\%s.pw",szID);
++    FILE *fp=fopen(filename,"rb");
++    if ( !fp ) {
++        // Never let public users claim a staff ID if the record is missing.
++        if ( lstrcmpi(szID,"adm")==0 || lstrcmpi(szID,"admin")==0 || passwordLen<8 )
++            return FALSE;
++        char record[112];
++        if ( !PasswordRecordCreate(szPassword,record) ) return FALSE;
++        if ( PasswordRecordWrite(filename,record,TRUE) ) return TRUE;
++        fp=fopen(filename,"rb"); // possibly created by another login
++        if ( !fp ) return FALSE;
++    }
++    int n=(int)fread(stored,1,sizeof(stored)-1,fp);
++    fclose(fp);
++    stored[n]=0;
++    if ( stored[0]=='P' && stored[1]=='2' && stored[2]=='$' )
++        return PasswordRecordCheck(szPassword,stored);
++    // Legacy 16-hex-character hashes: verify existing password, then migrate.
++    if ( n!=16 ) return FALSE;
++    char legacy[32];
++    OfflinePasswordHash(szID,szPassword,legacy);
++    if ( lstrcmpi(legacy,stored)!=0 ) return FALSE;
++    char upgraded[112];
++    if ( PasswordRecordCreate(szPassword,upgraded) )
++        PasswordRecordWrite(filename,upgraded,FALSE);
++    return TRUE;
+ }
+ 
+ DWORD WINAPI LogAccountThreadProc( void *pInfo )
+@@ -33152,6 +33497,12 @@ int	rsCheckAdminPlayer( rsPLAYINFO *lpPlayInfo )
  	int cnt;
  	smWINSOCK *lpsmSock = lpPlayInfo->lpsmSock;
  
