@@ -19,7 +19,7 @@
 // worker wakes up); they download here several at once, and the game's own request
 // for a file still downloading waits for that download (one download per file).
 var CACHE = 'pt-data-1';				// change to drop every stored file
-var CHECKED = ['data_startup.pack', 'data_manifest.txt'];
+var CHECKED = ['data_startup.pack', 'data_startup.pack.gz', 'data_manifest.txt'];
 var MANIFEST = 'data_manifest.txt';
 var scopePath = new URL(self.registration.scope).pathname;
 
@@ -95,30 +95,33 @@ function dataUrl(rel) {
 	return new URL('data/' + rel.split('/').map(encodeURIComponent).join('/'), self.registration.scope).href;
 }
 
-// Downloads still running, by URL: a second request for one waits for it.
+// Downloads in flight. Foreground requests can clone an in-progress prefetch
+// response and start reading immediately, rather than wait for the entire file.
 var inflight = new Map();
 
-// A data file from the network into the cache: { body, headers } or a Response
-// that is not 200 (passed on as it is).
 function download(url, rel, entry, batch) {
-	var p = inflight.get(url);
-	if (p) return p;
-	p = (async function () {
-		// 'no-cache': the browser's own cache may still hold the old copy (data\web.config max-age)
-		var res = await fetch(url, { cache: 'no-cache' });
-		if (res.status != 200) return res;
-		var body = await new Response(counted(res, rel, entry.size, batch)).arrayBuffer();
+	var current = inflight.get(url);
+	if (current) return current.finished;
+	var job = {};
+	job.ready = fetch(url, { cache: 'no-cache' }).then(function (res) {
+		if (res.status != 200 || !res.body) return res;
 		var h = new Headers(res.headers);
 		h.delete('Content-Encoding');
-		h.set('Content-Length', String(body.byteLength));
 		h.set('X-PT-Version', entry.hash);
-		var cache = await caches.open(CACHE);
-		await cache.put(url, new Response(body, { status: 200, statusText: 'OK', headers: h })).catch(function () {});	// storage full: still played
-		return { body: body, headers: h };
-	})();
-	inflight.set(url, p);
-	p.then(function () { inflight.delete(url); }, function () { inflight.delete(url); });
-	return p;
+		job.storing = caches.open(CACHE).then(function (cache) {
+			return cache.put(url, new Response(counted(res.clone(), rel, entry.size, batch), { headers: h }));
+		}).catch(function (err) {
+			console.warn('[Priston] asset cache skipped:', rel, String(err));
+		});
+		return res;
+	});
+	job.finished = job.ready.then(function (res) {
+		return job.storing || res;
+	}).finally(function () {
+		if (inflight.get(url) === job) inflight.delete(url);
+	});
+	inflight.set(url, job);
+	return job.finished;
 }
 
 async function dataFile(e, rel) {
@@ -131,11 +134,10 @@ async function dataFile(e, rel) {
 	// full file (sometimes tens of MB) before handing even its first byte over.
 	// Keep a separate copy in Cache Storage without blocking the game.
 	if (inflight.has(e.request.url)) {
-		var shared = await inflight.get(e.request.url);
+		var shared = await inflight.get(e.request.url).ready;
+		if (shared instanceof Response && shared.ok && shared.body)
+			return new Response(counted(shared.clone(), rel, entry.size, false), { status: 200, headers: shared.headers });
 		if (shared instanceof Response) return shared;
-		if (shared && shared.body) return new Response(shared.body, { status: 200, headers: shared.headers });
-		var saved = await cache.match(e.request.url);
-		if (saved && saved.headers.get('X-PT-Version') == entry.hash) return saved;
 	}
 	var res = await fetch(e.request.url, { cache: 'no-cache' });
 	if (res.status != 200 || !res.body) return res;
