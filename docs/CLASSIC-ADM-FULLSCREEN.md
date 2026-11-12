@@ -87,3 +87,28 @@ Pendências que não devem ser declaradas concluídas:
 - `/mapa` e `/field` ainda não foram implementados de forma segura. Permanecem os comandos nativos de teleporte, como `/near` e `/call`.
 - Testar no jogo com login ADM: confirmação dos dois anéis OR205 e amuleto OA130 + Murky, quantidade e recepção de itens premium, ganhos de ouro e monstros invocados, salvamento após logout/login. Builds, HTTP e WebSocket **não validam esse ciclo de personagem**.
 - Validar quantidade de pontos e compra de skills de tiers 1–4 no mestre.
+
+## Auditoria de ponta a ponta — 12/11/2026, 19h33
+
+### Auditoria executada
+- Varredura do processador `RecvCommand`: 116 chamadas `rsCompString`, correspondendo a 111 strings ASCII distintas. Mantidos os comandos originais, incluindo gestão de contas, jogadores, eventos, castelo, monstros, itens, guildas e ferramentas de debug. **A presença no código não significa que todos os comandos foram testados nem que devem estar disponíveis a toda conta.**
+- Adicionados aliases de GM por conta autenticada `adm`/`admin`: `/adm` consulta GM, `/mapa <número>` e `/field <número>` teleportam para mapas existentes e carregados, incluindo `/mapa ricarten` (3), `/mapa pillai` (21) e `/mapa nevisco` (9). Validação rejeita mapas inválidos/não carregados, sem enviar warp inseguro para campo ausente.
+- Adicionados aliases preservando os comandos nativos: `/ir <personagem>` equivale a `/near`, `/trazer <personagem>` equivale a `/call`, `/invencivel` equivale a `/IDDQD`. `/monstro`, `/meumonstro`, `/nivel`, `/ouro`, `/item`, `/premium`, `/equipar`, `/habilidades` e `/salvar` já integrados.
+- Indicadores 3D de tier 2, 3 e 4: cores bronze, prata e ouro no modelo nativo de coroa, sobre a cabeça de personagens cuja `ChangeJob` esteja em 1, 2 ou 3. Isso **não** reproduz artes de emblemas históricos independentes: utiliza o mesmo modelo com tintas diferentes. Tier 5 não está incluído. ADM mantém coroa/aura própria. Indicadores compilados em cliente WebAssembly e publicados.
+- Salvamento: verificados `SaveGameData()`, opcode `smTRANSCODE_SAVECLIENT`, rotina de logout e tentativa adicional `SetSaveSoon(3000)` em comando de salvamento. Conta e personagem preservados. A salvaguarda não elimina bloqueios nativos intencionais quando `AdminCharDisable`, trade ou warehouse estão ativos.
+- Equipamentos boss: `OR205` Valento Ring em 2 slots, `OA130` Kelvezu Amulet, `OS107` Murky com Spirit 64, `Random_MaxMode`; Dark Shelton não consta no catálogo local.
+- `/premium` distribui items do catálogo real em páginas de 10, sem processar todos de uma só vez; o inventário pode não ter espaço e itens precisam ser confirmados no personagem.
+- O cliente permaneceu com modo visual HD fixo por CSS, idioma do motor em PT-BR e canvas na largura total. Textos antigos de dentro do motor ainda não estão totalmente traduzidos.
+
+### Verificações objetivas
+- Criado `ops/audit-priston-classic.py`, auditoria somente leitura: 20 testes, **20 passaram** após implantar o cliente correspondente. Valida binário ativo vs compilado, WASM ativo vs compilado, portas 10007/19065, contas/personagens, backups, permissões de conta ADM, comandos, códigos dos itens, idioma, UI, cache e GET 200 do jogo/Guacamole/VelluM antigo.
+- `server.exe` compilado MSBuild ReleaseGL x86 sem erros e publicado pela tarefa `PristonServer` com rollback; porta 10007 e WSS público em funcionamento.
+- `game.wasm` compilado via Emscripten sem erros e publicado, 6.077.838 bytes, com fallback de rollback cliente. Navegador Puppeteer chegou ao estado `Running` em ~4,8 s no primeiro smoke e apresentou imagem 3D sem tela preta; canvas 1600x900 em viewport 1600x900; `Module.ptOpts.lang=7`.
+- Backups: `C:\\VelluM\\backups\\classic-audit-accounts-20261112-1926` (12 arquivos de conta/personagens), `C:\\VelluM\\backups\\classic-admin-authfix-20261112-192638` (servidor anterior) e `C:\\VelluM\\backups\\classic-tier-client-before-20261112-193052` (cliente anterior).
+- Código C++ atualizado: `ops/priston-classic-live-20261112.patch`; utilitários de implantação persistidos na branch `main` do GitHub.
+
+### Lacunas — não afirmar conclusão sem evidência
+- **Ainda não houve teste end-to-end autenticado em personagem** de execução dos comandos /mapa, /equipar, /premium, /salvar com logout/login, nem compras de habilidades após os tiers.
+- As cores dos emblemas dos tiers foram codificadas e compiladas, mas a aparência de cada tier não foi examinada dentro de uma sessão com o personagem promovido.
+- Nem todo texto embutido no executável original está traduzido; o visual horizontal preenche a tela, mas o render lógico original 1024x768 pode alongar a imagem.
+- A verificação automatizada cobre infraestrutura e evidências estáticas, **não** comprova todos os 111 comandos nativos, todas as quests, mapas, NPCs ou estabilidade de 24h.
