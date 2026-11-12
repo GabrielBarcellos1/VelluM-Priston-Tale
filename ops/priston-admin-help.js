@@ -132,7 +132,9 @@
 		'<h3>Test server cheats</h3>' +
 		'<p>GM e exclusivo da conta autenticada <code>ADM</code> no servidor. O botao de atalhos locais nao concede acesso GM. Relogue depois de mudar o nivel ou equipamentos.</p>' + table([
 			['/MakeMeLevel', 'level', 'Go to that level (up to 200) with the right experience, stat and skill points (saves at once)'],
-			['/equipar', '', 'ADM: coloca no nivel maximo e equipa os melhores itens compativeis, incluindo acessorios especiais de chefes com aging +25.'],
+			['/equipar', '', 'ADM: nivel maximo, equipamentos +25 e tiers 1-4 para comprar habilidades.'],
+            ['/habilidades', '', 'ADM: libera os tiers 1-4 sem quests. Abra o mestre de habilidades para comprar skills.'],
+            ['/comandos', '', 'Exibe os comandos ADM suportados pelo servidor.'],
 			['/DeckMeOut!', '[aging]', 'Put on the best gear you can wear for your level and class, at its best stats and specialised for your class: weapon (and shield or orb), armour or robe, boots, gauntlets, armlet, amulet, sheltom and two rings. Add a number to age it, up to 25, e.g. <code>/DeckMeOut! 10</code>. What you wore goes to your bag, or the ground when it is full'],
 			['/IDDQD', '', 'God mode on or off: your life, mana and stamina stay full'],
 			['/GiveMeMoney!', 'amount', 'Drop gold at your feet, up to 1,000,000 at a time'],
