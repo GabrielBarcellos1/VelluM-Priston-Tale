@@ -4,7 +4,14 @@ $dest = 'C:\VelluM\integration-priston'
 if (!(Test-Path -LiteralPath $dest)) { New-Item -ItemType Directory -Path $dest | Out-Null }
 $files = @('index.html','game.html','game.js','game.wasm','data_startup.pack','data_manifest.txt','config.js','progress.js','settings.js','admin.js','sw.js','server_worker.js','ws.ashx','web.config')
 foreach ($name in $files) {
-  $f = Join-Path $source $name
+  # The optimized ADM/crown/aura client is compiled in web/out.
+  # Do not overwrite it with the older static files from the project root.
+  $compiled = Join-Path $source ('[project]\\src\\web\\out\\' + $name)
+  if ($name -in @('game.js','game.wasm') -and (Test-Path -LiteralPath $compiled)) {
+    $f = $compiled
+  } else {
+    $f = Join-Path $source $name
+  }
   if (!(Test-Path -LiteralPath $f)) { throw "missing $name" }
   $target = Join-Path $dest $name
   # Preserve timestamps/ETags for unchanged packs: clients should not re-download 84MB after a re-deploy.
@@ -62,6 +69,8 @@ if (!(Test-Path -LiteralPath $data)) {
 }
 $base = [IO.File]::ReadAllText((Join-Path $dest 'index.html'))
 $base = $base.Replace('<title>Priston Tale</title>', '<title>VelluM Priston Tale | Classic Engine</title>')
+$wasmFingerprint = (Get-FileHash -LiteralPath (Join-Path $dest 'game.wasm') -Algorithm SHA256).Hash.Substring(0,12).ToLowerInvariant()
+$base = $base.Replace('src=game.js async', ('src=game.js?v=' + $wasmFingerprint + ' async'))
 $base = $base.Replace('</head>', '<link rel="stylesheet" href="fullscreen.css"></head>')
 $base = $base.Replace('</body>', '<script src="fullscreen.js"></script></body>')
 $base = $base.Replace('</head><body>', '<style>body{--bg:#091411;--fg:#f4e5c6;--panel:#142521}#wrap::before{content:"VelluM PRISTON TALE | CLASSIC ENGINE";display:block;width:min(1024px,100%);color:#dfbd77;font:700 18px/1.5 system-ui;text-align:center;letter-spacing:2px;padding:4px}#bar button{border-color:#625135}#canvas{border:1px solid #564629}#vellum-tools{width:min(1024px,100%);display:flex;align-items:center;gap:12px;flex-wrap:wrap;color:#e1c991;font:12px system-ui;margin-bottom:5px}#vellum-tools a{color:#f1d58b}#vellum-tools small{color:#aaa}</style></head><body>')
