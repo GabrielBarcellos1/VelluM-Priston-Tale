@@ -33,6 +33,11 @@ $progressText = $progressText.Replace("show('big', 'Downloading game data', frac
 $progressText = $progressText.Replace("pack ? 'Only the first visit (and updates) download this. Later visits load it from your browser.' : ''", "pack ? 'Arquivos ja salvos sao reutilizados. Areas novas podem exigir downloads.' : ''")
 $progressText = $progressText.Replace("if (m.rel == 'data_startup.pack') {", "if (m.rel == 'data_startup.pack' || m.rel == 'data_startup.pack.gz') {")
 [IO.File]::WriteAllText($progressFile, $progressText, [Text.UTF8Encoding]::new($false))
+$ptbrProgress = Join-Path $PSScriptRoot 'priston-progress-ptbr.js'
+if (!(Test-Path -LiteralPath $ptbrProgress)) { throw 'Missing Portuguese progress loader' }
+Copy-Item -LiteralPath $ptbrProgress -Destination $progressFile -Force
+& node --check $progressFile
+if ($LASTEXITCODE -ne 0) { throw 'Localized progress loader invalid' }
 # Create the compressed start-up asset; the browser falls back to the original on
 # engines without DecompressionStream. Keep the original pack for safe rollback.
 $fastBootScript = Join-Path $PSScriptRoot 'prepare-classic-fastboot.py'
