@@ -19,6 +19,12 @@ foreach ($name in $files) {
       (Get-FileHash -LiteralPath $f -Algorithm SHA256).Hash -eq (Get-FileHash -LiteralPath $target -Algorithm SHA256).Hash) { continue }
   Copy-Item -LiteralPath $f -Destination $target -Force
 }
+# The GM menu is informational; only the server authenticates the ADM account.
+$adminHelp = Join-Path $PSScriptRoot 'priston-admin-help.js'
+if (!(Test-Path -LiteralPath $adminHelp)) { throw 'Missing ADM-safe GM help script' }
+Copy-Item -LiteralPath $adminHelp -Destination (Join-Path $dest 'admin.js') -Force
+& node --check (Join-Path $dest 'admin.js')
+if ($LASTEXITCODE -ne 0) { throw 'Classic admin menu script is invalid' }
 # The start-up pack can be served from Cache Storage on repeat visits.
 # Avoid telling the player it is downloading when the client is only unpacking cached data.
 $progressFile = Join-Path $dest 'progress.js'
