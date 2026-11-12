@@ -119,6 +119,9 @@ def main() -> int:
           and b"lstrcmpi(szID,\"admin\")==0" in cmd_source)
     bridge_config = (SITE / "web.config").read_text("utf-8", errors="replace")
     bridge_code = (SITE / "ws.ashx").read_text("utf-8", errors="replace")
+    check("WebSocket connection quota active",
+          "MaxClassicSockets = 64" in bridge_code
+          and "Interlocked.Increment(ref ActiveClassicSockets)" in bridge_code)
     check("WebSocket bridge port whitelist limited to Classic",
           'key="PristonGamePorts" value="10007"' in bridge_config
           and "PortAllowed( port )" in bridge_code)
