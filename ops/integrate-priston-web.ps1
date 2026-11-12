@@ -18,7 +18,16 @@ $progressFile = Join-Path $dest 'progress.js'
 $progressText = [IO.File]::ReadAllText($progressFile)
 $progressText = $progressText.Replace("show('big', 'Downloading game data', frac, detail,", "show('big', 'Preparando dados do jogo', frac, detail,")
 $progressText = $progressText.Replace("pack ? 'Only the first visit (and updates) download this. Later visits load it from your browser.' : ''", "pack ? 'Arquivos ja salvos sao reutilizados. Areas novas podem exigir downloads.' : ''")
+$progressText = $progressText.Replace("if (m.rel == 'data_startup.pack') {", "if (m.rel == 'data_startup.pack' || m.rel == 'data_startup.pack.gz') {")
 [IO.File]::WriteAllText($progressFile, $progressText, [Text.UTF8Encoding]::new($false))
+# Create the compressed start-up asset; the browser falls back to the original on
+# engines without DecompressionStream. Keep the original pack for safe rollback.
+$fastBootScript = Join-Path $PSScriptRoot 'prepare-classic-fastboot.py'
+if (!(Test-Path -LiteralPath $fastBootScript)) { throw 'Classic fast boot script missing' }
+& python $fastBootScript $dest
+if ($LASTEXITCODE -ne 0) { throw 'Classic compressed pack preparation failed' }
+& node --check (Join-Path $dest 'game.js')
+if ($LASTEXITCODE -ne 0) { throw 'Classic compiled loader syntax invalid' }
 # Use the tested streaming Service Worker and background warmup from this repository.
 $optimizedSw = Join-Path $PSScriptRoot 'priston-classic-sw.js'
 $warmup = Join-Path $PSScriptRoot 'priston-prewarm.js'
