@@ -1,0 +1,121 @@
+--- a/Winmain.cpp
++++ b/Winmain.cpp
+@@ -680,2 +680,19 @@
+ 	HaejukReg();
++
++#ifdef PT_WEB
++    // Independent browser-only size. The server binary remains unchanged.
++    // Native UI and 3D backbuffers share this resolution, unlike CSS stretching.
++    EM_ASM({
++        var viewportW = Math.max(320, Math.min(1920, window.innerWidth || 1024));
++        var viewportH = Math.max(320, Math.min(1200, window.innerHeight || 768));
++        var mobile = ((navigator.maxTouchPoints || 0)>0) || matchMedia('(pointer:coarse)').matches;
++        var portrait = viewportH > viewportW;
++        // Mobile portrait preserves the old safe 4:3 game interface.
++        var w = mobile ? (portrait ? 800 : 960) : (viewportW >= 1600 ? 1600 : (viewportW>=1100 ? 1280 : 1024));
++        var h = mobile ? (portrait ? 600 : 540) : (viewportW >= 1600 ? 900 : (viewportW>=1100 ? 720 : 768));
++        Module['ptStartupResolution'] = new Object(); Module['ptStartupResolution'].width=w; Module['ptStartupResolution'].height=h;
++    });
++    smConfig.ScreenSize.x = EM_ASM_INT({ return Module['ptStartupResolution'].width; });
++    smConfig.ScreenSize.y = EM_ASM_INT({ return Module['ptStartupResolution'].height; });
++#endif
+ 
+
+--- a/ptplatform/ptplatform.cpp
++++ b/ptplatform/ptplatform.cpp
+@@ -107,2 +107,55 @@
+ }
++
++#ifdef PT_WEB
++// Touch controls use the same SDL queue as physical input, not untrusted DOM
++// synthetic keyboard events (which Emscripten may ignore).
++extern "C" EMSCRIPTEN_KEEPALIVE int PtWeb_MobileKey(int vk, int down)
++{
++    SDL_Scancode sc=SDL_SCANCODE_UNKNOWN;
++    switch(vk) {
++        case 16: sc=SDL_SCANCODE_LSHIFT;break;
++        case 27: sc=SDL_SCANCODE_ESCAPE;break;
++        case 13: sc=SDL_SCANCODE_RETURN;break;
++        case 32: sc=SDL_SCANCODE_SPACE;break;
++        case 73: sc=SDL_SCANCODE_I;break;
++        case 83: sc=SDL_SCANCODE_S;break;
++        case 77: sc=SDL_SCANCODE_M;break;
++        case 49: sc=SDL_SCANCODE_1;break;
++        case 50: sc=SDL_SCANCODE_2;break;
++        case 51: sc=SDL_SCANCODE_3;break;
++        case 52: sc=SDL_SCANCODE_4;break;
++        case 37: sc=SDL_SCANCODE_LEFT;break;
++        case 38: sc=SDL_SCANCODE_UP;break;
++        case 39: sc=SDL_SCANCODE_RIGHT;break;
++        case 40: sc=SDL_SCANCODE_DOWN;break;
++        default: return 0;
++    }
++    SDL_Event e; SDL_zero(e);
++    e.type=down ? SDL_KEYDOWN : SDL_KEYUP;
++    e.key.keysym.scancode=sc;
++    e.key.keysym.sym=SDL_GetKeyFromScancode(sc);
++    e.key.state=down ? SDL_PRESSED : SDL_RELEASED;
++    return SDL_PushEvent(&e)>0 ? 1 : 0;
++}
++
++extern "C" EMSCRIPTEN_KEEPALIVE int PtWeb_MobileMouse(int phase, int x, int y)
++{
++    if(!s_pWindow) return 0;
++    SDL_Event e; SDL_zero(e);
++    if(phase==0){
++        e.type=SDL_MOUSEMOTION;
++        e.motion.windowID=SDL_GetWindowID(s_pWindow);
++        e.motion.x=x; e.motion.y=y;
++        e.motion.state=SDL_GetMouseState(NULL,NULL);
++    }else{
++        e.type=(phase==1 || phase==3) ? SDL_MOUSEBUTTONDOWN : SDL_MOUSEBUTTONUP;
++        e.button.button=(phase==3 || phase==4) ? SDL_BUTTON_RIGHT : SDL_BUTTON_LEFT;
++        e.button.windowID=SDL_GetWindowID(s_pWindow);
++        e.button.state=e.type==SDL_MOUSEBUTTONDOWN ? SDL_PRESSED : SDL_RELEASED;
++        e.button.clicks=1;
++        e.button.x=x; e.button.y=y;
++    }
++    return SDL_PushEvent(&e)>0 ? 1 : 0;
++}
++#endif
+ 
+
+--- a/ptgfx/ptgfx_surface.cpp
++++ b/ptgfx/ptgfx_surface.cpp
+@@ -6,2 +6,23 @@
+ #include "ptgfx_internal.h"
++#ifdef PT_WEB
++#include <emscripten/html5.h>
++// Enable anisotropic sampling only if WebGL explicitly exposes the extension.
++// Desktop uses up to 4x; touch GPUs use up to 2x to preserve battery/FPS.
++static GLfloat VelluM_AnisoCap()
++{
++    static GLfloat cap=-1.0f;
++    if(cap>=0.0f) return cap;
++    cap=1.0f;
++    EMSCRIPTEN_WEBGL_CONTEXT_HANDLE ctx=emscripten_webgl_get_current_context();
++    if(!ctx) return cap;
++    if(emscripten_webgl_enable_extension(ctx,"EXT_texture_filter_anisotropic")!=EMSCRIPTEN_RESULT_SUCCESS) return cap;
++    GLfloat supported=1.0f;
++    glGetFloatv(0x84FF /* GL_MAX_TEXTURE_MAX_ANISOTROPY_EXT */, &supported);
++    int touch=EM_ASM_INT({return (navigator.maxTouchPoints || 0)>0 || matchMedia('(pointer:coarse)').matches ? 1 : 0;});
++    GLfloat wanted=touch ? 2.0f : 4.0f;
++    if(supported>=1.0f) cap=supported<wanted ? supported : wanted;
++    return cap;
++}
++#endif
++
+ 
+@@ -180,4 +201,11 @@
+ 	if ( m_GLTex && (!m_bDirty || m_bGPUNewer) ) return m_GLTex;
+-	if ( !m_GLTex ) glGenTextures( 1, &m_GLTex );
++	bool newTexture = !m_GLTex;
++	if ( newTexture ) glGenTextures( 1, &m_GLTex );
+ 	glBindTexture( GL_TEXTURE_2D, m_GLTex );
++#ifdef PT_WEB
++    if ( newTexture ) {
++        GLfloat aniso=VelluM_AnisoCap();
++        if(aniso>1.0f) glTexParameterf(GL_TEXTURE_2D,0x84FE /* GL_TEXTURE_MAX_ANISOTROPY_EXT */,aniso);
++    }
++#endif
+ 	g_PtStats.Uploads++;
