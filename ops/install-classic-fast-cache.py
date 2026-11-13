@@ -67,11 +67,11 @@ new="""if (inflight.has(e.request.url) && inflight.get(e.request.url).ready) {
 s=s.replace(old,new,1)
 # Keep the service worker alive while large assets are written to cache.
 s=s.replace('async function immutableAsset(req, cacheName, cacheKey) {',
-            'async function immutableAsset(event, cacheName, cacheKey) {\\n    var req = event.request;',1)
+            'async function immutableAsset(event, cacheName, cacheKey) {\n    var req = event.request;',1)
 s=s.replace('cache.put(cacheKey, response.clone()).catch(function(err) {',
             'event.waitUntil(cache.put(cacheKey, response.clone()).catch(function(err) {',1)
-s=s.replace("console.warn('[VelluM] Cache storage unavailable:', String(err));\\n        });",
-            "console.warn('[VelluM] Cache storage unavailable:', String(err));\\n        }));",1)
+s=s.replace("console.warn('[VelluM] Cache storage unavailable:', String(err));\n        });",
+            "console.warn('[VelluM] Cache storage unavailable:', String(err));\n        }));",1)
 s=s.replace('immutableAsset(req, boot ? BOOT_CACHE : ENGINE_CACHE, key)',
             'immutableAsset(e, boot ? BOOT_CACHE : ENGINE_CACHE, key)',1)
 sw.write_text(s,'utf8')
