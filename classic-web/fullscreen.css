@@ -1,0 +1,9 @@
+/* Immersive, horizontal VelluM Classic viewport; engine remains at 1024x768 internally. */
+html,body{width:100%;height:100%;margin:0;overflow:hidden;background:#000}
+#wrap{box-sizing:border-box!important;display:flex!important;align-items:stretch!important;justify-content:center!important;flex-direction:column!important;width:100vw!important;height:100vh!important;height:100dvh!important;padding:0!important;gap:0!important;overflow:hidden!important;background:#000!important}
+#wrap::before,#vellum-tools,#bar,#log,#vellum-image-quality{display:none!important}
+#canvas{display:block!important;width:100vw!important;height:100vh!important;height:100dvh!important;max-width:none!important;max-height:none!important;margin:0!important;padding:0!important;border:0!important;outline:0!important;image-rendering:auto!important;filter:contrast(1.075) saturate(1.105) brightness(1.015)!important;object-fit:fill!important}
+.pt-load{z-index:25!important}
+.pt-help{z-index:100!important}
+/* Aspect-correct option. Default remains full-screen fill for existing players. */
+html.vm-keep-aspect #canvas{width:min(100vw,133.333333dvh)!important;height:min(100dvh,75vw)!important;object-fit:contain!important;margin:auto!important}
