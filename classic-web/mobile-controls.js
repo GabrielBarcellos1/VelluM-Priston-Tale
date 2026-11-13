@@ -28,20 +28,24 @@
   var hud=document.createElement('div');hud.className='vm-hud';hud.setAttribute('aria-label','Controles do jogo para celular');
   hud.innerHTML='<div class="vm-top"><button data-key="Escape">Menu</button><button data-key="i">Inventário</button><button data-key="s">Skills</button><button data-key="m">Mapa</button><button data-open-settings="true">Gráficos</button></div>'+
     '<div class="vm-stick" role="group" aria-label="Controle direcional"><div class="vm-stick-knob">Mover</div></div>'+
-    '<div class="vm-actions"><button data-key="Shift" data-hold="true">Correr</button><button data-key="1">1</button><button data-key="2">2</button><button data-key="3">3</button><button data-key="4">4</button><button data-key="Space">Ação</button></div>'+
+    '<div class="vm-actions"><button data-key="Shift" data-hold="true">Correr</button><button data-key="1">1</button><button data-key="2">2</button><button data-key="3">3</button><button data-key="4">4</button><button data-key="Space">Ação</button><button data-mouse="right">Atacar</button></div>'+
     '<div class="vm-rotate">Gire o celular para jogar na horizontal</div>';
   document.body.appendChild(hud);
   function keyEvent(k,type){
+    var keyCode=k==='Shift'?16:k==='Escape'?27:k==='Enter'?13:k==='Space'?32:k.toUpperCase().charCodeAt(0);
+    if(typeof Module!=='undefined' && typeof Module._PtWeb_MobileKey==='function'){
+      Module._PtWeb_MobileKey(keyCode,type==='keydown'?1:0);
+      return;
+    }
+    // Compatibility with earlier WASM versions: events are only a fallback.
     var code={Shift:'ShiftLeft',Escape:'Escape',Enter:'Enter',Space:'Space'}[k] || (/^[1-4]$/.test(k)?'Digit'+k:'Key'+k.toUpperCase());
-    var key=k==='Space'?' ':k;
-    var e=new KeyboardEvent(type,{key:key,code:code,keyCode:k==='Shift'?16:k==='Escape'?27:k==='Enter'?13:k==='Space'?32:k.toUpperCase().charCodeAt(0),which:k==='Shift'?16:k==='Escape'?27:k==='Enter'?13:k==='Space'?32:k.toUpperCase().charCodeAt(0),bubbles:true,cancelable:true});
-    canvas.dispatchEvent(e);
+    canvas.dispatchEvent(new KeyboardEvent(type,{key:k==='Space'?' ':k,code:code,keyCode:keyCode,which:keyCode,bubbles:true,cancelable:true}));
   }
   hud.querySelector('[data-open-settings]').addEventListener('click',function(){document.getElementById('btnSettings')?.click();});
   hud.querySelectorAll('[data-key]').forEach(function(button){
     var down=false;
     function release(){if(!down)return;down=false;button.classList.remove('vm-active');keyEvent(button.dataset.key,'keyup')}
-    button.addEventListener('pointerdown',function(e){e.preventDefault();if(down)return;down=true;button.classList.add('vm-active');button.setPointerCapture?.(e.pointerId);keyEvent(button.dataset.key,'keydown')});
+    button.addEventListener('pointerdown',function(e){e.preventDefault();if(down)return;down=true;button.classList.add('vm-active');try{button.setPointerCapture?.(e.pointerId);}catch(ignore){}keyEvent(button.dataset.key,'keydown')});
     button.addEventListener('pointerup',function(e){e.preventDefault();release()});
     button.addEventListener('pointercancel',release);
     button.addEventListener('lostpointercapture',release);
@@ -49,9 +53,25 @@
   var stick=hud.querySelector('.vm-stick'),knob=hud.querySelector('.vm-stick-knob'),touchId=null,lastX=0,lastY=0;
   function simulatedMouse(type,x,y){
     var bounds=canvas.getBoundingClientRect();
-    var event=new MouseEvent(type,{bubbles:true,cancelable:true,clientX:bounds.left+x*bounds.width,clientY:bounds.top+y*bounds.height,button:0,buttons:type==='mouseup'?0:1});
-    canvas.dispatchEvent(event);
+    var px=Math.max(0,Math.min(canvas.width-1,Math.round(x*canvas.width)));
+    var py=Math.max(0,Math.min(canvas.height-1,Math.round(y*canvas.height)));
+    var phase=type==='mousedown'?1:type==='mouseup'?2:0;
+    if(typeof Module!=='undefined' && typeof Module._PtWeb_MobileMouse==='function'){
+      Module._PtWeb_MobileMouse(phase,px,py);
+      return;
+    }
+    canvas.dispatchEvent(new MouseEvent(type,{bubbles:true,cancelable:true,clientX:bounds.left+x*bounds.width,clientY:bounds.top+y*bounds.height,button:0,buttons:type==='mouseup'?0:1}));
   }
+  var attack=hud.querySelector('[data-mouse="right"]');
+  function attackAt(phase){
+    var x=Math.round(canvas.width*.60),y=Math.round(canvas.height*.54);
+    if(typeof Module!=='undefined'&&typeof Module._PtWeb_MobileMouse==='function'){
+      Module._PtWeb_MobileMouse(phase,x,y);
+    }
+  }
+  attack.addEventListener('pointerdown',function(e){e.preventDefault();try{attack.setPointerCapture?.(e.pointerId);}catch(ignore){}attackAt(3);});
+  attack.addEventListener('pointerup',function(e){e.preventDefault();attackAt(4);});
+  attack.addEventListener('pointercancel',function(){attackAt(4);});
   function update(e){
     var box=stick.getBoundingClientRect(),cx=box.left+box.width/2,cy=box.top+box.height/2;
     var dx=e.clientX-cx,dy=e.clientY-cy,r=box.width*.32;
@@ -61,7 +81,7 @@
     lastX=.5+dx/r*.36;lastY=.5+dy/r*.36;
     simulatedMouse('mousemove',lastX,lastY);
   }
-  stick.addEventListener('pointerdown',function(e){if(touchId!==null)return;e.preventDefault();touchId=e.pointerId;stick.setPointerCapture?.(e.pointerId);update(e);simulatedMouse('mousedown',lastX,lastY)});
+  stick.addEventListener('pointerdown',function(e){if(touchId!==null)return;e.preventDefault();touchId=e.pointerId;try{stick.setPointerCapture?.(e.pointerId);}catch(ignore){}update(e);simulatedMouse('mousedown',lastX,lastY)});
   stick.addEventListener('pointermove',function(e){if(e.pointerId!==touchId)return;e.preventDefault();update(e)});
   function stop(e){if(touchId===null||e.pointerId!==touchId)return;simulatedMouse('mouseup',lastX,lastY);touchId=null;knob.style.setProperty('--dx','0px');knob.style.setProperty('--dy','0px')}
   stick.addEventListener('pointerup',stop);stick.addEventListener('pointercancel',stop);
