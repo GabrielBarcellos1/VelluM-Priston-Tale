@@ -21,11 +21,12 @@
    '.vm-stick-knob{display:grid;place-items:center;width:54px;height:54px;border-radius:50%;border:2px solid #ebd09999;background:#847350aa;transform:translate(var(--dx,0px),var(--dy,0px));color:white;box-shadow:0 1px 12px #0008}',
    '.vm-rotate{position:absolute;left:50%;top:max(60px,env(safe-area-inset-top));transform:translateX(-50%);background:#172433df;border:1px solid #a58c53;border-radius:9px;padding:6px 10px;color:#fff6d4;pointer-events:none;white-space:nowrap;font:11px system-ui}',
    '@media(orientation:landscape){.vm-rotate{display:none}.vm-stick{width:112px;height:112px;bottom:15px}.vm-actions{bottom:12px}}',
+   '.pt-set{z-index:120!important}.pt-set-box{max-height:94dvh;overflow:auto}',
    '@media(max-height:520px){.vm-actions{grid-template-columns:repeat(4,43px);gap:4px}.vm-actions button{min-height:38px;font-size:10px}.vm-top button{min-height:30px}.vm-stick{width:95px;height:95px}}'
   ].join('');
   document.head.appendChild(css);
   var hud=document.createElement('div');hud.className='vm-hud';hud.setAttribute('aria-label','Controles do jogo para celular');
-  hud.innerHTML='<div class="vm-top"><button data-key="Escape">Menu</button><button data-key="i">Inventário</button><button data-key="s">Skills</button><button data-key="m">Mapa</button><button data-key="Enter">Enter</button></div>'+
+  hud.innerHTML='<div class="vm-top"><button data-key="Escape">Menu</button><button data-key="i">Inventário</button><button data-key="s">Skills</button><button data-key="m">Mapa</button><button data-open-settings="true">Gráficos</button></div>'+
     '<div class="vm-stick" role="group" aria-label="Controle direcional"><div class="vm-stick-knob">Mover</div></div>'+
     '<div class="vm-actions"><button data-key="Shift" data-hold="true">Correr</button><button data-key="1">1</button><button data-key="2">2</button><button data-key="3">3</button><button data-key="4">4</button><button data-key="Space">Ação</button></div>'+
     '<div class="vm-rotate">Gire o celular para jogar na horizontal</div>';
@@ -36,6 +37,7 @@
     var e=new KeyboardEvent(type,{key:key,code:code,keyCode:k==='Shift'?16:k==='Escape'?27:k==='Enter'?13:k==='Space'?32:k.toUpperCase().charCodeAt(0),which:k==='Shift'?16:k==='Escape'?27:k==='Enter'?13:k==='Space'?32:k.toUpperCase().charCodeAt(0),bubbles:true,cancelable:true});
     canvas.dispatchEvent(e);
   }
+  hud.querySelector('[data-open-settings]').addEventListener('click',function(){document.getElementById('btnSettings')?.click();});
   hud.querySelectorAll('[data-key]').forEach(function(button){
     var down=false;
     function release(){if(!down)return;down=false;button.classList.remove('vm-active');keyEvent(button.dataset.key,'keyup')}
