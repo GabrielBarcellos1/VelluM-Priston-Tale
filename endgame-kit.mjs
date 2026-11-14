@@ -13,9 +13,12 @@ const PREFERENCES = Object.freeze({
   10: ["WN1", "WN1"], // Shaman: phantom
   11: ["WV1", "WC1"], // Fighter class with fists: vambrace + claw
 });
+export const ENDGAME_KIT_LEVELS = Object.freeze([108, 110, 112, 116, 120]);
 const ordering=(a,b)=> (b.req?.level??0)-(a.req?.level??0)
   || (b.damage?.[3]??b.defense?.[1]??b.price??0)-(a.damage?.[3]??a.defense?.[1]??a.price??0);
-export function selectEndgameKit(definitions, job, starterCode, maxLevel=150) {
+export function selectEndgameKit(definitions, job, starterCode, maxLevel=120) {
+  if (!Number.isInteger(maxLevel) || !ENDGAME_KIT_LEVELS.includes(maxLevel))
+    throw Error("Faixa de kit inválida: escolha 108, 110, 112, 116 ou 120.");
   const items=[...definitions.values()];
   const best=(slot,prefix=null)=>items.filter(d=>
     d.slot===slot && (prefix===null || d.code.startsWith(prefix)) &&
@@ -30,19 +33,33 @@ export function selectEndgameKit(definitions, job, starterCode, maxLevel=150) {
   const shield=best("SHIELDS");
   if(!shield)throw Error("Nenhum escudo disponível para o kit.");
   const armor=best("ARMOR",[7,8,10].includes(job)?"DA2":"DA1")??best("ARMOR");
+  const namedAmulet=items.find(d=>d.slot==="AMULET" && /yagdhita|yagdhitta|yagd(h)?ita/i.test(d.name)) ??
+    definitions.get("OA144");
+  const amulet=namedAmulet && (namedAmulet.req?.level??0)<=maxLevel
+    ? namedAmulet : best("AMULET");
+  const shy=items.find(d=>d.slot==="RING" && /shy/i.test(d.name)) ??
+    definitions.get("OR299");
+  const ring=shy && (shy.req?.level??0)<=maxLevel ? shy : best("RING");
+  const boots=maxLevel===120
+    ? definitions.get("DB130")??best("BOOTS")
+    : best("BOOTS");
   const equipment={
     weapon:twoHand,
     armor,
-    // Mokova is the required final kit boot, not an optional inventory extra.
-    boots:definitions.get("DB130")??best("BOOTS"),
+    boots,
     gloves:best("GLOVES"),
     bracelets:best("ARMLET"),
-    amulet:best("AMULET"),
-    ring1:definitions.get("OR205")??best("RING"),
-    ring2:definitions.get("OR205")??best("RING"),
+    amulet,
+    ring1:ring,
+    ring2:ring,
     sheltom:best("SHELTOM"),
   };
   const secondary={weapon:oneHand,shield};
-  const extras=["BI139","BI140","BI141"].map(c=>definitions.get(c)).filter(Boolean);
-  return {equipment,secondary,extras};
+  // The previous /equipar promise to include Mokova remains honoured:
+  // in earlier tiers it is supplied as a separate bonus, not equipped above tier.
+  const extras=[
+    ...(maxLevel!==120 ? [definitions.get("DB130")] : []),
+    ...["BI139","BI140","BI141"].map(c=>definitions.get(c)),
+  ].filter(Boolean);
+  return {equipment,secondary,extras,tier:maxLevel};
 }
