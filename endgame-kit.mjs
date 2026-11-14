@@ -33,7 +33,8 @@ export function selectEndgameKit(definitions, job, starterCode, maxLevel=150) {
   const equipment={
     weapon:twoHand,
     armor,
-    boots:best("BOOTS"),
+    // Mokova is the required final kit boot, not an optional inventory extra.
+    boots:definitions.get("DB130")??best("BOOTS"),
     gloves:best("GLOVES"),
     bracelets:best("ARMLET"),
     amulet:best("AMULET"),
@@ -42,6 +43,6 @@ export function selectEndgameKit(definitions, job, starterCode, maxLevel=150) {
     sheltom:best("SHELTOM"),
   };
   const secondary={weapon:oneHand,shield};
-  const extras=[definitions.get("DB130"),...["BI139","BI140","BI141"].map(c=>definitions.get(c))].filter(Boolean);
+  const extras=["BI139","BI140","BI141"].map(c=>definitions.get(c)).filter(Boolean);
   return {equipment,secondary,extras};
 }
