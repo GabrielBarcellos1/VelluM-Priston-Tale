@@ -70,3 +70,43 @@ export function selectEndgameKit(definitions, job, starterCode, maxLevel=120) {
   ].filter(Boolean);
   return {equipment,secondary,extras,tier:maxLevel};
 }
+
+
+/**
+ * The Abyss set is only usable when every mandatory original definition exists.
+ * Never invent missing equipment stats or replace the armor with an unrelated skin.
+ * Weapons/accessories remain class-compatible through the regular endgame kit.
+ */
+export const ABYSS_REQUIRED = Object.freeze({
+  armor:"DA303",
+  boots:"DB129",
+  gloves:"DG129",
+  bracelets:"OA229",
+});
+export function abyssCatalogStatus(definitions) {
+  const found = {}, missing = [];
+  for (const [slot,code] of Object.entries(ABYSS_REQUIRED)) {
+    const item=definitions.get(code);
+    const expected={armor:"ARMOR",boots:"BOOTS",gloves:"GLOVES",bracelets:"ARMLET"}[slot];
+    if (!item || item.slot!==expected || !Number.isFinite(item.req?.level) ||
+        !item.image || !Array.isArray(item.defense)) {
+      missing.push(code);
+    } else {
+      found[slot]=item;
+    }
+  }
+  return {ready:missing.length===0,found,missing};
+}
+export function selectAbyssKit(definitions,job,starterCode) {
+  const status=abyssCatalogStatus(definitions);
+  if (!status.ready)
+    throw Error("Conjunto Abyss incompleto no catálogo original: "+status.missing.join(", ")+
+      ". Nenhum item foi substituído ou inventado.");
+  const standard=selectEndgameKit(definitions,job,starterCode,120);
+  return {
+    ...standard,
+    equipment:{...standard.equipment,...status.found},
+    // Original class weapons and accessories: do not pretend every class has an Abyss weapon.
+    abyssVerified:true,
+  };
+}
