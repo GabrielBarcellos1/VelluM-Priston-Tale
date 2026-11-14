@@ -7,6 +7,7 @@ import progression
 
 SHELTOM='OS199'
 POTION='BI998'
+SHY_RING='OR299'  # VelluM custom GM ring; Valento visuals and balanced stats
 ROOT=Path(__file__).resolve().parent
 
 def definitions(items):
@@ -16,6 +17,14 @@ def definitions(items):
         item['image']='image/freeston/gm/'+('sheltom' if code==SHELTOM else 'potion')+'.svg'
         if code==SHELTOM:item.update(defense=[1000000,1000000],damage=[50,50,50,50])
         result.append(item)
+    # The public item table has neither a Shy Ring nor a Yagdhita Amulet.
+    # Offer a clearly marked staff-only VelluM Shy Ring with the original
+    # Valento Ring statistics and sprite; never claim it is an original asset.
+    ring=copy.deepcopy(items['OR205'])
+    ring.update(code=SHY_RING,name='Anel Shy (VelluM)',price=0,
+                noGold=True,bound=True,gmOnly=True,
+                req={'level':80,'spi':70})
+    result.append(ring)
     return result
 
 def icon(name):
