@@ -12,6 +12,7 @@ import {
   questExperience,
   objectiveMatches,
   allocateStat,
+  allocateEquippedRequirement,
   undoStat,
   planAttributeReset,
 } from "/gameplay-rules.mjs";
@@ -2830,7 +2831,14 @@ async function handle(message) {
     case "statAdd":
     case "addStat": {
       const previousPoints=stats.statPoints;
-      if (!allocateStat(stats, message.stat ?? message.attr, message.n, statHistory)) return;
+      const attribute = message.stat ?? message.attr;
+      const allocated = message.autoRequirement === true
+        ? allocateEquippedRequirement(stats, attribute, [inv.equip, inv.equipB], statHistory)
+        : allocateStat(stats, attribute, message.n, statHistory);
+      if (!allocated) {
+        if (message.autoRequirement === true) notice("Nenhum ponto necessário ou pontos insuficientes para os itens equipados.");
+        return;
+      }
       updateQuests("stat",{count:previousPoints-stats.statPoints});
       recalculate();
       break;
