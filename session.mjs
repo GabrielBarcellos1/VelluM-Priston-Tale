@@ -411,7 +411,12 @@ function endgameItem(code, uid) {
 function perfectItem(code, uid, aging = B.maxAging, job = characterClass.job) {
   const def = definitions.get(code);
   if (!def) return null;
-  const item = B.item(def, uid ?? ++nextUid);
+  // Preserve the *catalog* identity, required level and full display metadata.
+  // Native B.item may omit fields on newer equipment (108+).
+  const item = { ...structuredClone(def), ...B.item(def, uid ?? ++nextUid) };
+  item.code = def.code;
+  item.name = def.name;
+  item.req = structuredClone(def.req ?? {});
   nextUid = Math.max(nextUid, item.uid);
   item.perfect = true;
   for (const key of ["defense", "absorb", "attackRating", "block"])
@@ -549,6 +554,9 @@ async function equipEndgame(tier = 120) {
     await stateWrite; // No success notice before the server confirms persistence.
     const persisted = await get(`/api/local/state?classe=${characterClass.job}`);
     if (persisted.generation !== characterGeneration || persisted.state?.stats?.level !== 150 ||
+        persisted.state?.inv?.equip?.weapon?.code !== kit.equipment.weapon.code ||
+        persisted.state?.inv?.equip?.armor?.code !== kit.equipment.armor.code ||
+        persisted.state?.inv?.equipB?.weapon?.code !== kit.secondary.weapon.code ||
         persisted.state?.inv?.equip?.boots?.code !== kit.equipment.boots.code ||
         persisted.state?.inv?.equip?.boots?.aging !== B.maxAging ||
         persisted.state?.inv?.equip?.amulet?.code !== kit.equipment.amulet.code ||
@@ -556,7 +564,11 @@ async function equipEndgame(tier = 120) {
         persisted.state?.inv?.equip?.ring2?.code !== kit.equipment.ring2.code ||
         Number(persisted.state?.savedAt) < lastSavedAt)
       throw Error("O servidor ainda não confirmou o nível e o kit atualizados.");
-    return `Kit ${tier} da classe ${characterClass.name} salvo: ${kit.equipment.boots.name} +${B.maxAging}, ${kit.equipment.amulet.name} e 2× ${kit.equipment.ring1.name}, armas de duas e uma mãos, escudo e pedras de treino. Premiums ativos por 30 dias.`;
+    const details = Object.entries(kit.equipment)
+      .filter(([, item]) => item)
+      .map(([slot, item]) => `${slot}: ${item.name} [${item.code}] Nv.${item.req?.level ?? '-'}`)
+      .join(' | ');
+    return `Kit /equipar${[108,110,112,116,120].indexOf(tier)+1} salvo e conferido no servidor. ${details}. O catálogo não contém peças do nível ${tier} em todos os slots; nesses casos é usada a melhor opção abaixo da faixa. Premiums: 30 dias.`;
   } catch (error) {
     // If no server confirmation, keep recovery data and restore the local snapshot.
     Object.assign(inv, backup.inv);
