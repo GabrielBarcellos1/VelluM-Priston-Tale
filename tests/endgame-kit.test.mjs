@@ -17,7 +17,8 @@ for (const job of [1,2,3,4,5,6,7,8,9,10,11]) {
       assert.ok(kit.equipment[key],"Missing "+key);
     assert.ok(kit.equipment.weapon.req.level<=150);
     assert.ok(kit.secondary.weapon.req.level<=150);
-    assert.ok(kit.extras.some(x=>x.code==="DB130"),"Mokova boots required");
+    assert.equal(kit.equipment.boots.code,"DB130","Mokova must be equipped, not merely in the inventory");
+    assert.ok(!kit.extras.some(x=>x.code==="DB130"),"Never duplicate Mokova in bonus inventory");
     for (const code of ["BI139","BI140","BI141"])
       assert.ok(kit.extras.some(x=>x.code===code),"Missing training stone "+code);
   });
