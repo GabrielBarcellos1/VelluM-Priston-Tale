@@ -61,3 +61,17 @@ test("available Yagdhita amulet has priority over Tulla and available Shy ring i
   augmented.set("OA299",{...catalog.get("OA144"),code:"OA299",name:"Yagdhita Amulet",slot:"AMULET"});
   assert.equal(selectEndgameKit(augmented,3,starter[3],108).equipment.amulet.code,"OA299");
 });
+
+test("/equipar5 selects the real Verus tier weapon, not the old level-105 weapon",()=>{
+  const expected={1:"WA130",2:"WH131",3:"WS131",4:"WP130",5:"WT130",6:"WS233"};
+  for(const [job,code] of Object.entries(expected)){
+    const kit=selectEndgameKit(catalog,Number(job),starter[job],120);
+    assert.equal(kit.equipment.weapon.code,code);
+    assert.equal(kit.equipment.weapon.req.level,120);
+  }
+  assert.equal(selectEndgameKit(catalog,1,starter[1],120).equipment.boots.code,"DB130");
+  for(const [level,expectedCode] of [[108,"WA125"],[110,"WA127"],[112,"WA128"],[116,"WA129"],[120,"WA130"]]){
+    const kit=selectEndgameKit(catalog,1,starter[1],level);
+    assert.equal(kit.equipment.weapon.code,expectedCode);
+  }
+});
