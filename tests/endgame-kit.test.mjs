@@ -71,7 +71,7 @@ test("/equipar5 selects the real Verus tier weapon, not the old level-105 weapon
     assert.equal(kit.equipment.weapon.req.level,120);
   }
   assert.equal(selectEndgameKit(catalog,1,starter[1],120).equipment.boots.code,"DB130");
-  for(const [level,expectedCode] of [[108,"WA125"],[110,"WA127"],[112,"WA128"],[116,"WA129"],[120,"WA130"]]){
+  for(const [level,expectedCode] of [[108,"WA124"],[110,"WA127"],[112,"WA128"],[116,"WA129"],[120,"WA130"]]){
     const kit=selectEndgameKit(catalog,1,starter[1],level);
     assert.equal(kit.equipment.weapon.code,expectedCode);
   }
