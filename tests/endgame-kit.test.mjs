@@ -10,7 +10,8 @@ const starter={1:"WA101",2:"WH101",3:"WS101",4:"WP101",5:"WT101",6:"WS201",7:"WM
 for (const job of [1,2,3,4,5,6,7,8,9,10,11]) {
   test("GM kit for class "+job+" contains both weapon sets and endgame armor",()=>{
     const kit=selectEndgameKit(catalog,job,starter[job]);
-    assert.equal(kit.equipment.weapon.slot,"WEAPON_TWO");
+    assert.equal(kit.equipment.weapon.slot,job===5?"WEAPON_ONE":"WEAPON_TWO");
+    if(job===5)assert.equal(kit.equipment.shield.slot,"SHIELDS");
     assert.equal(kit.secondary.weapon.slot,"WEAPON_ONE");
     assert.equal(kit.secondary.shield.slot,"SHIELDS");
     for (const key of ["armor","boots","gloves","bracelets"])
