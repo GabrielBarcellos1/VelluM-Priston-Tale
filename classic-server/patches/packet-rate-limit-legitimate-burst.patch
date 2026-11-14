@@ -1,0 +1,11 @@
+--- a/SrcServer/OnSever.cpp
++++ b/SrcServer/OnSever.cpp
+@@ -21650,7 +21650,7 @@
+ 	if ( !lpPlayInfo || !lpPlayInfo->lpsmSock ) goto quit;
+ 
+ 	if ( lpPlayInfo && !lpPlayInfo->SystemLine && (dwTime-lpPlayInfo->dwPacketAttackTime)>5000 ) {
+-		if ( lpPlayInfo->dwPacketAttackCount>251 ) { // 장별 - 패킷 120 -> 251
++		if ( lpPlayInfo->dwPacketAttackCount>450 ) { // VelluM: tolerate legitimate client bursts; rate limiter remains active
+ 			//5초 동안 60개 이상의 과도한 패킷 들어옴 ( 패킷을 이용한 서버 공격 )
+ 			//로그에 기록
+ 			smTransCommand.WParam = 5100;
