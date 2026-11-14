@@ -349,7 +349,9 @@ function restoreItem(item, options = {}) {
       B.age(upgraded, number(item.aging, 0, 0, B.maxAging) - (upgraded.aging ?? 0));
       if (item.mixed && B.mixById(item.mixRecipeId))
         B.applyMix(upgraded, B.mixById(item.mixRecipeId));
-      return restoreItemRolls(upgraded, item, options);
+      const restored = restoreItemRolls(upgraded, item, options);
+      if (item.endgameBonus === true) restored.endgameBonus = true;
+      return restored;
     }
   }
   if (item.perfect === true) {
@@ -374,6 +376,7 @@ function restoreItem(item, options = {}) {
   nextUid = Math.max(nextUid, result.uid);
   restoreItemRolls(result,item,options);
   if(item.furyQuestReward)result.furyQuestReward=true;
+  if(item.endgameBonus===true)result.endgameBonus=true;
   if(item.questWeapon){result.questWeapon=structuredClone(item.questWeapon);result.req={level:40};result.noGold=true;result.bound=true;result.name=item.name;}
   if(item.expiresAt){result.expiresAt=item.expiresAt;result.noGold=true;result.bound=true;}
   return result;
