@@ -479,12 +479,12 @@ function endgameBuffs() {
     type: p.type,
   }));
 }
-async function equipEndgame() {
+async function equipEndgame(tier = 120) {
   if (!isAdmin) throw Error("Comando exclusivo de GM.");
   if (economyBusy || economyUncertain || pendingLoot)
     throw Error("Aguarde as operações e salvamentos em andamento.");
   if (stateWrite) await stateWrite;
-  const kit = selectEndgameKit(definitions, characterClass.job, starterWeapon);
+  const kit = selectEndgameKit(definitions, characterClass.job, starterWeapon, tier);
   const backup = {
     inv: clone(inv), stats: clone(stats),
     skillLevels: skills.exportState(), endgameEnabled, endgamePremiumUntil,
@@ -549,11 +549,14 @@ async function equipEndgame() {
     await stateWrite; // No success notice before the server confirms persistence.
     const persisted = await get(`/api/local/state?classe=${characterClass.job}`);
     if (persisted.generation !== characterGeneration || persisted.state?.stats?.level !== 150 ||
-        persisted.state?.inv?.equip?.boots?.code !== "DB130" ||
+        persisted.state?.inv?.equip?.boots?.code !== kit.equipment.boots.code ||
         persisted.state?.inv?.equip?.boots?.aging !== B.maxAging ||
+        persisted.state?.inv?.equip?.amulet?.code !== kit.equipment.amulet.code ||
+        persisted.state?.inv?.equip?.ring1?.code !== kit.equipment.ring1.code ||
+        persisted.state?.inv?.equip?.ring2?.code !== kit.equipment.ring2.code ||
         Number(persisted.state?.savedAt) < lastSavedAt)
       throw Error("O servidor ainda não confirmou o nível e o kit atualizados.");
-    return `Kit da classe ${characterClass.name} salvo: Mokova Boots (DB130) equipada com aging +${B.maxAging}, armas de duas e uma mãos, escudo no segundo conjunto e pedras de treino. Premiums ativos por 30 dias. Troque o conjunto para usar arma de uma mão e escudo.`;
+    return `Kit ${tier} da classe ${characterClass.name} salvo: ${kit.equipment.boots.name} +${B.maxAging}, ${kit.equipment.amulet.name} e 2× ${kit.equipment.ring1.name}, armas de duas e uma mãos, escudo e pedras de treino. Premiums ativos por 30 dias.`;
   } catch (error) {
     // If no server confirmation, keep recovery data and restore the local snapshot.
     Object.assign(inv, backup.inv);
@@ -991,7 +994,13 @@ function adminCommand(input) {
       location.reload();
       return "Reabrindo a sessão local com seu progresso salvo…";
     case "equipar":
-      return equipEndgame();
+      return equipEndgame(120);
+    case "equipar1":
+    case "equipar2":
+    case "equipar3":
+    case "equipar4":
+    case "equipar5":
+      return equipEndgame([108, 110, 112, 116, 120][Number(command.slice(-1)) - 1]);
     case "nivel":
       stats.level = integer(args[0], 1, 150);
       stats.exp = experienceFloor(stats.level,balanceRules);
