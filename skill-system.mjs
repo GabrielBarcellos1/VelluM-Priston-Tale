@@ -464,6 +464,7 @@ export function createSkillSystem(ctx) {
     buffs,
     expire,
     maximize,
+    restoreLevels(saved) { for (const s of list) levels.set(s.id, Math.max(0, Math.min(s.maxLevel, Math.floor(Number(saved?.[s.code]) || 0)))); publish(); ctx.recalculate(); },
     exportState: () =>
       Object.fromEntries(list.filter((s) => learned(s.id)).map((s) => [s.code, learned(s.id)])),
     exportCooldowns: () =>
