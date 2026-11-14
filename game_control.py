@@ -255,7 +255,9 @@ def kill(user,data):
         import server_economy
         premiums=[]
         gameplay_test=user['role'] in ('admin','gm') and saved.get('gmGameplayTest') is True
-        if (not gameplay_test and user['role'] in ('admin','gm') and saved.get('endgame')\n                and isinstance(saved.get('endgamePremiumUntil'),(int,float))\n                and saved['endgamePremiumUntil']>time.time()):premiums.append(50)
+        if (not gameplay_test and user['role'] in ('admin','gm') and saved.get('endgame')
+                and isinstance(saved.get('endgamePremiumUntil'),(int,float))
+                and saved['endgamePremiumUntil']>time.time()):premiums.append(50)
         if not gameplay_test and db.execute("SELECT 1 FROM sqlite_master WHERE name='premium_active'").fetchone():
             third=db.execute("SELECT value FROM premium_active WHERE username=? AND kind='thirdEyes' AND expires>?",(user['username'],time.time())).fetchone()
             if third:premiums=[max([third['value'],*premiums])]
