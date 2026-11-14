@@ -18,6 +18,20 @@ class GmTools(ServerAudit):
     def activate(self):
         r=self.call('grant');item=next(i for i in npc.all_items(r['state']) if i['code']==gm.POTION)
         return self.call('activate',uid=item['uid'])
+    def test_shy_ring_is_custom_and_staff_only(self):
+        custom={i['code']:i for i in gm.definitions(game.ITEMS)}
+        self.assertIn(gm.SHY_RING,custom)
+        ring=custom[gm.SHY_RING]
+        self.assertIn('Shy',ring['name'])
+        self.assertTrue(ring['gmOnly'])
+        self.assertEqual(ring['slot'],'RING')
+        state=self.state()
+        state['inv']['equip']['ring1']=npc.item_instance(gm.SHY_RING,[])
+        with accounts.connection() as db:
+            game.setup(db)
+            with self.assertRaisesRegex(ValueError,'exclusivo de GM'):
+                game.inspect_state(db,{'username':'audituser','role':'player'},1,state,None)
+
     def test_staff_grant_inventory_and_idempotency(self):
         s=accounts.load_state('audituser',1);data={'job':1,'generation':self.generation,'action':'grant','savedAt':s['savedAt'],'requestId':'gm-grant-replay'}
         a=gm.action(self.user,data);b=gm.action(self.user,data)
