@@ -248,6 +248,7 @@ export function createRuntimeSkillSystem(ctx) {
     if(left>0)active.set((saved.party?'party:':'')+s.code,{...s,kind:profile(s).kind,level:n,until:now()+left,party:!!saved.party});}
   return {snapshot,publish,tickCooldowns,learn,cast,bonuses,buffs,expire,points,reveal,
     maximize(){for(const s of list)levels.set(s.id,10);ctx.recalculate?.();publish();},
+    restoreLevels(saved){for(const s of list)levels.set(s.id,Math.max(0,Math.min(s.maxLevel??10,Math.floor(Number(saved?.[s.code])||0))));ctx.recalculate?.();publish();},
     cancel(code){let changed=false;for(const [key,b]of active)if('skill:'+b.code===code){active.delete(key);changed=true;}if(changed){ctx.recalculate?.();ctx.buffsChanged?.();ctx.save?.();}return changed;},
     cancelActions(){generation++;dots.clear();actionReady=actionNow();},
     reset(){generation++;levels.forEach((_,id)=>{levels.set(id,0);ctx.emit?.({t:'skillCooldown',id,seconds:0,total:0});});ready.clear();totals.clear();active.clear();dots.clear();actionReady=0;ctx.recalculate?.();ctx.buffsChanged?.();publish();return points();},
