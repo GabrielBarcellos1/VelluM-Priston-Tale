@@ -10,7 +10,7 @@
 +    if(OpenFlag && sinChar && sinChar->StatePoint>0) {
 +        int chosen=0;
 +        for(int a=0;a<5;a++) {
-+            if(x>=PointButton[a][0] && x<=PointButton[a][2] &&
++            if(x>=PointButton[a][0] && x<=632 &&
 +               y>=PointButton[a][1] && y<=PointButton[a][3]) {chosen=a+1;break;}
 +        }
 +        if(chosen) {
