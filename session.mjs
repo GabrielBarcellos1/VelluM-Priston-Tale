@@ -549,9 +549,11 @@ async function equipEndgame() {
     await stateWrite; // No success notice before the server confirms persistence.
     const persisted = await get(`/api/local/state?classe=${characterClass.job}`);
     if (persisted.generation !== characterGeneration || persisted.state?.stats?.level !== 150 ||
+        persisted.state?.inv?.equip?.boots?.code !== "DB130" ||
+        persisted.state?.inv?.equip?.boots?.aging !== B.maxAging ||
         Number(persisted.state?.savedAt) < lastSavedAt)
       throw Error("O servidor ainda não confirmou o nível e o kit atualizados.");
-    return `Kit da classe ${characterClass.name} salvo: armas de duas e uma mãos, escudo no segundo conjunto, equipamentos aging +${B.maxAging}, Botas do Mokova e pedras de treino. Premiums ativos por 30 dias. Troque o conjunto para usar arma de uma mão e escudo.`;
+    return `Kit da classe ${characterClass.name} salvo: Mokova Boots (DB130) equipada com aging +${B.maxAging}, armas de duas e uma mãos, escudo no segundo conjunto e pedras de treino. Premiums ativos por 30 dias. Troque o conjunto para usar arma de uma mão e escudo.`;
   } catch (error) {
     // If no server confirmation, keep recovery data and restore the local snapshot.
     Object.assign(inv, backup.inv);
