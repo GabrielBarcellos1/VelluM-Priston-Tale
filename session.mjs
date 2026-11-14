@@ -22,6 +22,7 @@ import { worldFacingAngle, faceNearbyNpcs, mountStableCamera } from "/character-
 import {GM_SHELTOM,GM_POTION,gmProtection,gmClientLevel,gmProtectionEnabled,gmCombatEquipment,protectGm,applyGmAttack,gmTrainingActive} from "/gm-tools.mjs";
 import { premiumRecovery } from "/premium-effects.mjs";
 import { captureBaseRolls, restoreItemRolls } from "/item-save.mjs";
+import { selectEndgameKit } from "/endgame-kit.mjs";
 import { combatStats } from "/character-stats.mjs";
 import { physicalHit, nativeMonsterTiming } from "/classic-combat.mjs";
 import { canPlace, firstSpace, organizeBag, repairBags, swapWeaponSet } from "/inventory-grid.mjs";
@@ -398,6 +399,7 @@ if (stored?.inv && typeof stored.inv.equip === "object" && Array.isArray(stored.
     : inv.belt;
 }
 let endgameEnabled = isAdmin && stored?.endgame === true;
+let endgamePremiumUntil = Number(stored?.endgamePremiumUntil) || (endgameEnabled ? serverNow() / 1000 + 30 * 86400 : 0);
 function endgameItem(code, uid) {
   const item = perfectItem(code, uid);
   if (item) item.endgame = true;
@@ -443,7 +445,7 @@ function perfectItem(code, uid, aging = B.maxAging, job = characterClass.job) {
   return item;
 }
 function endgamePremiums() {
-  if (!endgameEnabled) return [];
+  if (!endgameEnabled || endgamePremiumUntil <= serverNow() / 1000) return [];
   const strongest = new Map();
   const supported = new Set([
     "expUp",
@@ -466,86 +468,101 @@ function endgameBuffs() {
       "premium:" +
       (B.premiumIcons[p.kind]?.[(p.type ?? 1) - 1] ?? B.premiumIcons[p.kind]?.[0] ?? p.kind),
     name: p.name,
-    left: 86400 * 365,
-    secondsLeft: 86400 * 365,
+    left: Math.max(0, Math.ceil(endgamePremiumUntil - serverNow() / 1000)),
+    secondsLeft: Math.max(0, Math.ceil(endgamePremiumUntil - serverNow() / 1000)),
+    total: 30 * 86400,
     level: 1,
     value: p.value,
     type: p.type,
   }));
 }
-function equipEndgame() {
-  const best = (slot, prefix) =>
-    [...definitions.values()]
-      .filter((d) => d.slot === slot && (!prefix || d.code.startsWith(prefix)) && d.req?.level > 0)
-      .sort(
-        (a, b) =>
-          b.req.level - a.req.level ||
-          (b.damage?.[3] ?? b.defense?.[1] ?? b.price ?? 0) -
-            (a.damage?.[3] ?? a.defense?.[1] ?? a.price ?? 0),
-      )[0];
-  const weaponPrefix = String(starterWeapon ?? '').slice(0, 3);
-  if (!weaponPrefix) throw Error('Classe sem arma inicial configurada.');
-  const weapon = [...definitions.values()]
-    .filter((d) => d.code.startsWith(weaponPrefix) && d.damage && d.req?.level > 0)
-    .sort((a, b) => b.req.level - a.req.level || b.damage[3] - a.damage[3])[0];
-  if (!weapon) throw Error("Nenhuma arma compatível disponível no catálogo.");
-  const selected = {
-    weapon,
-    armor: best("ARMOR", [7, 8, 10].includes(characterClass.job) ? "DA2" : "DA1"),
-    boots: best("BOOTS"),
-    gloves: best("GLOVES"),
-    bracelets: best("ARMLET"),
-    amulet: best("AMULET"),
-    ring1: definitions.get("OR205"),
-    ring2: definitions.get("OR205"),
-    sheltom: best("SHELTOM"),
+async function equipEndgame() {
+  if (!isAdmin) throw Error("Comando exclusivo de GM.");
+  if (economyBusy || economyUncertain || pendingLoot)
+    throw Error("Aguarde as operações e salvamentos em andamento.");
+  if (stateWrite) await stateWrite;
+  const kit = selectEndgameKit(definitions, characterClass.job, starterWeapon);
+  const backup = {
+    inv: clone(inv), stats: clone(stats),
+    skillLevels: skills.exportState(), endgameEnabled, endgamePremiumUntil,
+    heroLevel: hero.level,
   };
-  if (weapon.slot === "WEAPON_ONE") selected.shield = best("SHIELDS");
-  const equipment = Object.fromEntries(
-    Object.entries(selected)
-      .filter(([, def]) => def)
-      .map(([slot, def]) => [slot, endgameItem(def.code)]),
+  const staged = { bag: clone(inv.bag), bagB: clone(inv.bagB) };
+  const addStaged = item => {
+    let position = firstSpace(staged.bag, item), target = staged.bag;
+    if (!position) { target = staged.bagB; position = firstSpace(staged.bagB, item); }
+    if (!position) throw Error("Libere espaço nas duas bolsas para os itens do /equipar.");
+    target.push({ ...position, item });
+  };
+  // Preserve non-kit items rather than discarding the old equipment loadout.
+  for (const item of [...Object.values(inv.equip), ...Object.values(inv.equipB)])
+    if (item && !item.endgame) addStaged(clone(item));
+  for (const definition of kit.extras) {
+    if (staged.bag.some(p=>p.item.code===definition.code && p.item.endgameBonus) ||
+        staged.bagB.some(p=>p.item.code===definition.code && p.item.endgameBonus)) continue;
+    const item = definition.code === "DB130" ? endgameItem(definition.code) : instance(definition.code);
+    if (!item) throw Error("Falha ao preparar o item: " + definition.code);
+    item.endgameBonus = true;
+    addStaged(item);
+  }
+  const primary = Object.fromEntries(
+    Object.entries(kit.equipment).filter(([, d]) => d).map(([slot, d]) => [slot, endgameItem(d.code)])
   );
-  // Retain previous loadout as a recoverable per-class backup before replacement.
-  localStorage.setItem(
-    saveKey + "-before-equipar",
-    JSON.stringify({ inv, stats, endgame: endgameEnabled }),
+  const secondary = Object.fromEntries(
+    Object.entries(kit.secondary).filter(([, d]) => d).map(([slot, d]) => [slot, endgameItem(d.code)])
   );
-  for (const slot of [
-    "weapon",
-    "armor",
-    "shield",
-    "boots",
-    "gloves",
-    "bracelets",
-    "amulet",
-    "ring1",
-    "ring2",
-    "sheltom",
-  ])
-    delete inv.equip[slot];
-  Object.assign(inv.equip, equipment);
-  stats.level = 150;
-  hero.level = 150;
-  stats.exp = experienceFloor(150,balanceRules);
-  for (const key of ["str", "spi", "tal", "dex", "health"]) stats[key] = 999;
-  endgameEnabled = true;
-  skills.maximize();
-  recalculate();
-  stats.hp = stats.hpMax;
-  stats.mp = stats.mpMax;
-  stats.sp = stats.spMax;
-  publishBuffs();
-  return (
-    `Endgame local equipado para ${characterClass.name}; nível 150, itens perfeitos e aging +${B.maxAging} nas peças compatíveis. Premiums ativos: ${endgameBuffs()
-      .map((b) => b.name)
-      .join(", ")}.\n` +
-    Object.entries(selected)
-      .filter(([, d]) => d)
-      .map(([slot, d]) => `${slot}: ${d.name} (${d.code})`)
-      .join("\n")
-  );
+  // Keep a browser-local recovery point before touching live character state.
+  try {
+    localStorage.setItem(saveKey + "-before-equipar", JSON.stringify({
+      inv: backup.inv, stats: backup.stats, endgame: backup.endgameEnabled,
+      endgamePremiumUntil: backup.endgamePremiumUntil, skills: backup.skillLevels,
+    }));
+  } catch (error) {
+    throw Error("Sem espaço para o backup local do personagem: " + error.message);
+  }
+  economyBusy = true;
+  try {
+    inv.bag = staged.bag;
+    inv.bagB = staged.bagB;
+    inv.equip = { ...Object.fromEntries(Object.entries(inv.equip).filter(([slot])=>slot==="costume")), ...primary };
+    inv.equipB = secondary;
+    const oldLevel = stats.level;
+    stats.level = 150;
+    hero.level = 150;
+    stats.exp = experienceFloor(150, balanceRules);
+    // Preserve allocated attributes and grant the points earned by the GM level jump.
+    // Assigning all five attributes 999 made subsequent stat clicks overflow the client range.
+    stats.statPoints = Math.max(0, Math.floor(stats.statPoints || 0)) + Math.max(0, 150 - oldLevel) * 5;
+    endgameEnabled = true;
+    endgamePremiumUntil = serverNow() / 1000 + 30 * 86400;
+    skills.maximize();
+    recalculate();
+    stats.hp = stats.hpMax;
+    stats.mp = stats.mpMax;
+    stats.sp = stats.spMax;
+    publishBuffs();
+    if (!save(true)) throw Error("Falha ao preparar salvamento do kit.");
+    await stateWrite; // No success notice before the server confirms persistence.
+    return `Kit da classe ${characterClass.name} salvo: armas de duas e uma mãos, escudo no segundo conjunto, equipamentos aging +${B.maxAging}, Botas do Mokova e pedras de treino. Premiums ativos por 30 dias. Troque o conjunto para usar arma de uma mão e escudo.`;
+  } catch (error) {
+    // If no server confirmation, keep recovery data and restore the local snapshot.
+    Object.assign(inv, backup.inv);
+    Object.assign(stats, backup.stats);
+    hero.level = backup.heroLevel;
+    endgameEnabled = backup.endgameEnabled;
+    endgamePremiumUntil = backup.endgamePremiumUntil;
+    for (const skill of skillData.skills.filter(s=>s.job===characterClass.job))
+      if (backup.skillLevels[skill.code]===undefined) delete questMeta.skillMastery?.[skill.code];
+    // Existing skill levels are preserved in the recovery snapshot for manual recovery
+    // if the network failed after the server committed.
+    recalculate();
+    publishBuffs();
+    throw Error("Kit sem confirmação do servidor; backup preservado. " + error.message);
+  } finally {
+    economyBusy = false;
+  }
 }
+
 const conn = new B.Session("ws://127.0.0.1/local", "Sessão local");
 conn.creds = { id: account.username };
 conn.charName = stats.name;
@@ -965,8 +982,7 @@ function adminCommand(input) {
       location.reload();
       return "Reabrindo a sessão local com seu progresso salvo…";
     case "equipar":
-      result = equipEndgame();
-      break;
+      return equipEndgame();
     case "nivel":
       stats.level = integer(args[0], 1, 150);
       stats.exp = experienceFloor(stats.level,balanceRules);
@@ -1590,6 +1606,7 @@ function save(force = false) {
       JSON.stringify({
         savedAt: (lastSavedAt = Math.max(lastSavedAt + 1, Math.floor(serverNow()))),
         endgame: endgameEnabled,
+        endgamePremiumUntil,
         gmGameplayTest: gameplayTestMode,
         progressionRewards: [...claimedKitLevels],
         name: stats.name,
@@ -2841,6 +2858,9 @@ async function handle(message) {
       }
       updateQuests("stat",{count:previousPoints-stats.statPoints});
       recalculate();
+      if (!save(true)) return notice("Falha ao preparar salvamento dos atributos.");
+      try { await stateWrite; }
+      catch (error) { notice("Atributos não confirmados no servidor: " + error.message); }
       break;
     }
     case "undoStat":
