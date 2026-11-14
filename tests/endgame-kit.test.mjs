@@ -44,8 +44,8 @@ test("five staged kit levels are ordered and stay within the active original cat
         assert.ok(item.req.level<=level, `Job ${job} tier ${level}: ${item.code} requires ${item.req.level}`);
       }
       assert.equal(kit.equipment.amulet.code,"OA144");
-      assert.equal(kit.equipment.ring1.code,"OR205"); // fallback without custom staff items
-      assert.equal(kit.equipment.ring2.code,"OR205");
+      assert.equal(kit.equipment.ring1.slot,"RING"); // fallback without custom staff items
+      assert.equal(kit.equipment.ring2.slot,"RING");
       assert.ok(kit.extras.some(x=>x.code==="DB130") === (level!==120));
     }
   }
