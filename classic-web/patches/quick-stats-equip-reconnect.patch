@@ -1,0 +1,128 @@
+--- a/sinbaram/sinCharStatus.cpp
++++ b/sinbaram/sinCharStatus.cpp
+@@ -787,6 +787,53 @@
+ *-----------------------------------------------------------------------------*/	
+ void cCHARSTATUS::RButtonDown(int x , int y)
+ {
++#ifdef PT_WEB
++    // Right click an attribute's '+' to reach the highest requirement among
++    // currently equipped items. Spend only available points, one recalculation.
++    if(OpenFlag && sinChar && sinChar->StatePoint>0) {
++        int chosen=0;
++        for(int a=0;a<5;a++) {
++            if(x>=PointButton[a][0] && x<=PointButton[a][2] &&
++               y>=PointButton[a][1] && y<=PointButton[a][3]) {chosen=a+1;break;}
++        }
++        if(chosen) {
++            int required=0;
++            for(int i=0;i<INVENTORY_MAX_POS && i<10;i++) {
++                int slot=sInven[i].ItemIndex;
++                if(slot<1 || slot>INVENTORY_MAXITEM)continue;
++                sITEM *eq=&cInvenTory.InvenItem[slot-1];
++                if(!eq->Flag || !eq->ItemPosition || !eq->sItemInfo.ItemHeader.dwChkSum)continue;
++                int r=chosen==1 ? eq->sItemInfo.Strength :
++                      chosen==2 ? eq->sItemInfo.Spirit :
++                      chosen==3 ? eq->sItemInfo.Talent :
++                      chosen==4 ? eq->sItemInfo.Dexterity : eq->sItemInfo.Health;
++                if(r>required)required=r;
++            }
++            int *value=chosen==1 ? &sinChar->Strength :
++                        chosen==2 ? &sinChar->Spirit :
++                        chosen==3 ? &sinChar->Talent :
++                        chosen==4 ? &sinChar->Dexterity : &sinChar->Health;
++            int missing=required-*value;
++            if(missing>sinChar->StatePoint)missing=sinChar->StatePoint;
++            if(missing>0) {
++                static const int kinds[5]={POINT_STRENGTH,POINT_SPIRIT,POINT_TALENT,POINT_DEXTERITY,POINT_HEALTH};
++                CheckCharForm();
++                *value+=missing;
++                sinChar->StatePoint-=missing;
++                // Preserve the original 128-entry undo history as the normal '+' does.
++                for(int j=0;j<missing;j++){
++                    for(int q=0;q<127;q++)TempStatePoint[q]=TempStatePoint[q+1];
++                    TempStatePoint[127]=kinds[chosen-1];
++                }
++                ReformCharForm();
++                cInvenTory.SetItemToChar();
++                cInvenTory.CheckDamage();
++            }
++            return;
++        }
++    }
++#endif
++
+ 	if(ChatKindIndexNum){
+ 		switch(ChatKindIndexNum){
+ 			case 1: //채팅전체
+
+--- a/sinbaram/sinInvenTory.cpp
++++ b/sinbaram/sinInvenTory.cpp
+@@ -1355,6 +1355,52 @@
+ DWORD dwSkillDelayItemCode[] = {sin30,sin31,sin32, 0}; // 장별 - 스킬 딜레이
+ void cINVENTORY::RButtonDown(int x , int y)
+ {
++#ifdef PT_WEB
++    // One-click equip for a valid item from the backpack, without dropping
++    // anything or replacing occupied equipment slots without free space.
++    if(OpenFlag && !MouseItem.Flag && !sinItemPickUpDelayFlag &&
++       !cWareHouse.OpenFlag && !cTrade.OpenFlag && !cCraftItem.OpenFlag &&
++       !cShop.OpenFlag && !cMixtureReset.OpenFlag && !cMyShop.OpenFlag &&
++       !cCharShop.OpenFlag && !SmeltingItem.OpenFlag &&
++       !ManufactureItem.m_OpenFlag && !SpecialItemShowFlag &&
++       !SetDelayFlag && !sSinWarpGate.ShowFlag && lpCurPlayer &&
++       lpCurPlayer->MotionInfo &&
++       lpCurPlayer->MotionInfo->State!=CHRMOTION_STATE_ATTACK &&
++       lpCurPlayer->MotionInfo->State!=CHRMOTION_STATE_SKILL) {
++        for(int n=0;n<INVENTORY_MAXITEM;n++) {
++            sITEM *entry=&InvenItem[n];
++            if(!entry->Flag || entry->ItemPosition || !entry->lpItem ||
++               entry->Class==ITEM_CLASS_POTION || entry->sItemInfo.NotUseFlag ||
++               MyShopItemIndex[n] || entry->sItemInfo.SpecialItemFlag[1]==ITEM_KIND_SPECIAL)continue;
++            if(x<=entry->x || x>=entry->x+entry->w ||
++               y<=entry->y || y>=entry->y+entry->h)continue;
++            int pos=-1;
++            for(int i=0;i<10;i++){
++                if(!(entry->Class & sInven[i].Position) || sInven[i].ItemIndex)continue;
++                if(entry->Class==ITEM_CLASS_WEAPON_TWO &&
++                   (sInven[0].ItemIndex || sInven[1].ItemIndex))continue;
++                pos=i;break;
++            }
++            if(pos<0)break; // No valid vacant slot: leave the item untouched.
++            sITEM moving=*entry;
++            moving.ItemPosition=pos+1;
++            moving.SetX=sInven[pos].Rect.left+
++                (sInven[pos].Rect.right-sInven[pos].Rect.left-moving.w)/2;
++            moving.SetY=sInven[pos].Rect.top+
++                (sInven[pos].Rect.bottom-sInven[pos].Rect.top-moving.h)/2;
++            // The same item is being moved, not gained: do not duplicate.
++            entry->Flag=0;
++            if(!LastSetInvenItem(&moving,1)){
++                entry->Flag=1;
++                ReFormInvenItem();
++            }else{
++                SelectInvenItemIndex=0;
++            }
++            return;
++        }
++    }
++#endif
++
+ 	
+ 	if( MouseItem.Flag || sinItemPickUpDelayFlag)return ;		//우클릭시 계속 사용되는 버그 수정 
+ 	
+
+--- a/netplay.cpp
++++ b/netplay.cpp
+@@ -8565,7 +8565,11 @@
+ 
+ #define DEADLOCK_CHECK_LIMIT_TIME		(30*1000)
+ #define DEADLOCK_CHECK_LIMIT_TIME2		(60*1000)
+-#define RECONNECT_LIMIT_TIME			(7*1000)
++#ifdef PT_WEB
++#define RECONNECT_LIMIT_TIME             (25*1000)
++#else
++#define RECONNECT_LIMIT_TIME             (7*1000)
++#endif
+ 
+ /*
+ #define DEADLOCK_CHECK_LIMIT_TIME		(30*1000)
