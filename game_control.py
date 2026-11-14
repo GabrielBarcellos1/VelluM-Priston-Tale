@@ -480,7 +480,7 @@ def inspect_state(db,user,job,state,previous):
     if len(uids)!=len(set(uids)):raise ValueError('UID repetido entre bolsas/equipamentos.')
     for item in items:
         if isinstance(item,dict):
-            if item.get('code') in (gm_tools.SHELTOM,gm_tools.POTION) and user['role'] not in ('admin','gm'):raise ValueError('Item exclusivo de GM.')
+            if item.get('code') in (gm_tools.SHELTOM,gm_tools.POTION,gm_tools.SHY_RING) and user['role'] not in ('admin','gm'):raise ValueError('Item exclusivo de GM.')
             int_value(item.get('count',1),1,9999,'Quantidade do item')
             int_value(item.get('aging',0),0,20,'Aging do item')
     if 'level' in stats:int_value(stats['level'],1,150,'Nível')
