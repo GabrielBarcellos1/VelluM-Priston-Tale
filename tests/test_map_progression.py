@@ -1,4 +1,5 @@
 import unittest
+import time
 import progression
 import gm_tools
 
@@ -35,9 +36,21 @@ class GameplayTestProfile(unittest.TestCase):
             db.execute("UPDATE users SET role='gm' WHERE username='audituser'")
         monster=next(m for m in game.MONSTERS.values() if 2 in m['maps'] and not m.get('boss'))
         for enabled,expected in [(True,[]),(False,[50])]:
-            state=self.state(endgame=True,gmGameplayTest=enabled)
+            state=self.state(endgame=True,gmGameplayTest=enabled,endgamePremiumUntil=time.time()+30*86400)
             self.save(state)
             with patch.object(server_economy,'roll',return_value={'gold':0,'items':[],'policyVersion':0}) as roll:
                 game.kill(self.user,{'job':1,'generation':self.generation,'monster':monster['id'],
                                     'map':2,'requestId':'gameplay-profile-'+str(enabled)})
                 self.assertEqual(roll.call_args.args[3],expected)
+
+    def test_expired_endgame_premium_does_not_affect_server_drops(self):
+        self.user['role']='gm'
+        with accounts.connection() as db:
+            db.execute("UPDATE users SET role='gm' WHERE username='audituser'")
+        monster=next(m for m in game.MONSTERS.values() if 2 in m['maps'] and not m.get('boss'))
+        state=self.state(endgame=True,gmGameplayTest=False,endgamePremiumUntil=time.time()-1)
+        self.save(state)
+        with patch.object(server_economy,'roll',return_value={'gold':0,'items':[],'policyVersion':0}) as roll:
+            game.kill(self.user,{'job':1,'generation':self.generation,'monster':monster['id'],
+                                 'map':2,'requestId':'expired-endgame-bonus-test'})
+            self.assertEqual(roll.call_args.args[3],[])
