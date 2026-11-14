@@ -71,6 +71,22 @@ export const commands = [
     category: "Jogador",
   },
   {
+    name: "abyss",
+    syntax: "/abyss",
+    example: "/abyss",
+    description: "Confere se as peças Abyss originais estão completas no catálogo, sem inventar itens.",
+    category: "Consultas",
+    admin: true,
+  },
+  {
+    name: "equiparabyss",
+    syntax: "/equipar abyss",
+    example: "/equipar abyss",
+    description: "Equipa as peças Abyss verificadas, somente com o conjunto original completo. Mantém armas e acessórios da classe.",
+    category: "Personagem",
+    admin: true,
+  },
+  {
     name: "equipar",
     syntax: "/equipar",
     example: "/equipar",
