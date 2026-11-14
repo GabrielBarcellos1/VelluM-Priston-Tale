@@ -22,7 +22,7 @@ import { worldFacingAngle, faceNearbyNpcs, mountStableCamera } from "/character-
 import {GM_SHELTOM,GM_POTION,gmProtection,gmClientLevel,gmProtectionEnabled,gmCombatEquipment,protectGm,applyGmAttack,gmTrainingActive} from "/gm-tools.mjs";
 import { premiumRecovery } from "/premium-effects.mjs";
 import { captureBaseRolls, restoreItemRolls } from "/item-save.mjs";
-import { selectEndgameKit } from "/endgame-kit.mjs";
+import { selectEndgameKit, selectAbyssKit, abyssCatalogStatus } from "/endgame-kit.mjs";
 import { combatStats } from "/character-stats.mjs";
 import { physicalHit, nativeMonsterTiming } from "/classic-combat.mjs";
 import { canPlace, firstSpace, organizeBag, repairBags, swapWeaponSet } from "/inventory-grid.mjs";
@@ -484,12 +484,12 @@ function endgameBuffs() {
     type: p.type,
   }));
 }
-async function equipEndgame(tier = 120) {
+async function equipEndgame(tier = 120, abyss = false) {
   if (!isAdmin) throw Error("Comando exclusivo de GM.");
   if (economyBusy || economyUncertain || pendingLoot)
     throw Error("Aguarde as operações e salvamentos em andamento.");
   if (stateWrite) await stateWrite;
-  const kit = selectEndgameKit(definitions, characterClass.job, starterWeapon, tier);
+  const kit = abyss ? selectAbyssKit(definitions, characterClass.job, starterWeapon) : selectEndgameKit(definitions, characterClass.job, starterWeapon, tier);
   const backup = {
     inv: clone(inv), stats: clone(stats),
     skillLevels: skills.exportState(), endgameEnabled, endgamePremiumUntil,
@@ -568,7 +568,7 @@ async function equipEndgame(tier = 120) {
       .filter(([, item]) => item)
       .map(([slot, item]) => `${slot}: ${item.name} [${item.code}] Nv.${item.req?.level ?? '-'}`)
       .join(' | ');
-    return `Kit /equipar${[108,110,112,116,120].indexOf(tier)+1} salvo e conferido no servidor. ${details}. O catálogo não contém peças do nível ${tier} em todos os slots; nesses casos é usada a melhor opção abaixo da faixa. Premiums: 30 dias.`;
+    return `Kit ${abyss ? "/equipar abyss (peças originais verificadas, demais itens compatíveis com a classe)" : "/equipar"+([108,110,112,116,120].indexOf(tier)+1)} salvo e conferido no servidor. ${details}. O catálogo não contém peças do nível ${tier} em todos os slots; nesses casos é usada a melhor opção abaixo da faixa. Premiums: 30 dias.`;
   } catch (error) {
     // If no server confirmation, keep recovery data and restore the local snapshot.
     Object.assign(inv, backup.inv);
@@ -1006,7 +1006,14 @@ function adminCommand(input) {
       location.reload();
       return "Reabrindo a sessão local com seu progresso salvo…";
     case "equipar":
+      if (args[0]?.toLowerCase() === "abyss") return equipEndgame(120, true);
       return equipEndgame(120);
+    case "abyss": {
+      const report = abyssCatalogStatus(definitions);
+      return report.ready ? "Peças Abyss originais encontradas: use /equipar abyss." :
+        "Abyss incompleto no catálogo. Peças ausentes ou sem atributos verificados: " + report.missing.join(", ") +
+        ". Nenhuma skin ou atributo será inventado.";
+    }
     case "equipar1":
     case "equipar2":
     case "equipar3":
