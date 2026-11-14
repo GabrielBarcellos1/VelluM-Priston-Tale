@@ -29,7 +29,13 @@ export function selectEndgameKit(definitions, job, starterCode, maxLevel=120) {
   let oneHand=best("WEAPON_ONE",alternate);
   if (!twoHand) twoHand=best("WEAPON_TWO",primary==="WT1"?"WS1":primary==="WN1"?"WM1":"WS2");
   if (!oneHand) oneHand=best("WEAPON_ONE",primary)??best("WEAPON_ONE","WC1")??best("WEAPON_ONE","WM1");
-  if(!twoHand||!oneHand)throw Error("Catálogo incompleto: falta arma de uma ou duas mãos para o kit.");
+  // Atalanta only uses one-handed javelins: do not substitute an Archer bow.
+  // Both loadouts keep the correct class weapon and shield.
+  if (job===5) {
+    twoHand=best("WEAPON_ONE","WT1");
+    oneHand=best("WEAPON_ONE","WT1");
+  }
+  if(!twoHand||!oneHand)throw Error("Catálogo incompleto: falta arma compatível para o kit.");
   const shield=best("SHIELDS");
   if(!shield)throw Error("Nenhum escudo disponível para o kit.");
   const armor=best("ARMOR",[7,8,10].includes(job)?"DA2":"DA1")??best("ARMOR");
@@ -45,6 +51,7 @@ export function selectEndgameKit(definitions, job, starterCode, maxLevel=120) {
     : best("BOOTS");
   const equipment={
     weapon:twoHand,
+    ...(job===5?{shield}:{}),
     armor,
     boots,
     gloves:best("GLOVES"),
