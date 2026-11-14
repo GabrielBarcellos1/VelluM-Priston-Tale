@@ -59,9 +59,12 @@ export function objectiveMatches(q, objective, type, value, field) {
   return false; // Unspecified private objective contracts must not progress on unrelated actions.
 }
 export function allocateStat(stats, attribute, count, history) {
-  if (!["str", "spi", "tal", "dex", "health"].includes(attribute) || stats.statPoints <= 0)
-    return false;
-  const n = Math.min(stats.statPoints, Math.max(1, Math.min(10, Math.floor(Number(count) || 1))));
+  if (!["str", "spi", "tal", "dex", "health"].includes(attribute) ||
+      !Number.isFinite(stats[attribute]) || stats[attribute] >= 999 ||
+      !Number.isFinite(stats.statPoints) || stats.statPoints <= 0) return false;
+  const n = Math.min(999 - stats[attribute], Math.floor(stats.statPoints),
+    Math.max(1, Math.min(10, Math.floor(Number(count) || 1))));
+  if (n <= 0) return false;
   stats[attribute] += n;
   stats.statPoints -= n;
   history.push({ attribute, n });
@@ -80,7 +83,7 @@ export function allocateEquippedRequirement(stats, attribute, equipmentSets, his
   const available = Number(stats.statPoints);
   const missing = Math.ceil(required - current);
   if (!Number.isFinite(current) || !Number.isFinite(available) ||
-      missing <= 0 || missing > available) return false;
+      missing <= 0 || missing > available || current + missing > 999) return false;
   stats[attribute] = current + missing;
   stats.statPoints = available - missing;
   history.push({ attribute, n: missing });
