@@ -67,6 +67,25 @@ export function allocateStat(stats, attribute, count, history) {
   history.push({ attribute, n });
   return true;
 }
+// Allocate exactly the missing points for currently equipped gear (both weapon sets).
+// Never spend partial points if the requirement cannot be met.
+export function allocateEquippedRequirement(stats, attribute, equipmentSets, history) {
+  if (!["str", "spi", "tal", "dex", "health"].includes(attribute)) return false;
+  const required = Math.max(0, ...equipmentSets.flatMap(set =>
+    Object.entries(set ?? {}).filter(([slot, item]) => slot !== "costume" && item)
+      .map(([, item]) => Number(item.req?.[attribute] ?? 0))
+      .filter(Number.isFinite)
+  ));
+  const current = Number(stats[attribute]);
+  const available = Number(stats.statPoints);
+  const missing = Math.ceil(required - current);
+  if (!Number.isFinite(current) || !Number.isFinite(available) ||
+      missing <= 0 || missing > available) return false;
+  stats[attribute] = current + missing;
+  stats.statPoints = available - missing;
+  history.push({ attribute, n: missing });
+  return true;
+}
 export function undoStat(stats, equipment, history) {
   const last = history.at(-1);
   if (!last) return false;
