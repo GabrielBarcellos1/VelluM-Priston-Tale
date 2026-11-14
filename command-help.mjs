@@ -78,6 +78,14 @@ export const commands = [
     category: "Personagem",
     admin: true,
   },
+  ...[108, 110, 112, 116, 120].map((level,index)=>({
+    name: "equipar"+(index+1),
+    syntax: "/equipar"+(index+1),
+    example: "/equipar"+(index+1),
+    description: "Kit GM da linha "+level+" com itens perfeitos, aging máximo, Tulla/Yagdhita e anéis Shy.",
+    category: "Personagem",
+    admin: true,
+  })),
   {
     name: "nivel",
     syntax: "/nivel N",
