@@ -1848,45 +1848,6 @@ function showRedistribution(npc) {
   game.events.emit("npcOpen", { npcId: npc.id, name: npc.name, windowKind: "event", data: {} });
 }
 
-async function redistributeAtNpc(npcId, mode) {
-  const npc = npcs.find((n) => n.id === npcId && n.services?.includes("event") && /event girl/i.test(n.name));
-  if (!npc || !["stats", "skills", "both"].includes(mode)) throw Error("Redistribuição inválida.");
-  if (!game || game.dead || stats.hp <= 0) throw Error("O personagem precisa estar vivo.");
-  if (Math.hypot(game.pos.x - npc.x, -game.pos.z - npc.z) > 500)
-    throw Error("Aproxime-se da Event Girl para redistribuir.");
-  if (economyBusy || economyUncertain || pendingLoot)
-    throw Error("Aguarde o salvamento e as operações do inventário terminarem.");
-  economyBusy = true;
-  try {
-    if (stateWrite) await stateWrite;
-    const plan = mode !== "skills" ? planAttributeReset(stats, inv) : null;
-    if (plan) {
-      Object.assign(stats, plan.attributes);
-      Object.assign(inv, plan.inventory);
-      statHistory.length = 0;
-    }
-    if (mode !== "stats") {
-      skills.reset();
-      for (const side of ["left", "right"]) game.setSkillSlot(side, null);
-      const removed = [...companions.keys()].filter(id=>!companions.get(id).converted);
-      for(const pet of companions.values())if(pet.converted){restoreConversionHealth(pet.state);delete pet.state.owner;}
-      companions.clear();
-      if (removed.length) deliver({ t: "monsters", remove: removed });
-      deliver({ t: "pets", list: [] });
-    }
-    recalculate();
-    skills.publish();
-    publishBuffs();
-    if (!save(true)) throw Error("Não foi possível preparar o salvamento da redistribuição.");
-    await stateWrite;
-    const points = skills.points();
-    return `Redistribuição gratuita salva. Atributos: ${stats.statPoints} pontos livres. Skills: ${points.skill} SP e ${points.elite} EP livres. Aprenda as habilidades novamente com o mestre.`;
-  } finally {
-    economyBusy = false;
-  }
-}
-
-
 function openInstantSkillTrainer(npc) {
   if (!game || game.dead) return;
   game.keys.clear();
@@ -1928,6 +1889,45 @@ function openInstantSkillTrainer(npc) {
     await gameFeatures.openNpc(npc);
   });
 }
+
+async function redistributeAtNpc(npcId, mode) {
+  const npc = npcs.find((n) => n.id === npcId && n.services?.includes("event") && /event girl/i.test(n.name));
+  if (!npc || !["stats", "skills", "both"].includes(mode)) throw Error("Redistribuição inválida.");
+  if (!game || game.dead || stats.hp <= 0) throw Error("O personagem precisa estar vivo.");
+  if (Math.hypot(game.pos.x - npc.x, -game.pos.z - npc.z) > 500)
+    throw Error("Aproxime-se da Event Girl para redistribuir.");
+  if (economyBusy || economyUncertain || pendingLoot)
+    throw Error("Aguarde o salvamento e as operações do inventário terminarem.");
+  economyBusy = true;
+  try {
+    if (stateWrite) await stateWrite;
+    const plan = mode !== "skills" ? planAttributeReset(stats, inv) : null;
+    if (plan) {
+      Object.assign(stats, plan.attributes);
+      Object.assign(inv, plan.inventory);
+      statHistory.length = 0;
+    }
+    if (mode !== "stats") {
+      skills.reset();
+      for (const side of ["left", "right"]) game.setSkillSlot(side, null);
+      const removed = [...companions.keys()].filter(id=>!companions.get(id).converted);
+      for(const pet of companions.values())if(pet.converted){restoreConversionHealth(pet.state);delete pet.state.owner;}
+      companions.clear();
+      if (removed.length) deliver({ t: "monsters", remove: removed });
+      deliver({ t: "pets", list: [] });
+    }
+    recalculate();
+    skills.publish();
+    publishBuffs();
+    if (!save(true)) throw Error("Não foi possível preparar o salvamento da redistribuição.");
+    await stateWrite;
+    const points = skills.points();
+    return `Redistribuição gratuita salva. Atributos: ${stats.statPoints} pontos livres. Skills: ${points.skill} SP e ${points.elite} EP livres. Aprenda as habilidades novamente com o mestre.`;
+  } finally {
+    economyBusy = false;
+  }
+}
+
 
 function npcTalk(id, interactive) {
   const npc = npcs.find((n) => n.id === id);
