@@ -486,6 +486,7 @@ async function equipEndgame() {
     inv: clone(inv), stats: clone(stats),
     skillLevels: skills.exportState(), endgameEnabled, endgamePremiumUntil,
     heroLevel: hero.level,
+    previousSave: localStorage.getItem(saveKey),
   };
   const staged = { bag: clone(inv.bag), bagB: clone(inv.bagB) };
   const addStaged = item => {
@@ -543,6 +544,10 @@ async function equipEndgame() {
     publishBuffs();
     if (!save(true)) throw Error("Falha ao preparar salvamento do kit.");
     await stateWrite; // No success notice before the server confirms persistence.
+    const persisted = await get(`/api/local/state?classe=${characterClass.job}`);
+    if (persisted.generation !== characterGeneration || persisted.state?.stats?.level !== 150 ||
+        Number(persisted.state?.savedAt) < lastSavedAt)
+      throw Error("O servidor ainda não confirmou o nível e o kit atualizados.");
     return `Kit da classe ${characterClass.name} salvo: armas de duas e uma mãos, escudo no segundo conjunto, equipamentos aging +${B.maxAging}, Botas do Mokova e pedras de treino. Premiums ativos por 30 dias. Troque o conjunto para usar arma de uma mão e escudo.`;
   } catch (error) {
     // If no server confirmation, keep recovery data and restore the local snapshot.
@@ -551,10 +556,9 @@ async function equipEndgame() {
     hero.level = backup.heroLevel;
     endgameEnabled = backup.endgameEnabled;
     endgamePremiumUntil = backup.endgamePremiumUntil;
-    for (const skill of skillData.skills.filter(s=>s.job===characterClass.job))
-      if (backup.skillLevels[skill.code]===undefined) delete questMeta.skillMastery?.[skill.code];
-    // Existing skill levels are preserved in the recovery snapshot for manual recovery
-    // if the network failed after the server committed.
+    skills.restoreLevels(backup.skillLevels);
+    if (backup.previousSave !== null) localStorage.setItem(saveKey, backup.previousSave);
+    else localStorage.removeItem(saveKey);
     recalculate();
     publishBuffs();
     throw Error("Kit sem confirmação do servidor; backup preservado. " + error.message);
@@ -1883,6 +1887,48 @@ async function redistributeAtNpc(npcId, mode) {
 }
 
 
+function openInstantSkillTrainer(npc) {
+  if (!game || game.dead) return;
+  game.keys.clear();
+  const panel = serviceDialog(npc.name, "Clique uma vez no ícone ou no nome para comprar a próxima melhoria. Sem confirmação adicional.");
+  const views = skills.snapshot().skills;
+  for (const entry of views) {
+    const skill = entry;
+    const label = skill.name + " · nível " + skill.level + "/" + skill.maxLevel +
+      " · " + (skill.price ?? 0) + " ouro";
+    const button = panel.button(label, async () => {
+      try {
+        const message = skills.learn(skill.id, npc.id);
+        updateQuests("learn", {});
+        if (!save(true)) throw Error("Não foi possível preparar o salvamento da habilidade.");
+        await stateWrite;
+        panel.text.textContent = message;
+        const next = skills.snapshot().skills.find(s=>s.id===skill.id);
+        if (next) button.lastChild.textContent = next.name + " · nível " + next.level +
+          "/" + next.maxLevel + " · " + (next.price ?? 0) + " ouro";
+      } catch (error) {
+        panel.text.textContent = error.message;
+      }
+    });
+    const title = document.createElement("span");
+    title.textContent = button.textContent;
+    button.textContent = "";
+    button.style.cssText += ";display:flex;align-items:center;gap:10px";
+    if (skill.icon) {
+      const img = document.createElement("img");
+      img.src = skill.icon.startsWith("/") ? skill.icon : "/assets/" + skill.icon;
+      img.width=36;img.height=36;img.alt="";img.loading="lazy";
+      button.append(img);
+    }
+    button.append(title);
+    if (skill.level >= skill.maxLevel) button.disabled = true;
+  }
+  panel.button("Abrir treinador clássico / opções de promoção", async () => {
+    panel.close();
+    await gameFeatures.openNpc(npc);
+  });
+}
+
 function npcTalk(id, interactive) {
   const npc = npcs.find((n) => n.id === id);
   if (!npc || !game || game.dead) return;
@@ -1950,7 +1996,7 @@ function npcTalk(id, interactive) {
     });
   } else if (npc.services?.includes("skill")) {
     skills.publish();
-    gameFeatures.openNpc(npc).catch(e=>notice(e.message));
+    openInstantSkillTrainer(npc);
   } else if (npc.services?.includes("itemshop")) {
     showShop().catch((e) => notice(e.message));
   } else if (npc.services?.includes("warehouse")) {
@@ -2580,6 +2626,20 @@ async function handle(message) {
       if(typeof field!=='undefined' && field.id===32 && classicEndgame?.arenaPhase() && item?.slot==='ECORE')
         return notice('Nao e permitido usar Core durante o duelo com Fury.');
       if(item?.code===GM_POTION){try{await gmOperation("activate",{uid:item.uid});}catch(e){notice(e.message);}break;}
+      if (["BI139", "BI140", "BI141"].includes(item?.code)) {
+        const tier = ({ BI139: 1, BI140: 2, BI141: 3 })[item.code];
+        const learned = skills.exportState();
+        const trained = skillData.skills.filter(s=>s.job===characterClass.job &&
+          s.tier===tier && learned[s.code]>0 &&
+          Number(questMeta.skillMastery?.[s.code] ?? 0)<10000);
+        if (!trained.length) return notice("Nenhuma habilidade aprendida deste Tier precisa de treino.");
+        for (const skill of trained) questMeta.skillMastery[skill.code]=10000;
+        consume(item);
+        skills.publish();
+        recalculate();
+        notice("Skill Master: "+trained.length+" habilidades do Tier "+tier+" maturadas.");
+        break;
+      }
       if (item?.slot === "ECORE") {
         const destination = { EC101: 3, EC104: 21 }[item.code];
         if (destination == null) return notice("Este tipo de core ainda não tem destino disponível.");
