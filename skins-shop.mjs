@@ -180,7 +180,7 @@ export function mountSkinShop({
         filter.append(o);
       }
       filter.onchange = render;
-      filter.value="owned";
+      filter.value="";
       controls.append(search, filter);
       const cards = element("div");
       cards.className = "skin-cards";
