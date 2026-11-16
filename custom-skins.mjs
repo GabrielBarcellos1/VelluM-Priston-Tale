@@ -1,8 +1,15 @@
 import {buildSapphireWeapon,sapphireMaterials} from './sapphire-geometry.mjs';
-export function createSapphireMesh(B,kind,hands=2){
- const data=buildSapphireWeapon(kind,hands),group=new B.Group();group.name=data.name;
+const SKIN_THEMES={
+ sombria:[0x110c1e,0x413063,0x8571ad,0xb1a6bf,0x090514,0xb332ff,0xd8c7ff],
+ cibernetica:[0x152534,0x267aa4,0x667e96,0xc8dce2,0x08131b,0x02f5ff,0xf2ffff],
+ chef:[0x28303c,0xe0e3e5,0xb87439,0xfff6e0,0x171d23,0xff423a,0xffffff],
+ halloween:[0x21152d,0x613370,0xb77b31,0xe7c7a0,0x120a19,0xff8b18,0xffce51]
+};
+export function createSapphireMesh(B,kind,hands=2,theme=null){
+ const data=buildSapphireWeapon(kind,hands),group=new B.Group();group.name=theme?theme+' — '+kind:data.name;
+ const palette=SKIN_THEMES[theme];
  for(const part of data.parts){const geometry=new B.BufferGeometry();geometry.setAttribute('position',new B.Float32BufferAttribute(part.positions,3));geometry.setAttribute('normal',new B.Float32BufferAttribute(part.normals,3));geometry.computeBoundingSphere();
-  const spec=sapphireMaterials[part.material],material=new B.MeshStandardMaterial({...spec,side:2});const mesh=new B.Mesh(geometry,material);mesh.userData.sapphire=true;group.add(mesh);
+  const original=sapphireMaterials[part.material];const spec=palette?{...original,color:palette[part.material],emissive:part.material===5?palette[5]:undefined,emissiveIntensity:part.material===5?.42:0}:original;const material=new B.MeshStandardMaterial({...spec,side:2});const mesh=new B.Mesh(geometry,material);mesh.userData.sapphire=true;group.add(mesh);
  }
  group.userData.sapphire=true;group.userData.meshInfo={kind,hands,triangles:data.triangles,bounds:data.bounds};return group;
 }
@@ -37,7 +44,7 @@ export function mountCustomSkins({B,game,own,peers,catalog,inventory}){
    const handGroups=[],handModels=[];
    for(const bone of [15,25]){
     const hand=new B.Group();hand.matrixAutoUpdate=false;actor.object.add(hand);
-    const cosmetic=createSapphireMesh(B,skin.customModel,skin.hands);
+    const cosmetic=createSapphireMesh(B,skin.customModel,skin.hands,skin.theme);
     cosmetic.rotation.x=Math.PI/2;
     cosmetic.scale.setScalar((skin.customScale??.8)*(skin.customModel==='phantom'?.9:.5));
     cosmetic.position.y=-1.5;
@@ -47,7 +54,7 @@ export function mountCustomSkins({B,game,own,peers,catalog,inventory}){
    records.set(root,record);updateHands(actor,record);
    continue;
   }
-  const model=createSapphireMesh(B,skin.customModel,skin.hands);model.rotation.x=Math.PI/2;model.scale.setScalar((skin.customScale??.8)*2);
+  const model=createSapphireMesh(B,skin.customModel,skin.hands,skin.theme);model.rotation.x=Math.PI/2;model.scale.setScalar((skin.customScale??.8)*2);
   // Fists use short, hand-sized attachments; the scythe's large multiplier
   // previously made the Martial Artist's gauntlets float around her arms.
   if(skin.customModel==='vambrace'||skin.customModel==='claw'){
@@ -68,7 +75,7 @@ export function openSapphirePreview(B,skin,host=null){
  const dialog=document.createElement('dialog');dialog.className='ft-dialog';dialog.style.cssText='width:min(650px,94vw);max-height:94vh;overflow:auto;padding:18px;background:#101c26;color:#eee';const h=document.createElement('h2'),p=document.createElement('p'),canvas=document.createElement('canvas'),close=document.createElement('button');h.textContent=skin.name;p.textContent='Arraste para girar. Use a roda do mouse para aproximar. Esta é a geometria 3D usada no jogo.';close.textContent='Fechar';dialog.append(h,p,canvas,close);
  if(host){const previous=host.querySelector('.skin-inline-preview');previous?.remove();dialog.classList.add('skin-inline-preview');dialog.style.cssText='display:block;position:static;width:100%;max-height:440px;overflow:auto;padding:12px;background:#101c26;color:#eee';host.append(dialog);}
  else {document.body.append(dialog);dialog.showModal();}
- const renderer=new B.WebGLRenderer({canvas,antialias:true,alpha:false});renderer.setPixelRatio(Math.min(2,devicePixelRatio||1));renderer.setSize(host?Math.min(430,innerWidth-80):Math.min(590,innerWidth-80),host?225:Math.max(210,Math.min(500,innerHeight-230)));canvas.style.cssText='max-width:100%;display:block;touch-action:none';const scene=new B.Scene(),camera=new B.PerspectiveCamera(38,canvas.width/canvas.height,.1,500);scene.background=new B.Color(0x101c26);ensureSkinLights(B,scene);const model=createSapphireMesh(B,skin.customModel,skin.hands),bounds=model.userData.meshInfo.bounds,height=bounds[1][1]-bounds[1][0],width=bounds[0][1]-bounds[0][0];model.position.set(-(bounds[0][1]+bounds[0][0])/2,-(bounds[1][1]+bounds[1][0])/2,0);const pivot=new B.Group();pivot.add(model);scene.add(pivot);let distance=Math.max(height,width)*1.7,drag=false,last=0,angle=.3,frame,stopped=false;
+ const renderer=new B.WebGLRenderer({canvas,antialias:true,alpha:false});renderer.setPixelRatio(Math.min(2,devicePixelRatio||1));renderer.setSize(host?Math.min(430,innerWidth-80):Math.min(590,innerWidth-80),host?225:Math.max(210,Math.min(500,innerHeight-230)));canvas.style.cssText='max-width:100%;display:block;touch-action:none';const scene=new B.Scene(),camera=new B.PerspectiveCamera(38,canvas.width/canvas.height,.1,500);scene.background=new B.Color(0x101c26);ensureSkinLights(B,scene);const model=createSapphireMesh(B,skin.customModel,skin.hands,skin.theme),bounds=model.userData.meshInfo.bounds,height=bounds[1][1]-bounds[1][0],width=bounds[0][1]-bounds[0][0];model.position.set(-(bounds[0][1]+bounds[0][0])/2,-(bounds[1][1]+bounds[1][0])/2,0);const pivot=new B.Group();pivot.add(model);scene.add(pivot);let distance=Math.max(height,width)*1.7,drag=false,last=0,angle=.3,frame,stopped=false;
  canvas.onpointerdown=e=>{drag=true;last=e.clientX;canvas.setPointerCapture(e.pointerId);};canvas.onpointerup=()=>drag=false;canvas.onpointercancel=()=>drag=false;canvas.onpointermove=e=>{if(drag){angle+=(e.clientX-last)*.012;last=e.clientX;}};canvas.onwheel=e=>{e.preventDefault();distance=Math.min(height*4,Math.max(height*.65,distance+e.deltaY*.05));};
  function draw(){if(stopped)return;if(!dialog.isConnected){dispose();return;}if(!drag)angle+=.004;pivot.rotation.y=angle;camera.position.set(0,height*.04,distance);camera.lookAt(0,0,0);renderer.render(scene,camera);frame=requestAnimationFrame(draw);}draw();
  const dispose=()=>{if(stopped)return;stopped=true;cancelAnimationFrame(frame);disposeSapphire(model);renderer.dispose();renderer.forceContextLoss();dialog.remove();};close.onclick=()=>{if(host)dispose();else dialog.close();};dialog.addEventListener('close',dispose,{once:true});
@@ -92,9 +99,9 @@ export async function renderSapphireItemIcons(B,skins,onIcon){
  try{
   for(const skin of skins){
    if(!skin.customModel)continue;
-   const key=skin.customModel+':'+skin.hands;
+   const key=skin.customModel+':'+skin.hands+':'+(skin.theme||'sapphire');
    if(!cache.has(key)){
-    const mesh=createSapphireMesh(B,skin.customModel,skin.hands);
+    const mesh=createSapphireMesh(B,skin.customModel,skin.hands,skin.theme);
     const bounds=mesh.userData.meshInfo.bounds;
     const width=bounds[0][1]-bounds[0][0],height=bounds[1][1]-bounds[1][0];
     const depth=bounds[2][1]-bounds[2][0];
